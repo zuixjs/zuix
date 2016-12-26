@@ -16,7 +16,7 @@
  */
 
 /**
- * Javascript UI components enhancer. A tiny MVC framework.
+ * Javascript UI components enhancer. A lite MVC framework.
  * Find more details about jUIce here:
  *   https://github.com/genielabs/js-juice-mvc
  *
@@ -557,7 +557,8 @@
         };
 
     return scope;
-}(this));
+}.call(this));
+
 // jQuery helpers
 $.fn.extend({
     animateCss: function (animationName) {
