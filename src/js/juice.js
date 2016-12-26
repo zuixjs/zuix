@@ -20,15 +20,14 @@
  * Find more details about jUIce here:
  *   https://github.com/genielabs/js-juice-mvc
  *
- * @author Generoso Martello.
+ * @author Generoso Martello <generoso@martello.com>
  */
 
 (function (scope) {
     "use strict";
 
     /**
-     * Describes the type of component cache object.
-     *
+     * Component Cache object.
      * @typedef {{
      *      componentId: string The id of the cached component,
      *      view: ContextView The view,
@@ -212,7 +211,8 @@
 
 
     // TODO: implement Config object for juice
-    /** @protected */
+    /** @protected
+     * @const */
     var _juiceFieldAttribute = 'data-ui-field';
     // work-around for lint eval error
     /** @protected */
@@ -251,8 +251,7 @@
     }
 
     /**
-     * Load a component context with the given context options.
-     * // TODO: describe how component MVC is loaded inline or from url
+     * Load a component context with the given options.
      *
      * @param {!string} componentId The id/name of the component we want to load.
      * @param {ContextOptions} [options] context options used to initialize the component context
