@@ -15,4 +15,5 @@ gulp.task('build', function() {
         }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./build/js'))
+        .pipe(gulp.dest('./docs/js'))
 });

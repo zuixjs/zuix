@@ -557,7 +557,7 @@
         };
 
     return scope;
-}.call(this));
+}(this));
 
 // jQuery helpers
 $.fn.extend({

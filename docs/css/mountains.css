@@ -1,0 +1,16 @@
+canvas {
+    background:
+            linear-gradient(
+                    hsl(200, 50%, 80%) 0%,
+                    hsl(200, 30%, 95%) 75%);
+    display: block;
+}
+
+div.mountains {
+    background: url(http://jackrugile.com/images/misc/skyline-texture.png);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
