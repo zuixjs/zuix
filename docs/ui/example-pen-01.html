@@ -1,17 +1,71 @@
 ### Install
 
-### Creating a component context
+### Quick start
+
+
+The <strong>juice</strong> global object consists of a few methods:
+
+- juice.field
+- juice.include
+- juice.view
+- juice.controller
+- juice.load
+
+
+### Examples
+
+#### Creating an inline view
+
+<pre><code class="language-html">
+    <div data-ui-view="simple_view"
+         class="material-icons mdl-badge mdl-badge--overlap"
+         data-badge="3">account_box</div>
+</code></pre>
+
+
+
+<div data-ui-view="simple_view" data-ui-field="simple_view_test" class="material-icons mdl-badge mdl-badge--overlap" data-badge="3">account_box</div>
+
+<div data-ui-field="simple_view_1" />
+<script>juice.load('simple_view', {
+    container: juice.field('simple_view_1'),
+    controller: juice.controller(function ($$) {
+        $$.create = function () {
+            $$.view.find('div').on('click', function () {
+                $(this).attr('data-badge', 10);
+            });
+        }
+    })
+})</script>
+
+
+
+
+
+#### Reusing a view
+
+<pre><code class="language-html">
+    <div data-ui-load="simple_view" />
+    <div data-ui-load="simple_view" />
+    <div data-ui-load="simple_view" />
+</code></pre>
 
 <style>
     /*
      * Custom keyword styles
      */
-    .token.keyword.keyword-start, .token.keyword.keyword-load {
+    .token.keyword.keyword-data-ui-load, .token.keyword.keyword-load {
         color: #f92672;
+    }
+    .token.juice_obj {
+        color: purple;
+    }
+    .token.juice_ctr {
+        color: gray;
     }
 </style>
 <pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-include="(to load from url/template)" data-ui-contoller="exampleController"/>
+    <div data-ui-load="(id of the view to load)" data-ui-contoller="exampleController"/>
     <script>
     var exampleController = juice.controller(function($$){
         $$.create = function() {
@@ -23,10 +77,10 @@
 
 ##### or
 
-<div data-juice-view="component-view-1"/>
+<div data-ui-view="component_view_1"/>
 
 <script>
-    juice.load('component-view-1', {
+    juice.load('component_view_1', {
         controller: juice.controller(function($$){
             $$.create = function() {
                 $$.view.html('Helllo World!');
@@ -41,9 +95,9 @@
 
 
 <pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-field="component-view-1"/>
+    <div data-ui-view="component_view_1"/>
     <script>
-    juice.load('component-view-1', {
+    juice.load('component_view_1', {
         controller: juice.controller(function($$){
             $$.create = function() {
                 $$.view.html('Helllo World!');

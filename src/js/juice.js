@@ -251,8 +251,8 @@
     /**
      * Returns jQuery elements with `_juiceFieldAttribute` attribute matching `fieldName` .
      *
-     * @param {!Element|!jQuery|!HTMLElement|!HTMLDocument} container Starting DOM element for this search.
      * @param {!string} fieldName The class to check for.
+     * @param {!Element|!jQuery|!HTMLElement|!HTMLDocument} [container] Starting DOM element for this search.
      * @returns {jQuery}
      */
     function field(fieldName, container) {
@@ -261,6 +261,13 @@
         return $(container).find('[' + _juiceFieldAttribute + '="' + fieldName + '"]');
     }
 
+    /**
+     * TODO: describe
+     *
+     * @param html
+     * @param container
+     * @param callback
+     */
     function include(html, container, callback) {
         // TODO: add js markdown support
         load(html, {
@@ -279,6 +286,16 @@
                     callback(ctx, err);
             }
         });
+    }
+
+    /***
+     * TODO: describe
+     *
+     * @param componentId
+     * @return {ComponentContext}
+     */
+    function view(componentId) {
+        return load(componentId);
     }
 
     /**
@@ -353,7 +370,7 @@
                 context.view(cachedComponent.view);
             } else {
                 // TODO: replace $(document) with $(options.container)
-                var inlineView = $(document).find('[data-juice-view="' + context.componentId + '"]');
+                var inlineView = $(document).find('[data-ui-view="' + context.componentId + '"]');
                 if (inlineView.length >= 1)
                     context.view(inlineView.eq(0));
             }
@@ -582,9 +599,10 @@
     // Public API
 
     scope.juice = scope.juice || {
-            controller: controller,
             field: field,
             include: include,
+            view: view,
+            controller: controller,
             load: load
         };
 
