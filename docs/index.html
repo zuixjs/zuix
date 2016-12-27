@@ -134,14 +134,21 @@
     </div>
     <main class="mdl-layout__content">
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
-            <div class="page-content content-padding">
+            <div layout="column center-center" class="page-content content-padding" style="margin-top: 48px">
                 <!-- Your content goes here -->
-                <p></p>
-                <h1 align="center">coming soon...</h1>
+                <div data-ui-field="juice-demo"></div>
+                <!-- MDL Spinner Component -->
+                <div data-ui-field="loader" class="mdl-spinner mdl-js-spinner is-active"></div>
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
-            <div class="page-content"><!-- Your content goes here --></div>
+            <div class="page-content content-padding">
+                <!-- Your content goes here -->
+
+                <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="jUIce test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">jUIce test</a> by Gene (<a href="http://codepen.io/genielabs">@genielabs</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+                <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+            </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-3">
             <div class="page-content"><!-- Your content goes here --></div>
@@ -157,6 +164,18 @@
         </section>
     </main>
 </div>
+
+<script type="text/javascript">
+
+    juice.load('https://codepen.io/genielabs/pen/RomJZy', {
+        container: juice.field($(document), 'juice-demo'),
+        ready: function (context) {
+            juice.field($(document), 'loader').hide();
+            console.log(context);
+        }
+    });
+
+</script>
 
 </body>
 </html>
