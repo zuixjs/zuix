@@ -7,7 +7,7 @@ canvas {
 }
 
 div.mountains {
-    background: url(http://jackrugile.com/images/misc/skyline-texture.png);
+    background: url(../images/skyline-texture.png);
     top: 0;
     left: 0;
     width: 100%;
