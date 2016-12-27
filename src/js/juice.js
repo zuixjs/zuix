@@ -131,7 +131,16 @@
      */
     ComponentContext.prototype.view = function (view) {
         if (typeof view === 'undefined') return this._view;
-        else this._view = view !== null ? $(view) : null;
+        if (typeof view === 'string') {
+            if (this.options.markdown === true && !util.isNoU(showdown))
+                view = new showdown.Converter().makeHtml(view);
+            this._view = $('<div/>').append(view);
+            this._view.find('code').each(function(i, block) {
+                $(block).addClass('language-javascript');
+                //hljs.highlightBlock(block);
+                Prism.highlightElement(block);
+            });
+        } else this._view = view;
         return this;
     };
     /***
@@ -242,20 +251,23 @@
     /**
      * Returns jQuery elements with `_juiceFieldAttribute` attribute matching `fieldName` .
      *
-     * @param {!Element|!jQuery} container Starting DOM element for this search.
+     * @param {!Element|!jQuery|!HTMLElement|!HTMLDocument} container Starting DOM element for this search.
      * @param {!string} fieldName The class to check for.
      * @returns {jQuery}
      */
-    function field(container, fieldName) {
+    function field(fieldName, container) {
+        if (util.isNoU(container))
+            container = document;
         return $(container).find('[' + _juiceFieldAttribute + '="' + fieldName + '"]');
     }
 
-    function include(container, html, callback) {
+    function include(html, container, callback) {
         // TODO: add js markdown support
         load(html, {
             auto: false,
+            markdown: true,
             ready: function(/** @type {ComponentContext} */ ctx) {
-                $(container).append(ctx.view());
+                $(container).append(ctx.view().html());
                 if (util.isFunction(callback))
                     callback(ctx);
             },

@@ -52,17 +52,28 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
-
+    <!--link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script -->
+    <link rel="stylesheet" href="js/prism/prism.css">
+    <script type="text/javascript" src="js/prism/prism.js"></script>
 
     <!-- ... --->
     <script src="js/jquery-2.0.2.min.js"></script>
+    <script src="js/showdown.min.js"></script>
     <script src="js/juice.min.js"></script>
 
 
-    <style>
+    <style type="text/css">
 
         body {
             font-family: 'Titillium+Web', sans-serif;
+        }
+
+        header.mdl-layout__header,.mdl-layout__tab-bar {
+            background-color: transparent;
+        }
+        header .mdl-layout__tab-bar-button {
+            background-color: transparent;
         }
 
         .mdl-layout {
@@ -92,6 +103,7 @@
             vertical-align: top;
             margin: 0;
         }
+
     </style>
 </head>
 <body>
@@ -164,15 +176,19 @@
 <script type="text/javascript">
 
     juice.load('https://codepen.io/genielabs/pen/RomJZy', {
-        container: juice.field($(document), 'juice-demo'),
+        container: juice.field('juice-demo'),
         ready: function (context) {
-            juice.field($(document), 'loader').hide();
+            juice.field('loader').hide();
             console.log(context);
         }
     });
-    juice.field($(document), 'tab-getstarted').on('click', function(){
+    // load "Get Started" content dynamically when the tab
+    // button is tapped
+    juice.field('tab-getstarted').on('click', function(){
         $(this).off('click');
-        juice.include(juice.field($(document), 'page-getstarted'), 'ui/example-pen-01', function(){});
+        juice.include('ui/example-pen-01', juice.field('page-getstarted'), function(){
+            // async callback
+        });
     });
 
 </script>
