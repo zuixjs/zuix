@@ -122,7 +122,7 @@
         <!-- Tabs -->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
             <a href="#scroll-tab-1" class="mdl-layout__tab is-active">About</a>
-            <a href="#scroll-tab-2" class="mdl-layout__tab">Getting Started</a>
+            <a data-ui-field="tab-getstarted" href="#scroll-tab-2" class="mdl-layout__tab">Getting Started</a>
             <a href="#scroll-tab-3" class="mdl-layout__tab">Examples</a>
             <a href="#scroll-tab-4" class="mdl-layout__tab">Etc...</a>
             <a href="#scroll-tab-5" class="mdl-layout__tab">Tab 5</a>
@@ -142,12 +142,8 @@
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
-            <div class="page-content content-padding">
+            <div data-ui-field="page-getstarted" class="page-content content-padding">
                 <!-- Your content goes here -->
-
-                <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="jUIce test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">jUIce test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
-                <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
-
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-3">
@@ -173,6 +169,10 @@
             juice.field($(document), 'loader').hide();
             console.log(context);
         }
+    });
+    juice.field($(document), 'tab-getstarted').on('click', function(){
+        $(this).off('click');
+        juice.include(juice.field($(document), 'page-getstarted'), 'ui/example-pen-01', function(){});
     });
 
 </script>

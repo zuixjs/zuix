@@ -250,6 +250,25 @@
         return $(container).find('[' + _juiceFieldAttribute + '="' + fieldName + '"]');
     }
 
+    function include(container, html, callback) {
+        // TODO: add js markdown support
+        load(html, {
+            auto: false,
+            ready: function(/** @type {ComponentContext} */ ctx) {
+                $(container).append(ctx.view());
+                if (util.isFunction(callback))
+                    callback(ctx);
+            },
+            error: function(ctx, err) {
+                // TODO: report error
+                $(container).append($('<p>').append('ERROR juice.include'));
+                $(container).append($('<p>').append(data));
+                if (util.isFunction(callback))
+                    callback(ctx, err);
+            }
+        });
+    }
+
     /**
      * Load a component context with the given options.
      *
@@ -311,9 +330,9 @@
         if (cachedComponent !== null && util.isNoU(context.controller()))
             context.controller(cachedComponent.controller);
 
-        if (typeof options.ready === 'function')
+        if (util.isFunction(options.ready))
             context.ready = options.ready;
-        if (typeof options.error === 'function')
+        if (util.isFunction(options.error))
             context.error = options.error;
 
         if (util.isNoU(options.view)) {
@@ -338,10 +357,10 @@
                         context.view(viewHtml);
                         loadController(context);
                     },
-                    error: function (data) {
-                        console.log(data);
-                        if (typeof options.error === 'function')
-                            context.error(options, data);
+                    error: function (err) {
+                        console.log(err);
+                        if (util.isFunction(options.error))
+                            context.error(context, err);
                     }
                 });
                 // defer handler loading
@@ -411,10 +430,10 @@
                     }
                     createComponent(context);
                 },
-                error: function (data) {
-                    console.log(data);
+                error: function (err) {
+                    console.log(err);
                     if (util.isFunction(context.error))
-                        context.error(context, data);
+                        context.error(context, err);
                 }
             });
         } else {
@@ -472,7 +491,7 @@
                 if (util.isFunction(context._c.refresh)) context._c.refresh();
             }
         }
-        if (typeof context.ready === 'function')
+        if (util.isFunction(context.ready))
             context.ready(context);
     }
 
@@ -553,6 +572,7 @@
     scope.juice = scope.juice || {
             handler: handler,
             field: field,
+            include: include,
             load: load
         };
 
