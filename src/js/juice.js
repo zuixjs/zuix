@@ -432,7 +432,7 @@
                             ctrlJs = ctrlJs.substring(0, il-1);
                         var ih = ctrlJs.indexOf('juice.controller');
                         if (ih > 1)
-                            ctrlJs = ctrlJs.substring(ih+13);
+                            ctrlJs = ctrlJs.substring(ih+16);
                         context.controller(getController(ctrlJs));
                     } catch (e) {
                         console.log(e);
