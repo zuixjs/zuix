@@ -1,10 +1,70 @@
-## Example 1 - Code Pen
+### Install
+
+### Creating a component context
+
+<style>
+    /*
+     * Custom keyword styles
+     */
+    .token.keyword.keyword-start, .token.keyword.keyword-load {
+        color: #f92672;
+    }
+</style>
+<pre><code class="language-html keyword-start line-numbers">
+    <div data-ui-view="(to load from url/template)" data-ui-contoller="exampleController"/>
+    <script>
+    var exampleController = juice.controller(function($$){
+        $$.create = function() {
+            $$.view.html('Helllo World!');
+        }
+    });
+    </script>
+</code></pre>
+
+##### or
+
+<div data-juice-view="component-view-1"/>
+
+<script>
+    juice.load('component-view-1', {
+        controller: juice.controller(function($$){
+            $$.create = function() {
+                $$.view.html('Helllo World!');
+            }
+        }),
+        ready: function (context) {
+            juice.field('loader').hide();
+            console.log(context);
+        }
+    });
+</script>
+
+
+<pre><code class="language-html keyword-start line-numbers">
+    <div data-ui-field="component-view-1"/>
+    <script>
+    juice.load('component-view-1', {
+        controller: juice.controller(function($$){
+            $$.create = function() {
+                $$.view.html('Helllo World!');
+            }
+        }),
+        ready: function (context) {
+            juice.field('loader').hide();
+            console.log(context);
+        }
+    });
+    </script>
+</code></pre>
+
+### Example 1 - Code Pen
 
 <pre><code class="language-js">// load a component from CodePen
 juice.load('https://codepen.io/genielabs/pen/RomJZy', {
-    container: juice.field('juice-demo'),
+    controller: juice.controller(function($$){
+    },
     ready: function (context) {
-        juice.field('loader').hide();
+        // component loaded and ready
         console.log(context);
     }
 });

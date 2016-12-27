@@ -31,7 +31,7 @@
      * @typedef {{
      *      componentId: string The id of the cached component,
      *      view: ContextView The view,
-     *      controller: ContextControllerCallback The function of the controller handler.
+     *      controller: ContextControllerCallback The function of the controller controller.
      * }} ComponentCache
      */
 
@@ -244,7 +244,7 @@
      * @param callback {ContextControllerCallback}
      * @returns {ContextControllerCallback}
      */
-    function handler(callback) {
+    function controller(callback) {
         return callback;
     }
 
@@ -375,7 +375,7 @@
                             context.error(context, err);
                     }
                 });
-                // defer handler loading
+                // defer controller loading
                 return context;
             }
         }
@@ -430,7 +430,7 @@
                         var il = ctrlJs.indexOf('juice.load');
                         if (il > 1)
                             ctrlJs = ctrlJs.substring(0, il-1);
-                        var ih = ctrlJs.indexOf('juice.handler');
+                        var ih = ctrlJs.indexOf('juice.controller');
                         if (ih > 1)
                             ctrlJs = ctrlJs.substring(ih+13);
                         context.controller(getController(ctrlJs));
@@ -582,7 +582,7 @@
     // Public API
 
     scope.juice = scope.juice || {
-            handler: handler,
+            controller: controller,
             field: field,
             include: include,
             load: load
