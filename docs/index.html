@@ -155,8 +155,9 @@
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
-            <div data-ui-field="page-getstarted" class="page-content content-padding">
+            <div layout="column top-center" self="size-x1" class="page-content content-padding">
                 <!-- Your content goes here -->
+                <div self="size-medium top-center" data-ui-field="page-getstarted"></div>
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-3">
@@ -183,8 +184,11 @@
             console.log(context);
         }
     });
-    // load "Get Started" content dynamically when the tab
-    // button is tapped
+    // load "Get Started" content dynamically
+    //juice.include('ui/example-pen-01', juice.field('page-getstarted'), function(){
+    //    // async callback
+    //});
+    //  when the tab button is tapped
     juice.field('tab-getstarted').on('click', function(){
         $(this).off('click');
         juice.include('ui/example-pen-01', juice.field('page-getstarted'), function(){
