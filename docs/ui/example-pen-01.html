@@ -2,15 +2,10 @@
 
 ### Quick start
 
-
-The <strong>juice</strong> global object consists of a few methods:
-
-- juice.field
-- juice.include
-- juice.view
-- juice.controller
-- juice.load
-
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
 
 #### Declaring a View template
 
@@ -96,6 +91,86 @@ or any other remote server if an absolute url was given
 
 the first found template resource will be applied to the component.
 
+#### Adding a controller for the component logic
+
+While in the previous steps we didn't need any javascript coding,
+adding the controller for the component logic will indeed require
+to code a javascript handler for it.
+The handler can be specified either inline or into a sperate javascript
+file that will be loaded automatically if no inline controller is defined.
+
+
+<style>
+    /*
+     * Custom keyword styles
+     */
+    .token.keyword.keyword-data-ui-load, .token.keyword.keyword-load {
+        color: #f92672;
+    }
+    .token.juice_obj {
+        color: purple;
+    }
+    .token.juice_ctr {
+        color: gray;
+    }
+</style>
+
+
+
+<small>
+    <strong>INLINE CONTROLLER (METHOD 1)</strong>
+    The controller is specified in the ```data-ui-controller```
+    attribute.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <div data-ui-load="simple_view" data-ui-controller="exampleController"/>
+    <script>
+    var exampleController = juice.controller(function($$){
+        $$.create = function() {
+            $$.view.html('Helllo World!');
+        }
+    });
+    </script>
+</code></pre>
+
+
+<small>
+    <strong>INLINE CONTROLLER (METHOD 2)</strong>
+    The controller is specified along with the options
+    of the ```juice.load(view,options)``` method.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <script>
+    var componentContext = juice.load('simple_view', {
+        controller: juice.controller(function($$){
+            $$.create = function() {
+                $$.view.html('Helllo World!');
+            }
+        }),
+        ready: function (context) {
+            console.log('component loading complete');
+            console.log(context);
+        }
+    });
+    componentContext.append(my_container);
+    </script>
+</code></pre>
+
+#### j<strong>UI</strong><small>ce</small> API interface
+
+The ```juice``` global object consists of a few public methods:
+
+- ```juice.controller```
+- ```juice.view```
+- ```juice.load```
+- ```juice.field```
+- ```juice.include```
+
+<pre><code class="language-js">
+    juice.controller(<ctrl_handler_fn>)
+</code></pre>
+
+    ContextController ...
 
 
 <p></p>
@@ -104,11 +179,8 @@ the first found template resource will be applied to the component.
 <p>.</p>
 <p></p>
 
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
+#### The ```juice.load(...)``` method
+
 
 <p></p>
 <p>.</p>
@@ -139,71 +211,17 @@ the first found template resource will be applied to the component.
     })
 })</script>
 
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
 
-
-
-
-
-<style>
-    /*
-     * Custom keyword styles
-     */
-    .token.keyword.keyword-data-ui-load, .token.keyword.keyword-load {
-        color: #f92672;
-    }
-    .token.juice_obj {
-        color: purple;
-    }
-    .token.juice_ctr {
-        color: gray;
-    }
-</style>
-<pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-load="(id of the view to load)" data-ui-contoller="exampleController"/>
-    <script>
-    var exampleController = juice.controller(function($$){
-        $$.create = function() {
-            $$.view.html('Helllo World!');
-        }
-    });
-    </script>
-</code></pre>
-
-##### or
-
-<div data-ui-view="component_view_1"/>
-
-<script>
-    juice.load('component_view_1', {
-        controller: juice.controller(function($$){
-            $$.create = function() {
-                $$.view.html('Helllo World!');
-            }
-        }),
-        ready: function (context) {
-            juice.field('loader').hide();
-            console.log(context);
-        }
-    });
-</script>
-
-
-<pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-view="component_view_1"/>
-    <script>
-    juice.load('component_view_1', {
-        controller: juice.controller(function($$){
-            $$.create = function() {
-                $$.view.html('Helllo World!');
-            }
-        }),
-        ready: function (context) {
-            juice.field('loader').hide();
-            console.log(context);
-        }
-    });
-    </script>
-</code></pre>
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
 
 
 <p></p>
@@ -249,7 +267,6 @@ juice.load('https://codepen.io/genielabs/pen/RomJZy', {
 });
 </code></pre>
 
-#### Component is loaded dynamically from the following  CodePen:
 
 <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="jUIce test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">jUIce test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
