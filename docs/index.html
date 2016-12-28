@@ -42,10 +42,10 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.yellow-pink.min.css"/>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto+Slab:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <!--link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet"-->
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,300,400,600,700" rel="stylesheet">
+    <!--link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto+Slab:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 
@@ -64,9 +64,12 @@
 
 
     <style type="text/css">
-
         body {
-            font-family: 'Titillium+Web', sans-serif;
+            font-family: 'Titillium+Web', sans-serif !important;
+        }
+
+        p {
+            font-family: 'Titillium+Web', sans-serif !important;
         }
 
         header.mdl-layout__header,.mdl-layout__tab-bar {
@@ -146,12 +149,11 @@
         <span class="mdl-layout-title">j<strong>UI</strong><small>ce</small></span>
     </div>
     <main class="mdl-layout__content">
+        <!-- MDL Spinner Component -->
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
             <div layout="column center-center" class="page-content content-padding" style="margin-top: 48px">
                 <!-- Your content goes here -->
                 <div data-ui-field="juice-demo"></div>
-                <!-- MDL Spinner Component -->
-                <div data-ui-field="loader" class="mdl-spinner mdl-js-spinner is-active"></div>
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
@@ -175,6 +177,10 @@
     </main>
 </div>
 
+<div data-ui-field="loader" layout="column center-center" style="background-color:rgba(100,100,100,0.05);position: absolute; left: 0; top: 108px; bottom:0; right:0;z-index: 100">
+    <div class="mdl-spinner mdl-js-spinner is-active"></div>
+</div>
+
 <script type="text/javascript">
 
     juice.load('https://codepen.io/genielabs/pen/RomJZy', {
@@ -191,8 +197,10 @@
     //  when the tab button is tapped
     juice.field('tab-getstarted').on('click', function(){
         $(this).off('click');
+        juice.field('loader').show();
         juice.include('ui/example-pen-01', juice.field('page-getstarted'), function(){
             // async callback
+            juice.field('loader').hide();
         });
     });
 
