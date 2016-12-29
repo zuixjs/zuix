@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.yellow-pink.min.css"/>
 
     <!-- Fonts -->
-    <!--link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet"-->
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,300,400,600,700" rel="stylesheet">
     <!--link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto+Slab:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"-->
@@ -67,10 +67,20 @@
         body {
             background: url(images/skyline-texture.png);
             font-family: 'Titillium+Web', sans-serif !important;
+            font-size: 16px;
         }
 
         p {
-            font-family: 'Titillium+Web', sans-serif !important;
+            font-family: sans-serif !important;
+        }
+
+
+        h1,h2,h3,h4,h5,h6 {
+            font-family: 'Dosis', sans-serif !important;
+            padding-top: 24px;
+            line-height: 42px;
+            font-weight: 700;
+            text-transform: none;
         }
 
         header.mdl-layout__header,.mdl-layout__tab-bar {
@@ -78,6 +88,10 @@
         }
         header .mdl-layout__tab-bar-button {
             background-color: #efffe5;
+        }
+
+        section {
+
         }
 
         .section-content {
