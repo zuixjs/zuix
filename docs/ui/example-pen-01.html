@@ -164,15 +164,9 @@ file that will be loaded automatically if no inline controller is defined.
 
 #### j<strong>UI</strong><small>ce</small> API interface
 
-The ```juice``` global object exposes a few public methods:
+The ```juice``` global object exposes the following methods:
 
-- ```juice.controller```
-- ```juice.view```
-- ```juice.load```
-- ```juice.field```
-- ```juice.include```
-
-##### <code class="language-js">juice.controller(...)</code>
+#### ```juice.controller(...)```
 
 Initializes a controller function.
 
@@ -270,35 +264,32 @@ When calling the <code>juice.controller(...)</code> method, the passed
 <pre><strong>Methods</strong></pre>
 <pre><code>
 
-    // ...
+    // @returns {jQuery}
     $$.field(fieldName[, globalSearch]);
-    // ...
+    // @returns {ComponentContext}.this
     $$.fire(eventPath, eventValue)
-    // ...
-    $$.on(eventPath, handlerFn)
+    // @returns {ComponentContext}.this
+    {$$.on(eventPath, handlerFn)
 
 </code></pre>
 
 <pre><strong>Properties</strong></pre>
 <pre><code>
 
-    // ...
-    $$.view  -> {ContextView}
-    // ...
-    $$.model -> {ContextModel}
+    // {jQuery}
+    $$.view
+    // {JSON}
+    $$.model
 
 </code></pre>
 
+#### ```juice.view(...)```
 
+#### ```juice.load(...)```
 
+#### ```juice.field(...)```
 
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-#### The ```juice.load(...)``` method
+#### ```juice.include(...)```
 
 
 <p></p>
