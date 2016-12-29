@@ -1,7 +1,7 @@
 ### Installation
 
 <p>.</p>
-<small>(TODO: install instructions - stand alone,cdn,npm)</small>
+<small>(TODO: install instructions - stand alone,cdnjs,npm)</small>
 <p>.</p>
 
 ### Quick start
@@ -140,7 +140,7 @@ file that will be loaded automatically if no inline controller is defined.
 
 <small>
     <strong>INLINE CONTROLLER (METHOD 2)</strong>
-    The controller is specified along with the options
+    The controller is passed with the options
     of the ```juice.load(view,options)``` method.
 </small>
 <pre><code class="language-html keyword-start line-numbers">
@@ -160,9 +160,11 @@ file that will be loaded automatically if no inline controller is defined.
     </script>
 </code></pre>
 
+
+
 #### j<strong>UI</strong><small>ce</small> API interface
 
-The ```juice``` global object consists of a few public methods:
+The ```juice``` global object exposes a few public methods:
 
 - ```juice.controller```
 - ```juice.view```
@@ -170,11 +172,124 @@ The ```juice``` global object consists of a few public methods:
 - ```juice.field```
 - ```juice.include```
 
+##### <code class="language-js">juice.controller(...)</code>
+
+Initializes a controller function.
+
+<pre><strong>Method summary</strong>
+    <small>{ContextController}</small> juice.<strong>controller</strong>(<em>controller_impl</em>)
+
+<strong>Parameters</strong>
+    <small>{ContextController}</small> <em>controller_impl</em>
+    The context controller function.
+
+<strong>Returns</strong>
+    <small>{ContextController}</small>
+    The initialized controller.
+
+</pre>
+
+The <code>{ContextController}</code> function skelton is described below:
+
 <pre><code class="language-js">
-    juice.controller(<ctrl_handler_fn>)
+function ($$) {
+
+    $$.create = function () {
+        // Called as soon as the component context
+        // is created. Add initizlization code
+        // and register UI  event handlers here.
+    };
+
+    $$.destroy = function() {
+        // Called as soon as the component context
+        // is destroyed. Dispose any allocated resource here.
+    };
+
+    $$.resume = function () {
+        // Called automatically after $$.create()
+        // and any time back from $$.pause().
+    };
+
+    $$.pause = function() {
+        // Called when the component is
+        // requested to pause. Stop any background
+        // operation here
+        // (eg. event handlers and background workers)
+    };
+
+    $$.refresh = function () {
+        // Called when the bound data set (model) has changed.
+    };
+
+    $$.event = function (eventPath, eventValue) {
+        // Called when a component event is fired.
+    }
+
+    $$.api = function(command, options) {
+        // Called when a local API command is invoked.
+    }
+
+};
 </code></pre>
 
-    ContextController ...
+<p></p>
+
+<code>$$</code> is the <code>{ComponentContext}</code> object
+that is passed to the <code>{ContextController}</code> function
+once the related component is created.
+
+When calling the <code>juice.controller(...)</code> method, the passed
+<code>{ContextController}</code> function can implement none, one or more of the
+<code>$$</code> context handlers.
+
+
+
+
+##### <code>{ComponentContext}</code> $$ object summary
+
+<pre><strong>Handlers</strong></pre>
+<pre><code>
+
+    // on component created
+    $$.create = function() { ... };
+    // on component resumed
+    $$.resume = function() { ... };
+    // on component paused
+    $$.pause = function() { ... }
+    // on component destroyed
+    $$.destroy = function() { ... }
+    // on component refresh
+    $$.refresh = function() { ... }
+    // on component event
+    $$.event = function(eventPath, eventValue) { ... }
+    // on component command
+    $$.api = function(command, options) { ... }
+
+</code></pre>
+
+<pre><strong>Methods</strong></pre>
+<pre><code>
+
+    // ...
+    $$.field(fieldName[, globalSearch]);
+    // ...
+    $$.fire(eventPath, eventValue)
+    // ...
+    $$.on(eventPath, handlerFn)
+
+</code></pre>
+
+<pre><strong>Properties</strong></pre>
+<pre><code>
+
+    // ...
+    $$.view  -> {ContextView}
+    // ...
+    $$.model -> {ContextModel}
+
+</code></pre>
+
+
 
 
 <p></p>
