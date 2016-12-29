@@ -162,7 +162,7 @@ file that will be loaded automatically if no inline controller is defined.
 
 <br><hr /><br>
 
-#### j<strong>UI</strong><small>ce</small> API interface
+### j<strong>UI</strong><small>ce</small> API interface
 
 The ```juice``` global object exposes the following methods:
 
@@ -217,11 +217,11 @@ function ($$) {
 
     $$.event = function (eventPath, eventValue) {
         // Called when a component event is fired.
-    }
+    };
 
     $$.api = function(command, options) {
         // Called when a local API command is invoked.
-    }
+    };
 
 };
 </code></pre>
@@ -239,10 +239,10 @@ When calling the <code>juice.controller(...)</code> method, the passed
 
 
 
-##### <code>{ComponentContext}</code> $$ object summary
+##### $$ <code>{ComponentContext}</code> object summary
 
 <pre><strong>Handlers</strong></pre>
-<pre><code>
+<pre><code class="language-js">
 
     // on component created
     $$.create = function() { ... };
@@ -262,7 +262,7 @@ When calling the <code>juice.controller(...)</code> method, the passed
 </code></pre>
 
 <pre><strong>Methods</strong></pre>
-<pre><code>
+<pre><code class="language-js">
 
     // @returns {jQuery}
     $$.field(fieldName[, globalSearch]);
@@ -274,7 +274,7 @@ When calling the <code>juice.controller(...)</code> method, the passed
 </code></pre>
 
 <pre><strong>Properties</strong></pre>
-<pre><code>
+<pre><code class="language-js">
 
     // @type {jQuery}
     $$.view
@@ -340,7 +340,7 @@ When calling the <code>juice.controller(...)</code> method, the passed
 <p>.</p>
 <p></p>
 
-#### Component Life Cycle
+#### Component Life-Cycle
 
 
 <p></p>
@@ -369,17 +369,23 @@ When calling the <code>juice.controller(...)</code> method, the passed
 
 ##### Example 1 - Code Pen
 
-<pre><code class="language-js">// load a component from CodePen
-juice.load('https://codepen.io/genielabs/pen/RomJZy', {
-    controller: juice.controller(function($$){
-    },
-    ready: function (context) {
-        // component loaded and ready
-        console.log(context);
-    }
-});
+<small>HTML</small>
+<pre><code class="language-markup">
+    <div data-ui-field="my-container"/>
+</code></pre>
+<small>Javascript</small>
+<pre><code class="language-js">
+    // load a component from CodePen
+    juice.load('https://codepen.io/genielabs/pen/RomJZy', {
+        controller: juice.controller(function($$){
+        },
+        ready: function (context) {
+            // component loaded and ready
+            console.log(context);
+        }
+    }).append('my-container');
 </code></pre>
 
-
+<small>Component on CodePen</small>
 <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="jUIce test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">jUIce test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
