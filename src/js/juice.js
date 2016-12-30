@@ -16,14 +16,15 @@
  */
 
 /**
- * Javascript UI components enhancer. A lite MVC framework.
+ * Javascript UI components enhancer. A lite MVC library.
  * Find more details about jUIce here:
- *   https://github.com/genielabs/js-juice-mvc
+ *   https://github.com/genielabs/juice-mvc-js
  *
  * @author Generoso Martello <generoso@martello.com>
  */
 
-(function (scope) {
+/** @class */
+(function Juice(scope) {
     "use strict";
 
     /**
@@ -82,8 +83,8 @@
     /***
      * TODO: describe this class...
      *
-     * @param {ContextOptions} options
-     * @return {ComponentContext}
+     * @param {ContextOptions} options The context options.
+     * @returns {ComponentContext} The component context instance.
      * @constructor
      */
     function ComponentContext(options) {
@@ -91,9 +92,16 @@
         this.options = options;
         this.cid = util.isNoU(options) || util.isNoU(options.cid) ? null : options.cid;
         this.componentId = util.isNoU(options) || util.isNoU(options.componentId) ? null : options.componentId;
-        /** @type {function} */
+        /**
+         * @event ComponentContext#ready
+         * @param {ComponentContext} context The component context instance.
+         */
         this.ready = null;
-        /** @type {function} */
+        /**
+         * @event ComponentContext#error
+         * @param {ComponentContext} context The component context instance.
+         * @param {Object} error The error object
+         */
         this.error = null;
 
         /** @protected */
@@ -117,7 +125,7 @@
     /***
      *
      * @param {ContextModel} [model]
-     * @return {ComponentContext|Object}
+     * @returns {ComponentContext|Object}
      */
     ComponentContext.prototype.model = function (model) {
         if (util.isNoU(model)) return this._model;
@@ -127,7 +135,7 @@
     /***
      *
      * @param {ContextView} [view]
-     * @return {ComponentContext|ContextView}
+     * @returns {ComponentContext|ContextView}
      */
     ComponentContext.prototype.view = function (view) {
         if (typeof view === 'undefined') return this._view;
@@ -146,7 +154,7 @@
     /***
      *
      * @param {ContextControllerCallback} [controller]
-     * @return {ComponentContext|ContextControllerCallback}
+     * @returns {ComponentContext|ContextControllerCallback}
      */
     ComponentContext.prototype.controller = function (controller) {
         if (util.isNoU(controller)) return this._controller;
@@ -156,7 +164,7 @@
     /***
      *
      * @param {ViewContainer} [container]
-     * @return {ComponentContext|jQuery}
+     * @returns {ComponentContext|jQuery}
      */
     ComponentContext.prototype.container = function (container) {
         if (util.isNoU(container)) return this._container;
@@ -167,7 +175,7 @@
     /**
      * TODO: complete JSDoc
      *
-     * @return {ContextController}
+     * @returns {ContextController}
      * @constructor
      */
     function ContextController() {
@@ -188,9 +196,26 @@
         /** @type {function} */
         this.refresh = null;
         /** @type {function} */
-        this.event = null;
+        this.event = null; // UI event stream handler (eventPath,eventValue)
         /** @type {function} */
-        this.fire = null;
+        this.fire = function(eventPath,eventValue){
+            // fires a component event
+            if (util.isFunction(this.event))
+                this.event(eventPath,eventValue);
+        };
+        /** @type {function} */
+        this.on = function(eventName,handler_fn){
+            // used by consumers to listen for this component events
+            // TODO: ....
+        };
+        /** @type {function} */
+        this.api = null; // handler for component API (command,options)
+        /** @type {function} */
+        this.invoke = function(command,options){
+            // used by consumers to invoke a component API command
+            if (util.isFunction(this.api))
+                this.api(command,options);
+        };
         return this;
     }
 
@@ -221,10 +246,13 @@
 
     // TODO: implement Config object for juice
     /** @protected
-     * @const */
+     * @const
+     */
     var _juiceFieldAttribute = 'data-ui-field';
     // work-around for lint eval error
-    /** @protected */
+    /** @protected
+     * @const
+     */
     var _eval = eval;
     //
     /** @protected */
@@ -292,7 +320,7 @@
      * TODO: describe
      *
      * @param componentId
-     * @return {ComponentContext}
+     * @returns {ComponentContext}
      */
     function view(componentId) {
         return load(componentId);
@@ -403,7 +431,7 @@
     /***
      *
      * @param {Object} cid
-     * @return {ComponentContext}
+     * @returns {ComponentContext}
      */
     function getContext(cid) {
         var context = null;
@@ -419,7 +447,7 @@
     /***
      *
      * @param {Object} cid
-     * @return {ComponentCache}
+     * @returns {ComponentCache}
      */
     function getCachedComponent(cid) {
         var cached = null;

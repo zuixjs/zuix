@@ -49,7 +49,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
     <!--link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
@@ -69,7 +68,7 @@
             font-family: 'Titillium+Web', sans-serif !important;
         }
 
-        h1,h2,h3,h4,h5,h6 {
+        h1, h2, h3, h4, h5, h6 {
             font-family: 'Dosis', sans-serif !important;
             padding-top: 24px;
             line-height: 36px;
@@ -77,9 +76,10 @@
             text-transform: none;
         }
 
-        header.mdl-layout__header,.mdl-layout__tab-bar {
+        header.mdl-layout__header, .mdl-layout__tab-bar {
             background-color: #efffe5;
         }
+
         header .mdl-layout__tab-bar-button {
             background-color: #efffe5;
         }
@@ -89,8 +89,8 @@
         }
 
         .section-content {
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-           background-color: white;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            background-color: white;
             padding-left: 32px;
             padding-right: 32px;
             margin: 6px;
@@ -98,31 +98,32 @@
 
         .content-padding {
         }
-/*
-        dt {
-            font-weight: 700;
-        }*/
-/*
-        .mdl-layout {
-            font-size: 14pt;
-        }
 
-        .content-panel--text dl dt {
-            font-size: 18pt;
-            text-align: right;
-            vertical-align: top;
-            display: inline-table;
-            margin-right: 24px;
-            line-height: 2em;
-        }
+        /*
+                dt {
+                    font-weight: 700;
+                }*/
+        /*
+                .mdl-layout {
+                    font-size: 14pt;
+                }
 
-        .content-panel--text dl dd {
-            text-align: left;
-            line-height: 2em;
-            vertical-align: top;
-            margin: 0;
-        }
-*/
+                .content-panel--text dl dt {
+                    font-size: 18pt;
+                    text-align: right;
+                    vertical-align: top;
+                    display: inline-table;
+                    margin-right: 24px;
+                    line-height: 2em;
+                }
+
+                .content-panel--text dl dd {
+                    text-align: left;
+                    line-height: 2em;
+                    vertical-align: top;
+                    margin: 0;
+                }
+        */
     </style>
 </head>
 <body>
@@ -131,14 +132,12 @@
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
 
-
     <!-- -- >
     <div class="mountains"></div>
     <link rel="stylesheet" href="css/mountains.css">
     <script src="js/sketch.min.js"></script>
     <script type="text/javascript" src="js/mountains.js"></script>
     <! -- -->
-
 
 
     <header self="hide" class="mdl-layout__header">
@@ -169,9 +168,36 @@
     <main class="mdl-layout__content">
         <!-- MDL Spinner Component -->
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
-            <div layout="column center-center" class="page-content content-padding" style="margin-top: 48px">
+            <div layout="column center-center" class="page-content content-padding" s-tyle="margin-top: 48px">
                 <!-- Your content goes here -->
+
+                <div class="section-content">
+                    <h3>Introduction</h3>
+
+                    <p>
+                        jUIce aims to be a "jquery friendly" MVC implementation with
+                        a bit of Android MVC approach on top.
+                    </p>
+
+                    <p>
+                        jUIce purpose is also to be as simple as possible without introducing
+                        any extra custom code language that mixes up with the HTML code.
+                    </p>
+
+                    <p>
+                        So, no extra stuff to learn, but just MVC design approach and a
+                        lite Javascript API.
+                    </p>
+
+                    <p>&nbsp;</p>
+
+                </div>
+
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+
                 <div data-ui-field="juice-demo"></div>
+
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
@@ -195,7 +221,8 @@
     </main>
 </div>
 
-<div data-ui-field="loader" layout="column center-center" style="background-color:rgba(100,100,100,0.05);position: absolute; left: 0; top: 108px; bottom:0; right:0;z-index: 100">
+<div data-ui-field="loader" layout="column center-center"
+     style="background-color:rgba(100,100,100,0.05);position: absolute; left: 0; top: 108px; bottom:0; right:0;z-index: 100">
     <div class="mdl-spinner mdl-js-spinner is-active"></div>
 </div>
 
@@ -213,10 +240,10 @@
     //    // async callback
     //});
     //  when the tab button is tapped
-    juice.field('tab-getstarted').on('click', function(){
+    juice.field('tab-getstarted').on('click', function () {
         $(this).off('click');
         juice.field('loader').show();
-        juice.include('ui/example-pen-01', juice.field('page-getstarted'), function(){
+        juice.include('ui/example-pen-01', juice.field('page-getstarted'), function () {
             // async callback
             juice.field('loader').hide();
         });

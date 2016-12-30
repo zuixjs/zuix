@@ -162,7 +162,7 @@ file that will be loaded automatically if no inline controller is defined.
 
 <br><hr /><br>
 
-### j<strong>UI</strong><small>ce</small> API interface
+### j<strong>UI</strong><small>ce</small> API documentation
 
 The ```juice``` global object exposes the following methods:
 
@@ -241,7 +241,7 @@ When calling the <code>juice.controller(...)</code> method, the passed
 
 ##### $$ <code>{ComponentContext}</code> object summary
 
-<pre><strong>Handlers</strong></pre>
+<pre><strong>Event Handlers</strong></pre>
 <pre><code class="language-js">
 
     // on component created
@@ -257,9 +257,11 @@ When calling the <code>juice.controller(...)</code> method, the passed
     // on component event
     $$.event = function(eventPath, eventValue) { ... }
     // on component command
-    $$.api = function(command, options) { ... }
+    $$.api = function(apiCommand, options) { ... }
 
 </code></pre>
+
+All of the above handler methods return ```{ComponentContext}.this```.
 
 <pre><strong>Methods</strong></pre>
 <pre><code class="language-js">
@@ -269,7 +271,9 @@ When calling the <code>juice.controller(...)</code> method, the passed
     // @returns {ComponentContext}.this
     $$.fire(eventPath, eventValue)
     // @returns {ComponentContext}.this
-    {$$.on(eventPath, handlerFn)
+    $$.on(eventPath, handlerFn)
+    // @returns {ComponentContext}.this
+    $$.invoke(apiCommand, options)
 
 </code></pre>
 
@@ -367,7 +371,7 @@ When calling the <code>juice.controller(...)</code> method, the passed
 
 
 
-##### Example 1 - Code Pen
+##### Example 1 - Code Pen hosted component
 
 <small>HTML</small>
 <pre><code class="language-markup">
@@ -376,8 +380,12 @@ When calling the <code>juice.controller(...)</code> method, the passed
 <small>Javascript</small>
 <pre><code class="language-js">
     // load a component from CodePen
+    // and override its controller logic
+    // with an inline one
     juice.load('https://codepen.io/genielabs/pen/RomJZy', {
-        controller: juice.controller(function($$){
+        controller: juice.controller(function($$) {
+            // inline controller function
+            // TODO: implement your controller logic
         },
         ready: function (context) {
             // component loaded and ready
