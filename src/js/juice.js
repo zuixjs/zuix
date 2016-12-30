@@ -316,16 +316,6 @@
         });
     }
 
-    /***
-     * TODO: describe
-     *
-     * @param componentId
-     * @returns {ComponentContext}
-     */
-    function view(componentId) {
-        return load(componentId);
-    }
-
     /**
      * Load a component context with the given options.
      *
@@ -629,7 +619,6 @@
     scope.juice = scope.juice || {
             field: field,
             include: include,
-            view: view,
             controller: controller,
             load: load
         };

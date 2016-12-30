@@ -160,189 +160,6 @@ file that will be loaded automatically if no inline controller is defined.
     </script>
 </code></pre>
 
-<br><hr /><br>
-
-### j<strong>UI</strong><small>ce</small> API documentation
-
-The ```juice``` global object exposes the following methods:
-
-#### ```juice.controller(...)```
-
-Initializes a controller function.
-
-<pre><strong>Method summary</strong>
-    <small>{ContextController}</small> juice.<strong>controller</strong>(<em>controller_impl</em>)
-
-<strong>Parameters</strong>
-    <small>{ContextController}</small> <em>controller_impl</em>
-    The context controller function.
-
-<strong>Returns</strong>
-    <small>{ContextController}</small>
-    The initialized controller.
-
-</pre>
-
-The <code>{ContextController}</code> function skelton is described below:
-
-<pre><code class="language-js">
-function ($$) {
-
-    $$.create = function () {
-        // Called as soon as the component context
-        // is created. Add initizlization code
-        // and register UI  event handlers here.
-    };
-
-    $$.destroy = function() {
-        // Called as soon as the component context
-        // is destroyed. Dispose any allocated resource here.
-    };
-
-    $$.resume = function () {
-        // Called automatically after $$.create()
-        // and any time back from $$.pause().
-    };
-
-    $$.pause = function() {
-        // Called when the component is
-        // requested to pause. Stop any background
-        // operation here
-        // (eg. event handlers and background workers)
-    };
-
-    $$.refresh = function () {
-        // Called when the bound data set (model) has changed.
-    };
-
-    $$.event = function (eventPath, eventValue) {
-        // Called when a component event is fired.
-    };
-
-    $$.api = function(command, options) {
-        // Called when a local API command is invoked.
-    };
-
-};
-</code></pre>
-
-<p></p>
-
-<code>$$</code> is the <code>{ComponentContext}</code> object
-that is passed to the <code>{ContextController}</code> function
-once the related component is created.
-
-When calling the <code>juice.controller(...)</code> method, the passed
-<code>{ContextController}</code> function can implement none, one or more of the
-<code>$$</code> context handlers.
-
-
-
-
-##### $$ <code>{ComponentContext}</code> object summary
-
-<pre><strong>Event Handlers</strong></pre>
-<pre><code class="language-js">
-
-    // on component created
-    $$.create = function() { ... };
-    // on component resumed
-    $$.resume = function() { ... };
-    // on component paused
-    $$.pause = function() { ... }
-    // on component destroyed
-    $$.destroy = function() { ... }
-    // on component refresh
-    $$.refresh = function() { ... }
-    // on component event
-    $$.event = function(eventPath, eventValue) { ... }
-    // on component command
-    $$.api = function(apiCommand, options) { ... }
-
-</code></pre>
-
-All of the above handler methods return ```{ComponentContext}.this```.
-
-<pre><strong>Methods</strong></pre>
-<pre><code class="language-js">
-
-    // @returns {jQuery}
-    $$.field(fieldName[, globalSearch]);
-    // @returns {ComponentContext}.this
-    $$.fire(eventPath, eventValue)
-    // @returns {ComponentContext}.this
-    $$.on(eventPath, handlerFn)
-    // @returns {ComponentContext}.this
-    $$.invoke(apiCommand, options)
-
-</code></pre>
-
-<pre><strong>Properties</strong></pre>
-<pre><code class="language-js">
-
-    // @type {jQuery}
-    $$.view
-    // @type {JSON}
-    $$.model
-
-</code></pre>
-
-#### ```juice.view(...)```
-
-#### ```juice.load(...)```
-
-#### ```juice.field(...)```
-
-#### ```juice.include(...)```
-
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-
-<pre><code class="language-html">
-    <div data-ui-view="simple_view"
-         class="material-icons mdl-badge mdl-badge--overlap"
-         data-badge="3">account_box</div>
-</code></pre>
-
-
-
-<div data-ui-view="simple_view" data-ui-field="simple_view_test" class="material-icons mdl-badge mdl-badge--overlap" data-badge="3">account_box</div>
-
-<div data-ui-field="simple_view_1" />
-<script>juice.load('simple_view', {
-    container: juice.field('simple_view_1'),
-    controller: juice.controller(function ($$) {
-        $$.create = function () {
-            $$.view.find('div').on('click', function () {
-                $(this).attr('data-badge', 10);
-            });
-        }
-    })
-})</script>
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
 
 #### Component Life-Cycle
 
@@ -353,23 +170,20 @@ All of the above handler methods return ```{ComponentContext}.this```.
 <p>.</p>
 <p></p>
 
+
 #### Caching
+
 
 <p></p>
 <p>.</p>
 <p>.</p>
 <p>.</p>
 <p></p>
+
 
 #### Examples
 
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-
+...
 
 ##### Example 1 - Code Pen hosted component
 
@@ -397,3 +211,53 @@ All of the above handler methods return ```{ComponentContext}.this```.
 <small>Component on CodePen</small>
 <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="jUIce test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">jUIce test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+
+
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+
+
+<pre><code class="language-html">
+    <div data-ui-view="simple_view"
+         class="material-icons mdl-badge mdl-badge--overlap"
+         data-badge="3">account_box</div>
+</code></pre>
+
+
+
+<div data-ui-view="simple_view" data-ui-field="simple_view_test" class="material-icons mdl-badge mdl-badge--overlap" data-badge="3">account_box</div>
+
+<div data-ui-field="simple_view_1" />
+<script>juice.load('simple_view', {
+    container: juice.field('simple_view_1'),
+    controller: juice.controller(function ($$) {
+        $$.create = function () {
+            $$.view.find('div').on('click', function () {
+                $(this).attr('data-badge', 10);
+            });
+        }
+    })
+})</script>
+
+<p></p>
+
+<div id="api"></div>
+
+<script>juice.include('ui/api_overview', '#api')</script>
