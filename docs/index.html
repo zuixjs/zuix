@@ -154,12 +154,12 @@
         </div-->
         <!-- Tabs -->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">About</a>
+            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Home</a>
             <a data-ui-field="tab-getstarted" href="#scroll-tab-2" class="mdl-layout__tab">Getting Started</a>
-            <a href="#scroll-tab-3" class="mdl-layout__tab">Examples</a>
-            <a href="#scroll-tab-4" class="mdl-layout__tab">Etc...</a>
+            <a data-ui-field="tab-api" href="#scroll-tab-3" class="mdl-layout__tab">API</a>
+            <!--a href="#scroll-tab-4" class="mdl-layout__tab">Etc...</a>
             <a href="#scroll-tab-5" class="mdl-layout__tab">Tab 5</a>
-            <a href="#scroll-tab-6" class="mdl-layout__tab">Tab 6</a>
+            <a href="#scroll-tab-6" class="mdl-layout__tab">Tab 6</a-->
         </div>
     </header>
     <div class="mdl-layout__drawer">
@@ -170,34 +170,26 @@
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
             <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                 <!-- Your content goes here -->
-                <div self="size-medium" layout="column center-center" class="page-content content-padding" s-tyle="margin-top: 48px">
 
-                <div class="section-content">
-                    <h3>Introduction</h3>
-
-                    <p>
-                        jUIce aims to be a "jquery friendly" MVC implementation with
-                        a bit of Android MVC approach on top.
-                    </p>
-
-                    <p>
-                        jUIce purpose is also to be as simple as possible without introducing
-                        any extra custom code language that mixes up with the HTML code.
-                    </p>
-
-                    <p>
-                        So, no extra stuff to learn, but just MVC design approach and a
-                        lite Javascript API.
-                    </p>
-
-                    <p>&nbsp;</p>
-
-                </div>
-
-                <p>&nbsp;</p>
                 <p>&nbsp;</p>
 
                 <div data-ui-field="juice-demo"></div>
+
+                <p>&nbsp;</p>
+
+                <div self="size-medium" layout="column center-center" class="page-content content-padding">
+
+                    <div class="section-content">
+                        <h3>Javascript UI Component Enhancer</h3>
+
+                        <p>
+                            j<strong>UI</strong>ce is a library implementing MVC design pattern for component based
+                            Web/SPA development.
+                        </p>
+
+                        <p>&nbsp;</p>
+
+                    </div>
 
                 </div>
             </div>
@@ -205,11 +197,14 @@
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
             <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                 <!-- Your content goes here -->
-                <div self="size-medium top-center" class="section-content" data-ui-field="page-getstarted"></div>
+                <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content"></div>
             </div>
         </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-3">
-            <div class="page-content"><!-- Your content goes here --></div>
+        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-3">
+            <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
+                <!-- Your content goes here -->
+                <div data-ui-field="page-api" self="size-medium top-center" class="section-content"></div>
+            </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-4">
             <div class="page-content"><!-- Your content goes here --></div>
@@ -245,7 +240,15 @@
     juice.field('tab-getstarted').on('click', function () {
         $(this).off('click');
         juice.field('loader').show();
-        juice.include('ui/example-pen-01', juice.field('page-getstarted'), function () {
+        juice.include('content/getting_started', juice.field('page-getstarted'), function () {
+            // async callback
+            juice.field('loader').hide();
+        });
+    });
+    juice.field('tab-api').on('click', function () {
+        $(this).off('click');
+        juice.field('loader').show();
+        juice.include('content/api_overview', juice.field('page-api'), function () {
             // async callback
             juice.field('loader').hide();
         });
