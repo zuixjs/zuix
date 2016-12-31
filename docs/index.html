@@ -97,8 +97,12 @@
         }
 
         .content-padding {
+            padding: 16px;
         }
 
+        .md-48 {
+            font-size: 28px;
+        }
         /*
                 dt {
                     font-weight: 700;
@@ -152,30 +156,18 @@
             <p></p>
 
         </div-->
-        <!-- Tabs -->
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Home</a>
-            <a data-ui-field="tab-getstarted" href="#scroll-tab-2" class="mdl-layout__tab">Getting Started</a>
-            <a data-ui-field="tab-api" href="#scroll-tab-3" class="mdl-layout__tab">API</a>
-            <!--a href="#scroll-tab-4" class="mdl-layout__tab">Etc...</a>
-            <a href="#scroll-tab-5" class="mdl-layout__tab">Tab 5</a>
-            <a href="#scroll-tab-6" class="mdl-layout__tab">Tab 6</a-->
-        </div>
     </header>
     <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">j<strong>UI</strong><small>ce</small></span>
     </div>
     <main class="mdl-layout__content">
         <!-- MDL Spinner Component -->
-        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+
+        <div data-ui-field="pager">
+
+        <section data-ui-field="scroll-tab-1">
             <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                 <!-- Your content goes here -->
-
-                <p>&nbsp;</p>
-
-                <div data-ui-field="juice-demo"></div>
-
-                <p>&nbsp;</p>
 
                 <div self="size-medium" layout="column center-center" class="page-content content-padding">
 
@@ -183,7 +175,8 @@
                         <h3>Javascript UI Component Enhancer</h3>
 
                         <p>
-                            j<strong>UI</strong>ce is a library for component based Web/SPA development implementing MVC design pattern.
+                            j<strong>UI</strong>ce is a library for component based Web/SPA development implementing MVC
+                            design pattern.
                         </p>
 
                         <p>&nbsp;</p>
@@ -191,34 +184,56 @@
                     </div>
 
                 </div>
+
+                <p>&nbsp;</p>
+
+                <div data-ui-field="juice-demo"></div>
+
+                <p>&nbsp;</p>
+
             </div>
         </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-2">
+        <section data-ui-field="scroll-tab-2">
             <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                 <!-- Your content goes here -->
-                <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content"></div>
+                <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content">
+                    <script>juice.include('content/getting_started', null, function () { });</script>
+                </div>
             </div>
         </section>
-        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-3">
+        <section data-ui-field="scroll-tab-3">
             <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                 <!-- Your content goes here -->
-                <div data-ui-field="page-api" self="size-medium top-center" class="section-content"></div>
+                <div data-ui-include="content/api_overview" data-ui-field="page-api" self="size-medium top-center" class="section-content">
+                    <script>juice.include('content/api_overview', null, function () { });</script>
+                </div>
             </div>
         </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-4">
-            <div class="page-content"><!-- Your content goes here --></div>
-        </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-5">
-            <div class="page-content"><!-- Your content goes here --></div>
-        </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-6">
-            <div class="page-content"><!-- Your content goes here --></div>
-        </section>
+
+        </div>
+
     </main>
 </div>
 
+<!-- Tabs -->
+<div layout="row center-center"
+     style="position: absolute; top:0; width:auto; right:16px; height: 60px; z-index: 5;">
+    <div data-ui-field="tab-home" align="center" class="content-padding">
+        <i class="material-icons md-48">home</i>
+        <br><small>Home</small>
+    </div>
+    <div data-ui-field="tab-getstarted" align="center" class="content-padding">
+        <i class="material-icons md-48">school</i>
+        <br><small>Getting Started</small>
+    </div>
+    <div data-ui-field="tab-api" align="center" class="content-padding">
+        <i class="material-icons md-48">import_contacts</i>
+        <br><small>API Docs</small>
+    </div>
+</div>
+
 <div data-ui-field="loader" layout="column center-center"
-     style="background-color:rgba(100,100,100,0.05);position: absolute; left: 0; top: 108px; bottom:0; right:0;z-index: 100">
+     style="background-color:rgba(100,100,100,0.05);position: fixed; left: 0; top: 0; bottom:0; right:0;z-index: 100;border: 2px solid rebeccapurple">
     <div class="mdl-spinner mdl-js-spinner is-active"></div>
 </div>
 
@@ -228,30 +243,23 @@
         container: juice.field('juice-demo'),
         ready: function (context) {
             juice.field('loader').hide();
-            console.log(context);
         }
     });
-    // load "Get Started" content dynamically
-    //juice.include('ui/example-pen-01', juice.field('page-getstarted'), function(){
-    //    // async callback
-    //});
-    //  when the tab button is tapped
+    juice.field('tab-home').on('click', function () {
+        pager.invoke('setPage', 0);
+    });
     juice.field('tab-getstarted').on('click', function () {
-        $(this).off('click');
-        juice.field('loader').show();
-        juice.include('content/getting_started', juice.field('page-getstarted'), function () {
-            // async callback
-            juice.field('loader').hide();
-        });
+        pager.invoke('setPage', 1);
     });
     juice.field('tab-api').on('click', function () {
-        $(this).off('click');
-        juice.field('loader').show();
-        juice.include('content/api_overview', juice.field('page-api'), function () {
-            // async callback
-            juice.field('loader').hide();
-        });
+        pager.invoke('setPage', 2);
     });
+
+
+    var pager = juice.load('ui/layout/pager', {
+        view: juice.field('pager')
+    });
+
 
 </script>
 

@@ -117,6 +117,7 @@
         this._controller = util.isNoU(options) || util.isNoU(options.controller) ? null : options.controller;
         /** @protected */
         this._c = null;
+        this.invoke = null;
 
         return this;
 
@@ -143,6 +144,7 @@
             if (this.options.markdown === true && !util.isNoU(showdown))
                 view = new showdown.Converter().makeHtml(view);
             this._view = $('<div/>').append(view);
+            // TODO: move this code to "juice.preprocessors"
             this._view.find('code').each(function(i, block) {
                 $(block).addClass('language-javascript');
                 //hljs.highlightBlock(block);
@@ -179,6 +181,7 @@
      * @constructor
      */
     function ContextController() {
+        var self = this;
         /** @protected */
         this._fieldCache = [];
         /** @type {ContextView} */
@@ -200,8 +203,8 @@
         /** @type {function} */
         this.fire = function(eventPath,eventValue){
             // fires a component event
-            if (util.isFunction(this.event))
-                this.event(eventPath,eventValue);
+            if (util.isFunction(self.event))
+                self.event(eventPath,eventValue);
         };
         /** @type {function} */
         this.on = function(eventName,handler_fn){
@@ -213,8 +216,8 @@
         /** @type {function} */
         this.invoke = function(command,options){
             // used by consumers to invoke a component API command
-            if (util.isFunction(this.api))
-                this.api(command,options);
+            if (util.isFunction(self.api))
+                self.api(command,options);
         };
         return this;
     }
@@ -292,13 +295,18 @@
     /**
      * TODO: describe
      *
-     * @param html
+     * @param resource
      * @param container
      * @param callback
      */
-    function include(html, container, callback) {
+    function include(resource, container, callback) {
+        if (container === null) {
+            var fieldName = 'juice-include-'+(++_contextSeqNum);
+            document.write('<div data-ui-include="'+(resource)+'" data-ui-field="'+fieldName+'" />');
+            container = juice.field(fieldName);
+        }
         // TODO: add js markdown support
-        load(html, {
+        load(resource, {
             auto: false,
             markdown: true,
             ready: function(/** @type {ComponentContext} */ ctx) {
@@ -364,12 +372,14 @@
         // assign the given component (widget) to this context
         if (context.componentId != componentId) {
             context.componentId = componentId;
+/*
+TODO: to be fixed
             if (!util.isNoU(context.view())) {
                 // TODO: implement this code in a context.detach() method
                 //context.controller().pause()
                 context.view().detach();
                 context.view(null);
-            }
+            }*/
         }
 
         // pick it from cache if found
@@ -413,6 +423,8 @@
                 // defer controller loading
                 return context;
             }
+        } else {
+            context.view(options.view);
         }
         loadController(context);
         return context;
@@ -493,32 +505,32 @@
      * @param context {ComponentContext}
      */
     function createComponent(context) {
-        var cached = getCachedComponent(context.componentId);
-        if (cached === null)
-            _componentCache.push({
-                componentId: context.componentId,
-                view: $('<div>').append(context.view().clone()).html(),
-                controller: context.controller()
+        if (!util.isNoU(context.view())) {
+            var cached = getCachedComponent(context.componentId);
+            if (cached === null)
+                _componentCache.push({
+                    componentId: context.componentId,
+                    view: $('<div>').append(context.view().clone()).html(),
+                    controller: context.controller()
+                });
+
+            if (!util.isNoU(context.container())) {
+                context.view().detach();
+                context.container().append(context.view());
+            }
+
+            context.view().one('create', function () {
+                // Material Design Light  DOM upgrade
+                if (componentHandler)
+                    componentHandler.upgradeElements(context.view()[0]);
+                context.view().show();
+                initComponent(context);
             });
 
-        if (!util.isNoU(context.container())) {
-            var wrapperDiv = $('<div class="juice-ui-wrapper"/>');
-            wrapperDiv.hide();
-            context.view().detach();
-            wrapperDiv.append(context.view());
-            context.container().append(wrapperDiv);
-            context.view(wrapperDiv);
+            context.view().trigger('create');
+        } else {
+            // TODO: report error
         }
-
-        context.view().one('create', function () {
-            // Material Design Light  DOM upgrade
-            if (componentHandler)
-                componentHandler.upgradeElements(context.view()[0]);
-            context.view().show();
-            initComponent(context);
-        });
-
-        context.view().trigger('create');
     }
 
     /***
@@ -528,6 +540,7 @@
     function initComponent(context) {
         if (util.isFunction(context.controller())) {
             context._c = new ContextController();
+            context.invoke = context._c.invoke;
             context._c.view = context.view();
             context._c.model = context.model();
             context.controller()(context._c);
@@ -628,10 +641,15 @@
 
 // jQuery helpers
 $.fn.extend({
-    animateCss: function (animationName) {
+    animateCss: function (animationName, callback) {
         var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
         this.addClass('animated ' + animationName).one(animationEnd, function() {
             $(this).removeClass('animated ' + animationName);
+            if (typeof callback === 'function') {
+                callback.this = this;
+                callback(animationName);
+            }
         });
+        return this;
     }
 });
