@@ -1,0 +1,43 @@
+{
+  "name": "juice-mvc-js",
+  "description": "jUIce, Javascript UI Components Enhancer. A lite MVC library.",
+  "main": [
+    "src/js/juice.js"
+  ],
+  "dependencies": {
+    "jquery": "^2.0.2"
+  },
+  "devDependencies": {
+    "google-closure-compiler-js": "^20161201.0.0",
+    "gulp-install": "^0.6.0",
+    "gulp-sourcemaps": "^1.9.1",
+    "http-server": "^0.9.0",
+    "jsdoc": "^3.4.3",
+    "jshint": "^2.9.4",
+    "uglify-js": "^2.7.5"
+  },
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "javascript",
+    "mvc",
+    "framework",
+    "components",
+    "ui"
+  ],
+  "license": "Apache-2.0"
+  "authors": [
+    "Generoso Martello <generoso@martello.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genielabs/js-juice-mvc"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "private": false
+}

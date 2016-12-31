@@ -18,13 +18,13 @@
     "jquery": "^2.0.2"
   },
   "devDependencies": {
+    "google-closure-compiler-js": "^20161201.0.0",
+    "gulp-install": "^0.6.0",
+    "gulp-sourcemaps": "^1.9.1",
     "http-server": "^0.9.0",
     "jsdoc": "^3.4.3",
     "jshint": "^2.9.4",
-    "uglify-js": "^2.7.5",
-    "google-closure-compiler-js": "^20161201.0.0",
-    "gulp-install": "^0.6.0",
-    "gulp-sourcemaps": "^1.9.1"
+    "uglify-js": "^2.7.5"
   },
   "repository": {
     "type": "git",
