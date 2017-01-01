@@ -76,22 +76,11 @@
             text-transform: none;
         }
 
-        header.mdl-layout__header, .mdl-layout__tab-bar {
-            background-color: #efffe5;
-        }
-
-        header .mdl-layout__tab-bar-button {
-            background-color: #efffe5;
-        }
-
-        section {
-
-        }
-
-        .section-active {
+        [data-ui-component="ui/layout/actions-view"] .is-active {
             background-color: yellow;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
         }
+
         .section-content {
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
             background-color: white;
@@ -107,31 +96,6 @@
         .md-48 {
             font-size: 28px;
         }
-        /*
-                dt {
-                    font-weight: 700;
-                }*/
-        /*
-                .mdl-layout {
-                    font-size: 14pt;
-                }
-
-                .content-panel--text dl dt {
-                    font-size: 18pt;
-                    text-align: right;
-                    vertical-align: top;
-                    display: inline-table;
-                    margin-right: 24px;
-                    line-height: 2em;
-                }
-
-                .content-panel--text dl dd {
-                    text-align: left;
-                    line-height: 2em;
-                    vertical-align: top;
-                    margin: 0;
-                }
-        */
     </style>
 </head>
 <body>
@@ -167,52 +131,52 @@
     <main class="mdl-layout__content">
         <!-- MDL Spinner Component -->
 
-        <div data-ui-field="pager">
+        <div data-ui-field="content-pages">
 
-        <section data-ui-field="scroll-tab-1">
-            <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
-                <!-- Your content goes here -->
+            <section>
+                <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
+                    <!-- Your content goes here -->
 
-                <div self="size-medium" layout="column center-center" class="page-content content-padding">
+                    <div self="size-medium" layout="column center-center" class="page-content content-padding">
 
-                    <div class="section-content">
-                        <h3>Javascript UI Component Enhancer</h3>
+                        <div class="section-content">
+                            <h3>Javascript UI Component Enhancer</h3>
 
-                        <p>
-                            j<strong>UI</strong>ce is a library for component based Web/SPA development implementing MVC
-                            design pattern.
-                        </p>
+                            <p>
+                                j<strong>UI</strong>ce is a library for component based Web/SPA development implementing MVC
+                                design pattern.
+                            </p>
 
-                        <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+
+                        </div>
 
                     </div>
 
+                    <p>&nbsp;</p>
+
+                    <div data-ui-field="juice-demo"></div>
+
+                    <p>&nbsp;</p>
+
                 </div>
-
-                <p>&nbsp;</p>
-
-                <div data-ui-field="juice-demo"></div>
-
-                <p>&nbsp;</p>
-
-            </div>
-        </section>
-        <section data-ui-field="scroll-tab-2">
-            <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
-                <!-- Your content goes here -->
-                <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content">
-                    <script>juice.include('content/getting_started', null, function () { });</script>
+            </section>
+            <section>
+                <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
+                    <!-- Your content goes here -->
+                    <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content">
+                        <script>juice.include('content/getting_started', null, function () { });</script>
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section data-ui-field="scroll-tab-3">
-            <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
-                <!-- Your content goes here -->
-                <div data-ui-include="content/api_overview" data-ui-field="page-api" self="size-medium top-center" class="section-content">
-                    <script>juice.include('content/api_overview', null, function () { });</script>
+            </section>
+            <section>
+                <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
+                    <!-- Your content goes here -->
+                    <div data-ui-include="content/api_overview" data-ui-field="page-api" self="size-medium top-center" class="section-content">
+                        <script>juice.include('content/api_overview', null, function () { });</script>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
         </div>
 
@@ -220,8 +184,8 @@
 </div>
 
 <!-- Tabs -->
-<div data-ui-field="button-pager" layout="row center-center"
-     style="position: absolute; top:0; width:auto; right:16px; height: 60px; z-index: 5;">
+<div data-ui-field="actions-menu" layout="row center-center"
+     style="position: absolute; top:0; width:100%; height: 60px; z-index: 5;">
     <div data-ui-field="tab-home" align="center" class="content-padding">
         <i class="material-icons md-48">home</i>
         <br><small>Home</small>
@@ -249,41 +213,19 @@
             juice.field('loader').hide();
         }
     });
-    juice.field('tab-home').on('click', function () {
-        juice.field('button-pager').children().each(function(){
-            $(this).removeClass('section-active');
-        });
-        $(this).addClass('section-active');
-        $(this).animateCss('tada', function() {
 
-        });
-        pager.invoke('setPage', 0);
-    });
-    juice.field('tab-getstarted').on('click', function () {
-        juice.field('button-pager').children().each(function(){
-            $(this).removeClass('section-active');
-        });
-        $(this).addClass('section-active');
-        $(this).animateCss('tada', function() {
-
-        });
-        pager.invoke('setPage', 1);
-    });
-    juice.field('tab-api').on('click', function () {
-        juice.field('button-pager').children().each(function(){
-            $(this).removeClass('section-active');
-        });
-        $(this).addClass('section-active');
-        $(this).animateCss('tada', function() {
-
-        });
-        pager.invoke('setPage', 2);
+    var pager = juice.load('ui/layout/paged-view', {
+        view: juice.field('content-pages')
     });
 
-
-    var pager = juice.load('ui/layout/pager', {
-        view: juice.field('pager')
+    var actions = juice.load('ui/layout/actions-view', {
+        view: juice.field('actions-menu')
     });
+    actions.on('item:click', function(e, i) {
+        actions.view().children().eq(i).animateCss('tada', function() { });
+        if (pager) pager.invoke('setPage', i);
+    });
+
 
 
 </script>

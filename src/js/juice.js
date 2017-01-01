@@ -88,7 +88,7 @@
      * @constructor
      */
     function ComponentContext(options) {
-
+        var self = this;
         this.options = options;
         this.cid = util.isNoU(options) || util.isNoU(options.cid) ? null : options.cid;
         this.componentId = util.isNoU(options) || util.isNoU(options.componentId) ? null : options.componentId;
@@ -117,7 +117,14 @@
         this._controller = util.isNoU(options) || util.isNoU(options.controller) ? null : options.controller;
         /** @protected */
         this._c = null;
-        this.invoke = null;
+        this.invoke = function(a,b) {
+            // TODO: throw error if _c (controller instance) is not yet ready
+            return self._c.invoke(a,b)
+        };
+        this.on = function(a,b) {
+            // TODO: throw error if _view (view) is not yet ready
+            return self.view().on(a,b);
+        };
 
         return this;
 
@@ -184,6 +191,8 @@
         var self = this;
         /** @protected */
         this._fieldCache = [];
+        /** @type {string} */
+        this.componentId = {};
         /** @type {ContextView} */
         this.view = {};
         /** @type {ContextModel} */
@@ -201,6 +210,7 @@
         /** @type {function} */
         this.event = null; // UI event stream handler (eventPath,eventValue)
         /** @type {function} */
+        // TODO: rename to "trigger"
         this.fire = function(eventPath,eventValue){
             // fires a component event
             if (util.isFunction(self.event))
@@ -209,7 +219,8 @@
         /** @type {function} */
         this.on = function(eventName,handler_fn){
             // used by consumers to listen for this component events
-            // TODO: ....
+            // TODO: implement automatic event unbinding in super().destroy()
+            self.view.on(eventName, handler_fn);
         };
         /** @type {function} */
         this.api = null; // handler for component API (command,options)
@@ -540,7 +551,7 @@ TODO: to be fixed
     function initComponent(context) {
         if (util.isFunction(context.controller())) {
             context._c = new ContextController();
-            context.invoke = context._c.invoke;
+            context._c.componentId = context.componentId;
             context._c.view = context.view();
             context._c.model = context.model();
             context.controller()(context._c);
