@@ -487,12 +487,13 @@ TODO: to be fixed
                     try {
                         var il = ctrlJs.indexOf('.load');
                         if (il > 1)
-                            ctrlJs = ctrlJs.substring(0, il-1);
+                            ctrlJs = ctrlJs.substring(0, il-4);
                         var ih = ctrlJs.indexOf('.controller');
                         if (ih > 1)
-                            ctrlJs = ctrlJs.substring(ih+14);
+                            ctrlJs = ctrlJs.substring(ih+11);
                         context.controller(getController(ctrlJs));
                     } catch (e) {
+                        console.log(ctrlJs);
                         console.log(e);
                         if (util.isFunction(context.error))
                             context.error(context, e);
