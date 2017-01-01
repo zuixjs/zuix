@@ -88,6 +88,10 @@
 
         }
 
+        .section-active {
+            background-color: yellow;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        }
         .section-content {
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
             background-color: white;
@@ -216,7 +220,7 @@
 </div>
 
 <!-- Tabs -->
-<div layout="row center-center"
+<div data-ui-field="button-pager" layout="row center-center"
      style="position: absolute; top:0; width:auto; right:16px; height: 60px; z-index: 5;">
     <div data-ui-field="tab-home" align="center" class="content-padding">
         <i class="material-icons md-48">home</i>
@@ -246,12 +250,33 @@
         }
     });
     juice.field('tab-home').on('click', function () {
+        juice.field('button-pager').children().each(function(){
+            $(this).removeClass('section-active');
+        });
+        $(this).addClass('section-active');
+        $(this).animateCss('tada', function() {
+
+        });
         pager.invoke('setPage', 0);
     });
     juice.field('tab-getstarted').on('click', function () {
+        juice.field('button-pager').children().each(function(){
+            $(this).removeClass('section-active');
+        });
+        $(this).addClass('section-active');
+        $(this).animateCss('tada', function() {
+
+        });
         pager.invoke('setPage', 1);
     });
     juice.field('tab-api').on('click', function () {
+        juice.field('button-pager').children().each(function(){
+            $(this).removeClass('section-active');
+        });
+        $(this).addClass('section-active');
+        $(this).animateCss('tada', function() {
+
+        });
         pager.invoke('setPage', 2);
     });
 
