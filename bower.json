@@ -1,8 +1,8 @@
 {
-  "name": "juice-mvc-js",
-  "description": "jUIce, Javascript UI Components Enhancer. A lite MVC library.",
+  "name": "zuix-mvc-js",
+  "description": "zuix, Javascript UI Components Enhancer. A lite MVC library.",
   "main": [
-    "src/js/juice.js"
+    "src/js/zuix.js"
   ],
   "dependencies": {
     "jquery": "^2.0.2"
@@ -32,7 +32,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/genielabs/js-juice-mvc"
+    "url": "https://github.com/genielabs/js-zuix-mvc"
   },
   "ignore": [
     "**/.*",

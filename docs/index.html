@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>jUIce: a lite MVC framework</title>
+    <title>zuix: a lite MVC framework</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -58,9 +58,9 @@
     <!-- ShowDown, javascript markdown -->
     <script src="js/showdown.min.js"></script>
 
-    <!-- jUIce deps --->
+    <!-- zuix dependencies -->
     <script src="js/jquery-2.0.2.min.js"></script>
-    <script src="js/juice.min.js"></script>
+    <script src="js/zuix.min.js"></script>
 
     <!-- Main Page includes -->
     <link rel="stylesheet" href="index.css">
@@ -70,19 +70,18 @@
 </head>
 <body>
 
-<!-- Simple header with scrollable tabs. -->
+<!-- Main page layout (MDL) -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
 
-            <!-- Actions Menu -->
-            <div data-ui-field="actions-menu" layout="row center-center"
-                 st-yle="position: absolute; top:0; width:100%; height: 60px; z-index: 5;">
+            <!-- zuix "ui/layout/actions-view" layout -->
+            <div data-ui-field="actions-menu" layout="row center-center">
                 <div data-ui-field="tab-home" align="center" class="content-padding">
                     <i class="material-icons md-48">format_color_fill</i>
                     <br>
-                    <small>j<strong>UI</strong>ce</small>
+                    <small>ZUIX</small>
                 </div>
                 <div data-ui-field="tab-getstarted" align="center" class="content-padding">
                     <i class="material-icons md-48">school</i>
@@ -99,9 +98,8 @@
         </div>
     </header>
     <main class="mdl-layout__content">
-        <!-- MDL Spinner Component -->
 
-        <!-- Paged View -->
+        <!-- zuix "ui/layout/paged-view" layout -->
         <div data-ui-field="content-pages">
 
             <!-- page 1 -->
@@ -112,10 +110,10 @@
                     <div self="size-medium" layout="column center-center" class="page-content content-padding">
 
                         <div class="section-content">
-                            <h3>Javascript UI Component Enhancer</h3>
+                            <h3>Javascript UI Components Enhancer</h3>
 
                             <p>
-                                j<strong>UI</strong>ce is a library for <strong>component based Web/SPA
+                                <strong>zuix</strong> is a library for <strong>component based Web/SPA
                                 development</strong>
                                 implementing <strong>MVC</strong> design pattern.
                             </p>
@@ -128,7 +126,7 @@
 
                     <p>&nbsp;</p>
 
-                    <div data-ui-field="juice-demo"></div>
+                    <div data-ui-field="zuix-demo"></div>
 
                     <p>&nbsp;</p>
 
@@ -142,7 +140,7 @@
                     <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content">
 
                         <!-- include content from external resource -->
-                        <script>juice.include('content/getting_started', null, function () {
+                        <script>zuix.include('content/getting_started', null, function () {
                         });</script>
 
                     </div>
@@ -156,7 +154,7 @@
                     <div data-ui-field="page-api" self="size-medium top-center" class="section-content">
 
                         <!-- include content from external resource -->
-                        <script>juice.include('content/api_overview', null, function () {
+                        <script>zuix.include('content/api_overview', null, function () {
                         });</script>
 
                     </div>
@@ -170,7 +168,7 @@
 
 <!-- Loader Overlay -->
 <div data-ui-field="loader" layout="column center-center"
-     style="background-color:rgba(100,100,100,0.05);position: fixed; left: 0; top: 0; bottom:0; right:0;z-index: 100;border: 2px solid rebeccapurple">
+     style="background-color:rgba(100,100,100,0.05);position: fixed; left: 0; top: 76px; bottom:0; right:0;z-index: 100">
     <div class="mdl-spinner mdl-js-spinner is-active"></div>
 </div>
 

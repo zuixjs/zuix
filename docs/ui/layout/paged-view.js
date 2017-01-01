@@ -1,6 +1,10 @@
-juice.controller(function($$){
+zuix.controller(function($$){
 
     $$.create = function () {
+
+        $$.expose('setPage', function(i) {
+            setPage(i, 'bounce');
+        });
 
         $$.view.children().each(function(){
             $(this).wrap('<div style="position:absolute;top:0;left:0;bottom:0;right:0;overflow: auto;"></div>');
@@ -23,6 +27,7 @@ juice.controller(function($$){
       switch (command) {
           case 'page':
           case 'setPage':
+              console.log(options);
               setPage(options, 'bounce');
               break;
       }

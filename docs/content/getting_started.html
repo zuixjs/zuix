@@ -12,7 +12,7 @@
 
 #### Declaring a View template
 
-Before applying a view template to a jUIce component, it is required to declare it by assigning
+Before applying a view template to a zuix component, it is required to declare it by assigning
 an unique identifier.
 A view template can be either placed inline in the document or it can be
 loaded from a separate HTML snippet file placed on a remote server.
@@ -73,7 +73,7 @@ that has to be applied to the component.
 <p></p>
 
 <small><strong>NOTE:</strong></small>
-jUIce will first look for an <em>inline</em> template matching the ```data-ui-view```
+zuix will first look for an <em>inline</em> template matching the ```data-ui-view```
 value. If none found it will try to load it from a <em>remote</em> resource by appending ```.html```
 suffix to the template name.
 
@@ -111,10 +111,10 @@ file that will be loaded automatically if no inline controller is defined.
     .token.keyword.keyword-data-ui-load, .token.keyword.keyword-load {
         color: #f92672;
     }
-    .token.juice_obj {
+    .token.zuix_obj {
         color: purple;
     }
-    .token.juice_ctr {
+    .token.zuix_ctr {
         color: gray;
     }
 </style>
@@ -129,7 +129,7 @@ file that will be loaded automatically if no inline controller is defined.
 <pre><code class="language-html keyword-start line-numbers">
     <div data-ui-load="simple_view" data-ui-controller="exampleController"/>
     <script>
-    var exampleController = juice.controller(function($$){
+    var exampleController = zuix.controller(function($$){
         $$.create = function() {
             $$.view.html('Helllo World!');
         }
@@ -141,12 +141,12 @@ file that will be loaded automatically if no inline controller is defined.
 <small>
     <strong>INLINE CONTROLLER (METHOD 2)</strong>
     The controller is passed with the options
-    of the ```juice.load(view,options)``` method.
+    of the ```zuix.load(view,options)``` method.
 </small>
 <pre><code class="language-html keyword-start line-numbers">
     <script>
-    var componentContext = juice.load('simple_view', {
-        controller: juice.controller(function($$){
+    var componentContext = zuix.load('simple_view', {
+        controller: zuix.controller(function($$){
             $$.create = function() {
                 $$.view.html('Helllo World!');
             }
@@ -196,8 +196,8 @@ file that will be loaded automatically if no inline controller is defined.
     // load a component from CodePen
     // and override its controller logic
     // with an inline one
-    juice.load('https://codepen.io/genielabs/pen/RomJZy', {
-        controller: juice.controller(function($$) {
+    zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
+        controller: zuix.controller(function($$) {
             // inline controller function
             // TODO: implement your controller logic
         },
@@ -209,7 +209,7 @@ file that will be loaded automatically if no inline controller is defined.
 </code></pre>
 
 <small>Component on CodePen</small>
-<p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="jUIce test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">jUIce test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="zuix test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">zuix test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 
@@ -245,9 +245,9 @@ file that will be loaded automatically if no inline controller is defined.
 <div data-ui-view="simple_view" data-ui-field="simple_view_test" class="material-icons mdl-badge mdl-badge--overlap" data-badge="3">account_box</div>
 
 <div data-ui-field="simple_view_1" />
-<script>juice.load('simple_view', {
-    container: juice.field('simple_view_1'),
-    controller: juice.controller(function ($$) {
+<script>zuix.load('simple_view', {
+    container: zuix.field('simple_view_1'),
+    controller: zuix.controller(function ($$) {
         $$.create = function () {
             $$.view.find('div').on('click', function () {
                 $(this).attr('data-badge', 10);

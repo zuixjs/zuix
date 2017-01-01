@@ -1,8 +1,8 @@
-### j<strong>UI</strong><small>ce</small> API documentation
+### <small>zuix</small> API documentation
 
-The ```juice``` global object exposes the following methods:
+The ```zuix``` global object exposes the following methods:
 
-#### ```juice.load( name [, options] )```
+#### ```zuix.load( name [, options] )```
 
 Loads a component and returns the associated ```{ComponentContext}``` object.
 
@@ -13,7 +13,7 @@ This method will try in order:
 from the ```name```.js
 
 <pre><strong>Method summary</strong>
-    <small>{ComponentContext}</small> juice.<strong>load</strong>( <em>view</em> [, <em>options</em>] )
+    <small>{ComponentContext}</small> zuix.<strong>load</strong>( <em>view</em> [, <em>options</em>] )
 
 <strong>Parameters</strong>
     <small>{string|jQuery|HTMLElement}</small> <em>view</em>
@@ -32,12 +32,12 @@ from the ```name```.js
     The loaded component context.
 </pre>
 
-#### ```juice.controller( controller_impl )```
+#### ```zuix.controller( controller_impl )```
 
 Initializes a controller function.
 
 <pre><strong>Method summary</strong>
-    <small>{ContextController}</small> juice.<strong>controller</strong>( <em>controller_impl</em> )
+    <small>{ContextController}</small> zuix.<strong>controller</strong>( <em>controller_impl</em> )
 
 <strong>Parameters</strong>
     <small>{ContextController}</small> <em>controller_impl</em>
@@ -98,7 +98,7 @@ function ($$) {
 that is passed to the <code>{ContextController}</code> function
 once the related component is created.
 
-When calling the <code>juice.controller(...)</code> method, the passed
+When calling the <code>zuix.controller(...)</code> method, the passed
 <code>{ContextController}</code> function can implement none, one or more of the
 <code>$$</code> context handlers.
 
@@ -135,11 +135,13 @@ All of the above handler methods return ```{ComponentContext}.this```.
     // @returns {jQuery}
     $$.field(fieldName[, globalSearch]);
     // @returns {ComponentContext}.this
-    $$.fire(eventPath, eventValue)
+    $$.trigger(eventPath, eventValue)
     // @returns {ComponentContext}.this
     $$.on(eventPath, handlerFn)
     // @returns {ComponentContext}.this
     $$.invoke(apiCommand, options)
+    // @returns {ComponentContext}.this
+    $$.expose(methodName, handler)
 
 </code></pre>
 
@@ -153,13 +155,13 @@ All of the above handler methods return ```{ComponentContext}.this```.
 
 </code></pre>
 
-#### ```juice.field( name [, container])```
+#### ```zuix.field( name [, container])```
 
 Returns the ```{jQuery}``` object of the element having ```data-ui-field``` attribute matching ```name```.
 If no ```container``` specified the search range will cover the entire document.
 
 <pre><strong>Method summary</strong>
-    <small>{jQuery}</small> juice.<strong>field</strong>( <em>name</em> [, <em>container</em>] )
+    <small>{jQuery}</small> zuix.<strong>field</strong>( <em>name</em> [, <em>container</em>] )
 
 <strong>Parameters</strong>
     <small>{string}</small> <em>name</em>
@@ -172,12 +174,12 @@ If no ```container``` specified the search range will cover the entire document.
     The {jQuery} element with ```data-ui-field``` matching ```name```.
 </pre>
 
-#### ```juice.behaviour( componentId, handler_fn )```
+#### ```zuix.behaviour( componentId, handler_fn )```
 
-#### ```juice.include( view [, container] )```
+#### ```zuix.include( view [, container] )```
 
-#### ```juice.requires( context, varNameOrTestFn )```
-#### ```juice.conflicts( context, varNameOrTestFn )```
+#### ```zuix.requires( context, varNameOrTestFn )```
+#### ```zuix.conflicts( context, varNameOrTestFn )```
 
 Append ```view``` to the specified ```container```.
 

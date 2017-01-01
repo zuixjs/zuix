@@ -1,8 +1,8 @@
-juice.controller(function($$){
+zuix.controller(function($$){
 
     $$.create = function () {
 
-        // TODO: move the following line in the juice core
+        // TODO: move the following line in the zuix core
         $$.view.attr('data-ui-component', $$.componentId);
 
         $$.view.children().each(function(index){
@@ -16,7 +16,7 @@ juice.controller(function($$){
 
     $$.destroy = function() {
 
-        // TODO: move the following line in the juice core
+        // TODO: move the following line in the zuix core
         $$.view.removeAttr('data-ui-component');
 
         $$.view.children().each(function(){
@@ -47,7 +47,7 @@ juice.controller(function($$){
         });
         if (index != selected)
             actions.eq(index).addClass('is-active');
-        $$.view.trigger('item:click', index);
+        $$.trigger('item:click', index);
     }
 
 });
