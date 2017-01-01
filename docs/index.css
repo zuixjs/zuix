@@ -1,0 +1,39 @@
+body {
+    background: url(images/skyline-texture.png);
+    font-family: 'Titillium+Web', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Dosis', sans-serif !important;
+    padding-top: 24px;
+    line-height: 36px;
+    font-weight: 700;
+    text-transform: none;
+}
+
+[data-ui-component="ui/layout/actions-view"] div {
+    cursor: pointer;
+    min-width: 140px;
+}
+
+[data-ui-component="ui/layout/actions-view"] .is-active {
+    background-color: yellow;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    cursor: default;
+}
+
+.section-content {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    background-color: white;
+    padding-left: 32px;
+    padding-right: 32px;
+    margin: 6px;
+}
+
+.content-padding {
+    padding: 16px;
+}
+
+.md-48 {
+    font-size: 28px;
+}
