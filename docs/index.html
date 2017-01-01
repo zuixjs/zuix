@@ -76,9 +76,14 @@
             text-transform: none;
         }
 
+        [data-ui-component="ui/layout/actions-view"] div {
+            cursor: pointer;
+            min-width: 140px;
+        }
         [data-ui-component="ui/layout/actions-view"] .is-active {
             background-color: yellow;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            cursor: default;
         }
 
         .section-content {
@@ -112,27 +117,18 @@
     <! -- -->
 
 
-    <header self="hide" class="mdl-layout__header">
+    <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
-            <!-- Title -->
-            <span class="mdl-layout-title">j<strong>UI</strong><small>ce</small></span>
+
         </div>
-        <!--div style="background-color: darkblue;padding: 24px;" align="center">
-
-            <img style="max-height: 100px" alt="jUIce: a lite MVC framework" title="jUIce: a lite MVC framework"
-                 src="images/juice_logo.png">
-            <p></p>
-
-        </div-->
     </header>
-    <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">j<strong>UI</strong><small>ce</small></span>
-    </div>
     <main class="mdl-layout__content">
         <!-- MDL Spinner Component -->
 
+        <!-- Paged View -->
         <div data-ui-field="content-pages">
 
+            <!-- page 1 -->
             <section>
                 <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                     <!-- Your content goes here -->
@@ -143,8 +139,8 @@
                             <h3>Javascript UI Component Enhancer</h3>
 
                             <p>
-                                j<strong>UI</strong>ce is a library for component based Web/SPA development implementing MVC
-                                design pattern.
+                                j<strong>UI</strong>ce is a library for <strong>component based Web/SPA development</strong>
+                                implementing <strong>MVC</strong> design pattern.
                             </p>
 
                             <p>&nbsp;</p>
@@ -161,18 +157,24 @@
 
                 </div>
             </section>
+
+            <!-- page 2 -->
             <section>
                 <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                     <!-- Your content goes here -->
                     <div data-ui-field="page-getstarted" self="size-medium top-center" class="section-content">
+                        <!-- include content from external resource -->
                         <script>juice.include('content/getting_started', null, function () { });</script>
                     </div>
                 </div>
             </section>
+
+            <!-- page 3 -->
             <section>
                 <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                     <!-- Your content goes here -->
                     <div data-ui-include="content/api_overview" data-ui-field="page-api" self="size-medium top-center" class="section-content">
+                        <!-- include content from external resource -->
                         <script>juice.include('content/api_overview', null, function () { });</script>
                     </div>
                 </div>
@@ -183,12 +185,12 @@
     </main>
 </div>
 
-<!-- Tabs -->
+<!-- Actions Menu -->
 <div data-ui-field="actions-menu" layout="row center-center"
      style="position: absolute; top:0; width:100%; height: 60px; z-index: 5;">
     <div data-ui-field="tab-home" align="center" class="content-padding">
-        <i class="material-icons md-48">home</i>
-        <br><small>Home</small>
+        <i class="material-icons md-48">format_color_fill</i>
+        <br><small>j<strong>UI</strong>ce</small>
     </div>
     <div data-ui-field="tab-getstarted" align="center" class="content-padding">
         <i class="material-icons md-48">school</i>
@@ -206,27 +208,38 @@
 </div>
 
 <script type="text/javascript">
+/*
+    juice.behaviour('ui/layout/actions-view', function(e, i){
+        switch(e) {
+            case 'item:click':
+                //$(this).children().eq(i).animateCss('tada', function() { });
+                break;
+        }
+    });
+*/
+    // load 'ui/layout/paged-view' component into element with [data-ui-field="content-pages"]
+    var pagedView = juice.load('ui/layout/paged-view', {
+        view: juice.field('content-pages')
+    });
 
+    // load 'actions-menu' component into element with [data-ui-field="actions-menu"]
+    var actionsMenu = juice.load('ui/layout/actions-view', {
+        view: juice.field('actions-menu')
+    });
+    actionsMenu.on('item:click', function(e, i) {
+        $(this).children().eq(i).animateCss('tada', function() { });
+        if (pagedView) pagedView.invoke('setPage', i);
+    });
+
+    // Example - Loading external hosted component
+    // NOTE: ensure the source is trusted before
+    // loading any external hosted component in your site
     juice.load('https://codepen.io/genielabs/pen/RomJZy', {
         container: juice.field('juice-demo'),
         ready: function (context) {
             juice.field('loader').hide();
         }
     });
-
-    var pager = juice.load('ui/layout/paged-view', {
-        view: juice.field('content-pages')
-    });
-
-    var actions = juice.load('ui/layout/actions-view', {
-        view: juice.field('actions-menu')
-    });
-    actions.on('item:click', function(e, i) {
-        actions.view().children().eq(i).animateCss('tada', function() { });
-        if (pager) pager.invoke('setPage', i);
-    });
-
-
 
 </script>
 

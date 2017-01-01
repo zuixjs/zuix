@@ -34,17 +34,18 @@ juice.controller(function($$){
 
     function setPage(p, anim) {
         var pages = $$.view.children();
+        var oldPage = currentPage;
         if (p > currentPage) {
+            currentPage = p;
             pages.eq(p).animateCss(anim+'InRight').show();
-            pages.eq(currentPage).animateCss(anim+'OutLeft', function(){
-                pages.eq(currentPage).hide();
-                currentPage = p;
+            pages.eq(oldPage).animateCss(anim+'OutLeft', function(){
+                pages.eq(oldPage).hide();
             }).show();
         } else if (p < currentPage) {
+            currentPage = p;
             pages.eq(p).animateCss(anim+'InLeft').show();
-            pages.eq(currentPage).animateCss(anim+'OutRight', function(){
-                pages.eq(currentPage).hide();
-                currentPage = p;
+            pages.eq(oldPage).animateCss(anim+'OutRight', function(){
+                pages.eq(oldPage).hide();
             }).show();
         }
     }
