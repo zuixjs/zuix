@@ -24,7 +24,7 @@
  */
 
 /** @class */
-(function Zuix(scope) {
+(function Zuix() {
     "use strict";
 
     /**
@@ -62,7 +62,7 @@
      * @typedef {jQuery|HTMLElement|string} ViewContainer
      *
      * @typedef {{
-     *    cid: Object,
+     *    contextId: Object,
      *    container: jQuery,
      *    componentId: string,
      *    model: ContextModel,
@@ -88,21 +88,9 @@
      * @constructor
      */
     function ComponentContext(options) {
-        var self = this;
         this.options = options;
-        this.cid = util.isNoU(options) || util.isNoU(options.cid) ? null : options.cid;
+        this.contextId = util.isNoU(options) || util.isNoU(options.contextId) ? null : options.contextId;
         this.componentId = util.isNoU(options) || util.isNoU(options.componentId) ? null : options.componentId;
-        /**
-         * @event ComponentContext#ready
-         * @param {ComponentContext} context The component context instance.
-         */
-        this.ready = null;
-        /**
-         * @event ComponentContext#error
-         * @param {ComponentContext} context The component context instance.
-         * @param {Object} error The error object
-         */
-        this.error = null;
 
         /** @protected */
         this._container = util.isNoU(options) || util.isNoU(options.container) ? null : options.container;
@@ -112,26 +100,69 @@
         this._view = util.isNoU(options) || util.isNoU(options.view) ? null : options.view;
         /**
          * @protected
-         * @type {ContextController}
+         * @type {ContextControllerCallback}
          */
         this._controller = util.isNoU(options) || util.isNoU(options.controller) ? null : options.controller;
-        /** @protected */
+        /**
+         * @protected
+         * @type {ContextController}
+         */
         this._c = null;
-        this.invoke = function(a,b) {
-            // TODO: throw error if _c (controller instance) is not yet ready
-            return self._c.invoke(a,b)
-        };
-        this.on = function(a,b) {
-            // TODO: throw error if _view (view) is not yet ready
-            return self.view().on(a,b);
-        };
-        /** @type {function} */
-        this.expose = null;
-        return this;
 
+        return this;
     }
 
-    /***
+    /**
+     * TODO: describe
+     * @event ComponentContext#ready
+     * @param {ComponentContext} context The component context instance.
+     */
+    ComponentContext.prototype.ready = function (context) { };
+
+    /**
+     * TODO: describe
+     * @event ComponentContext#error
+     * @param {ComponentContext} context The component context instance.
+     * @param {Object} error The error object
+     */
+    ComponentContext.prototype.error = function (context, error) { };
+
+    /**
+     * TODO: describe
+     * @param a
+     * @param b
+     */
+    ComponentContext.prototype.on = function (a, b) {
+        // TODO: throw error if _c (controller instance) is not yet ready
+        return this._c.on(a, this.eventWrapper(b));
+    };
+
+    /**
+     * TODO: describe
+     * @param apiMethodName {string}
+     * @param options {Object}
+     */
+    ComponentContext.prototype.invoke = function (apiMethodName, options) {
+        // TODO: throw error if _c (controller instance) is not yet ready
+        return this._c.invoke(apiMethodName, options)
+    };
+
+    /**
+     * TODO: describe
+     * @param exposeAsName {string}
+     * @param handler_fn {function}
+     */
+    ComponentContext.prototype.expose = function (exposeAsName, handler_fn) { };
+
+    /**
+     * Define the local behavior handler for this context instance only.
+     * Any global behavior matching the same `componentId` will be overridden.
+     *
+     * @param handler_fn {function}
+     */
+    ComponentContext.prototype.behavior = function (handler_fn) { };
+
+        /***
      *
      * @param {ContextModel} [model]
      * @returns {ComponentContext|Object}
@@ -182,6 +213,15 @@
         return this;
     };
 
+    ComponentContext.prototype.eventWrapper = function(handler_fn) {
+        var context = this;
+        return function(a, b) {
+            if (util.isFunction(context.behavior))
+                context.behavior.call(this, a, b);
+            return handler_fn.call(this, a, b);
+        };
+    };
+
     /**
      * TODO: complete JSDoc
      *
@@ -192,12 +232,14 @@
         var self = this;
         /** @protected */
         this._fieldCache = [];
+
         /** @type {string} */
         this.componentId = {};
         /** @type {ContextView} */
         this.view = {};
         /** @type {ContextModel} */
         this.model = {};
+
         /** @type {function} */
         this.create = null;
         /** @type {function} */
@@ -211,22 +253,22 @@
         /** @type {function} */
         this.event = null; // UI event stream handler (eventPath,eventValue)
         /** @type {function} */
-        this.trigger = function(eventPath,eventData){
+        this.trigger = function(eventPath, eventData){
             // TODO: ...
-            self.view.trigger(eventPath,eventData);
+            self.view.trigger(eventPath, eventData);
         };
         /** @type {function} */
-        this.on = function(eventPath,handler_fn){
+        this.on = function(eventPath, handler_fn){
             // TODO: implement automatic event unbinding (off) in super().destroy()
             self.view.on(eventPath, handler_fn);
         };
         /** @type {function} */
         this.api = null; // handler for component API (command,options)
         /** @type {function} */
-        this.invoke = function(command,options){
+        this.invoke = function(command, options){
             // used by consumers to invoke a component API command
             if (util.isFunction(self.api))
-                self.api(command,options);
+                self.api(command, options);
         };
         /** @type {function} */
         this.expose = null;
@@ -350,17 +392,19 @@
         var context = null;
         if (!util.isNoU(options)) {
             // check if context has its unique id assigned
-            if (!util.isNoU(options.cid)) {
-                var cachedContext = getContext(options.cid);
-                if (cachedContext !== null) {
+            if (!util.isNoU(options.contextId)) {
+                // if it does, try to pick it from allocated contexts list
+                context = getContext(options.contextId);
+                if (context !== null) {
                     if (!util.isNoU(options.view))
-                        cachedContext.view(options.view);
+                        context.view(options.view);
                     if (!util.isNoU(options.model))
-                        cachedContext.model(options.model);
+                        context.model(options.model);
                     if (!util.isNoU(options.controller))
-                        cachedContext.controller(options.controller);
-                    context = cachedContext;
+                        context.controller(options.controller);
                 } else {
+                    // if no context is already allocated
+                    // with that id, then add a new one
                     context = new ComponentContext(options);
                     _contextRoot.push(context);
                 }
@@ -369,8 +413,8 @@
                     options = {};
                     options.auto = false;
                 }
-                // generate cid (this is a bit buggy, but it's quick)
-                options.cid = 'zuix-ctx-' + (++_contextSeqNum);
+                // generate contextId (this is a bit buggy, but it's quick)
+                options.contextId = 'zuix-ctx-' + (++_contextSeqNum);
                 context = new ComponentContext(options);
                 _contextRoot.push(context);
             }
@@ -441,15 +485,43 @@ TODO: to be fixed
         return context;
     }
 
+    /**
+     *
+     * @param context {ComponentContext}
+     */
+    function unload(context) {
+        if (!util.isNoU(context) && !util.isNoU(context._c)) {
+            if (!util.isNoU(context._c.view))
+                context._c.view.removeAttr('data-ui-component');
+
+            // TODO: unregister local context behavior
+            // TODO: detach view from parent if context.container is not null
+
+            if (util.isFunction(context._c.destroy))
+                context._c.destroy();
+        }
+    }
+
+    /**
+     * Define the behavior handler for the component matching `componentId`.
+     * All active contexts implementing `componentId` will be affected.
+     *
+     * @param componentId {Object}
+     * @param handler_fn {function}
+     */
+    function behavior(componentId, handler_fn) {
+        // TODO: behavior
+    }
+
     /***
      *
-     * @param {Object} cid
+     * @param {Object} contextId
      * @returns {ComponentContext}
      */
-    function getContext(cid) {
+    function getContext(contextId) {
         var context = null;
         $.each(_contextRoot, function (k, v) {
-            if (util.objectEquals(v.cid, cid)) {
+            if (util.objectEquals(v.contextId, contextId)) {
                 context = v;
                 return false;
             }
@@ -457,15 +529,23 @@ TODO: to be fixed
         return context;
     }
 
+    function removeContext(contextId) {
+        // TODO: removeContext
+    }
+
+    function removeCachedComponent(componentId) {
+        // TODO: removeCachedComponent
+    }
+
     /***
      *
-     * @param {Object} cid
+     * @param {Object} componentId
      * @returns {ComponentCache}
      */
-    function getCachedComponent(cid) {
+    function getCachedComponent(componentId) {
         var cached = null;
         $.each(_componentCache, function (k, v) {
-            if (util.objectEquals(v.componentId, cid)) {
+            if (util.objectEquals(v.componentId, componentId)) {
                 cached = v;
                 return false;
             }
@@ -559,13 +639,15 @@ TODO: to be fixed
             c.expose = function(methodName, handler) {
                 context[methodName] = handler;
             };
-            context.controller()(context._c);
-            if (!util.isNoU(context._c)) {
-                if (util.isFunction(context._c.create)) context._c.create();
-                //if (util.isFunction(context._c.bind)) context._c.bind();
-                if (util.isFunction(context._c.resume)) context._c.resume();
-                if (util.isFunction(context._c.refresh)) context._c.refresh();
-            }
+            context.controller().call(c, c);
+
+            if (!util.isNoU(c.view))
+                c.view.attr('data-ui-component', c.componentId);
+
+            if (util.isFunction(c.create)) c.create();
+            //if (util.isFunction(c.bind)) c.bind();
+            if (util.isFunction(c.resume)) c.resume();
+            if (util.isFunction(c.refresh)) c.refresh();
         }
         if (util.isFunction(context.ready))
             context.ready(context);
@@ -645,15 +727,18 @@ TODO: to be fixed
 
     // Public API
 
-    scope.zuix = scope.zuix || {
+    this.zuix = this.zuix || {
             field: field,
             include: include,
             controller: controller,
-            load: load
+            load: load,
+            unload: unload,
+            dumpCache: function() { console.log(_componentCache); },
+            dumpContexts: function() { console.log(_contextRoot); }
         };
 
-    return scope;
-}(this));
+    return this.zuix;
+}.call(this));
 
 // jQuery helpers
 $.fn.extend({

@@ -2,9 +2,6 @@ zuix.controller(function($$){
 
     $$.create = function () {
 
-        // TODO: move the following line in the zuix core
-        $$.view.attr('data-ui-component', $$.componentId);
-
         $$.view.children().each(function(index){
             $(this).on('click', function () {
                 setSelected(index);
@@ -16,14 +13,11 @@ zuix.controller(function($$){
 
     $$.destroy = function() {
 
-        // TODO: move the following line in the zuix core
-        $$.view.removeAttr('data-ui-component');
-
         $$.view.children().each(function(){
             $(this).off('click');
             $(this).removeClass('is-active');
         });
-        selected = -1;
+        selectedItem = -1;
 
     };
 
@@ -38,14 +32,13 @@ zuix.controller(function($$){
 
     // Private Members
 
-    var selected = -1;
-
+    var selectedItem = -1;
     function setSelected(index) {
         var actions = $$.view.children();
         actions.each(function(){
            $(this).removeClass('is-active');
         });
-        if (index != selected)
+        if (index != selectedItem)
             actions.eq(index).addClass('is-active');
         $$.trigger('item:click', index);
     }
