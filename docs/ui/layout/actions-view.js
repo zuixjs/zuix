@@ -2,7 +2,7 @@ zuix.controller(function($$){
 
     $$.create = function () {
 
-        $$.view.children().each(function(index){
+        $$.view().children().each(function(index){
             $(this).on('click', function () {
                 setSelected(index);
             });
@@ -13,7 +13,7 @@ zuix.controller(function($$){
 
     $$.destroy = function() {
 
-        $$.view.children().each(function(){
+        $$.view().children().each(function(){
             $(this).off('click');
             $(this).removeClass('is-active');
         });
@@ -34,7 +34,7 @@ zuix.controller(function($$){
 
     var selectedItem = -1;
     function setSelected(index) {
-        var actions = $$.view.children();
+        var actions = $$.view().children();
         actions.each(function(){
            $(this).removeClass('is-active');
         });

@@ -6,7 +6,7 @@ zuix.controller(function($$){
             setPage(i);
         });
 
-        $$.view.children().each(function(){
+        $$.view().children().each(function(){
             $(this).wrap('<div style="position:absolute;top:0;left:0;bottom:0;right:0;overflow: auto;"></div>');
             $(this).parent().hide();
         });
@@ -16,7 +16,7 @@ zuix.controller(function($$){
 
     $$.destroy = function() {
 
-        $$.view.children().each(function(){
+        $$.view().children().each(function(){
            $(this).unwrap();
         });
         currentPage = -1;
@@ -36,7 +36,7 @@ zuix.controller(function($$){
 
     var currentPage = -1;
     function setPage(p) {
-        var pages = $$.view.children();
+        var pages = $$.view().children();
         var oldPage = currentPage;
         if (p > currentPage) {
             currentPage = p;

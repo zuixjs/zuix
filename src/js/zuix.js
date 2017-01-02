@@ -23,7 +23,10 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-/** @class */
+/**
+ * @class
+ * @constructor
+ */
 (function Zuix() {
     "use strict";
 
@@ -103,6 +106,16 @@
          * @type {ContextControllerCallback}
          */
         this._controller = util.isNoU(options) || util.isNoU(options.controller) ? null : options.controller;
+
+        /**
+         * Define the local behavior handler for this context instance only.
+         * Any global behavior matching the same `componentId` will be overridden.
+         *
+         * @function behavior
+         * @param handler_fn {function}
+         */
+        this.behavior = null;
+
         /**
          * @protected
          * @type {ContextController}
@@ -127,6 +140,7 @@
      */
     ComponentContext.prototype.error = function (context, error) { };
 
+
     /**
      * TODO: describe
      * @param a
@@ -134,7 +148,8 @@
      */
     ComponentContext.prototype.on = function (a, b) {
         // TODO: throw error if _c (controller instance) is not yet ready
-        return this._c.on(a, this.eventWrapper(b));
+        console.log("PROTO.ON");
+        return this._c.on(a, b);
     };
 
     /**
@@ -147,22 +162,7 @@
         return this._c.invoke(apiMethodName, options)
     };
 
-    /**
-     * TODO: describe
-     * @param exposeAsName {string}
-     * @param handler_fn {function}
-     */
-    ComponentContext.prototype.expose = function (exposeAsName, handler_fn) { };
-
-    /**
-     * Define the local behavior handler for this context instance only.
-     * Any global behavior matching the same `componentId` will be overridden.
-     *
-     * @param handler_fn {function}
-     */
-    ComponentContext.prototype.behavior = function (handler_fn) { };
-
-        /***
+    /***
      *
      * @param {ContextModel} [model]
      * @returns {ComponentContext|Object}
@@ -213,32 +213,33 @@
         return this;
     };
 
-    ComponentContext.prototype.eventWrapper = function(handler_fn) {
-        var context = this;
-        return function(a, b) {
-            if (util.isFunction(context.behavior))
-                context.behavior.call(this, a, b);
-            return handler_fn.call(this, a, b);
-        };
-    };
-
+    var _eventMap = [];
     /**
      * TODO: complete JSDoc
      *
      * @returns {ContextController}
      * @constructor
      */
-    function ContextController() {
+    function ContextController(context) {
         var self = this;
+
+        this.context = context;
+
+        // TODO: should improve/deprecate this.componentId?
+        this.componentId = context.componentId;
+        /** @type {ContextView} */
+        this.view = function(){ return context.view() };
+        /** @type {ContextModel} */
+        this.model = function() { return context.model() };
+        /** @type {function} */
+        this.expose = function(methodName, handler) {
+            context[methodName] = handler;
+        };
+        /** @type {function} */
+        this.behavior = function(a,b) { return context.behavior; };
+
         /** @protected */
         this._fieldCache = [];
-
-        /** @type {string} */
-        this.componentId = {};
-        /** @type {ContextView} */
-        this.view = {};
-        /** @type {ContextModel} */
-        this.model = {};
 
         /** @type {function} */
         this.create = null;
@@ -253,17 +254,21 @@
         /** @type {function} */
         this.event = null; // UI event stream handler (eventPath,eventValue)
         /** @type {function} */
+        this.api = null; // handler for component API (command,options)
+
+        /** @type {function} */
         this.trigger = function(eventPath, eventData){
+            if (util.isNoU(_eventMap[eventPath]))
+                this.addEvent(self.view(), eventPath, null);
+            console.log("trigger", eventPath);
             // TODO: ...
-            self.view.trigger(eventPath, eventData);
+            self.view().trigger(eventPath, eventData);
         };
         /** @type {function} */
         this.on = function(eventPath, handler_fn){
+            this.addEvent(self.view(), eventPath, handler_fn);
             // TODO: implement automatic event unbinding (off) in super().destroy()
-            self.view.on(eventPath, handler_fn);
         };
-        /** @type {function} */
-        this.api = null; // handler for component API (command,options)
         /** @type {function} */
         this.invoke = function(command, options){
             // used by consumers to invoke a component API command
@@ -271,9 +276,32 @@
                 self.api(command, options);
         };
         /** @type {function} */
-        this.expose = null;
+        this.eventRouter = function(a, b) {
+            console.log(a);
+            console.log(util.isFunction(_eventMap[a.type]));
+            console.log(_eventMap);
+            if (util.isFunction(self.behavior()))
+                self.behavior().call(self.view(), a, b);
+            if (util.isFunction(_eventMap[a.type]))
+                _eventMap[a.type].call(self.view(), a, b);
+            // TODO: else-> should report anomaly
+        };
+
+        context.controller().call(this, this);
+
         return this;
     }
+
+    ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
+        if (!util.isNoU(target)) {
+            if (!util.isNoU(_eventMap[eventPath]))
+                target.off(eventPath);
+            _eventMap[eventPath] = handler_fn;
+            target.on(eventPath, this.eventRouter);
+        } else {
+            // TODO: should report missing view
+        }
+    };
 
     /***
      * Search and cache this view elements.
@@ -286,7 +314,7 @@
         var f = globalSearch ? '@' + field : field;
         var el = null;
         if (typeof this._fieldCache[f] === 'undefined') {
-            el = globalSearch ? $(field) : this.view.find('[data-ui-field=' + field + ']');
+            el = globalSearch ? $(field) : this.view().find('[data-ui-field=' + field + ']');
             if (el.length)
                 this._fieldCache[f] = el;
         } else {
@@ -427,14 +455,14 @@
         // assign the given component (widget) to this context
         if (context.componentId != componentId) {
             context.componentId = componentId;
-/*
-TODO: to be fixed
-            if (!util.isNoU(context.view())) {
-                // TODO: implement this code in a context.detach() method
-                //context.controller().pause()
-                context.view().detach();
-                context.view(null);
-            }*/
+            /*
+             TODO: to be fixed
+             if (!util.isNoU(context.view())) {
+             // TODO: implement this code in a context.detach() method
+             //context.controller().pause()
+             context.view().detach();
+             context.view(null);
+             }*/
         }
 
         // pick it from cache if found
@@ -491,8 +519,8 @@ TODO: to be fixed
      */
     function unload(context) {
         if (!util.isNoU(context) && !util.isNoU(context._c)) {
-            if (!util.isNoU(context._c.view))
-                context._c.view.removeAttr('data-ui-component');
+            if (!util.isNoU(context._c.view()))
+                context._c.view().removeAttr('data-ui-component');
 
             // TODO: unregister local context behavior
             // TODO: detach view from parent if context.container is not null
@@ -632,17 +660,10 @@ TODO: to be fixed
     function initComponent(context) {
         if (util.isFunction(context.controller())) {
             /** @type {ContextController} */
-            var c = context._c = new ContextController();
-            c.componentId = context.componentId;
-            c.view = context.view();
-            c.model = context.model();
-            c.expose = function(methodName, handler) {
-                context[methodName] = handler;
-            };
-            context.controller().call(c, c);
+            var c = context._c = new ContextController(context);
 
-            if (!util.isNoU(c.view))
-                c.view.attr('data-ui-component', c.componentId);
+            if (!util.isNoU(c.view()))
+                c.view().attr('data-ui-component', c.componentId);
 
             if (util.isFunction(c.create)) c.create();
             //if (util.isFunction(c.bind)) c.bind();
@@ -740,17 +761,4 @@ TODO: to be fixed
     return this.zuix;
 }.call(this));
 
-// jQuery helpers
-$.fn.extend({
-    animateCss: function (animationName, callback) {
-        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-        this.addClass('animated ' + animationName).one(animationEnd, function() {
-            $(this).removeClass('animated ' + animationName);
-            if (typeof callback === 'function') {
-                callback.this = this;
-                callback(animationName);
-            }
-        });
-        return this;
-    }
-});
+//var zuix = Zuix.call(this);

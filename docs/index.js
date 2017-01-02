@@ -13,6 +13,8 @@ var actionsMenu = zuix.load('ui/layout/actions-view', {
     view: zuix.field('actions-menu'),
     ready: function() {
         actionsMenu.on('item:click', function (e, i) {
+            $(this).children().eq(i).animateCss('tada', function () { });
+            console.log("CLICKED!!!");
             if (pagedView) pagedView.invoke('setPage', i);
         });
     }
@@ -43,9 +45,11 @@ pagedView.behavior = function (e, i) {
 };
 
 actionsMenu.behavior = function (e, i) {
+    console.log("ACTION BEHAVE");
     switch (e.type) {
         case 'item:click':
             // Animate clicked button
+            console.log(this);
             $(this).children().eq(i).animateCss('tada', function () { });
             break;
     }
@@ -83,3 +87,20 @@ setTimeout(function () {
     zuix.dumpCache();
     zuix.dumpContexts();
 }, 5000);
+
+
+
+// jQuery helpers
+$.fn.extend({
+    animateCss: function (animationName, callback) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.addClass('animated ' + animationName).one(animationEnd, function() {
+            $(this).removeClass('animated ' + animationName);
+            if (typeof callback === 'function') {
+                callback.this = this;
+                callback(animationName);
+            }
+        });
+        return this;
+    }
+});
