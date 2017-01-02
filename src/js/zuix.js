@@ -148,7 +148,6 @@
      */
     ComponentContext.prototype.on = function (a, b) {
         // TODO: throw error if _c (controller instance) is not yet ready
-        console.log("PROTO.ON");
         return this._c.on(a, b);
     };
 
@@ -260,7 +259,6 @@
         this.trigger = function(eventPath, eventData){
             if (util.isNoU(_eventMap[eventPath]))
                 this.addEvent(self.view(), eventPath, null);
-            console.log("trigger", eventPath);
             // TODO: ...
             self.view().trigger(eventPath, eventData);
         };
@@ -277,9 +275,6 @@
         };
         /** @type {function} */
         this.eventRouter = function(a, b) {
-            console.log(a);
-            console.log(util.isFunction(_eventMap[a.type]));
-            console.log(_eventMap);
             if (util.isFunction(self.behavior()))
                 self.behavior().call(self.view(), a, b);
             if (util.isFunction(_eventMap[a.type]))

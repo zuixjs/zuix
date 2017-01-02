@@ -131,7 +131,7 @@ file that will be loaded automatically if no inline controller is defined.
     <script>
     var exampleController = zuix.controller(function($$){
         $$.create = function() {
-            $$.view.html('Helllo World!');
+            $$.view().html('Helllo World!');
         }
     });
     </script>
@@ -148,7 +148,7 @@ file that will be loaded automatically if no inline controller is defined.
     var componentContext = zuix.load('simple_view', {
         controller: zuix.controller(function($$){
             $$.create = function() {
-                $$.view.html('Helllo World!');
+                $$.view().html('Helllo World!');
             }
         }),
         ready: function (context) {
@@ -220,7 +220,7 @@ file that will be loaded automatically if no inline controller is defined.
 
 <small>Component on CodePen</small>
 <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="zuix test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">zuix test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
-<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+<script defer src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 
 
@@ -259,7 +259,7 @@ file that will be loaded automatically if no inline controller is defined.
     container: zuix.field('simple_view_1'),
     controller: zuix.controller(function ($$) {
         $$.create = function () {
-            $$.view.find('div').on('click', function () {
+            $$.view().find('div').on('click', function () {
                 $(this).attr('data-badge', 10);
             });
         }

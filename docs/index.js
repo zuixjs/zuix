@@ -3,7 +3,7 @@ var pagedView = zuix.load('ui/layout/paged-view', {
     view: zuix.field('content-pages'),
     ready: function() {
         pagedView.on('page:change', function (e, i) {
-            console.log('page changed', i);
+            console.log('page:change@PagedView', i);
         });
     }
 });
@@ -13,8 +13,8 @@ var actionsMenu = zuix.load('ui/layout/actions-view', {
     view: zuix.field('actions-menu'),
     ready: function() {
         actionsMenu.on('item:click', function (e, i) {
+            console.log("item::click@ActionsView", i);
             $(this).children().eq(i).animateCss('tada', function () { });
-            console.log("CLICKED!!!");
             if (pagedView) pagedView.invoke('setPage', i);
         });
     }
@@ -45,11 +45,9 @@ pagedView.behavior = function (e, i) {
 };
 
 actionsMenu.behavior = function (e, i) {
-    console.log("ACTION BEHAVE");
     switch (e.type) {
         case 'item:click':
             // Animate clicked button
-            console.log(this);
             $(this).children().eq(i).animateCss('tada', function () { });
             break;
     }
@@ -81,6 +79,7 @@ zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
         zuix.field('loader').hide();
     }
 });
+
 
 // debug
 setTimeout(function () {
