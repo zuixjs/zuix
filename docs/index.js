@@ -2,6 +2,11 @@
 var pagedView = null;
 var actionMenu = null;
 
+zuix.field('loader').show();
+zuix.loadEnd = function() {
+    zuix.field('loader').fadeOut(500);
+};
+
 // Main page setup
 var main = {
     topMenu: {
@@ -135,10 +140,7 @@ pagedView.behavior = function (e, i) {
 // NOTE: ensure the source is trusted before
 // loading any external hosted component in your site
 zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
-    container: zuix.field('zuix-demo'),
-    ready: function () {
-        zuix.field('loader').hide();
-    }
+    container: zuix.field('zuix-demo')
 });
 
 

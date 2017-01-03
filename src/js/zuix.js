@@ -456,6 +456,10 @@
     }
 
 
+
+
+
+    // TODO: make of it a class
     var _taskList = [];
     function taskQueue(tid, fn) {
         _taskList.push({ tid: tid, fn: fn, status: 0 });
@@ -470,13 +474,17 @@
             else if (_taskList[i].status == 1) {
                 console.log("... waiting task ", _taskList[i].tid);
                 next = -2;
-                setTimeout(taskCheck, 100);
+                setTimeout(taskCheck, 10);
+//                if (util.isFunction(this.loadProgress))
+//                    this.loadProgress();
                 return;
             }
             else if (_taskList[i].status == 2) {
-                console.log("Completed task ", _taskList[i].tid);
+                console.log("Completed task ", _taskList[i].tid, next);
                 _taskList.splice(i, 1);
-                setTimeout(taskCheck, 100);
+                setTimeout(taskCheck, 10);
+//                if (util.isFunction(this.loadProgress))
+//                    this.loadProgress();
                 return;
             }
         }
@@ -485,8 +493,20 @@
             _taskList[next].status = 1;
             _taskList[next].fn.call(_taskList[next]);
             console.log("Started task ", _taskList[next].tid);
+            if (util.isFunction(zuix.loadBegin))
+                zuix.loadBegin();
+            setTimeout(taskCheck, 10);
+        } else {
+            if (util.isFunction(zuix.loadEnd))
+                zuix.loadEnd();
         }
     }
+
+
+
+
+
+
 
 
     /**
@@ -573,7 +593,7 @@
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(context.view())) {
-                taskQueue(context.componentId, function() {
+                taskQueue('html:'+context.componentId, function() {
                     var promise = this;
                     $.ajax({
                         url: context.componentId + ".html?" + new Date().getTime(),
@@ -588,7 +608,7 @@
                             if (util.isFunction(options.error))
                                 context.error(context, err);
                         }
-                    }).done(function() {
+                    }).then(function() {
                         promise.status = 2;
                     });
 
@@ -678,7 +698,7 @@
      */
     function loadController(context) {
         if (context.controller() === null && context.options.auto !== false) {
-            taskQueue(context.componentId, function() {
+            taskQueue('js:'+context.componentId, function() {
                 var promise = this;
                 $.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
@@ -707,7 +727,7 @@
                         if (util.isFunction(context.error))
                             context.error(context, err);
                     }
-                }).done(function () {
+                }).then(function () {
                     promise.status = 2;
                 });
             });

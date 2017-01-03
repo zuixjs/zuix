@@ -69,6 +69,22 @@
 </head>
 <body>
 
+
+<!-- Loader Overlay -->
+<div data-ui-field="loader" layout="column center-center"
+     style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100">
+    <div layout="row center-center">
+        <i class="material-icons md-18">dashboard</i>
+        &nbsp;
+        <small><strong>ZUIX</strong></small>,
+        lite MVC library for Web/SPA development
+    </div>
+    <p>&nbsp;</p>
+    <!-- MDL Progress Bar with Indeterminate Progress -->
+    <div style="max-width: 200px;" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+</div>
+
+
 <!-- Main page layout (MDL) -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
@@ -76,7 +92,7 @@
         <div class="mdl-layout__header-row">
 
             <!-- zuix "ui/layout/actions-view" layout -->
-            <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" data-ui-ready="main.topMenu.ready" data-ui-field="actions-menu" layout="row center-center">
+            <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" data-ui-ready="main.topMenu.ready" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
                     <i class="material-icons md-18">dashboard</i>
                     <small>ZUIX</small>
@@ -106,12 +122,19 @@
                     <div self="size-medium" layout="column center-center" class="page-content content-padding">
 
                         <div class="section-content">
-                            <h3>Javascript UI Components Enhancer</h3>
+                            <h3>
+                                ZUIX
+                                <small>
+                                    lite MVC library for Web/SPA development
+                                </small>
+                            </h3>
 
                             <p>
-                                <strong>zuix</strong> is a library for <strong>component based Web/SPA
-                                development</strong>
-                                implementing <strong>MVC</strong> design pattern.
+                                <small><strong>ZUIX</strong></small> is a JavaScript library for
+                                "composing" <strong>web</strong>sites and <strong>app</strong>lications by
+                                creating loadable and reusable components.
+                                Based on the MVC design pattern, <small><strong>ZUIX</strong></small> plays well
+                                with any UI framework of your pick.
                             </p>
 
                             <p>&nbsp;</p>
@@ -160,12 +183,6 @@
         </div>
 
     </main>
-</div>
-
-<!-- Loader Overlay -->
-<div data-ui-field="loader" layout="column center-center"
-     style="background-color:rgba(100,100,100,0.05);position: fixed; left: 0; top: 76px; bottom:0; right:0;z-index: 100">
-    <div class="mdl-spinner mdl-js-spinner is-active"></div>
 </div>
 
 
