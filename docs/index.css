@@ -14,6 +14,7 @@ h1, h2, h3, h4, h5, h6 {
 [data-ui-component="ui/layout/actions-view"] div {
     cursor: pointer;
     min-width: 140px;
+    height: 72px;
 }
 
 [data-ui-component="ui/layout/actions-view"] .is-active {
@@ -34,6 +35,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 16px;
 }
 
+.md-18 {
+    font-size: 18px;
+}
+.md-24 {
+    font-size: 24px;
+}
 .md-48 {
-    font-size: 28px;
+    font-size: 48px;
 }

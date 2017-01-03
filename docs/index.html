@@ -66,7 +66,6 @@
     <link rel="stylesheet" href="index.css">
     <script defer type="text/javascript" src="index.js"></script>
 
-
 </head>
 <body>
 
@@ -77,20 +76,17 @@
         <div class="mdl-layout__header-row">
 
             <!-- zuix "ui/layout/actions-view" layout -->
-            <div data-ui-field="actions-menu" layout="row center-center">
-                <div data-ui-field="tab-home" align="center" class="content-padding">
-                    <i class="material-icons md-48">dashboard</i>
-                    <br>
+            <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" data-ui-ready="main.topMenu.ready" data-ui-field="actions-menu" layout="row center-center">
+                <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+                    <i class="material-icons md-18">dashboard</i>
                     <small>ZUIX</small>
                 </div>
-                <div data-ui-field="tab-getstarted" align="center" class="content-padding">
-                    <i class="material-icons md-48">school</i>
-                    <br>
+                <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+                    <i class="material-icons md-18">school</i>
                     <small>Getting Started</small>
                 </div>
-                <div data-ui-field="tab-api" align="center" class="content-padding">
-                    <i class="material-icons md-48">import_contacts</i>
-                    <br>
+                <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+                    <i class="material-icons md-18">import_contacts</i>
                     <small>API Docs</small>
                 </div>
             </div>
@@ -100,7 +96,7 @@
     <main class="mdl-layout__content">
 
         <!-- zuix "ui/layout/paged-view" layout -->
-        <div data-ui-field="content-pages">
+        <div data-ui-load="ui/layout/paged-view" data-ui-ready="main.contentPager.ready" data-ui-field="content-pages">
 
             <!-- page 1 -->
             <section>

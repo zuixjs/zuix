@@ -1,12 +1,12 @@
-zuix.controller(function($$){
+zuix.controller(function ($$) {
 
     $$.create = function () {
 
-        $$.expose('setPage', function(i) {
+        $$.expose('setPage', function (i) {
             setPage(i);
         });
 
-        $$.view().children().each(function(){
+        $$.view().children().each(function () {
             $(this).wrap('<div style="position:absolute;top:0;left:0;bottom:0;right:0;overflow: auto;"></div>');
             $(this).parent().hide();
         });
@@ -14,27 +14,28 @@ zuix.controller(function($$){
 
     };
 
-    $$.destroy = function() {
+    $$.destroy = function () {
 
-        $$.view().children().each(function(){
-           $(this).unwrap();
+        $$.view().children().each(function () {
+            $(this).unwrap();
         });
         currentPage = -1;
 
     };
 
-    $$.api = function(command, options) {
-      switch (command) {
-          case 'page':
-          case 'setPage':
-              setPage(options);
-              break;
-      }
+    $$.api = function (command, options) {
+        switch (command) {
+            case 'page':
+            case 'setPage':
+                setPage(options);
+                break;
+        }
     };
 
     // Private Members
 
     var currentPage = -1;
+
     function setPage(p) {
         var pages = $$.view().children();
         var oldPage = currentPage;
