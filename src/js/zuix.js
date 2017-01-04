@@ -510,6 +510,12 @@
                 options = {};
             options.view = $(this);
 
+
+            // TODO: Behavior are also definable in "data-ui-behavior" attribute
+            // TODO: Events are also definable in "data-ui-on" attribute
+            // util.propertyFromPath( ... )
+
+
             if (!util.isNoU($(this).attr('data-ui-ready')))
                 options.ready = util.propertyFromPath(window, $(this).attr('data-ui-ready'));
             if (!util.isNoU($(this).attr('data-ui-error')))

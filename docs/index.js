@@ -1,3 +1,28 @@
+/**
+ * @license
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Javascript UI components enhancer. A lite MVC library.
+ * Find more details about zuix here:
+ *   https://github.com/genielabs/zuix-mvc-js
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
 // Wait for bootstrap to complete
 zuix.field('loader').show();
 zuix.loadEnd(function () {
@@ -12,14 +37,12 @@ var main = {
     topMenu: {
         // actions map
         on: {
-            'item:click': function (e, i) {
-                if (pagedView) pagedView.invoke('setPage', i);
-                console.log("item::click@ActionsView", i);
-            }
+            'item:click': menuItemClicked
         },
         // behaviors map
         behavior: {
             'item:click': function (e, i) {
+                // animate the button when clicked
                 $(this).children().eq(i).animateCss('tada');
             }
         },
@@ -39,25 +62,10 @@ var main = {
         },
         // behaviors map
         behavior: {
-            'page:change': function (e, i) {
-                // Animate page changing
-                var pages = $(this).children();
-                if (i.page > i.old) {
-                    pages.eq(i.page).animateCss('bounceInRight').show();
-                    pages.eq(i.old).animateCss('bounceOutLeft', function () {
-                        if (!pages.eq(i.old).hasClass('animated'))
-                            pages.eq(i.old).hide();
-                    }).show();
-                } else {
-                    pages.eq(i.page).animateCss('bounceInLeft').show();
-                    pages.eq(i.old).animateCss('bounceOutRight', function () {
-                        if (!pages.eq(i.old).hasClass('animated'))
-                            pages.eq(i.old).hide();
-                    }).show();
-                }
-            }
+            'page:change': changePage
         },
         ready: function (ctx) {
+            // store a reference to this component once it's loaded
             pagedView = ctx;
             console.log("ZUIX", "INFO", "Paged view ready.", ctx);
         }
@@ -66,61 +74,28 @@ var main = {
 };
 zuix.componentize();
 
-function changePage(i) {
+function menuItemClicked(e, i) {
     if (pagedView) pagedView.invoke('setPage', i);
+    console.log("item::click@ActionsView", i);
 }
 
-function animateMenuItem() {
-    $(this).children().eq(i).animateCss('tada');
+function changePage(e, i) {
+    // Animate page changing
+    var pages = $(this).children();
+    if (i.page > i.old) {
+        pages.eq(i.page).animateCss('bounceInRight').show();
+        pages.eq(i.old).animateCss('bounceOutLeft', function () {
+            if (!pages.eq(i.old).hasClass('animated'))
+                pages.eq(i.old).hide();
+        }).show();
+    } else {
+        pages.eq(i.page).animateCss('bounceInLeft').show();
+        pages.eq(i.old).animateCss('bounceOutRight', function () {
+            if (!pages.eq(i.old).hasClass('animated'))
+                pages.eq(i.old).hide();
+        }).show();
+    }
 }
-
-/*
- // load 'actions-menu' component into element with [data-ui-field="actions-menu"]
- var actionsMenu = zuix.load('ui/layout/actions-view', {
- view: zuix.field('actions-menu'),
- ready: function () {
- actionsMenu.on('item:click', function (e, i) {
- console.log("item::click@ActionsView", i);
- $(this).children().eq(i).animateCss('tada');
- if (pagedView) pagedView.invoke('setPage', i);
- });
- }
- });
- */
-
-// Define behavior for the PageView and the ActionMenu components
-// TODO: Behavior are also definable in "data-ui-behavior" attribute
-/*
- pagedView.behavior = function (e, i) {
- switch (e.type) {
- case 'page:change':
- // Animate page changing
- var pages = $(this).children();
- if (i.page > i.old) {
- pages.eq(i.page).animateCss('bounceInRight').show();
- pages.eq(i.old).animateCss('bounceOutLeft', function () {
- pages.eq(i.old).hide();
- }).show();
- } else {
- pages.eq(i.page).animateCss('bounceInLeft').show();
- pages.eq(i.old).animateCss('bounceOutRight', function () {
- pages.eq(i.old).hide();
- }).show();
- }
- break;
- }
- };
- */
-/*
- actionsMenu.behavior = function (e, i) {
- switch (e.type) {
- case 'item:click':
- // Animate clicked button
- $(this).children().eq(i).animateCss('tada');
- break;
- }
- };
- */
 
 /*
  // Example of loading UI logic from two different components
