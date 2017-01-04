@@ -73,13 +73,9 @@
 <!-- Loader Overlay -->
 <div data-ui-field="loader" layout="column center-center"
      style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100">
-    <div layout="row center-center" class="animated bounceInDown">
-        <span class="animated infinite pulse">
-        <i class="material-icons md-18">dashboard</i>
-        <small><strong>ZUIX</strong></small>
-        </span>
-        &nbsp;
-        <small>lite MVC library for Web/SPA development</small>
+    <div layout="row center-center" class="animated infinite pulse">
+        <i class="material-icons md-24">dashboard</i>
+        <strong>ZUIX</strong>
     </div>
     <p>&nbsp;</p>
     <!-- MDL Progress Bar with Indeterminate Progress -->
@@ -94,7 +90,7 @@
         <div class="mdl-layout__header-row">
 
             <!-- zuix "ui/layout/actions-view" layout -->
-            <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" data-ui-ready="main.topMenu.ready" layout="row center-center">
+            <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" -d-ata-ui-ready="main.topMenu.ready" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
                     <i class="material-icons md-18">dashboard</i>
                     <small>ZUIX</small>
@@ -114,7 +110,7 @@
     <main class="mdl-layout__content">
 
         <!-- zuix "ui/layout/paged-view" layout -->
-        <div data-ui-load="ui/layout/paged-view" data-ui-ready="main.contentPager.ready" data-ui-field="content-pages">
+        <div data-ui-load="ui/layout/paged-view" data-ui-options="main.contentPager" d-a--ta-ui-ready="main.contentPager.ready">
 
             <!-- page 1 -->
             <section>

@@ -1,67 +1,68 @@
-// load 'ui/layout/paged-view' component into element with [data-ui-field="content-pages"]
-var pagedView = null;
-var actionMenu = null;
-
+// Wait for bootstrap to complete
 zuix.field('loader').show();
-zuix.loadEnd(function() {
+zuix.loadEnd(function () {
     zuix.field('loader').fadeOut(500);
 });
 
 // Main page setup
+var pagedView = null;
 var main = {
+
+    // Component 'ui/layout/actions-view'
     topMenu: {
-        // Context Options
-        model: {
-            test: 'testing...'
-        },
-        // actions map or function
-        on: { // '<event_name>': handlerFn
-            'item:click': changePage
-        },
-        // behaviors map or function
-        behavior: { // '<event_name>':  handlerFn
-            'item:click': animateMenuItem
-        },
-        ready: function (ctx) {
-            console.log("MENU READY", ctx);
-            actionMenu = ctx;
-            ctx.on('item:click', function (e, i) {
-                console.log("item::click@ActionsView", i);
-                $(this).children().eq(i).animateCss('tada');
+        // actions map
+        on: {
+            'item:click': function (e, i) {
                 if (pagedView) pagedView.invoke('setPage', i);
-            });
+                console.log("item::click@ActionsView", i);
+            }
+        },
+        // behaviors map
+        behavior: {
+            'item:click': function (e, i) {
+                $(this).children().eq(i).animateCss('tada');
+            }
+        },
+        // component ready callback
+        ready: function (ctx) {
+            console.log("ZUIX", "INFO", "Top menu ready.", ctx);
         }
     },
+
+    // Component 'ui/layout/paged-view'
     contentPager: {
-        // Context Options
+        // actions map
+        on: {
+            'page:change': function (e, i) {
+                console.log('page:change@PagedView', i);
+            }
+        },
+        // behaviors map
+        behavior: {
+            'page:change': function (e, i) {
+                // Animate page changing
+                var pages = $(this).children();
+                if (i.page > i.old) {
+                    pages.eq(i.page).animateCss('bounceInRight').show();
+                    pages.eq(i.old).animateCss('bounceOutLeft', function () {
+                        if (!pages.eq(i.old).hasClass('animated'))
+                            pages.eq(i.old).hide();
+                    }).show();
+                } else {
+                    pages.eq(i.page).animateCss('bounceInLeft').show();
+                    pages.eq(i.old).animateCss('bounceOutRight', function () {
+                        if (!pages.eq(i.old).hasClass('animated'))
+                            pages.eq(i.old).hide();
+                    }).show();
+                }
+            }
+        },
         ready: function (ctx) {
             pagedView = ctx;
-            ctx.behavior = function (e, i) {
-                switch (e.type) {
-                    case 'page:change':
-                        // Animate page changing
-                        var pages = $(this).children();
-                        if (i.page > i.old) {
-                            pages.eq(i.page).animateCss('bounceInRight').show();
-                            pages.eq(i.old).animateCss('bounceOutLeft', function () {
-                                if (!pages.eq(i.old).hasClass('animated'))
-                                    pages.eq(i.old).hide();
-                            }).show();
-                        } else {
-                            pages.eq(i.page).animateCss('bounceInLeft').show();
-                            pages.eq(i.old).animateCss('bounceOutRight', function () {
-                                if (!pages.eq(i.old).hasClass('animated'))
-                                    pages.eq(i.old).hide();
-                            }).show();
-                        }
-                        break;
-                }
-            };
-            ctx.on('page:change', function (e, i) {
-                console.log('page:change@PagedView', i);
-            });
+            console.log("ZUIX", "INFO", "Paged view ready.", ctx);
         }
     }
+
 };
 zuix.componentize();
 
@@ -90,26 +91,26 @@ function animateMenuItem() {
 // Define behavior for the PageView and the ActionMenu components
 // TODO: Behavior are also definable in "data-ui-behavior" attribute
 /*
-pagedView.behavior = function (e, i) {
-    switch (e.type) {
-        case 'page:change':
-            // Animate page changing
-            var pages = $(this).children();
-            if (i.page > i.old) {
-                pages.eq(i.page).animateCss('bounceInRight').show();
-                pages.eq(i.old).animateCss('bounceOutLeft', function () {
-                    pages.eq(i.old).hide();
-                }).show();
-            } else {
-                pages.eq(i.page).animateCss('bounceInLeft').show();
-                pages.eq(i.old).animateCss('bounceOutRight', function () {
-                    pages.eq(i.old).hide();
-                }).show();
-            }
-            break;
-    }
-};
-*/
+ pagedView.behavior = function (e, i) {
+ switch (e.type) {
+ case 'page:change':
+ // Animate page changing
+ var pages = $(this).children();
+ if (i.page > i.old) {
+ pages.eq(i.page).animateCss('bounceInRight').show();
+ pages.eq(i.old).animateCss('bounceOutLeft', function () {
+ pages.eq(i.old).hide();
+ }).show();
+ } else {
+ pages.eq(i.page).animateCss('bounceInLeft').show();
+ pages.eq(i.old).animateCss('bounceOutRight', function () {
+ pages.eq(i.old).hide();
+ }).show();
+ }
+ break;
+ }
+ };
+ */
 /*
  actionsMenu.behavior = function (e, i) {
  switch (e.type) {

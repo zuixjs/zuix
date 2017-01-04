@@ -24,7 +24,7 @@
  */
 
 /**
- * @class
+ * @class Zuix
  * @constructor
  */
 (function Zuix() {
@@ -55,9 +55,15 @@
      * @param {ComponentContext} context
      * @param {Object} error
      *
+     * @callback EventCallback
+     * @param {jQuery.Event} event
+     * @param {Object} data
+     *
+     * @typedef {!{string, function}} EventMapping
+     *
      * @typedef {{
-     *    data: Object,
-     *    locales: Object
+     *    data: Object|undefined,
+     *    locales: Object|undefined
      * }} ContextModel
      *
      * @typedef {jQuery|HTMLElement|string} ContextView
@@ -65,16 +71,19 @@
      * @typedef {jQuery|HTMLElement|string} ViewContainer
      *
      * @typedef {{
-     *    contextId: Object,
-     *    container: jQuery,
-     *    componentId: string,
-     *    model: ContextModel,
-     *    view: ContextView,
-     *    controller: ContextControllerCallback,
-     *    auto: Object,
-     *    ready: ContextReadyCallback,
-     *    error: ContextErrorCallback
+     *    contextId: Object|undefined,
+     *    container: jQuery|undefined,
+     *    componentId: string|undefined,
+     *    model: ContextModel|undefined,
+     *    view: ContextView|undefined,
+     *    controller: ContextControllerCallback|undefined,
+     *    auto: Object|undefined,
+     *    on: Array.<EventMapping>|EventCallback|undefined,
+     *    behavior: Array.<EventMapping>|EventCallback|undefined,
+     *    ready: ContextReadyCallback|undefined,
+     *    error: ContextErrorCallback|undefined
      * }} ContextOptions
+     *
      */
 
     /**
@@ -91,21 +100,23 @@
      * @constructor
      */
     function ComponentContext(options) {
-        this.options = options;
+
+        this._options = null;
         this.contextId = util.isNoU(options) || util.isNoU(options.contextId) ? null : options.contextId;
-        this.componentId = util.isNoU(options) || util.isNoU(options.componentId) ? null : options.componentId;
+        this.componentId = null;
 
         /** @protected */
-        this._container = util.isNoU(options) || util.isNoU(options.container) ? null : options.container;
+        this._container = null;
+
         /** @protected */
-        this._model = util.isNoU(options) || util.isNoU(options.model) ? null : options.model;
+        this._model = null;
         /** @protected */
-        this._view = util.isNoU(options) || util.isNoU(options.view) ? null : options.view;
+        this._view = null;
         /**
          * @protected
          * @type {ContextControllerCallback}
          */
-        this._controller = util.isNoU(options) || util.isNoU(options.controller) ? null : options.controller;
+        this._controller = null;
 
         /**
          * Define the local behavior handler for this context instance only.
@@ -122,8 +133,25 @@
          */
         this._c = null;
 
+        this.options(options);
+
         return this;
     }
+
+    ComponentContext.prototype.options = function (options) {
+        if (util.isNoU(options))
+            return this._options;
+        this._options = options;
+        if (!util.isNoU(options)) {
+            if (!util.isNoU(options.componentId))
+              this.componentId = options.componentId;
+            this.container(options.container);
+            this.model(options.model);
+            this.view(options.view);
+            this.controller(options.controller);
+        }
+        return this;
+    };
 
     /**
      * TODO: describe
@@ -182,10 +210,10 @@
         if (typeof view === 'undefined') return this._view;
         if (typeof view === 'string') {
 
-            // TODO: turn all of these into viewHandle plugins as optional deps
+            // TODO: turn all of these into viewHandle plugins as optional dependencies
 
             // ShowDown - Markdown compiler
-            if (this.options.markdown === true && !util.isNoU(showdown))
+            if (this.options().markdown === true && !util.isNoU(showdown))
                 view = new showdown.Converter().makeHtml(view);
 
             this._view = $('<div/>').append(view);
@@ -228,6 +256,7 @@
     };
 
     ComponentContext.prototype._eventMap = [];
+    ComponentContext.prototype._behaviorMap = [];
 
     /**
      * TODO: complete JSDoc
@@ -297,12 +326,33 @@
         };
         /** @type {function} */
         this.eventRouter = function (a, b) {
-            if (util.isFunction(self.behavior()))
-                self.behavior().call(self.view(), a, b);
+            //if (util.isFunction(self.behavior()))
+            //    self.behavior().call(self.view(), a, b);
+            if (util.isFunction(context._behaviorMap[a.type]))
+                context._behaviorMap[a.type].call(self.view(), a, b);
             if (util.isFunction(context._eventMap[a.type]))
                 context._eventMap[a.type].call(self.view(), a, b);
             // TODO: else-> should report anomaly
         };
+        // create event map from context options
+        var options = context.options();
+        if (!util.isNoU(options.on))
+        {
+            for(var eventPath in options.on) {
+                var handler = options.on[eventPath];
+                // TODO: should log.warn if k already exists
+                self.addEvent(self.view(), eventPath, handler);
+            }
+        }
+        // create behavior map from context options
+        if (!util.isNoU(options.behavior))
+        {
+            for(var eventPath in options.behavior) {
+                var handler = options.behavior[eventPath];
+                // TODO: should log.warn if k already exists
+                self.addBehavior(self.view(), eventPath, handler);
+            }
+        }
 
         context.controller().call(this, this);
 
@@ -310,11 +360,18 @@
     }
 
     ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
-        console.log(target, eventPath);
         if (!util.isNoU(target)) {
-            //if (!util.isNoU(this.context._eventMap[eventPath]))
-                target.off(eventPath, this.eventRouter);
+            target.off(eventPath, this.eventRouter);
             this.context._eventMap[eventPath] = handler_fn;
+            target.on(eventPath, this.eventRouter);
+        } else {
+            // TODO: should report missing view
+        }
+    };
+    ContextController.prototype.addBehavior = function (target, eventPath, handler_fn) {
+        if (!util.isNoU(target)) {
+            target.off(eventPath, this.eventRouter);
+            this.context._behaviorMap[eventPath] = handler_fn;
             target.on(eventPath, this.eventRouter);
         } else {
             // TODO: should report missing view
@@ -428,6 +485,11 @@
     }
 
 
+    /**
+     * TODO: describe
+     *
+     * @param [element] {jQuery|HTMLElement|HTMLDocument}
+     */
     function componentize(element) {
         // TODO: add 'data-ui-loaded="true"' attribute after loading
         // to prevent loading twice
@@ -436,14 +498,18 @@
         $(element).find('[data-ui-load]').each(function () {
             var componentId = $(this).attr('data-ui-load');
             if ($(this).attr('data-ui-loaded') === true || $(this).parent('pre,code').length) {
-                console.log("Skipped", this);
+                console.log(_className, "WARN", "Skipped", this);
                 return;
             }
             $(this).attr('data-ui-loaded', true);
             /** @type {ContextOptions} */
-            var options = {
-                view: $(this)
-            };
+            var options;
+            if (!util.isNoU($(this).attr('data-ui-options')))
+                options = util.propertyFromPath(window, $(this).attr('data-ui-options'));
+            else
+                options = {};
+            options.view = $(this);
+
             if (!util.isNoU($(this).attr('data-ui-ready')))
                 options.ready = util.propertyFromPath(window, $(this).attr('data-ui-ready'));
             if (!util.isNoU($(this).attr('data-ui-error')))
@@ -457,24 +523,24 @@
             if (!util.isNoU($(this).attr('data-ui-controller')))
                 options.controller = util.propertyFromPath(window, $(this).attr('data-ui-controller'));
 
-            zuix.load(componentId, options);
+            load(componentId, options);
         });
     }
 
 
-
-
-
     // TODO: make of it a class
     var _taskList = [];
+
     function taskQueue(tid, fn) {
-        _taskList.push({ tid: tid, fn: fn, status: 0 });
-        setTimeout(function(){ taskCheck(); }, 1);
+        _taskList.push({tid: tid, fn: fn, status: 0});
+        setTimeout(function () {
+            taskCheck();
+        }, 1);
     }
 
     function taskCheck() {
         var next = -1;
-        for(var i = 0; i < _taskList.length; i++) {
+        for (var i = 0; i < _taskList.length; i++) {
             if (next != -2 && _taskList[i].status == 0) {
                 next = i;
             }
@@ -498,7 +564,7 @@
 
         if (next >= 0) {
             _taskList[next].status = 1;
-            _taskList[next].fn.call(_taskList[next]);
+            (_taskList[next].fn).call(_taskList[next]);
             console.log("Started task ", _taskList[next].tid);
             if (util.isFunction(loadBegin))
                 loadBegin();
@@ -510,21 +576,19 @@
     }
 
 
-
-
-
-
+    // TODO: implement <componentId>.css and <componentId>.model.js loading
+    // TODO: implement LESS.js css pre-processing for <component>.css files
+    // TODO: (supporting nested rules for local component styles definitions)
 
 
     /**
-     * Load a component context with the given options.
+     * Loads a component with the given options.
      *
      * @param {!string} componentId The id/name of the component we want to load.
-     * @param {ContextOptions} [options] context options used to initialize the component context
+     * @param {ContextOptions} [options] context options used to initialize the loaded component
      * @returns {ComponentContext}
      */
     function load(componentId, options) {
-
         // TODO: throw error on argument mismatch
 
         /** @type {ComponentContext} */
@@ -535,12 +599,7 @@
                 // if it does, try to pick it from allocated contexts list
                 context = getContext(options.contextId);
                 if (context !== null) {
-                    if (!util.isNoU(options.view))
-                        context.view(options.view);
-                    if (!util.isNoU(options.model))
-                        context.model(options.model);
-                    if (!util.isNoU(options.controller))
-                        context.controller(options.controller);
+                    context.options(options);
                 } else {
                     // if no context is already allocated
                     // with that id, then add a new one
@@ -600,7 +659,7 @@
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(context.view())) {
-                taskQueue('html:'+context.componentId, function() {
+                taskQueue('html:' + context.componentId, function () {
                     var promise = this;
                     $.ajax({
                         url: context.componentId + ".html?" + new Date().getTime(),
@@ -615,7 +674,7 @@
                             if (util.isFunction(options.error))
                                 context.error(context, err);
                         }
-                    }).then(function() {
+                    }).then(function () {
                         promise.status = 2;
                     });
 
@@ -704,8 +763,8 @@
      * @param {ComponentContext} context
      */
     function loadController(context) {
-        if (context.controller() === null && context.options.auto !== false) {
-            taskQueue('js:'+context.componentId, function() {
+        if (context.controller() === null && context.options().auto !== false) {
+            taskQueue('js:' + context.componentId, function () {
                 var promise = this;
                 $.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
@@ -867,7 +926,7 @@
 
         propertyFromPath: function (o, s) {
             if (typeof s !== 'string') return;
-            s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+            s = s.replace(/\[(\w+)]/g, '.$1'); // convert indexes to properties
             s = s.replace(/^\./, '');           // strip a leading dot
             var a = s.split('.');
             var ref = o;
@@ -896,10 +955,26 @@
         include: include,
 
         /* events */
-        loadBegin: function(h) { loadBegin = h; },
-        loadEnd:  function(h) { loadEnd = h; },
+
+        /**
+         * @param h {loadBegin}
+         * @listens handler
+         */
+        loadBegin: function (h) {
+            loadBegin = h;
+            return this;
+        },
+        /**
+         * @param h {loadEnd}
+         * @listens handler
+         */
+        loadEnd: function (h) {
+            loadEnd = h;
+            return this;
+        },
 
         /* utility methods */
+
         field: field,
 
         /* dev utility methods */
@@ -912,7 +987,7 @@
 
     };
 
-    return this.zuix;
+    return zuix;
 }.call(this));
 
 //var zuix = Zuix.call(this);

@@ -41,16 +41,16 @@ zuix.controller(function ($$) {
         var oldPage = currentPage;
         if (p > currentPage) {
             currentPage = p;
-            pages.eq(p).show();
-            pages.eq(oldPage).hide();
+            pages.eq(p).fadeIn();
+            pages.eq(oldPage).fadeOut();
             $$.trigger('page:change', {
                 old: oldPage,
                 page: currentPage
             });
         } else if (p < currentPage) {
             currentPage = p;
-            pages.eq(p).show();
-            pages.eq(oldPage).hide();
+            pages.eq(p).fadeIn();
+            pages.eq(oldPage).fadeOut();
             $$.trigger('page:change', {
                 old: oldPage,
                 page: currentPage
