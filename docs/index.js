@@ -3,9 +3,9 @@ var pagedView = null;
 var actionMenu = null;
 
 zuix.field('loader').show();
-zuix.loadEnd = function() {
+zuix.loadEnd(function() {
     zuix.field('loader').fadeOut(500);
-};
+});
 
 // Main page setup
 var main = {
@@ -15,13 +15,13 @@ var main = {
             test: 'testing...'
         },
         // actions map or function
-        //on: { // '<event_name>': handlerFn
-        //    'item:click': changePage
-        //},
+        on: { // '<event_name>': handlerFn
+            'item:click': changePage
+        },
         // behaviors map or function
-        //behavior: { // '<event_name>':  handlerFn
-        //    'item:click': animateMenuItem
-        //},
+        behavior: { // '<event_name>':  handlerFn
+            'item:click': animateMenuItem
+        },
         ready: function (ctx) {
             console.log("MENU READY", ctx);
             actionMenu = ctx;

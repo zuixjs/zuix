@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2015-2016 G-Labs. All Rights Reserved.
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -227,7 +227,7 @@
         return this;
     };
 
-    var _eventMap = [];
+    ComponentContext.prototype._eventMap = [];
 
     /**
      * TODO: complete JSDoc
@@ -279,7 +279,7 @@
 
         /** @type {function} */
         this.trigger = function (eventPath, eventData) {
-            if (util.isNoU(_eventMap[eventPath]))
+            if (util.isNoU(context._eventMap[eventPath]))
                 this.addEvent(self.view(), eventPath, null);
             // TODO: ...
             self.view().trigger(eventPath, eventData);
@@ -299,8 +299,8 @@
         this.eventRouter = function (a, b) {
             if (util.isFunction(self.behavior()))
                 self.behavior().call(self.view(), a, b);
-            if (util.isFunction(_eventMap[a.type]))
-                _eventMap[a.type].call(self.view(), a, b);
+            if (util.isFunction(context._eventMap[a.type]))
+                context._eventMap[a.type].call(self.view(), a, b);
             // TODO: else-> should report anomaly
         };
 
@@ -312,9 +312,9 @@
     ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
         console.log(target, eventPath);
         if (!util.isNoU(target)) {
-            //if (!util.isNoU(_eventMap[eventPath]))
+            //if (!util.isNoU(this.context._eventMap[eventPath]))
                 target.off(eventPath, this.eventRouter);
-            _eventMap[eventPath] = handler_fn;
+            this.context._eventMap[eventPath] = handler_fn;
             target.on(eventPath, this.eventRouter);
         } else {
             // TODO: should report missing view
@@ -358,6 +358,12 @@
     //
     /** @protected */
     var _contextSeqNum = 0;
+
+
+    /** @event loadBegin */
+    var loadBegin = null;
+    /** @event loadEnd */
+    var loadEnd = null;
 
 
     /**
@@ -465,6 +471,7 @@
         _taskList.push({ tid: tid, fn: fn, status: 0 });
         setTimeout(function(){ taskCheck(); }, 1);
     }
+
     function taskCheck() {
         var next = -1;
         for(var i = 0; i < _taskList.length; i++) {
@@ -493,12 +500,12 @@
             _taskList[next].status = 1;
             _taskList[next].fn.call(_taskList[next]);
             console.log("Started task ", _taskList[next].tid);
-            if (util.isFunction(zuix.loadBegin))
-                zuix.loadBegin();
+            if (util.isFunction(loadBegin))
+                loadBegin();
             setTimeout(taskCheck, 10);
         } else {
-            if (util.isFunction(zuix.loadEnd))
-                zuix.loadEnd();
+            if (util.isFunction(loadEnd))
+                loadEnd();
         }
     }
 
@@ -801,7 +808,7 @@
         return instance;
     }
 
-    // Generic utility methods class
+    // Generic utility class
     var util = {
 
         isNoU: function (obj) {
@@ -877,22 +884,33 @@
 
     };
 
-    // Public API
+    // Public Interface
 
     this.zuix = this.zuix || {
-            field: field,
-            include: include,
-            componentize: componentize,
-            controller: controller,
-            load: load,
-            unload: unload,
-            dumpCache: function () {
-                console.log(_componentCache);
-            },
-            dumpContexts: function () {
-                console.log(_contextRoot);
-            }
-        };
+
+        /* component loading */
+        controller: controller,
+        load: load,
+        unload: unload,
+        componentize: componentize,
+        include: include,
+
+        /* events */
+        loadBegin: function(h) { loadBegin = h; },
+        loadEnd:  function(h) { loadEnd = h; },
+
+        /* utility methods */
+        field: field,
+
+        /* dev utility methods */
+        dumpCache: function () {
+            console.log("ZUIX", "Component Cache", _componentCache);
+        },
+        dumpContexts: function () {
+            console.log("ZUIX", "Loaded Component Instances", _contextRoot);
+        }
+
+    };
 
     return this.zuix;
 }.call(this));
