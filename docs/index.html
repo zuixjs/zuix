@@ -55,14 +55,14 @@
     <!-- Animte.Css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
-    <!-- Prism, code syntax highlighting -->
+    <!-- ZUIX-HOOK add-on: Prism, code syntax highlighting -->
     <link rel="stylesheet" href="js/prism/prism.css">
     <script type="text/javascript" src="js/prism/prism.js"></script>
 
-    <!-- ShowDown, javascript markdown -->
+    <!-- ZUIX-HOOK add-on: ShowDown, javascript markdown -->
     <script src="js/showdown.min.js"></script>
 
-    <!-- zuix dependencies -->
+    <!-- zuix core dependencies -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/zuix.min.js"></script>
@@ -74,21 +74,7 @@
 </head>
 <body>
 
-
-<!-- Loader Overlay -->
-<div data-ui-field="loader" layout="column center-center"
-     style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100">
-    <div layout="column center-center" class="animated infinite pulse">
-        <i class="material-icons md-24">dashboard</i>
-        <strong>ZUIX,</strong>
-        <div>
-            the easy shift to component-based development
-        </div>
-    </div>
-    <p>&nbsp;</p>
-    <!-- MDL Progress Bar with Indeterminate Progress -->
-    <div style="max-width: 200px;" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-</div>
+<!-- TODO: rip-off inline styles, move them to index.css -->
 
 
 <!-- Main page layout (MDL) -->
@@ -100,8 +86,8 @@
             <!-- zuix "ui/layout/actions-view" layout -->
             <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-                    <i class="material-icons md-18">dashboard</i>
-                    <small>ZUIX</small>
+                    <i class="material-icons md-18">home</i>
+                    <small>Home</small>
                 </div>
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
                     <i class="material-icons md-18">school</i>
@@ -125,14 +111,18 @@
                 <div layout="column top-center" self="size-x1" class="page-content content-padding is-casting-shadow">
                     <!-- Your content goes here -->
 
-                    <div self="size-medium top-center" class="section-content">
+                    <h3 align="center">
+                        <i class="material-icons">dashboard</i>ZUIX
+                        <br>
+                        <small>
+                            the easy shift to component-based development
+                        </small>
+                    </h3>
 
-                        <div data-ui-include="content/about"></div>
+                    <div class="content-padding">
 
-                        <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"></div>
-
-                        <p>&nbsp;</p>
-                        <p>&nbsp;</p>
+                        <!-- include content from local resource -->
+                        <div data-ui-include="content/about" data-ui-options="main.options.content"></div>
 
                     </div>
 
@@ -145,9 +135,8 @@
                     <!-- Your content goes here -->
                     <div self="size-medium top-center" class="section-content">
 
-                        <!-- include content from external resource -->
-                        <script>zuix.include('content/getting_started', null, function () {
-                        });</script>
+                        <!-- include content from local resource -->
+                        <div data-ui-include="content/getting_started" data-ui-options="main.options.content"></div>
 
                     </div>
                 </div>
@@ -159,9 +148,8 @@
                     <!-- Your content goes here -->
                     <div self="size-medium top-center" class="section-content">
 
-                        <!-- include content from external resource -->
-                        <script>zuix.include('content/api_overview', null, function () {
-                        });</script>
+                        <!-- include content from local resource -->
+                        <div data-ui-include="content/api_overview" data-ui-options="main.options.content"></div>
 
                     </div>
                 </div>
@@ -170,6 +158,23 @@
         </div>
 
     </main>
+</div>
+
+
+<!-- Loader Overlay -->
+<div data-ui-field="loader" layout="column center-center"
+     style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100">
+    <div class="animated infinite pulse">
+        <h5 layout="row center-center">
+            <i class="material-icons md-24">dashboard</i>
+            <span>ZUIX</span>
+        </h5>
+    </div>
+    <!-- MDL Progress Bar with Indeterminate Progress -->
+    <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate" style="max-width: 200px;"></div>
+    <div class="content-padding">
+        <em>the easy shift to component-based development</em>
+    </div>
 </div>
 
 

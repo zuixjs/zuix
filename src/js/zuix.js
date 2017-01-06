@@ -77,7 +77,6 @@
      *    model: ContextModel|undefined,
      *    view: ContextView|undefined,
      *    controller: ContextControllerCallback|undefined,
-     *    auto: Object|undefined,
      *    on: Array.<EventMapping>|EventCallback|undefined,
      *    behavior: Array.<EventMapping>|EventCallback|undefined,
      *    ready: ContextReadyCallback|undefined,
@@ -218,10 +217,10 @@
         if (typeof view === 'undefined') return this._view;
         if (typeof view === 'string') {
 
-            // trigger `view:parse` hook before assigning content to the view
+            // trigger `html:parse` hook before assigning content to the view
             var hookData = { content: view };
             // TODO: fire zuix.hook -> view:attach
-            triggerHook(this, 'view:parse', hookData);
+            triggerHook(this, 'html:parse', hookData);
             view = hookData.content;
 
 
@@ -419,12 +418,6 @@
     var _contextSeqNum = 0;
 
 
-    /** @event loadBegin */
-    var loadBegin = null;
-    /** @event loadEnd */
-    var loadEnd = null;
-
-
     /**
      * TODO: describe
      *
@@ -454,38 +447,6 @@
         return $(container).find('[' + _zuixFieldAttribute + '="' + fieldName + '"]');
     }
 
-    /**
-     * TODO: describe
-     *
-     * @param resource
-     * @param container
-     * @param callback
-     */
-    function include(resource, container, callback) {
-        if (container === null) {
-            var fieldName = 'zuix-include-' + (++_contextSeqNum);
-            document.write('<div data-ui-include="' + (resource) + '" data-ui-field="' + fieldName + '" />');
-            container = zuix.field(fieldName);
-        }
-        // TODO: add js markdown support
-        load(resource, {
-            auto: false,
-            markdown: true,
-            ready: function (/** @type {ComponentContext} */ ctx) {
-                $(container).append(ctx.view());
-                if (util.isFunction(callback))
-                    callback(ctx);
-            },
-            error: function (/** @type {ComponentContext} */ ctx, err) {
-                // TODO: report error
-                $(container).append($('<p>').append('ERROR zuix.include'));
-                $(container).append($('<p>').append(data));
-                if (util.isFunction(callback))
-                    callback(ctx, err);
-            }
-        });
-    }
-
 
     /**
      * TODO: describe
@@ -502,15 +463,18 @@
             if (util.isNoU(componentId))
                 componentId = $(this).attr('data-ui-include');
             if ($(this).attr('data-ui-loaded') === true || $(this).parent('pre,code').length) {
-                console.log(_className, "WARN", "Skipped", this);
+                console.log("ZUIX", "WARN", "Skipped", this);
                 return;
             }
             $(this).attr('data-ui-loaded', true);
             /** @type {ContextOptions} */
             var options;
-            if (!util.isNoU($(this).attr('data-ui-options')))
+            if (!util.isNoU($(this).attr('data-ui-options'))) {
                 options = util.propertyFromPath(window, $(this).attr('data-ui-options'));
-            else
+                // copy passed options
+                options = jQuery.extend({}, options);
+                console.log("OPTIONS!", options);
+            } else
                 options = {};
 
             // Automatic view/container selection
@@ -563,19 +527,19 @@
                 next = i;
             }
             else if (_taskList[i].status == 1) {
-                console.log("... waiting task ", _taskList[i].tid);
                 next = -2;
                 setTimeout(taskCheck, 100);
-//                if (util.isFunction(this.loadProgress))
-//                    this.loadProgress();
+                triggerHook(this, 'load:step', {
+                    task: _taskList[i].tid
+                });
                 return;
             }
             else if (_taskList[i].status == 2) {
-                console.log("Completed task ", _taskList[i].tid, next);
+                triggerHook(this, 'load:next', {
+                    task: _taskList[i].tid
+                });
                 _taskList.splice(i, 1);
                 setTimeout(taskCheck, 100);
-//                if (util.isFunction(this.loadProgress))
-//                    this.loadProgress();
                 return;
             }
         }
@@ -583,13 +547,12 @@
         if (next >= 0) {
             _taskList[next].status = 1;
             (_taskList[next].fn).call(_taskList[next]);
-            console.log("Started task ", _taskList[next].tid);
-            if (util.isFunction(loadBegin))
-                loadBegin();
             setTimeout(taskCheck, 100);
+            triggerHook(this, 'load:begin', {
+                task: _taskList[next].tid
+            });
         } else {
-            if (util.isFunction(loadEnd))
-                loadEnd();
+            triggerHook(this, 'load:end');
         }
     }
 
@@ -616,6 +579,7 @@
         /** @type {ComponentContext} */
         var context = null;
         if (!util.isNoU(options)) {
+            console.log("OPTIONS!#", options);
             // check if context has its unique id assigned
             if (!util.isNoU(options.contextId)) {
                 // if it does, try to pick it from allocated contexts list
@@ -629,10 +593,8 @@
                     _contextRoot.push(context);
                 }
             } else {
-                if (options === false) {
+                if (options === false)
                     options = {};
-                    options.auto = false;
-                }
                 // generate contextId (this is a bit buggy, but it's quick)
                 options.contextId = 'zuix-ctx-' + (++_contextSeqNum);
                 context = new ComponentContext(options);
@@ -775,7 +737,7 @@
      * @param {ComponentContext} context
      */
     function loadController(context) {
-        if (context.controller() === null && context.options().auto !== false) {
+        if (context.controller() === null) {
             taskQueue('js:' + context.componentId, function () {
                 var promise = this;
                 $.ajax({
@@ -987,33 +949,11 @@
         load: load,
         unload: unload,
         componentize: componentize,
-        include: include,
-
-        /* events */
-
-        /**
-         * @param h {loadBegin}
-         * @listens handler
-         */
-        loadBegin: function (h) {
-            loadBegin = h;
-            return this;
-        },
-        /**
-         * @param h {loadEnd}
-         * @listens handler
-         */
-        loadEnd: function (h) {
-            loadEnd = h;
-            return this;
-        },
-
-
+        /* Zuix hooks */
         hook: function(p,v) {
             hooks(p, v);
             return this;
         },
-
 
         /* utility methods */
 
