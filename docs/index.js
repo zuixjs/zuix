@@ -27,22 +27,40 @@
 zuix.field('loader').show();
 zuix.loadEnd(function () {
     zuix.field('loader').fadeOut(500);
+
+    /*
+    // testing less css
+    less.render('[data-ui-component="ui/layout/actions-view"] { small { font-size: 10px; } i { font-size: 28px } }',
+        {
+            paths: ['.', './css/lib'],  // Specify search paths for @import directives
+            //filename: 'style.less', // Specify a filename, for better error messages
+            //compress: true          // Minify CSS output
+        },
+        function (e, output) {
+            $('<style type="text/css">'+output.css+'</style>').appendTo($('head'));
+            console.log(output.css);
+        });
+    */
+
 });
 
-// Main page setup
+// Reference to the horizontal page scroller component
 var pagedView = null;
+
+// Main page setup
 var main = {
 
     // Component 'ui/layout/actions-view'
     topMenu: {
         // actions map
         on: {
+            // call 'menuItemClicked' handler when a menu item is clicked
             'item:click': menuItemClicked
         },
         // behaviors map
         behavior: {
+            // animate the button when clicked
             'item:click': function (e, i) {
-                // animate the button when clicked
                 $(this).children().eq(i).animateCss('tada');
             }
         },
@@ -62,6 +80,7 @@ var main = {
         },
         // behaviors map
         behavior: {
+            // animate entering/exiting pages on page:change event
             'page:change': changePage
         },
         ready: function (ctx) {
@@ -72,13 +91,37 @@ var main = {
     }
 
 };
-zuix.componentize();
 
+// Setup various plugins to apply (Showdown, Prism, Material Design Lite)
+zuix.hook('view:parse', function (h, w) {
+
+   console.log("HOOK", this, h, w);
+    // ShowDown - Markdown compiler
+    if (this.options().markdown === true && typeof showdown !== 'undefined')
+        w.content = new showdown.Converter().makeHtml(w.content);
+
+}).hook('view:process', function (h, w) {
+
+    // Prism code syntax highlighter
+    w.find('code').each(function (i, block) {
+        $(block).addClass('language-javascript');
+        Prism.highlightElement(block);
+    });
+
+    // Material Design Light  DOM upgrade
+    if (componentHandler)
+        componentHandler.upgradeElements(w[0]);
+
+}).componentize(); // Componentize the page
+
+// Top menu `item:click` event handler
 function menuItemClicked(e, i) {
-    if (pagedView) pagedView.invoke('setPage', i);
+    if (pagedView)
+        pagedView.invoke('setPage', i);
     console.log("item::click@ActionsView", i);
 }
 
+// PagedView `page:change` behavior handler
 function changePage(e, i) {
     // Animate page changing
     var pages = $(this).children();
@@ -111,15 +154,6 @@ function changePage(e, i) {
  });
  */
 
-
-// Example - Loading external hosted component
-// NOTE: ensure the source is trusted before
-// loading any external hosted component in your site
-zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
-    container: zuix.field('zuix-demo')
-});
-
-
 // debug
 setTimeout(function () {
     zuix.dumpCache();
@@ -127,7 +161,7 @@ setTimeout(function () {
 }, 5000);
 
 
-// jQuery helpers
+// jQuery `animateCss` helper extension
 $.fn.extend({
     animateCss: function (animationName, callback) {
         var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';

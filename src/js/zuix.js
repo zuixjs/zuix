@@ -127,6 +127,11 @@
          */
         this.behavior = null;
 
+        /** @protected */
+        this._eventMap = [];
+        /** @protected */
+        this._behaviorMap = [];
+
         /**
          * @protected
          * @type {ContextController}
@@ -137,6 +142,9 @@
 
         return this;
     }
+
+//    ComponentContext.prototype._eventMap = [];
+//    ComponentContext.prototype._behaviorMap = [];
 
     ComponentContext.prototype.options = function (options) {
         if (util.isNoU(options))
@@ -210,25 +218,22 @@
         if (typeof view === 'undefined') return this._view;
         if (typeof view === 'string') {
 
-            // TODO: turn all of these into viewHandle plugins as optional dependencies
+            // trigger `view:parse` hook before assigning content to the view
+            var hookData = { content: view };
+            // TODO: fire zuix.hook -> view:attach
+            triggerHook(this, 'view:parse', hookData);
+            view = hookData.content;
 
-            // ShowDown - Markdown compiler
-            if (this.options().markdown === true && !util.isNoU(showdown))
-                view = new showdown.Converter().makeHtml(view);
 
+            // add context to the view
             this._view = $('<div/>').append(view);
 
-            // Prism code syntax highlighter
-            this._view.find('code').each(function (i, block) {
-                $(block).addClass('language-javascript');
-                Prism.highlightElement(block);
-            });
 
-            // Material Design Light  DOM upgrade
-            if (componentHandler)
-                componentHandler.upgradeElements(this._view[0]);
+            // trigger `view:process` hook when the view is ready to be processed
+            triggerHook(this, 'view:process', this._view);
 
-            // Zuix componentizer
+
+            // Zuix Componentizer is the last executed hook (built-in)
             componentize(this._view);
 
         } else this._view = view;
@@ -254,9 +259,6 @@
         else this._container = $(container);
         return this;
     };
-
-    ComponentContext.prototype._eventMap = [];
-    ComponentContext.prototype._behaviorMap = [];
 
     /**
      * TODO: complete JSDoc
@@ -474,7 +476,7 @@
                 if (util.isFunction(callback))
                     callback(ctx);
             },
-            error: function (ctx, err) {
+            error: function (/** @type {ComponentContext} */ ctx, err) {
                 // TODO: report error
                 $(container).append($('<p>').append('ERROR zuix.include'));
                 $(container).append($('<p>').append(data));
@@ -495,8 +497,10 @@
         // to prevent loading twice
         if (util.isNoU(element))
             element = document;
-        $(element).find('[data-ui-load]').each(function () {
+        $(element).find('[data-ui-load],[data-ui-include]').each(function () {
             var componentId = $(this).attr('data-ui-load');
+            if (util.isNoU(componentId))
+                componentId = $(this).attr('data-ui-include');
             if ($(this).attr('data-ui-loaded') === true || $(this).parent('pre,code').length) {
                 console.log(_className, "WARN", "Skipped", this);
                 return;
@@ -508,30 +512,38 @@
                 options = util.propertyFromPath(window, $(this).attr('data-ui-options'));
             else
                 options = {};
-            options.view = $(this);
 
+            // Automatic view/container selection
+            if (util.isNoU(options.view) && !$(this).is(':empty'))
+                options.view = $(this);
+            else if (util.isNoU(options.view) && util.isNoU(options.container) && $(this).is(':empty'))
+                options.container = $(this);
 
-            // TODO: Behavior are also definable in "data-ui-behavior" attribute
-            // TODO: Events are also definable in "data-ui-on" attribute
-            // util.propertyFromPath( ... )
-
-
-            if (!util.isNoU($(this).attr('data-ui-ready')))
+             // TODO: Behavior are also definable in "data-ui-behavior" attribute
+             // TODO: Events are also definable in "data-ui-on" attribute
+             // util.propertyFromPath( ... )
+/*
+             if (!util.isNoU($(this).attr('data-ui-ready')))
                 options.ready = util.propertyFromPath(window, $(this).attr('data-ui-ready'));
             if (!util.isNoU($(this).attr('data-ui-error')))
                 options.error = util.propertyFromPath(window, $(this).attr('data-ui-error'));
             if (!util.isNoU($(this).attr('data-ui-container')))
-                options.container = $(this).attr('data-ui-container');
+                options.container = field($(this).attr('data-ui-container'));
             if (!util.isNoU($(this).attr('data-ui-model')))
                 options.model = util.propertyFromPath(window, $(this).attr('data-ui-model'));
             if (!util.isNoU($(this).attr('data-ui-view')))
-                options.view = $(this).attr('data-ui-view');
+                options.view = field($(this).attr('data-ui-view'));
             if (!util.isNoU($(this).attr('data-ui-controller')))
                 options.controller = util.propertyFromPath(window, $(this).attr('data-ui-controller'));
+*/
 
             load(componentId, options);
         });
     }
+
+
+
+
 
 
     // TODO: make of it a class
@@ -553,7 +565,7 @@
             else if (_taskList[i].status == 1) {
                 console.log("... waiting task ", _taskList[i].tid);
                 next = -2;
-                setTimeout(taskCheck, 10);
+                setTimeout(taskCheck, 100);
 //                if (util.isFunction(this.loadProgress))
 //                    this.loadProgress();
                 return;
@@ -561,7 +573,7 @@
             else if (_taskList[i].status == 2) {
                 console.log("Completed task ", _taskList[i].tid, next);
                 _taskList.splice(i, 1);
-                setTimeout(taskCheck, 10);
+                setTimeout(taskCheck, 100);
 //                if (util.isFunction(this.loadProgress))
 //                    this.loadProgress();
                 return;
@@ -574,12 +586,16 @@
             console.log("Started task ", _taskList[next].tid);
             if (util.isFunction(loadBegin))
                 loadBegin();
-            setTimeout(taskCheck, 10);
+            setTimeout(taskCheck, 100);
         } else {
             if (util.isFunction(loadEnd))
                 loadEnd();
         }
     }
+
+
+
+
 
 
     // TODO: implement <componentId>.css and <componentId>.model.js loading
@@ -676,6 +692,7 @@
                             loadController(context);
                         },
                         error: function (err) {
+                            promise.status = 2;
                             console.log(err);
                             if (util.isFunction(options.error))
                                 context.error(context, err);
@@ -711,17 +728,6 @@
             if (util.isFunction(context._c.destroy))
                 context._c.destroy();
         }
-    }
-
-    /**
-     * Define the behavior handler for the component matching `componentId`.
-     * All active contexts implementing `componentId` will be affected.
-     *
-     * @param componentId {Object}
-     * @param handler_fn {function}
-     */
-    function behavior(componentId, handler_fn) {
-        // TODO: behavior
     }
 
     /***
@@ -795,6 +801,8 @@
                         createComponent(context);
                     },
                     error: function (err) {
+                        promise.status = 2;
+                        createComponent(context);
                         console.log(err);
                         if (util.isFunction(context.error))
                             context.error(context, err);
@@ -872,6 +880,27 @@
             instance = _eval(javascriptCode);
         return instance;
     }
+
+
+
+
+
+    function triggerHook(context, path, data) {
+        // TODO: call all registered callback
+        if (util.isFunction(_hooksCallbacks[path]))
+            _hooksCallbacks[path].call(context, path, data);
+    }
+
+    var _hooksCallbacks = [];
+    function hooks(path, handler) {
+        if (util.isNoU(handler))
+            return _hooksCallbacks[path];
+        _hooksCallbacks[path] = handler;
+        return this;
+    }
+
+
+
 
     // Generic utility class
     var util = {
@@ -979,6 +1008,13 @@
             return this;
         },
 
+
+        hook: function(p,v) {
+            hooks(p, v);
+            return this;
+        },
+
+
         /* utility methods */
 
         field: field,
@@ -991,9 +1027,10 @@
             console.log("ZUIX", "Loaded Component Instances", _contextRoot);
         }
 
+        // TODO: add zuix.options to configure stuff like
+        // TODO: the css/html/js lookup base path (each individually own prop)
+
     };
 
     return zuix;
 }.call(this));
-
-//var zuix = Zuix.call(this);

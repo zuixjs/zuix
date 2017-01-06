@@ -1,7 +1,7 @@
 zuix.controller(function ($$) {
 
     $$.create = function () {
-console.log("CREATED", $$);
+
         $$.view().children().each(function (index) {
             $(this).on('click', function () {
                 setSelected(index);
