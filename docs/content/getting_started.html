@@ -10,38 +10,61 @@
 <small>(TODO: about components, short MVC introduction)</small>
 <p>.</p>
 
+#### Static content
+
+##### Inclusion
+
+To include static content the ```data-ui-include``` attribute is used.
+The value of this attribute is the URL of the *HTML* file to include
+omitting its ```.html``` extension.
+
+The URL can refer either to a file on the local server or a remote one.
+
+<small><strong>Example</strong></small>
+
+Content of file ```site/common/links.html```
+<pre><code class="language-html">
+    <div layout="row center-left">
+        <a class="mdl-button mdl-js-button mdl-button--accent">Link 1</a>
+        <a class="mdl-button mdl-js-button mdl-button--accent">Link 2</a>
+        <a class="mdl-button mdl-js-button mdl-button--accent">Link 3</a>
+    </div>
+</code></pre>
+
+Inclusion of the above file in another document
+<pre><code class="language-html">
+    <div data-ui-include="site/common/links"></div>
+</code></pre>
+
+Inclusion of the above file from a different server
+<pre><code class="language-html">
+    <div data-ui-include="https://genielabs.github.io/zuix-mvc-js/site/common/links"></div>
+</code></pre>
+
+<small><strong>Result</strong></small>
+
+<!-- Colored raised button -->
+<div data-ui-include="site/common/links"></div>
 
 
+##### Styling <small><mark>WIP</mark></small>
 
-<!-- zuix "ui/layout/actions-view" layout -->
-<div data-ui-load="ui/layout/actions-view" layout="row center-center">
-<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-<i class="material-icons md-48">dashboard</i>
-<br>
-<small>ZUIX</small>
-</div>
-<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-<i class="material-icons md-48">school</i>
-<br>
-<small>Getting Started</small>
-</div>
-<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-<i class="material-icons md-48">import_contacts</i>
-<br>
-<small>API Docs</small>
-</div>
-</div>
+If a ```.css``` style file with the same base name of
+the ```data-ui-include``` attribute value is found, this will be loaded
+as well.
+The CSS definitions contained in the ```.css``` file will be applied only
+to the container of the included HTML.
 
-<p>.</p>
+#### Components
 
-#### Declaring a View template
+<p>...</p>
 
-Before applying a view template to a zuix component, it is required to declare it by assigning
-an unique identifier.
+##### View Templates
+
 A view template can be either placed inline in the document or it can be
 loaded from a separate HTML snippet file placed on a remote server.
 
-##### Inline View template
+##### Declaring an inline View template
 
 Inline view template definition is achieved by adding a ```data-ui-view``` attribute
 to the main container element of the view template.
@@ -55,14 +78,14 @@ will override any other previous one.
     </div>
 </code></pre>
 
-##### Remote View template
+##### Loading a View template
 
-A remote view template is placed in a separate HTML file:
+A view template can also be placed in a separate HTML file:
 
 <pre><code class="language-html">
     <!-- Content of "simple_view.html" file -->
     <div>
-        This is a remote view template
+        This is a view template file
     </div>
 </code></pre>
 
@@ -128,7 +151,7 @@ The handler can be specified either inline or into a sperate javascript
 file that will be loaded automatically if no inline controller is defined.
 
 
-<style>
+<style type="text/css">
     /*
      * Custom keyword styles
      */
@@ -216,6 +239,29 @@ file that will be loaded automatically if no inline controller is defined.
 
 
 #### Examples
+
+<p>.</p>
+
+<!-- zuix "ui/layout/actions-view" layout -->
+<div data-ui-load="ui/layout/actions-view" layout="row center-center">
+<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+<i class="material-icons md-48">dashboard</i>
+<br>
+<small>ZUIX</small>
+</div>
+<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+<i class="material-icons md-48">school</i>
+<br>
+<small>Getting Started</small>
+</div>
+<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+<i class="material-icons md-48">import_contacts</i>
+<br>
+<small>API Docs</small>
+</div>
+</div>
+
+<p>.</p>
 
 ...
 

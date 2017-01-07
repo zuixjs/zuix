@@ -103,9 +103,13 @@ zuix
         $(block).addClass('language-javascript');
         Prism.highlightElement(block);
     });
+    // TODO: move MDL to 'view:ready' hook and remove setTimeout
     // Material Design Light  DOM upgrade
-    if (componentHandler)
-        componentHandler.upgradeElements(w[0]);
+    if (componentHandler) {
+        setTimeout(function () {
+            componentHandler.upgradeElements(w[0]);
+        }, 500);
+    }
 
 }).componentize(); // Componentize the page
 

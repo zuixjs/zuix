@@ -459,9 +459,6 @@
         if (util.isNoU(element))
             element = document;
         $(element).find('[data-ui-load],[data-ui-include]').each(function () {
-            var componentId = $(this).attr('data-ui-load');
-            if (util.isNoU(componentId))
-                componentId = $(this).attr('data-ui-include');
             if ($(this).attr('data-ui-loaded') === true || $(this).parent('pre,code').length) {
                 console.log("ZUIX", "WARN", "Skipped", this);
                 return;
@@ -482,6 +479,14 @@
                 options.view = $(this);
             else if (util.isNoU(options.view) && util.isNoU(options.container) && $(this).is(':empty'))
                 options.container = $(this);
+
+            var componentId = $(this).attr('data-ui-load');
+            if (util.isNoU(componentId)) {
+                // Static include should not have any controller
+                componentId = $(this).attr('data-ui-include');
+                if (util.isNoU(options.controller))
+                    options.controller = function() {};
+            }
 
              // TODO: Behavior are also definable in "data-ui-behavior" attribute
              // TODO: Events are also definable in "data-ui-on" attribute
