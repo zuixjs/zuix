@@ -2,6 +2,9 @@ zuix.controller(function ($$) {
 
     $$.create = function () {
 
+        var pages = $$.view().children();
+        pages.hide().eq(0).show();
+
         $$.expose('setPage', function (i) {
             setPage(i);
         });
@@ -11,6 +14,9 @@ zuix.controller(function ($$) {
             $(this).parent().hide();
         });
         setPage(0);
+        setTimeout(function () {
+            pages.show();
+        }, 500);
 
     };
 

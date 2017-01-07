@@ -162,18 +162,24 @@
 
 
 <!-- Loader Overlay -->
-<div data-ui-field="loader" layout="column center-center"
+<div data-ui-field="loader" layout="column stretch-stretch"
      style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100">
-    <div class="animated infinite pulse">
-        <h5 layout="row center-center">
-            <i class="material-icons md-24">dashboard</i>
-            <span>ZUIX</span>
-        </h5>
+    <div layout="column bottom-center">
+        <div class="animated infinite pulse">
+            <h5 layout="row center-center">
+                <i class="material-icons md-24">dashboard</i>
+                <span>ZUIX</span>
+            </h5>
+        </div>
+        <!-- MDL Progress Bar with Indeterminate Progress -->
+        <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate" style="max-width: 200px;"></div>
+        <div class="content-padding">
+            <em>the easy shift to component-based development</em>
+        </div>
     </div>
-    <!-- MDL Progress Bar with Indeterminate Progress -->
-    <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate" style="max-width: 200px;"></div>
-    <div class="content-padding">
-        <em>the easy shift to component-based development</em>
+    <div layout="column bottom-center" class="content-padding">
+        <strong><small>loading...</small></strong>
+        <span data-ui-field="loader-progress">...</span>
     </div>
 </div>
 

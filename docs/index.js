@@ -84,6 +84,7 @@ zuix
     console.log("LOAD START", b);
 
 }).hook('load:step', function(a,b){
+    zuix.field('loader-progress').html(b.task).prev().animateCss('bounce');
 
 }).hook('load:next', function(a,b){
     console.log("LOAD END", b);
