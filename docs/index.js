@@ -84,13 +84,15 @@ zuix
     console.log("LOAD START", b);
 
 }).hook('load:step', function(a,b){
-    zuix.field('loader-progress').html(b.task).prev().animateCss('bounce');
 
 }).hook('load:next', function(a,b){
-    console.log("LOAD END", b);
+    zuix.field('loader-progress').html(b.task).prev().animateCss('bounce');
 
 }).hook('load:end', function(a,b){
     zuix.field('loader').hide();
+
+    // Force opening of all non-local links in a new window
+    $('a[href*="://"]').attr('target','_blank');
 
 }).hook('html:parse', function (h, w) {
     // ShowDown - Markdown compiler

@@ -17,13 +17,13 @@ from the ```name```.js
 
 <strong>Parameters</strong>
     <small>{string|jQuery|HTMLElement}</small> <em>view</em>
-        Mixed type parameter that can be either one of the following:
-        - a ```string``` with the value matching the ```data-ui-view``` attribute
-          of an inline element in the document
-        - a ```string``` indicating the relative or absolute path of the view file
-          (without the .html extension)
-        - a ```{jQuery}``` $(element)
-        - a ```HTMLElement```
+    Mixed type parameter that can be either one of the following:
+    - a ```string``` with the value matching the ```data-ui-view```
+      attribute of an inline element in the document
+    - a ```string``` indicating the relative or absolute path
+      of the view file (without the .html extension)
+    - a ```{jQuery}``` $(element)
+    - a ```HTMLElement```
     <small>{ContextOptions}</small> <em>options</em>
         Options object used to initialize the component context.
 
@@ -178,14 +178,12 @@ If no ```container``` specified the search range will cover the entire document.
     The {jQuery} element with ```data-ui-field``` matching ```name```.
 </pre>
 
-#### ```zuix.behaviour( componentId, handler_fn )```
-
 #### ```zuix.include( view [, container] )```
+
+#### ```zuix.hook( eventName, handler_fn )```
 
 #### ```zuix.requires( context, varNameOrTestFn )```
 #### ```zuix.conflicts( context, varNameOrTestFn )```
-
-Append ```view``` to the specified ```container```.
 
 <p></p>
 <p>.</p>

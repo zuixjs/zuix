@@ -10,19 +10,20 @@
 <small>(TODO: about components, short MVC introduction)</small>
 <p>.</p>
 
-#### Static content
+<a name="Content-Templates"></a>
+#### Static content and templates
 
-##### Inclusion
+...
 
-To include static content the ```data-ui-include``` attribute is used.
+##### Content inclusion
+
+To include static content or a template, the ```data-ui-include``` attribute is used.
 The value of this attribute is the URL of the *HTML* file to include
 omitting its ```.html``` extension.
 
 The URL can refer either to a file on the local server or a remote one.
 
-<small><strong>Example</strong></small>
-
-Content of file ```site/common/links.html```
+<small><strong>EXAMPLE - </strong></small> Content of file ```site/common/links.html```:
 <pre><code class="language-html">
     <div layout="row center-left">
         <a class="mdl-button mdl-js-button mdl-button--accent">Link 1</a>
@@ -31,46 +32,38 @@ Content of file ```site/common/links.html```
     </div>
 </code></pre>
 
-Inclusion of the above file in another document
+Inclusion of the above file in another document:
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-Inclusion of the above file from a different server
+Inclusion of the above file from a different server:
 <pre><code class="language-html">
     <div data-ui-include="https://genielabs.github.io/zuix-mvc-js/site/common/links"></div>
 </code></pre>
 
-<small><strong>Result</strong></small>
-
-<!-- Colored raised button -->
+<small><strong>RESULT</strong></small>
 <div data-ui-include="site/common/links"></div>
 
-
-##### Styling <small><mark>WIP</mark></small>
+##### Content styling <small>Local CSS, LESS pre-processing <mark>WIP</mark></small>
 
 If a ```.css``` style file with the same base name of
-the ```data-ui-include``` attribute value is found, this will be loaded
+the ```data-ui-include``` attribute value is found, it will be loaded
 as well.
-The CSS definitions contained in the ```.css``` file will be applied only
-to the container of the included HTML.
+The CSS definitions contained in this file will be applied only
+to the container of the included HTML. The style file is preprocessed
+using [*LESS*](http://lesscss.org).
 
-#### Components
+##### View Templates <small>Data Binding <mark>WIP</mark></small>
 
-<p>...</p>
-
-##### View Templates
-
-A view template can be either placed inline in the document or it can be
-loaded from a separate HTML snippet file placed on a remote server.
+```data-bind-model``` (optional - applied to container and children if not overridden),
+```data-bind-to``` (field to bind to in the give model)
 
 ##### Declaring an inline View template
 
 Inline view template definition is achieved by adding a ```data-ui-view``` attribute
 to the main container element of the view template.
 The value of this field is meant to be an unique identifier.
-If the same value is used for more than one element, the last declaration
-will override any other previous one.
 
 <pre><code class="language-html">
     <div data-ui-view="simple_view">
@@ -78,9 +71,14 @@ will override any other previous one.
     </div>
 </code></pre>
 
-##### Loading a View template
+##### Template inclusion
 
-A view template can also be placed in a separate HTML file:
+A view template can be declared in its own HTML file
+just like already described for [Content Templates](#Content-Templates)
+or it can be declared inline. When declaring an inline template,
+the associated CSS can be declared either inline too or in a separate file.
+
+<small><strong>EXAMPLE - </strong></small> ...
 
 <pre><code class="language-html">
     <!-- Content of "simple_view.html" file -->
@@ -89,60 +87,82 @@ A view template can also be placed in a separate HTML file:
     </div>
 </code></pre>
 
+<mark>**TODO** ... to be completed</mark>
+
+#### Components
+
+A component is basically a [content template](#Content-Templates) (html/css/data model) with the
+plus of a piece of Javascript code associated to it.
+
+This Javascript code is the ****Controller**** of the component and
+it implements the logic and behavior of it upon user interaction or
+when the bound data model is updated.
+
 #### Loading a component
 
 To load a component, the ```data-ui-load``` attribute is used,
 where its value is the name of the view template
 that has to be applied to the component.
 
-<small><strong>INPUT</strong></small>
+<small><strong>EXAMPLE</strong></small> - Component Loading
 <pre><code class="language-html">
     <!-- load 3 component instances using
          the "simple_view" template -->
-    <div data-ui-load="simple_view"/>
-    <div data-ui-load="simple_view"/>
-    <div data-ui-load="simple_view"/>
+    <div data-ui-load="site/common/links"/>
+    <div data-ui-load="site/common/links"/>
+    <div data-ui-load="site/common/links"/>
+</code></pre>
+
+<small><strong>OUTPUT</strong></small>
+<pre><code class="language-html">
+<div layout="row center-left">
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 1
+    </a>
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 2
+    </a>
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 3
+    </a>
+</div>
+<div layout="row center-left">
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 1
+    </a>
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 2
+    </a>
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 3
+    </a>
+</div>
+<div layout="row center-left">
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 1
+    </a>
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 2
+    </a>
+    <a class="mdl-button mdl-js-button mdl-button--accent">
+        Link 3
+    </a>
+</div>
 </code></pre>
 
 <small><strong>RESULT</strong></small>
-<pre><code class="language-html">
-    <div>
-        This is a remote view template
-    </div>
-    <div>
-        This is a remote view template
-    </div>
-    <div>
-        This is a remote view template
-    </div>
-</code></pre>
+<div data-ui-include="site/common/links"></div>
+<div data-ui-include="site/common/links"></div>
+<div data-ui-include="site/common/links"></div>
 
 <p></p>
 
 <small><strong>NOTE:</strong></small>
-zuix will first look for an <em>inline</em> template matching the ```data-ui-view```
-value. If none found it will try to load it from a <em>remote</em> resource by appending ```.html```
+zuix will first look for an <em>inline view</em> matching the ```data-ui-view```
+value. If none found it will try to load it from <em>file</em>, by appending the ```.html```
 suffix to the template name.
 
-In the following example:
-
-<pre><code class="language-html">
-    <div data-ui-load="ui/badges/cool_one"/>
-    <!-- note that the .html extension must be omitted -->
-    <div data-ui-load="http://remote.server/jcdn/ui/badges/cool_one"/>
-</code></pre>
-
-The template lookup order will be:
-
-1. An inline view template with ```data-ui-view = ui/badges/cool_one``` or ```data-ui-view = http://remote.server/jcdn/ui/badges/cool_one```
-(inline overriding of a remote template)
-2. A remote template file located on the same server if
-a relative path was given as the value of the ```data-ui-load``` attribute,
-or any other remote server if an absolute url was given
-
-the first found template resource will be applied to the component.
-
-#### Adding a controller for the component logic
+#### The Controller <small>component logic</small>
 
 While in the previous steps we didn't need any javascript coding,
 adding the controller for the component logic will indeed require
@@ -207,8 +227,23 @@ file that will be loaded automatically if no inline controller is defined.
     </script>
 </code></pre>
 
+##### Applying a same Controller to different Views
 
-#### Custom component behaviors
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+#### Component events handler
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+#### Component behaviors handler
 
 
 <p></p>
@@ -228,7 +263,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p></p>
 
 
-#### Caching
+#### About caching
 
 
 <p></p>
@@ -238,7 +273,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p></p>
 
 
-#### Examples
+### More examples
 
 <p>.</p>
 
