@@ -1,35 +1,33 @@
-zuix.controller(function ($$) {
+zuix.controller(function (ctx) {
 
-    $$.create = function () {
-
-        var pages = $$.view().children();
-        pages.hide().eq(0).show();
-
-        $$.expose('setPage', function (i) {
+    ctx.create = function () {
+        ctx.expose('setPage', function (i) {
             setPage(i);
         });
-
-        $$.view().children().each(function () {
-            $(this).wrap('<div style="position:absolute;top:0;left:0;bottom:0;right:0;overflow: auto;"></div>');
-            $(this).parent().hide();
+        zuix.$(ctx.view()).children().each(function () {
+            var c = this; //zuix.$.wrapElement('div', this);
+            c.style['position'] = 'absolute';
+            c.style['top'] = '0';
+            c.style['left'] = '0';
+            c.style['bottom'] = '0';
+            c.style['right'] = '0';
+            c.style['overflow'] = 'auto';
+            console.log("DEBUG", c);
+            //$(this).wrap('<div style="position:absolute;top:0;
+            // left:0;bottom:0;right:0;overflow: auto;"></div>');
+            zuix.$(c).hide();
         });
         setPage(0);
-        setTimeout(function () {
-            pages.show();
-        }, 500);
-
     };
 
-    $$.destroy = function () {
-
-        $$.view().children().each(function () {
-            $(this).unwrap();
+    ctx.destroy = function () {
+        zuix.$(ctx.view()).children().each(function () {
+            // TODO: should restore original container styles
         });
         currentPage = -1;
-
     };
 
-    $$.api = function (command, options) {
+    ctx.api = function (command, options) {
         switch (command) {
             case 'page':
             case 'setPage':
@@ -43,24 +41,18 @@ zuix.controller(function ($$) {
     var currentPage = -1;
 
     function setPage(p) {
-        var pages = $$.view().children();
+        var pages = zuix.$(ctx.view()).children();
         var oldPage = currentPage;
-        if (p > currentPage) {
+        if (p != currentPage) {
             currentPage = p;
-            pages.eq(p).fadeIn();
-            pages.eq(oldPage).fadeOut();
-            $$.trigger('page:change', {
-                old: oldPage,
-                page: currentPage
-            });
-        } else if (p < currentPage) {
-            currentPage = p;
-            pages.eq(p).fadeIn();
-            pages.eq(oldPage).fadeOut();
-            $$.trigger('page:change', {
-                old: oldPage,
-                page: currentPage
-            });
+            pages.eq(p).show();
+            if (oldPage != -1) {
+                pages.eq(oldPage).hide();
+                ctx.trigger('page:change', {
+                    old: oldPage,
+                    page: currentPage
+                });
+            }
         }
     }
 

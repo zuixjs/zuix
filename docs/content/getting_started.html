@@ -45,14 +45,13 @@ Inclusion of the above file from a different server:
 <small><strong>RESULT</strong></small>
 <div data-ui-include="site/common/links"></div>
 
-##### Content styling <small>Local CSS, LESS pre-processing <mark>WIP</mark></small>
+##### Content styling <small>Local CSS, pre-processing <mark>WIP</mark></small>
 
 If a ```.css``` style file with the same base name of
 the ```data-ui-include``` attribute value is found, it will be loaded
 as well.
 The CSS definitions contained in this file will be applied only
-to the container of the included HTML. The style file is preprocessed
-using [*LESS*](http://lesscss.org).
+to the container of the included HTML.
 
 ##### View Templates <small>Data Binding <mark>WIP</mark></small>
 
@@ -235,7 +234,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p></p>
 
-#### Component events handler
+#### Component events
 
 <p></p>
 <p>.</p>
@@ -243,7 +242,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p></p>
 
-#### Component behaviors handler
+#### Component behaviors
 
 
 <p></p>
@@ -252,6 +251,15 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p></p>
 
+
+#### Hooks
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
 
 #### Component Life-Cycle
 
@@ -359,7 +367,7 @@ file that will be loaded automatically if no inline controller is defined.
 
 <div data-ui-view="simple_view" data-ui-field="simple_view_test" class="material-icons mdl-badge mdl-badge--overlap" data-badge="3">account_box</div>
 
-<div data-ui-field="simple_view_1" />
+<div data-ui-field="simple_view_1"></div>
 <script>zuix.load('simple_view', {
     container: zuix.field('simple_view_1'),
     controller: zuix.controller(function ($$) {

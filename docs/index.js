@@ -46,7 +46,7 @@ var main = {
         behavior: {
             // animate the button when clicked
             'item:click': function (e, i) {
-                $(this).children().eq(i).animateCss('tada');
+                zuix.$(this).children().eq(i).animateCss('tada');
             }
         },
         // component ready callback
@@ -79,20 +79,21 @@ var main = {
 
 // Zuix hook handlers
 zuix
-  .hook('load:begin', function(a,b){
-    zuix.field('loader').show();
+.hook('load:begin', function(a,b){
+    zuix.$(zuix.field('loader')).show();
     console.log("LOAD START", b);
 
 }).hook('load:step', function(a,b){
 
 }).hook('load:next', function(a,b){
-    zuix.field('loader-progress').html(b.task).prev().animateCss('bounce');
+    console.log("LOAD NEXT", zuix.field('loader'), b);
+    zuix.$(zuix.field('loader-progress')).html(b.task).prev().animateCss('bounce');
 
 }).hook('load:end', function(a,b){
-    zuix.field('loader').hide();
+    zuix.$(zuix.field('loader')).hide();
 
     // Force opening of all non-local links in a new window
-    $('a[href*="://"]').attr('target','_blank');
+    zuix.$('a[href*="://"]').attr('target','_blank');
 
 }).hook('html:parse', function (h, w) {
     // ShowDown - Markdown compiler
@@ -101,15 +102,15 @@ zuix
 
 }).hook('view:process', function (h, w) {
     // Prism code syntax highlighter
-    w.find('code').each(function (i, block) {
-        $(block).addClass('language-javascript');
+    zuix.$(w).find('code').each(function (i, block) {
+        zuix.$(block).addClass('language-javascript');
         Prism.highlightElement(block);
     });
     // TODO: move MDL to 'view:ready' hook and remove setTimeout
     // Material Design Light  DOM upgrade
     if (componentHandler) {
         setTimeout(function () {
-            componentHandler.upgradeElements(w[0]);
+            componentHandler.upgradeElements(w);
         }, 500);
     }
 
@@ -125,18 +126,16 @@ function menuItemClicked(e, i) {
 // PagedView `page:change` behavior handler
 function changePage(e, i) {
     // Animate page changing
-    var pages = $(this).children();
+    var pages = zuix.$(this).children();
     if (i.page > i.old) {
         pages.eq(i.page).animateCss('bounceInRight').show();
         pages.eq(i.old).animateCss('bounceOutLeft', function () {
-            if (!pages.eq(i.old).hasClass('animated'))
-                pages.eq(i.old).hide();
+            pages.eq(i.old).hide();
         }).show();
     } else {
         pages.eq(i.page).animateCss('bounceInLeft').show();
         pages.eq(i.old).animateCss('bounceOutRight', function () {
-            if (!pages.eq(i.old).hasClass('animated'))
-                pages.eq(i.old).hide();
+            pages.eq(i.old).hide();
         }).show();
     }
 }
@@ -161,20 +160,16 @@ setTimeout(function () {
     zuix.dumpContexts();
 }, 5000);
 
-
-// jQuery `animateCss` helper extension
-$.fn.extend({
-    animateCss: function (animationName, callback) {
-        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-        if (this.hasClass('animated'))
-            this.trigger('animationend');
-        this.addClass('animated ' + animationName).one(animationEnd, function () {
-            $(this).removeClass('animated ' + animationName);
-            if (typeof callback === 'function') {
-                callback.this = this;
-                callback(animationName);
-            }
-        });
-        return this;
-    }
-});
+zuix.$.ZuixQl.prototype.animateCss  = function (animationName, callback) {
+    var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+    if (this.hasClass('animated'))
+        this.trigger('animationend');
+    this.addClass('animated ' + animationName).one(animationEnd, function () {
+        zuix.$(this).removeClass('animated ' + animationName);
+        if (typeof callback === 'function') {
+            callback.this = this;
+            callback(animationName);
+        }
+    });
+    return this;
+};

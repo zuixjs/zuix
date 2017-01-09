@@ -142,9 +142,6 @@
         return this;
     }
 
-//    ComponentContext.prototype._eventMap = [];
-//    ComponentContext.prototype._behaviorMap = [];
-
     ComponentContext.prototype.options = function (options) {
         if (util.isNoU(options))
             return this._options;
@@ -225,7 +222,7 @@
 
 
             // add context to the view
-            this._view = $('<div/>').append(view);
+            this._view = z$.wrapElement('div', view);
 
 
             // trigger `view:process` hook when the view is ready to be processed
@@ -255,7 +252,7 @@
      */
     ComponentContext.prototype.container = function (container) {
         if (util.isNoU(container)) return this._container;
-        else this._container = $(container);
+        else this._container = container;
         return this;
     };
 
@@ -312,7 +309,7 @@
             if (util.isNoU(context._eventMap[eventPath]))
                 this.addEvent(self.view(), eventPath, null);
             // TODO: ...
-            self.view().trigger(eventPath, eventData);
+            z$(self.view()).trigger(eventPath, eventData);
         };
         /** @type {function} */
         this.on = function (eventPath, handler_fn) {
@@ -326,13 +323,13 @@
                 self.api(command, options);
         };
         /** @type {function} */
-        this.eventRouter = function (a, b) {
+        this.eventRouter = function (e) {
             //if (util.isFunction(self.behavior()))
             //    self.behavior().call(self.view(), a, b);
-            if (util.isFunction(context._behaviorMap[a.type]))
-                context._behaviorMap[a.type].call(self.view(), a, b);
-            if (util.isFunction(context._eventMap[a.type]))
-                context._eventMap[a.type].call(self.view(), a, b);
+            if (util.isFunction(context._behaviorMap[e.type]))
+                context._behaviorMap[e.type].call(self.view(), e, e.detail);
+            if (util.isFunction(context._eventMap[e.type]))
+                context._eventMap[e.type].call(self.view(), e, e.detail);
             // TODO: else-> should report anomaly
         };
         // create event map from context options
@@ -362,18 +359,18 @@
 
     ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
         if (!util.isNoU(target)) {
-            target.off(eventPath, this.eventRouter);
+            z$(target).off(eventPath, this.eventRouter);
             this.context._eventMap[eventPath] = handler_fn;
-            target.on(eventPath, this.eventRouter);
+            z$(target).on(eventPath, this.eventRouter);
         } else {
             // TODO: should report missing view
         }
     };
     ContextController.prototype.addBehavior = function (target, eventPath, handler_fn) {
         if (!util.isNoU(target)) {
-            target.off(eventPath, this.eventRouter);
+            z$(target).off(eventPath, this.eventRouter);
             this.context._behaviorMap[eventPath] = handler_fn;
-            target.on(eventPath, this.eventRouter);
+            z$(target).on(eventPath, this.eventRouter);
         } else {
             // TODO: should report missing view
         }
@@ -390,7 +387,7 @@
         var f = globalSearch ? '@' + field : field;
         var el = null;
         if (typeof this._fieldCache[f] === 'undefined') {
-            el = globalSearch ? $(field) : this.view().find('[data-ui-field=' + field + ']');
+            el = globalSearch ? z$(field).get(0) : z$(this.view()).find('[data-ui-field=' + field + ']').get(0);
             if (el.length)
                 this._fieldCache[f] = el;
         } else {
@@ -442,9 +439,7 @@
      * @returns {jQuery}
      */
     function field(fieldName, container) {
-        if (util.isNoU(container))
-            container = document;
-        return $(container).find('[' + _zuixFieldAttribute + '="' + fieldName + '"]');
+        return z$(container).find('[' + _zuixFieldAttribute + '="' + fieldName + '"]').get(0);
     }
 
 
@@ -456,34 +451,32 @@
     function componentize(element) {
         // TODO: add 'data-ui-loaded="true"' attribute after loading
         // to prevent loading twice
-        if (util.isNoU(element))
-            element = document;
-        $(element).find('[data-ui-load],[data-ui-include]').each(function () {
-            if ($(this).attr('data-ui-loaded') === true || $(this).parent('pre,code').length) {
+        z$(element).find('[data-ui-load],[data-ui-include]').each(function () {
+            if (z$(this).attr('data-ui-loaded') === true || z$(this).parent('pre,code').length) {
                 console.log("ZUIX", "WARN", "Skipped", this);
                 return;
             }
-            $(this).attr('data-ui-loaded', true);
+            z$(this).attr('data-ui-loaded', true);
             /** @type {ContextOptions} */
             var options;
-            if (!util.isNoU($(this).attr('data-ui-options'))) {
-                options = util.propertyFromPath(window, $(this).attr('data-ui-options'));
+            if (!util.isNoU(z$(this).attr('data-ui-options'))) {
+                options = util.propertyFromPath(window, z$(this).attr('data-ui-options'));
                 // copy passed options
-                options = jQuery.extend({}, options);
-                console.log("OPTIONS!", options);
+                //options = jQuery.extend({}, options);
+                options = util.cloneObject(options);
             } else
                 options = {};
 
             // Automatic view/container selection
-            if (util.isNoU(options.view) && !$(this).is(':empty'))
-                options.view = $(this);
-            else if (util.isNoU(options.view) && util.isNoU(options.container) && $(this).is(':empty'))
-                options.container = $(this);
+            if (util.isNoU(options.view) && !z$(this).isEmpty())
+                options.view = this;
+            else if (util.isNoU(options.view) && util.isNoU(options.container) && z$(this).isEmpty())
+                options.container = this;
 
-            var componentId = $(this).attr('data-ui-load');
+            var componentId = z$(this).attr('data-ui-load');
             if (util.isNoU(componentId)) {
                 // Static include should not have any controller
-                componentId = $(this).attr('data-ui-include');
+                componentId = z$(this).attr('data-ui-include');
                 if (util.isNoU(options.controller))
                     options.controller = function() {};
             }
@@ -492,84 +485,23 @@
              // TODO: Events are also definable in "data-ui-on" attribute
              // util.propertyFromPath( ... )
 /*
-             if (!util.isNoU($(this).attr('data-ui-ready')))
-                options.ready = util.propertyFromPath(window, $(this).attr('data-ui-ready'));
-            if (!util.isNoU($(this).attr('data-ui-error')))
-                options.error = util.propertyFromPath(window, $(this).attr('data-ui-error'));
-            if (!util.isNoU($(this).attr('data-ui-container')))
-                options.container = field($(this).attr('data-ui-container'));
-            if (!util.isNoU($(this).attr('data-ui-model')))
-                options.model = util.propertyFromPath(window, $(this).attr('data-ui-model'));
-            if (!util.isNoU($(this).attr('data-ui-view')))
-                options.view = field($(this).attr('data-ui-view'));
-            if (!util.isNoU($(this).attr('data-ui-controller')))
-                options.controller = util.propertyFromPath(window, $(this).attr('data-ui-controller'));
+             if (!util.isNoU(z$(this).attr('data-ui-ready')))
+                options.ready = util.propertyFromPath(window, z$(this).attr('data-ui-ready'));
+            if (!util.isNoU(z$(this).attr('data-ui-error')))
+                options.error = util.propertyFromPath(window, z$(this).attr('data-ui-error'));
+            if (!util.isNoU(z$(this).attr('data-ui-container')))
+                options.container = field(z$(this).attr('data-ui-container'));
+            if (!util.isNoU(z$(this).attr('data-ui-model')))
+                options.model = util.propertyFromPath(window, z$(this).attr('data-ui-model'));
+            if (!util.isNoU(z$(this).attr('data-ui-view')))
+                options.view = field(z$(this).attr('data-ui-view'));
+            if (!util.isNoU(z$(this).attr('data-ui-controller')))
+                options.controller = util.propertyFromPath(window, z$(this).attr('data-ui-controller'));
 */
 
             load(componentId, options);
         });
     }
-
-
-
-
-
-
-    // TODO: make of it a class
-    var _taskList = [];
-
-    function taskQueue(tid, fn) {
-        _taskList.push({tid: tid, fn: fn, status: 0});
-        setTimeout(function () {
-            taskCheck();
-        }, 1);
-    }
-
-    function taskCheck() {
-        var next = -1;
-        for (var i = 0; i < _taskList.length; i++) {
-            if (next != -2 && _taskList[i].status == 0) {
-                next = i;
-            }
-            else if (_taskList[i].status == 1) {
-                next = -2;
-                setTimeout(taskCheck, 100);
-                triggerHook(this, 'load:step', {
-                    task: _taskList[i].tid
-                });
-                return;
-            }
-            else if (_taskList[i].status == 2) {
-                triggerHook(this, 'load:next', {
-                    task: _taskList[i].tid
-                });
-                _taskList.splice(i, 1);
-                setTimeout(taskCheck, 100);
-                return;
-            }
-        }
-
-        if (next >= 0) {
-            _taskList[next].status = 1;
-            (_taskList[next].fn).call(_taskList[next]);
-            setTimeout(taskCheck, 100);
-            triggerHook(this, 'load:begin', {
-                task: _taskList[next].tid
-            });
-        } else {
-            triggerHook(this, 'load:end');
-        }
-    }
-
-
-
-
-
-
-    // TODO: implement <componentId>.css and <componentId>.model.js loading
-    // TODO: implement LESS.js css pre-processing for <component>.css files
-    // TODO: (supporting nested rules for local component styles definitions)
-
 
     /**
      * Loads a component with the given options.
@@ -584,7 +516,6 @@
         /** @type {ComponentContext} */
         var context = null;
         if (!util.isNoU(options)) {
-            console.log("OPTIONS!#", options);
             // check if context has its unique id assigned
             if (!util.isNoU(options.contextId)) {
                 // if it does, try to pick it from allocated contexts list
@@ -639,10 +570,10 @@
             if (cachedComponent !== null) {
                 context.view(cachedComponent.view);
             } else {
-                // TODO: replace $(document) with $(options.container)
-                var inlineView = $(document).find('[data-ui-view="' + context.componentId + '"]');
+                // TODO: replace $() with $(options.container)
+                var inlineView = z$().find('[data-ui-view="' + context.componentId + '"]');
                 if (inlineView.length >= 1)
-                    context.view(inlineView.eq(0));
+                    context.view(inlineView.get(0));
             }
 
             // if not able to inherit the view from the base cachedComponent
@@ -650,13 +581,14 @@
             if (util.isNoU(context.view())) {
                 taskQueue('html:' + context.componentId, function () {
                     var promise = this;
-                    $.ajax({
+                    z$.ajax({
                         url: context.componentId + ".html?" + new Date().getTime(),
-                        dataType: 'text',
-                        type: 'GET',
+                        //dataType: 'text',
+                        //type: 'GET',
                         success: function (viewHtml) {
                             context.view(viewHtml);
                             loadController(context);
+                            promise.status = 2;
                         },
                         error: function (err) {
                             promise.status = 2;
@@ -664,8 +596,6 @@
                             if (util.isFunction(options.error))
                                 context.error(context, err);
                         }
-                    }).then(function () {
-                        promise.status = 2;
                     });
 
                 });
@@ -704,7 +634,7 @@
      */
     function getContext(contextId) {
         var context = null;
-        $.each(_contextRoot, function (k, v) {
+        z$.each(_contextRoot, function (k, v) {
             if (util.objectEquals(v.contextId, contextId)) {
                 context = v;
                 return false;
@@ -728,7 +658,7 @@
      */
     function getCachedComponent(componentId) {
         var cached = null;
-        $.each(_componentCache, function (k, v) {
+        z$.each(_componentCache, function (k, v) {
             if (util.objectEquals(v.componentId, componentId)) {
                 cached = v;
                 return false;
@@ -745,10 +675,8 @@
         if (context.controller() === null) {
             taskQueue('js:' + context.componentId, function () {
                 var promise = this;
-                $.ajax({
+                z$.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
-                    dataType: 'text',
-                    type: 'GET',
                     success: function (ctrlJs) {
                         try {
                             var il = ctrlJs.indexOf('.load');
@@ -766,6 +694,7 @@
                             return;
                         }
                         createComponent(context);
+                        promise.status = 2;
                     },
                     error: function (err) {
                         promise.status = 2;
@@ -774,8 +703,6 @@
                         if (util.isFunction(context.error))
                             context.error(context, err);
                     }
-                }).then(function () {
-                    promise.status = 2;
                 });
             });
         } else {
@@ -793,21 +720,23 @@
             if (cached === null) {
                 _componentCache.push({
                     componentId: context.componentId,
-                    view: $('<div>').append(context.view().clone()).html(),
+                    view: '<div>'+context.view().innerHTML+'</div>',
                     controller: context.controller()
                 });
             }
 
             if (!util.isNoU(context.container())) {
-                context.view().detach();
-                context.container().append(context.view());
+                var v = context.view();
+                if (v.parentNode)
+                    v.parentNode.removeChild(v);
+                context.container().appendChild(context.view());
             }
 
-            context.view().one('create', function () {
+            z$(context.view()).one('create', function () {
                 initComponent(context);
             });
 
-            context.view().trigger('create');
+            z$(context.view()).trigger('create');
         } else {
             // TODO: report error
         }
@@ -823,7 +752,7 @@
             var c = context._c = new ContextController(context);
 
             if (!util.isNoU(c.view()))
-                c.view().attr('data-ui-component', c.componentId);
+                z$(c.view()).attr('data-ui-component', c.componentId);
 
             if (util.isFunction(c.create)) c.create();
             //if (util.isFunction(c.bind)) c.bind();
@@ -852,6 +781,15 @@
 
 
 
+
+
+
+
+
+
+    // TODO: following code to be sorted/re-arranged
+
+
     function triggerHook(context, path, data) {
         // TODO: call all registered callback
         if (util.isFunction(_hooksCallbacks[path]))
@@ -865,6 +803,9 @@
         _hooksCallbacks[path] = handler;
         return this;
     }
+
+
+
 
 
 
@@ -941,9 +882,320 @@
                 }
             }
             return ref;
+        },
+
+        cloneObject: function cloneObject(obj) {
+            if (obj === null || typeof obj !== 'object') {
+                return obj;
+            }
+            // give temp the original obj's constructor
+            var temp = obj.constructor();
+            for (var key in obj)
+                temp[key] = cloneObject(obj[key]);
+            return temp;
         }
 
     };
+
+
+
+
+
+
+
+
+
+
+    // TODO: make of it a class
+    var _taskList = [];
+
+    function taskQueue(tid, fn) {
+        _taskList.push({tid: tid, fn: fn, status: 0});
+        setTimeout(function () {
+            taskCheck();
+        }, 1);
+    }
+
+    function taskCheck() {
+        var next = -1;
+        for (var i = 0; i < _taskList.length; i++) {
+            if (next != -2 && _taskList[i].status == 0) {
+                next = i;
+            }
+            else if (_taskList[i].status == 1) {
+                next = -2;
+                setTimeout(taskCheck, 100);
+                triggerHook(this, 'load:step', {
+                    task: _taskList[i].tid
+                });
+                return;
+            }
+            else if (_taskList[i].status == 2) {
+                triggerHook(this, 'load:next', {
+                    task: _taskList[i].tid
+                });
+                _taskList.splice(i, 1);
+                setTimeout(taskCheck, 100);
+                return;
+            }
+        }
+
+        if (next >= 0) {
+            _taskList[next].status = 1;
+            (_taskList[next].fn).call(_taskList[next]);
+            setTimeout(taskCheck, 100);
+            triggerHook(this, 'load:begin', {
+                task: _taskList[next].tid
+            });
+        } else {
+            triggerHook(this, 'load:end');
+        }
+    }
+
+
+
+
+
+
+    // TODO: implement <componentId>.css and <componentId>.model.js loading
+    // TODO: implement CSS pre-processing for <component>.css files
+    // TODO: (supporting nested rules for local component styles definitions)
+    // TODO: regexp /([.,\w])([^/{};]+)({)/g
+
+
+
+
+
+    // ZuixQl - Very small set of jQuery like functions used by Zuix
+    // TODO: deprecate jQuery dependency add:
+    // TODO: ZuixQl.prototype.children
+    // TODO: ZuixQl.prototype.one
+
+    /**
+     *
+     * @param element {ZuixQl|Array<HTMLElement>|HTMLElement|Node|NodeList|undefined}
+     * @return {ZuixQl}
+     * @constructor
+     */
+    function ZuixQl(element) {
+        if (util.isNoU(element) || typeof element === 'string')
+            element = document.documentElement;
+        /** @protected */
+        this._selection = [];
+
+        if (element instanceof ZuixQl)
+            return element;
+        else if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))
+            this._selection = element;
+        else if (element instanceof HTMLElement || element instanceof Node)
+            this._selection = [element];
+        else if (typeof element === 'string')
+            this._selection = this._selection[0].querySelectorAll(element);
+        else { //if (typeof element === 'string') {
+            console.log(typeof element);
+            throw(element);
+        }
+        return this;
+    }
+    ZuixQl.prototype.parent = function() {
+        return new ZuixQl(this._selection[0].parentNode);
+    };
+    ZuixQl.prototype.children = function(filter) {
+        // TODO: implement filtering
+        return new ZuixQl(this._selection[0].children);
+    };
+    ZuixQl.prototype.get = function(i) {
+        if (util.isNoU(i))
+            i = 0;
+        return this._selection[i];
+    };
+    ZuixQl.prototype.eq = function(i) {
+        return new ZuixQl(this._selection[i]);
+    };
+    ZuixQl.prototype.find = function(selector) {
+        return new ZuixQl(this._selection[0].querySelectorAll(selector));
+    };
+    ZuixQl.prototype.each = function(iterationCallback) {
+       z$.each(this._selection, iterationCallback);
+       return this;
+    };
+    ZuixQl.prototype.attr = function(attr, val) {
+        if (util.isNoU(val))
+            return this._selection[0].getAttribute(attr);
+        else
+            this.each(function(k,v){
+                this.setAttribute(attr, val);
+            });
+        return this;
+    };
+    ZuixQl.prototype.trigger = function(eventPath, eventData) {
+        var event;
+        if (window.CustomEvent) {
+            event = new CustomEvent(eventPath, { detail: eventData});
+        } else {
+            event = document.createEvent('CustomEvent');
+            event.initCustomEvent(eventPath, true, true, eventData);
+        }
+        this.each(function(k, v) {
+            this.dispatchEvent(event);
+        });
+        return this;
+    };
+    ZuixQl.prototype.one = function(eventPath, eventHandler) {
+        var fired = false;
+        this.on(eventPath, function (a, b) {
+            if (fired) return;
+            fired = true;
+            z$(this).off(eventPath, eventHandler);
+            eventHandler.call(this, a, b);
+        });
+        return this;
+    };
+    ZuixQl.prototype.on = function(eventPath, eventHandler) {
+        var events = eventPath.match(/\S+/g) || [];
+        this.each(function(k, v) {
+            var _t = this;
+            z$.each(events, function(k, v) {
+                _t.addEventListener(v, eventHandler, false);
+            });
+        });
+        return this;
+    };
+    ZuixQl.prototype.off = function(eventPath, eventHandler) {
+        var events = eventPath.match(/\S+/g) || [];
+        this.each(function(k, v) {
+            var _t = this;
+            z$.each(events, function(k, v) {
+                _t.removeEventListener(v, eventHandler);
+            });
+        });
+        return this;
+    };
+    ZuixQl.prototype.isEmpty = function() {
+      return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
+    };
+    // TODO: the following methods could be deprecated
+    ZuixQl.prototype.css = function(attr, val) {
+        if (util.isNoU(val))
+            return this._selection[0].style[attr];
+        else
+            this.each(function(k,v) {
+                this.style[attr] = val;
+            });
+        return this;
+    };
+    ZuixQl.prototype.addClass = function(className) {
+        var classes = className.match(/\S+/g) || [];
+        z$.each(this._selection, function(k, v){
+            if (this.classList) {
+                var _t = this;
+                z$.each(classes, function(k, v) {
+                    _t.classList.add(v);
+                });
+            } else this.className += ' ' + className;
+        });
+        return this;
+    };
+    ZuixQl.prototype.hasClass = function(className) {
+        var classes = className.match(/\S+/g) || [];
+        var success = false;
+        var cls = this._selection[0];
+        z$.each(classes, function(k, v) {
+            if (cls)
+                success = cls.classList.contains(v);
+            else
+                success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(cls.className));
+            if (success) return false;
+        });
+        return success;
+    };
+    ZuixQl.prototype.removeClass = function(className) {
+        var classes = className.match(/\S+/g) || [];
+        z$.each(this._selection, function(k, v){
+            if (this.classList) {
+                var _t = this;
+                z$.each(classes, function(k, v) {
+                    _t.classList.remove(v);
+                });
+            } else this.className = this.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        });
+        return this;
+    };
+    ZuixQl.prototype.prev = function() {
+        return new ZuixQl(this._selection[0].previousElementSibling);
+    };
+    ZuixQl.prototype.next= function() {
+        return new ZuixQl(this._selection[0].nextElementSibling);
+    };
+    ZuixQl.prototype.html = function(htmlText) {
+        if (util.isNoU(htmlText))
+            return this._selection[0].innerHTML;
+        else
+            this.each(function(k,v){
+                this.innerHTML = htmlText;
+            });
+        return this;
+    };
+    ZuixQl.prototype.show = function() {
+        z$.each(this._selection, function(k, v){
+            this.style.display = '';
+        });
+        return this;
+    };
+    ZuixQl.prototype.hide = function() {
+        z$.each(this._selection, function(k, v){
+            this.style.display = 'none';
+        });
+        return this;
+    };
+
+
+
+
+    var z$ = function(what) { return new ZuixQl(what); };
+    z$.ZuixQl = ZuixQl;
+    z$.find = function (filter) {
+      return z$().find(filter);
+    };
+    z$.each = function(items, iterationCallback) {
+        for (var i = 0, len = items.length; i < len; i++)
+            if (iterationCallback.call(items[i], i, items[i]) === false)
+                break;
+        return this;
+    };
+    z$.ajax = function ajax(opt) {
+        if (!util.isNoU(opt) && !util.isNoU(opt.url))
+            url = opt.url;
+        else
+            url = opt;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                if (util.isFunction(opt.success)) opt.success(xhr.responseText);
+            }
+            else {
+                if (util.isFunction(opt.error)) opt.error(xhr);
+            }
+        };
+        xhr.send();
+        return this;
+    };
+    z$.wrapElement = function (containerTag, element) {
+        //$(element).wrap($('<'+containerTag+'/>'));
+        //return element;
+        var container = document.createElement(containerTag);
+        if (typeof element === 'string')
+            container.innerHTML = element;
+        else
+            container.append(element);
+        return container;
+    };
+
+
+
+
+
 
     // Public Interface
 
@@ -962,6 +1214,7 @@
 
         /* utility methods */
 
+        $: z$,
         field: field,
 
         /* dev utility methods */
@@ -978,4 +1231,4 @@
     };
 
     return zuix;
-}.call(this));
+})();
