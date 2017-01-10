@@ -579,8 +579,8 @@
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(context.view())) {
-                taskQueue('html:' + context.componentId, function () {
-                    var promise = this;
+                tasker.queue('html:' + context.componentId, function () {
+                    var task = this;
                     z$.ajax({
                         url: context.componentId + ".html?" + new Date().getTime(),
                         //dataType: 'text',
@@ -588,10 +588,10 @@
                         success: function (viewHtml) {
                             context.view(viewHtml);
                             loadController(context);
-                            promise.status = 2;
+                            task.end();
                         },
                         error: function (err) {
-                            promise.status = 2;
+                            task.end();
                             console.log(err);
                             if (util.isFunction(options.error))
                                 context.error(context, err);
@@ -673,8 +673,8 @@
      */
     function loadController(context) {
         if (context.controller() === null) {
-            taskQueue('js:' + context.componentId, function () {
-                var promise = this;
+            tasker.queue('js:' + context.componentId, function () {
+                var task = this;
                 z$.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
                     success: function (ctrlJs) {
@@ -694,10 +694,10 @@
                             return;
                         }
                         createComponent(context);
-                        promise.status = 2;
+                        task.end();
                     },
                     error: function (err) {
-                        promise.status = 2;
+                        task.end();
                         createComponent(context);
                         console.log(err);
                         if (util.isFunction(context.error))
@@ -810,6 +810,11 @@
 
 
 
+
+
+
+
+
     // Generic utility class
     var util = {
 
@@ -902,88 +907,82 @@
 
 
 
-
-
-
-
-    // TODO: make of it a class
-    var _taskList = [];
-
-    function taskQueue(tid, fn) {
-        _taskList.push({tid: tid, fn: fn, status: 0});
-        setTimeout(function () {
-            taskCheck();
-        }, 1);
-    }
-
-    function taskCheck() {
-        var next = -1;
-        for (var i = 0; i < _taskList.length; i++) {
-            if (next != -2 && _taskList[i].status == 0) {
-                next = i;
-            }
-            else if (_taskList[i].status == 1) {
-                next = -2;
-                setTimeout(taskCheck, 100);
-                triggerHook(this, 'load:step', {
-                    task: _taskList[i].tid
-                });
-                return;
-            }
-            else if (_taskList[i].status == 2) {
-                triggerHook(this, 'load:next', {
-                    task: _taskList[i].tid
-                });
-                _taskList.splice(i, 1);
-                setTimeout(taskCheck, 100);
-                return;
-            }
-        }
-
-        if (next >= 0) {
-            _taskList[next].status = 1;
-            (_taskList[next].fn).call(_taskList[next]);
-            setTimeout(taskCheck, 100);
-            triggerHook(this, 'load:begin', {
-                task: _taskList[next].tid
+    // Task Queue Manager
+    function TaskQueue() {
+        var _t = this;
+        _t._taskList = [];
+        _t.taskQueue = function(tid, fn) {
+            _t._taskList.push({
+                tid: tid,
+                fn: fn,
+                status: 0,
+                end: function(){ this.status = 2; }
             });
-        } else {
-            triggerHook(this, 'load:end');
+            setTimeout(function () {
+                _t.taskCheck();
+            }, 1);
+        };
+        _t.taskCheck = function () {
+            var next = -1;
+            for (var i = 0; i < _t._taskList.length; i++) {
+                if (next != -2 && _t._taskList[i].status == 0) {
+                    next = i;
+                }
+                else if (_t._taskList[i].status == 1) {
+                    next = -2;
+                    setTimeout(_t.taskCheck, 10);
+                    triggerHook(_t, 'load:step', {
+                        task: _t._taskList[i].tid
+                    });
+                    return;
+                }
+                else if (_t._taskList[i].status == 2) {
+                    triggerHook(this, 'load:next', {
+                        task: _t._taskList[i].tid
+                    });
+                    _t._taskList.splice(i, 1);
+                    setTimeout(_t.taskCheck, 10);
+                    return;
+                }
+            }
+
+            if (next >= 0) {
+                _t._taskList[next].status = 1;
+                (_t._taskList[next].fn).call(_t._taskList[next]);
+                setTimeout(_t.taskCheck, 10);
+                triggerHook(_t, 'load:begin', {
+                    task: _t._taskList[next].tid
+                });
+            } else {
+                triggerHook(_t, 'load:end');
+            }
         }
+
     }
+    TaskQueue.prototype.queue = function(tid, fn) {
+        return this.taskQueue(tid, fn);
+    };
+
+    var tasker = new TaskQueue();
 
 
 
-
-
-
-    // TODO: implement <componentId>.css and <componentId>.model.js loading
-    // TODO: implement CSS pre-processing for <component>.css files
-    // TODO: (supporting nested rules for local component styles definitions)
-    // TODO: regexp /([.,\w])([^/{};]+)({)/g
-
-
-
-
-
-    // ZuixQl - Very small set of jQuery like functions used by Zuix
-    // TODO: deprecate jQuery dependency add:
-    // TODO: ZuixQl.prototype.children
-    // TODO: ZuixQl.prototype.one
 
     /**
+     * ZQuery, a very small subset of jQuery-like functions
+     * internally used in Zuix
      *
-     * @param element {ZuixQl|Array<HTMLElement>|HTMLElement|Node|NodeList|undefined}
-     * @return {ZuixQl}
+     * @param element {ZQuery|Array<HTMLElement>|HTMLElement|Node|NodeList|undefined}
+     * @return {ZQuery}
      * @constructor
      */
-    function ZuixQl(element) {
+    function ZQuery(element) {
         if (util.isNoU(element) || typeof element === 'string')
             element = document.documentElement;
         /** @protected */
         this._selection = [];
 
-        if (element instanceof ZuixQl)
+        if (element instanceof ZQuery)
             return element;
         else if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))
             this._selection = element;
@@ -997,29 +996,29 @@
         }
         return this;
     }
-    ZuixQl.prototype.parent = function() {
-        return new ZuixQl(this._selection[0].parentNode);
+    ZQuery.prototype.parent = function() {
+        return new ZQuery(this._selection[0].parentNode);
     };
-    ZuixQl.prototype.children = function(filter) {
+    ZQuery.prototype.children = function(filter) {
         // TODO: implement filtering
-        return new ZuixQl(this._selection[0].children);
+        return new ZQuery(this._selection[0].children);
     };
-    ZuixQl.prototype.get = function(i) {
+    ZQuery.prototype.get = function(i) {
         if (util.isNoU(i))
             i = 0;
         return this._selection[i];
     };
-    ZuixQl.prototype.eq = function(i) {
-        return new ZuixQl(this._selection[i]);
+    ZQuery.prototype.eq = function(i) {
+        return new ZQuery(this._selection[i]);
     };
-    ZuixQl.prototype.find = function(selector) {
-        return new ZuixQl(this._selection[0].querySelectorAll(selector));
+    ZQuery.prototype.find = function(selector) {
+        return new ZQuery(this._selection[0].querySelectorAll(selector));
     };
-    ZuixQl.prototype.each = function(iterationCallback) {
+    ZQuery.prototype.each = function(iterationCallback) {
        z$.each(this._selection, iterationCallback);
        return this;
     };
-    ZuixQl.prototype.attr = function(attr, val) {
+    ZQuery.prototype.attr = function(attr, val) {
         if (util.isNoU(val))
             return this._selection[0].getAttribute(attr);
         else
@@ -1028,7 +1027,7 @@
             });
         return this;
     };
-    ZuixQl.prototype.trigger = function(eventPath, eventData) {
+    ZQuery.prototype.trigger = function(eventPath, eventData) {
         var event;
         if (window.CustomEvent) {
             event = new CustomEvent(eventPath, { detail: eventData});
@@ -1041,7 +1040,7 @@
         });
         return this;
     };
-    ZuixQl.prototype.one = function(eventPath, eventHandler) {
+    ZQuery.prototype.one = function(eventPath, eventHandler) {
         var fired = false;
         this.on(eventPath, function (a, b) {
             if (fired) return;
@@ -1051,7 +1050,7 @@
         });
         return this;
     };
-    ZuixQl.prototype.on = function(eventPath, eventHandler) {
+    ZQuery.prototype.on = function(eventPath, eventHandler) {
         var events = eventPath.match(/\S+/g) || [];
         this.each(function(k, v) {
             var _t = this;
@@ -1061,7 +1060,7 @@
         });
         return this;
     };
-    ZuixQl.prototype.off = function(eventPath, eventHandler) {
+    ZQuery.prototype.off = function(eventPath, eventHandler) {
         var events = eventPath.match(/\S+/g) || [];
         this.each(function(k, v) {
             var _t = this;
@@ -1071,11 +1070,11 @@
         });
         return this;
     };
-    ZuixQl.prototype.isEmpty = function() {
+    ZQuery.prototype.isEmpty = function() {
       return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
     };
     // TODO: the following methods could be deprecated
-    ZuixQl.prototype.css = function(attr, val) {
+    ZQuery.prototype.css = function(attr, val) {
         if (util.isNoU(val))
             return this._selection[0].style[attr];
         else
@@ -1084,7 +1083,7 @@
             });
         return this;
     };
-    ZuixQl.prototype.addClass = function(className) {
+    ZQuery.prototype.addClass = function(className) {
         var classes = className.match(/\S+/g) || [];
         z$.each(this._selection, function(k, v){
             if (this.classList) {
@@ -1096,7 +1095,7 @@
         });
         return this;
     };
-    ZuixQl.prototype.hasClass = function(className) {
+    ZQuery.prototype.hasClass = function(className) {
         var classes = className.match(/\S+/g) || [];
         var success = false;
         var cls = this._selection[0];
@@ -1109,7 +1108,7 @@
         });
         return success;
     };
-    ZuixQl.prototype.removeClass = function(className) {
+    ZQuery.prototype.removeClass = function(className) {
         var classes = className.match(/\S+/g) || [];
         z$.each(this._selection, function(k, v){
             if (this.classList) {
@@ -1121,13 +1120,13 @@
         });
         return this;
     };
-    ZuixQl.prototype.prev = function() {
-        return new ZuixQl(this._selection[0].previousElementSibling);
+    ZQuery.prototype.prev = function() {
+        return new ZQuery(this._selection[0].previousElementSibling);
     };
-    ZuixQl.prototype.next= function() {
-        return new ZuixQl(this._selection[0].nextElementSibling);
+    ZQuery.prototype.next= function() {
+        return new ZQuery(this._selection[0].nextElementSibling);
     };
-    ZuixQl.prototype.html = function(htmlText) {
+    ZQuery.prototype.html = function(htmlText) {
         if (util.isNoU(htmlText))
             return this._selection[0].innerHTML;
         else
@@ -1136,24 +1135,21 @@
             });
         return this;
     };
-    ZuixQl.prototype.show = function() {
+    ZQuery.prototype.show = function() {
         z$.each(this._selection, function(k, v){
             this.style.display = '';
         });
         return this;
     };
-    ZuixQl.prototype.hide = function() {
+    ZQuery.prototype.hide = function() {
         z$.each(this._selection, function(k, v){
             this.style.display = 'none';
         });
         return this;
     };
 
-
-
-
-    var z$ = function(what) { return new ZuixQl(what); };
-    z$.ZuixQl = ZuixQl;
+    // ZQuery object
+    var z$ = function(what) { return new ZQuery(what); };
     z$.find = function (filter) {
       return z$().find(filter);
     };
@@ -1188,16 +1184,14 @@
         if (typeof element === 'string')
             container.innerHTML = element;
         else
+            // TODO: test this, it may not work
             container.append(element);
         return container;
     };
 
 
+    // Public ```zuix``` interface
 
-
-
-
-    // Public Interface
 
     this.zuix = this.zuix || {
 
@@ -1214,6 +1208,7 @@
 
         /* utility methods */
 
+        ZQuery: ZQuery,
         $: z$,
         field: field,
 
@@ -1225,10 +1220,22 @@
             console.log("ZUIX", "Loaded Component Instances", _contextRoot);
         }
 
-        // TODO: add zuix.options to configure stuff like
-        // TODO: the css/html/js lookup base path (each individually own prop)
-
     };
+
+
+
+    // TODO: implement <componentId>.css and <componentId>.model.js loading
+    // TODO: implement CSS pre-processing for <component>.css files
+    // TODO: (supporting nested rules for local component styles definitions)
+    // TODO: regexp /([.,\w])([^/{};]+)({)/g
+
+    // TODO: add zuix.options to configure stuff like
+    // TODO: the css/html/js lookup base path (each individually own prop)
+
+    // TODO: deprecate jQuery dependency
+
+
+
 
     return zuix;
 })();

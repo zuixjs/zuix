@@ -160,7 +160,7 @@ setTimeout(function () {
     zuix.dumpContexts();
 }, 5000);
 
-zuix.$.ZuixQl.prototype.animateCss  = function (animationName, callback) {
+zuix.ZQuery.prototype.animateCss  = function (animationName, callback) {
     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
     if (this.hasClass('animated'))
         this.trigger('animationend');
