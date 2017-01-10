@@ -910,6 +910,7 @@
     // Task Queue Manager
     function TaskQueue() {
         var _t = this;
+        _t._worker = null;
         _t._taskList = [];
         _t.taskQueue = function(tid, fn) {
             _t._taskList.push({
@@ -918,9 +919,14 @@
                 status: 0,
                 end: function(){ this.status = 2; }
             });
-            setTimeout(function () {
+            _t.check();
+        };
+        _t.check = function() {
+            if (_t._worker != null)
+                clearTimeout(_t._worker);
+            _t._worker = setTimeout(function () {
                 _t.taskCheck();
-            }, 1);
+            }, 10);
         };
         _t.taskCheck = function () {
             var next = -1;
@@ -930,7 +936,7 @@
                 }
                 else if (_t._taskList[i].status == 1) {
                     next = -2;
-                    setTimeout(_t.taskCheck, 10);
+                    _t.check();
                     triggerHook(_t, 'load:step', {
                         task: _t._taskList[i].tid
                     });
@@ -941,7 +947,7 @@
                         task: _t._taskList[i].tid
                     });
                     _t._taskList.splice(i, 1);
-                    setTimeout(_t.taskCheck, 10);
+                    _t.check();
                     return;
                 }
             }
@@ -949,7 +955,7 @@
             if (next >= 0) {
                 _t._taskList[next].status = 1;
                 (_t._taskList[next].fn).call(_t._taskList[next]);
-                setTimeout(_t.taskCheck, 10);
+                _t.check();
                 triggerHook(_t, 'load:begin', {
                     task: _t._taskList[next].tid
                 });

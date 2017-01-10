@@ -78,19 +78,23 @@ var main = {
 };
 
 // Zuix hook handlers
+var loader = zuix.$(zuix.field('loader'));
 zuix
 .hook('load:begin', function(a,b){
-    zuix.$(zuix.field('loader')).show();
-    console.log("LOAD START", b);
+    loader.show();
 
 }).hook('load:step', function(a,b){
 
 }).hook('load:next', function(a,b){
-    console.log("LOAD NEXT", zuix.field('loader'), b);
     zuix.$(zuix.field('loader-progress')).html(b.task).prev().animateCss('bounce');
 
 }).hook('load:end', function(a,b){
-    zuix.$(zuix.field('loader')).hide();
+    loader.animateCss('fadeOutUp', function(){
+       loader.hide();
+    });
+    zuix.$(zuix.field('main')).animateCss('fadeIn', function(){
+        loader.hide();
+    });
 
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
