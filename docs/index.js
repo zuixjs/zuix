@@ -33,6 +33,12 @@ var main = {
             markdown: true,
             mdl: true,
             prism: true
+        },
+        content_no_css: {
+            markdown: true,
+            mdl: true,
+            prism: true,
+            css: false
         }
     },
     // Component 'ui/layout/actions-view'

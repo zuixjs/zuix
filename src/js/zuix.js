@@ -76,6 +76,7 @@
      *    componentId: string|undefined The component identifier,
      *    model: ContextModel|undefined The data model,
      *    view: ContextView|undefined The view element,
+     *    css: Element|string|undefined,
      *    controller: ContextControllerCallback|undefined The controller handler,
      *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
      *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
@@ -156,6 +157,8 @@
             this.container(options.container);
             this.model(options.model);
             this.view(options.view);
+            if (typeof options.css !== 'undefined')
+                this.style(options.css);
             this.controller(options.controller);
         }
         return this;
@@ -201,7 +204,7 @@
 
     /***
      *
-     * @param {ContextModel|null|undefined} [model]
+     * @param {ContextModel|undefined} [model]
      * @returns {ComponentContext|Object}
      */
     ComponentContext.prototype.model = function (model) {
@@ -209,23 +212,18 @@
         else this._model = model;
         return this;
     };
+
     /***
      *
-     * @param {string|Element|null|undefined} [css]
+     * @param {string|Element|undefined} [css]
      * @returns {ComponentContext|Element}
      */
     ComponentContext.prototype.style = function (css) {
         if (typeof css === 'undefined') return this._style;
         if (css == null || css instanceof Element) {
 
-            // remove previous style node
-            var h = document.head || document.getElementsByTagName('head')[0];
-            if (!util.isNoU(this._style))
-                h.removeChild(this._style);
-            this._css = '';
-            this._style = css;
-            if (css != null)
-                h.appendChild(this._style);
+            this._css = (css instanceof Element) ? css.innerText : css;
+            this._style = z$.appendCss(css, this._style);
 
         } else if (typeof css === 'string') {
 
@@ -242,22 +240,7 @@
             css = hookData.content;
 
             // output css
-            var head = document.head || document.getElementsByTagName('head')[0],
-                style = document.createElement('style');
-            style.type = 'text/css';
-            if (style.styleSheet)
-                style.styleSheet.cssText = css;
-            else
-                style.appendChild(document.createTextNode(css));
-
-            // remove previous style node
-            if (!util.isNoU(this._style))
-                head.removeChild(this._style);
-            head.appendChild(style);
-
-            // store the style node in order to properly remove
-            // if style changes or TODO: component is removed
-            this._style = style;
+            this._style = z$.appendCss(css, this._style);
 
         }
         // TODO: should throw error if ```css``` is not a valid type
@@ -265,7 +248,7 @@
     };
     /***
      *
-     * @param {ContextView|string|null|undefined} [view]
+     * @param {ContextView|string|undefined} [view]
      * @returns {ComponentContext|ContextView}
      */
     ComponentContext.prototype.view = function (view) {
@@ -294,7 +277,7 @@
     };
     /***
      *
-     * @param {ContextControllerCallback|null|undefined} [controller]
+     * @param {ContextControllerCallback|undefined} [controller]
      * @returns {ComponentContext|ContextControllerCallback}
      */
     ComponentContext.prototype.controller = function (controller) {
@@ -643,10 +626,12 @@
                             context.view(viewHtml);
                             task.end();
                             // View CSS loading
-                            loadViewCss( context, function() {
-                                // Controller loading
-                                loadController(context);
-                            });
+                            if (options.css !== false)
+                                loadViewCss( context, function() {
+                                    // Controller loading
+                                    loadController(context);
+                                });
+                            else loadController(context);
                         },
                         error: function (err) {
                             task.end();
@@ -1277,6 +1262,25 @@
             css = wrappedCss;
         }
         return css;
+    };
+    z$.appendCss = function(css, target) {
+        var style = null;
+        if (typeof css === 'string') {
+            // output css
+            var head = document.head || document.getElementsByTagName('head')[0];
+            style = document.createElement('style');
+            style.type = 'text/css';
+            if (style.styleSheet)
+                style.styleSheet.cssText = css;
+            else
+                style.appendChild(document.createTextNode(css));
+        } else if (css instanceof Element) style = css;
+        // remove previous style node
+        if (!util.isNoU(target))
+            head.removeChild(target);
+        if (!util.isNoU(style))
+            head.appendChild(style);
+        return style;
     };
 
 
