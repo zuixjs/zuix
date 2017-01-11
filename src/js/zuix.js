@@ -155,10 +155,10 @@
             if (!util.isNoU(options.componentId))
                 this.componentId = options.componentId;
             this.container(options.container);
-            this.model(options.model);
             this.view(options.view);
             if (typeof options.css !== 'undefined')
                 this.style(options.css);
+            this.model(options.model);
             this.controller(options.controller);
         }
         return this;
@@ -210,7 +210,23 @@
     ComponentContext.prototype.model = function (model) {
         if (typeof model === 'undefined') return this._model;
         else this._model = model;
+        this.updateModelView();
         return this;
+    };
+
+    ComponentContext.prototype.updateModelView = function() {
+        if (!util.isNoU(this._view) && !util.isNoU(this._model)) {
+            var _t = this;
+            z$(this._view).find('[data-ui-field]').each(function(a,b){
+                var field = z$(this);
+                var boundField = field.attr('data-bind-to');
+                if (util.isNoU(boundField))
+                    boundField = field.attr('data-ui-field');
+                var boundData = util.propertyFromPath(_t._model, boundField);
+                if (!util.isNoU(boundData))
+                    this.innerHTML = boundData;
+            });
+        }
     };
 
     /***
@@ -260,18 +276,16 @@
             triggerHook(this, 'html:parse', hookData);
             view = hookData.content;
 
-
             // add context to the view
             this._view = z$.wrapElement('div', view);
-
 
             // trigger `view:process` hook when the view is ready to be processed
             triggerHook(this, 'view:process', this._view);
 
-
             // Zuix Componentizer is the last executed hook (built-in)
             componentize(this._view);
 
+            this.updateModelView();
         } else this._view = view;
         return this;
     };
