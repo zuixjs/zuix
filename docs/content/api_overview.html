@@ -56,40 +56,40 @@ Initializes a controller function.
 The <code>{ContextController}</code> function skelton is described below:
 
 <pre><code class="language-js">
-function ($$) {
+function (cp) {
 
-    $$.create = function () {
+    cp.create = function () {
         // Called as soon as the component context
         // is created. Add initizlization code
         // and register UI  event handlers here.
     };
 
-    $$.destroy = function() {
+    cp.destroy = function() {
         // Called as soon as the component context
         // is destroyed. Dispose any allocated resource here.
     };
 
-    $$.resume = function () {
-        // Called automatically after $$.create()
-        // and any time back from $$.pause().
+    cp.resume = function () {
+        // Called automatically after cp.create()
+        // and any time back from cp.pause().
     };
 
-    $$.pause = function() {
+    cp.pause = function() {
         // Called when the component is
         // requested to pause. Stop any background
         // operation here
         // (eg. event handlers and background workers)
     };
 
-    $$.refresh = function () {
+    cp.refresh = function () {
         // Called when the bound data set (model) has changed.
     };
 
-    $$.event = function (eventPath, eventValue) {
+    cp.event = function (eventPath, eventValue) {
         // Called when a component event is fired.
     };
 
-    $$.api = function(command, options) {
+    cp.api = function(command, options) {
         // Called when a local API command is invoked.
     };
 
@@ -98,36 +98,36 @@ function ($$) {
 
 <p></p>
 
-<code>$$</code> is the <code>{ComponentContext}</code> object
+<code>cp</code> is the <code>{ComponentContext}</code> object
 that is passed to the <code>{ContextController}</code> function
 once the related component is created.
 
 When calling the <code>zuix.controller(...)</code> method, the passed
 <code>{ContextController}</code> function can implement none, one or more of the
-<code>$$</code> context handlers.
+<code>cp</code> context handlers.
 
 
 
 
-##### $$ <code>{ComponentContext}</code> object summary
+##### cp <code>{ComponentContext}</code> object summary
 
 <pre><strong>Event Handlers</strong></pre>
 <pre><code class="language-js">
 
     // on component created
-    $$.create = function() { ... };
+    cp.create = function() { ... };
     // on component resumed
-    $$.resume = function() { ... };
+    cp.resume = function() { ... };
     // on component paused
-    $$.pause = function() { ... }
+    cp.pause = function() { ... }
     // on component destroyed
-    $$.destroy = function() { ... }
+    cp.destroy = function() { ... }
     // on component refresh
-    $$.refresh = function() { ... }
+    cp.refresh = function() { ... }
     // on component event
-    $$.event = function(eventPath, eventValue) { ... }
+    cp.event = function(eventPath, eventValue) { ... }
     // on component command
-    $$.api = function(apiCommand, options) { ... }
+    cp.api = function(apiCommand, options) { ... }
 
 </code></pre>
 
@@ -137,15 +137,15 @@ All of the above handler methods return ```{ComponentContext}.this```.
 <pre><code class="language-js">
 
     // @returns {jQuery}
-    $$.field(fieldName[, globalSearch]);
+    cp.field(fieldName[, globalSearch]);
     // @returns {ComponentContext}.this
-    $$.trigger(eventPath, eventValue)
+    cp.trigger(eventPath, eventValue)
     // @returns {ComponentContext}.this
-    $$.on(eventPath, handlerFn)
+    cp.on(eventPath, handlerFn)
     // @returns {ComponentContext}.this
-    $$.invoke(apiCommand, options)
+    cp.invoke(apiCommand, options)
     // @returns {ComponentContext}.this
-    $$.expose(methodName, handler)
+    cp.expose(methodName, handler)
 
 </code></pre>
 
@@ -153,9 +153,9 @@ All of the above handler methods return ```{ComponentContext}.this```.
 <pre><code class="language-js">
 
     // @type {jQuery}
-    $$.view
+    cp.view
     // @type {JSON}
-    $$.model
+    cp.model
 
 </code></pre>
 

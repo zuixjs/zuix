@@ -16,9 +16,9 @@
  */
 
 /**
- * Javascript UI components enhancer. A lite MVC library.
+ * Javascript UI components enhancer. A lite MV* library.
  * Find more details about zuix here:
- *   https://github.com/genielabs/zuix-mvc-js
+ *   https://github.com/genielabs/zuix-mvx-js
  *
  * @author Generoso Martello <generoso@martello.com>
  */
@@ -103,6 +103,9 @@ zuix
     // ShowDown - Markdown compiler
     if (this.options().markdown === true && typeof showdown !== 'undefined')
         w.content = new showdown.Converter().makeHtml(w.content);
+
+}).hook('css:parse', function (h, w) {
+    console.log("css:parse", w);
 
 }).hook('view:process', function (h, w) {
     // Prism code syntax highlighter

@@ -6,10 +6,9 @@ gulp.task('build', function() {
     return gulp.src('./src/js/zuix.js', {base: './'})
         .pipe(sourcemaps.init())
         .pipe(compiler({
+//            warningLevel: 'VERBOSE',
+//            useTypesForOptimization: true,
             compilationLevel: 'SIMPLE',
-//            warningLevel: 'DEFAULT',
-//            outputWrapper: '(function(scope){\n%output%\nreturn scope;}(this));',
-//            outputWrapper: '(function(){\n%output%\n}).call(this)',
             jsOutputFile: 'zuix.min.js',  // outputs single file
             createSourceMap: true
         }))

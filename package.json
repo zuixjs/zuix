@@ -1,12 +1,12 @@
 {
-  "name": "juice-mvc",
+  "name": "zuix-mvx",
   "version": "0.1.0",
-  "description": "Javascript UI components enhancer, lite MVC framework.",
+  "description": "Web UI components manager: a lite MV* library.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
   "bin": {},
   "scripts": {
-    "info": "echo 'juice MVC framework'",
+    "info": "echo 'ZUIX MV* library'",
     "lint": "echo '=> linting' && jshint src/*.js",
     "test": "echo \"Error: not implemented\" && exit 1",
     "gulp": "echo '=> running gulp' && npm run lint && gulp build",
@@ -31,11 +31,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/genielabs/js-zuix-mvc"
+    "url": "https://github.com/genielabs/js-zuix-mvx"
   },
   "keywords": [
     "javascript",
-    "mvc",
+    "mvx",
     "framework",
     "components",
     "ui"

@@ -6,22 +6,76 @@
 
 ### Quick start
 
-<p>.</p>
-<small>(TODO: about components, short MVC introduction)</small>
-<p>.</p>
+**ZUIX** will come handy, either creating a simple site
+like a blog or a *strongly componentized*
+[*SPA*](https://en.wikipedia.org/wiki/Single-page_application) for an Home Automation dashboard.
+
+If your target is creating something more complex than a blog site,
+before going into further reading, perhaps it may come useful
+to read something about the [**MV\***](https://addyosmani.com/resources/essentialjsdesignpatterns/book/#detailmvcmvp) design pattern.
+Either way, *ZUIX* will intrinsically guide you through adopting such design pattern.
+
+The starting point of your application will be an ```.html```
+file containing header includes, such as CSS styles, libraries and
+frameworks used by your application, including *ZUIX*.
+
+Beside that, the body of this ```.html``` file,
+will be blank in most cases, and will only contain
+some include directives to tell ZUIX what content and components to load
+in the page.
+
+<small><strong>EXAMPLE - </strong></small> Content of file ```index.html```:
+<pre><code class="language-html">
+<html>
+    <head>
+        <!-- This example is using Google's Material Design UI -->
+        <link rel="stylesheet" href="js/mdl/material.min.css">
+        <script src="js/mdl/material.min.js"></script>
+
+        <!-- other css/script includes used in this application -->
+
+        <!-- ZUIX include -->
+        <script src="js/zuix.min.js"></script>
+
+        <!-- Load CSS and JavaScript associated to this page -->
+        <link  href="index.css" rel="stylesheet">
+        <script src="index.js" defer type="text/javascript"></script>
+
+    </head>
+    <body>
+
+        <!-- Load the application main page -->
+        <div data-ui-include="site/layout/main"></div>
+
+    </body>
+</html>
+</code></pre>
+
+
+The ```site/layout/main``` include, may also itself include other files.
+
+
+<small><strong>EXAMPLE - </strong></small> Content of file ```site/layout/main.html```:
+<pre><code class="language-html">
+<div layout="column center-top">
+
+    <div data-ui-include="site/layout/header"></div>
+
+    <!-- page content goes here -->
+
+    <div data-ui-include="site/layout/footer"></div>
+
+</div>
+</code></pre>
 
 <a name="Content-Templates"></a>
 #### Static content and templates
 
-...
-
-##### Content inclusion
-
-To include static content or a template, the ```data-ui-include``` attribute is used.
+So, to include static content or a template, the ```data-ui-include``` attribute is used.
 The value of this attribute is the URL of the *HTML* file to include
 omitting its ```.html``` extension.
 
-The URL can refer either to a file on the local server or a remote one.
+The URL can either refer to a file on the local server or a remote one.
 
 <small><strong>EXAMPLE - </strong></small> Content of file ```site/common/links.html```:
 <pre><code class="language-html">
@@ -39,11 +93,17 @@ Inclusion of the above file in another document:
 
 Inclusion of the above file from a different server:
 <pre><code class="language-html">
-    <div data-ui-include="https://genielabs.github.io/zuix-mvc-js/site/common/links"></div>
+    <div data-ui-include="https://genielabs.github.io/zuix-mvx-js/site/common/links"></div>
 </code></pre>
 
 <small><strong>RESULT</strong></small>
 <div data-ui-include="site/common/links"></div>
+
+----
+
+<mark>DRAFT TEXT BELOW THIS LINE</mark>
+
+----
 
 ##### Content styling <small>Local CSS, pre-processing <mark>WIP</mark></small>
 
@@ -91,9 +151,9 @@ the associated CSS can be declared either inline too or in a separate file.
 #### Components
 
 A component is basically a [content template](#Content-Templates) (html/css/data model) with the
-plus of a piece of Javascript code associated to it.
+plus of a piece of JavaScript code associated to it.
 
-This Javascript code is the ****Controller**** of the component and
+This JavaScript code is the ****Controller**** of the component and
 it implements the logic and behavior of it upon user interaction or
 when the bound data model is updated.
 
@@ -163,10 +223,10 @@ suffix to the template name.
 
 #### The Controller <small>component logic</small>
 
-While in the previous steps we didn't need any javascript coding,
+While in the previous steps we didn't need any JavaScript coding,
 adding the controller for the component logic will indeed require
-to code a javascript handler for it.
-The handler can be specified either inline or into a sperate javascript
+to code a JavaScript handler for it.
+The handler can be specified either inline or into a sperate JavaScript
 file that will be loaded automatically if no inline controller is defined.
 
 
@@ -195,9 +255,9 @@ file that will be loaded automatically if no inline controller is defined.
 <pre><code class="language-html keyword-start line-numbers">
     <div data-ui-load="simple_view" data-ui-controller="exampleController"/>
     <script>
-    var exampleController = zuix.controller(function($$){
-        $$.create = function() {
-            $$.view().html('Helllo World!');
+    var exampleController = zuix.controller(function(cp){
+        cp.create = function() {
+            cp.view().html('Helllo World!');
         }
     });
     </script>
@@ -212,9 +272,9 @@ file that will be loaded automatically if no inline controller is defined.
 <pre><code class="language-html keyword-start line-numbers">
     <script>
     var componentContext = zuix.load('simple_view', {
-        controller: zuix.controller(function($$){
-            $$.create = function() {
-                $$.view().html('Helllo World!');
+        controller: zuix.controller(function(cp){
+            cp.create = function() {
+                cp.view().html('Helllo World!');
             }
         }),
         ready: function (context) {
@@ -314,13 +374,13 @@ file that will be loaded automatically if no inline controller is defined.
 <pre><code class="language-markup">
     <div data-ui-field="my-container"/>
 </code></pre>
-<small>Javascript</small>
+<small>JavaScript</small>
 <pre><code class="language-js">
     // load a component from CodePen
     // and override its controller logic
     // with an inline one
     zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
-        controller: zuix.controller(function($$) {
+        controller: zuix.controller(function(cp) {
             // inline controller function
             // TODO: implement your controller logic
         },
@@ -370,9 +430,9 @@ file that will be loaded automatically if no inline controller is defined.
 <div data-ui-field="simple_view_1"></div>
 <script>zuix.load('simple_view', {
     container: zuix.field('simple_view_1'),
-    controller: zuix.controller(function ($$) {
-        $$.create = function () {
-            $$.view().find('div').on('click', function () {
+    controller: zuix.controller(function (cp) {
+        cp.create = function () {
+            cp.view().find('div').on('click', function () {
                 $(this).attr('data-badge', 10);
             });
         }

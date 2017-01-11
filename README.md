@@ -1,7 +1,7 @@
 ## zuix
 #### JavaScript UI Components Enhancer
 
-**zuix** is a library for **component based Web/SPA** development implementing **MVC** design pattern.
+**ZUIX** is a library for **component based Web/SPA** development implementing **MV\*** design pattern.
 
-https://genielabs.github.io/zuix-mvc-js/
+https://genielabs.github.io/zuix-mvx-js/
 

@@ -16,9 +16,9 @@
  */
 
 /**
- * Javascript UI components enhancer. A lite MVC library.
+ * Javascript UI components enhancer. A lite MV* library.
  * Find more details about zuix here:
- *   https://github.com/genielabs/zuix-mvc-js
+ *   https://github.com/genielabs/zuix-mvx-js
  *
  * @author Generoso Martello <generoso@martello.com>
  */
@@ -56,7 +56,7 @@
      * @param {Object} error
      *
      * @callback EventCallback
-     * @param {jQuery.Event} event
+     * @param {string} event path
      * @param {Object} data
      *
      * @typedef {!{string, function}} EventMapping
@@ -66,21 +66,21 @@
      *    locales: Object|undefined
      * }} ContextModel
      *
-     * @typedef {jQuery|HTMLElement|string} ContextView
+     * @typedef {Node|string} ContextView
      *
-     * @typedef {jQuery|HTMLElement|string} ViewContainer
+     * @typedef {Node|string} ViewContainer
      *
      * @typedef {{
-     *    contextId: Object|undefined,
-     *    container: jQuery|undefined,
-     *    componentId: string|undefined,
-     *    model: ContextModel|undefined,
-     *    view: ContextView|undefined,
-     *    controller: ContextControllerCallback|undefined,
-     *    on: Array.<EventMapping>|EventCallback|undefined,
-     *    behavior: Array.<EventMapping>|EventCallback|undefined,
-     *    ready: ContextReadyCallback|undefined,
-     *    error: ContextErrorCallback|undefined
+     *    contextId: Object|undefined The context id,
+     *    container: Node|undefined The container element,
+     *    componentId: string|undefined The component identifier,
+     *    model: ContextModel|undefined The data model,
+     *    view: ContextView|undefined The view element,
+     *    controller: ContextControllerCallback|undefined The controller handler,
+     *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
+     *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
+     *    ready: ContextReadyCallback|undefined The ready callback, called once the component is succesfully loaded,
+     *    error: ContextErrorCallback|undefined The error callback, called when error occurs
      * }} ContextOptions
      *
      */
@@ -111,6 +111,10 @@
         this._model = null;
         /** @protected */
         this._view = null;
+        /** @protected */
+        this._css = null;
+        /** @protected */
+        this._style = null;
         /**
          * @protected
          * @type {ContextControllerCallback}
@@ -148,7 +152,7 @@
         this._options = options;
         if (!util.isNoU(options)) {
             if (!util.isNoU(options.componentId))
-              this.componentId = options.componentId;
+                this.componentId = options.componentId;
             this.container(options.container);
             this.model(options.model);
             this.view(options.view);
@@ -197,17 +201,71 @@
 
     /***
      *
-     * @param {ContextModel} [model]
+     * @param {ContextModel|null|undefined} [model]
      * @returns {ComponentContext|Object}
      */
     ComponentContext.prototype.model = function (model) {
-        if (util.isNoU(model)) return this._model;
+        if (typeof model === 'undefined') return this._model;
         else this._model = model;
         return this;
     };
     /***
      *
-     * @param {ContextView} [view]
+     * @param {string|Element|null|undefined} [css]
+     * @returns {ComponentContext|Element}
+     */
+    ComponentContext.prototype.style = function (css) {
+        if (typeof css === 'undefined') return this._style;
+        if (css == null || css instanceof Element) {
+
+            // remove previous style node
+            var h = document.head || document.getElementsByTagName('head')[0];
+            if (!util.isNoU(this._style))
+                h.removeChild(this._style);
+            this._css = '';
+            this._style = css;
+            if (css != null)
+                h.appendChild(this._style);
+
+        } else if (typeof css === 'string') {
+
+            // store original unparsed css (might be useful for debugging)
+            this._css = css;
+
+            // nest the CSS inside [data-ui-component='<componentId>']
+            // so that the style is only applied to this component type
+            css = z$.wrapCss('[data-ui-component="'+this.componentId+'"]', css);
+
+            // trigger `css:parse` hook before assigning content to the view
+            var hookData = {content: css};
+            triggerHook(this, 'css:parse', hookData);
+            css = hookData.content;
+
+            // output css
+            var head = document.head || document.getElementsByTagName('head')[0],
+                style = document.createElement('style');
+            style.type = 'text/css';
+            if (style.styleSheet)
+                style.styleSheet.cssText = css;
+            else
+                style.appendChild(document.createTextNode(css));
+
+            // remove previous style node
+            if (!util.isNoU(this._style))
+                head.removeChild(this._style);
+            head.appendChild(style);
+
+            // store the style node in order to properly remove
+            // if style changes or TODO: component is removed
+            this._style = style;
+
+        }
+        // TODO: should throw error if ```css``` is not a valid type
+        return this;
+    };
+    /***
+     *
+     * @param {ContextView|string|null|undefined} [view]
      * @returns {ComponentContext|ContextView}
      */
     ComponentContext.prototype.view = function (view) {
@@ -215,8 +273,7 @@
         if (typeof view === 'string') {
 
             // trigger `html:parse` hook before assigning content to the view
-            var hookData = { content: view };
-            // TODO: fire zuix.hook -> view:attach
+            var hookData = {content: view};
             triggerHook(this, 'html:parse', hookData);
             view = hookData.content;
 
@@ -237,18 +294,18 @@
     };
     /***
      *
-     * @param {ContextControllerCallback} [controller]
+     * @param {ContextControllerCallback|null|undefined} [controller]
      * @returns {ComponentContext|ContextControllerCallback}
      */
     ComponentContext.prototype.controller = function (controller) {
-        if (util.isNoU(controller)) return this._controller;
+        if (typeof controller === 'undefined') return this._controller;
         else this._controller = controller;
         return this;
     };
     /***
      *
      * @param {ViewContainer} [container]
-     * @returns {ComponentContext|jQuery}
+     * @returns {ComponentContext|Node}
      */
     ComponentContext.prototype.container = function (container) {
         if (util.isNoU(container)) return this._container;
@@ -334,18 +391,16 @@
         };
         // create event map from context options
         var options = context.options();
-        if (!util.isNoU(options.on))
-        {
-            for(var eventPath in options.on) {
+        if (!util.isNoU(options.on)) {
+            for (var eventPath in options.on) {
                 var handler = options.on[eventPath];
                 // TODO: should log.warn if k already exists
                 self.addEvent(self.view(), eventPath, handler);
             }
         }
         // create behavior map from context options
-        if (!util.isNoU(options.behavior))
-        {
-            for(var eventPath in options.behavior) {
+        if (!util.isNoU(options.behavior)) {
+            for (var eventPath in options.behavior) {
                 var handler = options.behavior[eventPath];
                 // TODO: should log.warn if k already exists
                 self.addBehavior(self.view(), eventPath, handler);
@@ -381,7 +436,7 @@
      *
      * @param {!string} field Name of the `data-ui-field` to search
      * @param {boolean} [globalSearch] Search a generic field attribute
-     * @returns {Element|jQuery}
+     * @returns {Node}
      */
     ContextController.prototype.field = function (field, globalSearch) {
         var f = globalSearch ? '@' + field : field;
@@ -432,21 +487,20 @@
     }
 
     /**
-     * Returns jQuery elements with `_zuixFieldAttribute` attribute matching `fieldName` .
+     * Returns Node with `_zuixFieldAttribute` attribute matching `fieldName` .
      *
      * @param {!string} fieldName The class to check for.
-     * @param {!Element|!jQuery|!HTMLElement|!HTMLDocument} [container] Starting DOM element for this search.
-     * @returns {jQuery}
+     * @param {!Node} [container] Starting DOM element for this search.
+     * @returns {Node}
      */
     function field(fieldName, container) {
         return z$(container).find('[' + _zuixFieldAttribute + '="' + fieldName + '"]').get(0);
     }
 
-
     /**
      * TODO: describe
      *
-     * @param [element] {jQuery|HTMLElement|HTMLDocument}
+     * @param [element] {Node}
      */
     function componentize(element) {
         // TODO: add 'data-ui-loaded="true"' attribute after loading
@@ -462,7 +516,6 @@
             if (!util.isNoU(z$(this).attr('data-ui-options'))) {
                 options = util.propertyFromPath(window, z$(this).attr('data-ui-options'));
                 // copy passed options
-                //options = jQuery.extend({}, options);
                 options = util.cloneObject(options);
             } else
                 options = {};
@@ -477,27 +530,29 @@
             if (util.isNoU(componentId)) {
                 // Static include should not have any controller
                 componentId = z$(this).attr('data-ui-include');
+                z$(this).attr('data-ui-component', componentId);
                 if (util.isNoU(options.controller))
-                    options.controller = function() {};
+                    options.controller = function () {
+                    };
             }
 
-             // TODO: Behavior are also definable in "data-ui-behavior" attribute
-             // TODO: Events are also definable in "data-ui-on" attribute
-             // util.propertyFromPath( ... )
-/*
+            // TODO: Behavior are also definable in "data-ui-behavior" attribute
+            // TODO: Events are also definable in "data-ui-on" attribute
+            // util.propertyFromPath( ... )
+            /*
              if (!util.isNoU(z$(this).attr('data-ui-ready')))
-                options.ready = util.propertyFromPath(window, z$(this).attr('data-ui-ready'));
-            if (!util.isNoU(z$(this).attr('data-ui-error')))
-                options.error = util.propertyFromPath(window, z$(this).attr('data-ui-error'));
-            if (!util.isNoU(z$(this).attr('data-ui-container')))
-                options.container = field(z$(this).attr('data-ui-container'));
-            if (!util.isNoU(z$(this).attr('data-ui-model')))
-                options.model = util.propertyFromPath(window, z$(this).attr('data-ui-model'));
-            if (!util.isNoU(z$(this).attr('data-ui-view')))
-                options.view = field(z$(this).attr('data-ui-view'));
-            if (!util.isNoU(z$(this).attr('data-ui-controller')))
-                options.controller = util.propertyFromPath(window, z$(this).attr('data-ui-controller'));
-*/
+             options.ready = util.propertyFromPath(window, z$(this).attr('data-ui-ready'));
+             if (!util.isNoU(z$(this).attr('data-ui-error')))
+             options.error = util.propertyFromPath(window, z$(this).attr('data-ui-error'));
+             if (!util.isNoU(z$(this).attr('data-ui-container')))
+             options.container = field(z$(this).attr('data-ui-container'));
+             if (!util.isNoU(z$(this).attr('data-ui-model')))
+             options.model = util.propertyFromPath(window, z$(this).attr('data-ui-model'));
+             if (!util.isNoU(z$(this).attr('data-ui-view')))
+             options.view = field(z$(this).attr('data-ui-view'));
+             if (!util.isNoU(z$(this).attr('data-ui-controller')))
+             options.controller = util.propertyFromPath(window, z$(this).attr('data-ui-controller'));
+             */
 
             load(componentId, options);
         });
@@ -579,20 +634,23 @@
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(context.view())) {
+                // Load View
                 tasker.queue('html:' + context.componentId, function () {
                     var task = this;
                     z$.ajax({
                         url: context.componentId + ".html?" + new Date().getTime(),
-                        //dataType: 'text',
-                        //type: 'GET',
                         success: function (viewHtml) {
                             context.view(viewHtml);
-                            loadController(context);
                             task.end();
+                            // View CSS loading
+                            loadViewCss( context, function() {
+                                // Controller loading
+                                loadController(context);
+                            });
                         },
                         error: function (err) {
                             task.end();
-                            console.log(err);
+                            console.log(err, context);
                             if (util.isFunction(options.error))
                                 context.error(context, err);
                         }
@@ -667,6 +725,32 @@
         return cached;
     }
 
+
+    function loadViewCss(context, callback) {
+        // CSS is optional, so no error is thrown on load error
+        tasker.queue('css:' + context.componentId, function () {
+            var task = this;
+            z$.ajax({
+                url: context.componentId + ".css?" + new Date().getTime(),
+                success: function (viewCss) {
+                    context.style(viewCss);
+                    task.end();
+                    if (util.isFunction(callback))
+                        callback.call(context);
+                },
+                error: function (err) {
+                    task.end();
+                    console.log(err, context);
+                    if (util.isFunction(callback))
+                        callback.call(context);
+                }
+            });
+
+        });
+
+
+    }
+
     /***
      *
      * @param {ComponentContext} context
@@ -687,8 +771,7 @@
                                 ctrlJs = ctrlJs.substring(ih + 11);
                             context.controller(getController(ctrlJs));
                         } catch (e) {
-                            console.log(ctrlJs);
-                            console.log(e);
+                            console.log(e, ctrlJs, context);
                             if (util.isFunction(context.error))
                                 context.error(context, e);
                             return;
@@ -699,7 +782,7 @@
                     error: function (err) {
                         task.end();
                         createComponent(context);
-                        console.log(err);
+                        console.log(err, context);
                         if (util.isFunction(context.error))
                             context.error(context, err);
                     }
@@ -720,7 +803,7 @@
             if (cached === null) {
                 _componentCache.push({
                     componentId: context.componentId,
-                    view: '<div>'+context.view().innerHTML+'</div>',
+                    view: '<div>' + context.view().innerHTML + '</div>',
                     controller: context.controller()
                 });
             }
@@ -778,15 +861,6 @@
     }
 
 
-
-
-
-
-
-
-
-
-
     // TODO: following code to be sorted/re-arranged
 
 
@@ -797,22 +871,13 @@
     }
 
     var _hooksCallbacks = [];
+
     function hooks(path, handler) {
         if (util.isNoU(handler))
             return _hooksCallbacks[path];
         _hooksCallbacks[path] = handler;
         return this;
     }
-
-
-
-
-
-
-
-
-
-
 
 
     // Generic utility class
@@ -903,25 +968,28 @@
     };
 
 
-
-
-
-
-    // Task Queue Manager
+    /**
+     * Task Queue Manager
+     *
+     * @class TaskQueue
+     * @constructor
+     */
     function TaskQueue() {
         var _t = this;
         _t._worker = null;
         _t._taskList = [];
-        _t.taskQueue = function(tid, fn) {
+        _t.taskQueue = function (tid, fn) {
             _t._taskList.push({
                 tid: tid,
                 fn: fn,
                 status: 0,
-                end: function(){ this.status = 2; }
+                end: function () {
+                    this.status = 2;
+                }
             });
             _t.check();
         };
-        _t.check = function() {
+        _t.check = function () {
             if (_t._worker != null)
                 clearTimeout(_t._worker);
             _t._worker = setTimeout(function () {
@@ -965,28 +1033,27 @@
         }
 
     }
-    TaskQueue.prototype.queue = function(tid, fn) {
+    TaskQueue.prototype.queue = function (tid, fn) {
         return this.taskQueue(tid, fn);
     };
 
     var tasker = new TaskQueue();
 
 
-
-
     /**
      * ZQuery, a very small subset of jQuery-like functions
      * internally used in Zuix
-     *
-     * @param element {ZQuery|Array<HTMLElement>|HTMLElement|Node|NodeList|undefined}
+     * @class ZQuery
+     * @param element {ZQuery|Array<Node>|Node|NodeList|undefined}
      * @return {ZQuery}
      * @constructor
      */
     function ZQuery(element) {
-        if (util.isNoU(element) || typeof element === 'string')
-            element = document.documentElement;
         /** @protected */
         this._selection = [];
+
+        if (util.isNoU(element))
+            element = document.documentElement;
 
         if (element instanceof ZQuery)
             return element;
@@ -995,117 +1062,117 @@
         else if (element instanceof HTMLElement || element instanceof Node)
             this._selection = [element];
         else if (typeof element === 'string')
-            this._selection = this._selection[0].querySelectorAll(element);
+            this._selection = document.documentElement.querySelectorAll(element);
         else { //if (typeof element === 'string') {
             console.log(typeof element);
             throw(element);
         }
         return this;
     }
-    ZQuery.prototype.parent = function() {
+    ZQuery.prototype.parent = function () {
         return new ZQuery(this._selection[0].parentNode);
     };
-    ZQuery.prototype.children = function(filter) {
+    ZQuery.prototype.children = function (filter) {
         // TODO: implement filtering
         return new ZQuery(this._selection[0].children);
     };
-    ZQuery.prototype.get = function(i) {
+    ZQuery.prototype.get = function (i) {
         if (util.isNoU(i))
             i = 0;
         return this._selection[i];
     };
-    ZQuery.prototype.eq = function(i) {
+    ZQuery.prototype.eq = function (i) {
         return new ZQuery(this._selection[i]);
     };
-    ZQuery.prototype.find = function(selector) {
+    ZQuery.prototype.find = function (selector) {
         return new ZQuery(this._selection[0].querySelectorAll(selector));
     };
-    ZQuery.prototype.each = function(iterationCallback) {
-       z$.each(this._selection, iterationCallback);
-       return this;
+    ZQuery.prototype.each = function (iterationCallback) {
+        z$.each(this._selection, iterationCallback);
+        return this;
     };
-    ZQuery.prototype.attr = function(attr, val) {
+    ZQuery.prototype.attr = function (attr, val) {
         if (util.isNoU(val))
             return this._selection[0].getAttribute(attr);
         else
-            this.each(function(k,v){
+            this.each(function (k, v) {
                 this.setAttribute(attr, val);
             });
         return this;
     };
-    ZQuery.prototype.trigger = function(eventPath, eventData) {
+    ZQuery.prototype.trigger = function (eventPath, eventData) {
         var event;
         if (window.CustomEvent) {
-            event = new CustomEvent(eventPath, { detail: eventData});
+            event = new CustomEvent(eventPath, {detail: eventData});
         } else {
             event = document.createEvent('CustomEvent');
             event.initCustomEvent(eventPath, true, true, eventData);
         }
-        this.each(function(k, v) {
+        this.each(function (k, v) {
             this.dispatchEvent(event);
         });
         return this;
     };
-    ZQuery.prototype.one = function(eventPath, eventHandler) {
+    ZQuery.prototype.one = function (eventPath, eventHandler) {
         var fired = false;
         this.on(eventPath, function (a, b) {
             if (fired) return;
             fired = true;
             z$(this).off(eventPath, eventHandler);
-            eventHandler.call(this, a, b);
+            (eventHandler).call(this, a, b);
         });
         return this;
     };
-    ZQuery.prototype.on = function(eventPath, eventHandler) {
+    ZQuery.prototype.on = function (eventPath, eventHandler) {
         var events = eventPath.match(/\S+/g) || [];
-        this.each(function(k, v) {
+        this.each(function (k, v) {
             var _t = this;
-            z$.each(events, function(k, v) {
+            z$.each(events, function (k, v) {
                 _t.addEventListener(v, eventHandler, false);
             });
         });
         return this;
     };
-    ZQuery.prototype.off = function(eventPath, eventHandler) {
+    ZQuery.prototype.off = function (eventPath, eventHandler) {
         var events = eventPath.match(/\S+/g) || [];
-        this.each(function(k, v) {
+        this.each(function (k, v) {
             var _t = this;
-            z$.each(events, function(k, v) {
+            z$.each(events, function (k, v) {
                 _t.removeEventListener(v, eventHandler);
             });
         });
         return this;
     };
-    ZQuery.prototype.isEmpty = function() {
-      return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
+    ZQuery.prototype.isEmpty = function () {
+        return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
     };
     // TODO: the following methods could be deprecated
-    ZQuery.prototype.css = function(attr, val) {
+    ZQuery.prototype.css = function (attr, val) {
         if (util.isNoU(val))
             return this._selection[0].style[attr];
         else
-            this.each(function(k,v) {
+            this.each(function (k, v) {
                 this.style[attr] = val;
             });
         return this;
     };
-    ZQuery.prototype.addClass = function(className) {
+    ZQuery.prototype.addClass = function (className) {
         var classes = className.match(/\S+/g) || [];
-        z$.each(this._selection, function(k, v){
+        z$.each(this._selection, function (k, v) {
             if (this.classList) {
                 var _t = this;
-                z$.each(classes, function(k, v) {
+                z$.each(classes, function (k, v) {
                     _t.classList.add(v);
                 });
             } else this.className += ' ' + className;
         });
         return this;
     };
-    ZQuery.prototype.hasClass = function(className) {
+    ZQuery.prototype.hasClass = function (className) {
         var classes = className.match(/\S+/g) || [];
         var success = false;
         var cls = this._selection[0];
-        z$.each(classes, function(k, v) {
+        z$.each(classes, function (k, v) {
             if (cls)
                 success = cls.classList.contains(v);
             else
@@ -1114,52 +1181,54 @@
         });
         return success;
     };
-    ZQuery.prototype.removeClass = function(className) {
+    ZQuery.prototype.removeClass = function (className) {
         var classes = className.match(/\S+/g) || [];
-        z$.each(this._selection, function(k, v){
+        z$.each(this._selection, function (k, v) {
             if (this.classList) {
                 var _t = this;
-                z$.each(classes, function(k, v) {
+                z$.each(classes, function (k, v) {
                     _t.classList.remove(v);
                 });
             } else this.className = this.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         });
         return this;
     };
-    ZQuery.prototype.prev = function() {
+    ZQuery.prototype.prev = function () {
         return new ZQuery(this._selection[0].previousElementSibling);
     };
-    ZQuery.prototype.next= function() {
+    ZQuery.prototype.next = function () {
         return new ZQuery(this._selection[0].nextElementSibling);
     };
-    ZQuery.prototype.html = function(htmlText) {
+    ZQuery.prototype.html = function (htmlText) {
         if (util.isNoU(htmlText))
             return this._selection[0].innerHTML;
         else
-            this.each(function(k,v){
+            this.each(function (k, v) {
                 this.innerHTML = htmlText;
             });
         return this;
     };
-    ZQuery.prototype.show = function() {
-        z$.each(this._selection, function(k, v){
+    ZQuery.prototype.show = function () {
+        z$.each(this._selection, function (k, v) {
             this.style.display = '';
         });
         return this;
     };
-    ZQuery.prototype.hide = function() {
-        z$.each(this._selection, function(k, v){
+    ZQuery.prototype.hide = function () {
+        z$.each(this._selection, function (k, v) {
             this.style.display = 'none';
         });
         return this;
     };
 
-    // ZQuery object
-    var z$ = function(what) { return new ZQuery(what); };
-    z$.find = function (filter) {
-      return z$().find(filter);
+    // ZQuery object factory and static methods
+    var z$ = function (what) {
+        return new ZQuery(what);
     };
-    z$.each = function(items, iterationCallback) {
+    z$.find = function (filter) {
+        return z$().find(filter);
+    };
+    z$.each = function (items, iterationCallback) {
         for (var i = 0, len = items.length; i < len; i++)
             if (iterationCallback.call(items[i], i, items[i]) === false)
                 break;
@@ -1172,7 +1241,7 @@
             url = opt;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 if (util.isFunction(opt.success)) opt.success(xhr.responseText);
             }
@@ -1190,50 +1259,64 @@
         if (typeof element === 'string')
             container.innerHTML = element;
         else
-            // TODO: test this, it may not work
+        // TODO: test this, it may not work
             container.append(element);
         return container;
+    };
+    z$.wrapCss = function(wrapperRule, css) {
+        var wrapReX = /([.,\w])([^/{};]+)({)/g;
+        var r, result = null, wrappedCss = '';
+        while (r = wrapReX.exec(css)) {
+            if (result != null)
+                wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);
+            result = r;
+        }
+        if (result != null)
+            wrappedCss += wrapperRule + ' ' + css.substring(result.index);
+        if (wrappedCss != '') {
+            css = wrappedCss;
+        }
+        return css;
     };
 
 
     // Public ```zuix``` interface
 
-
+    /** @global */
     this.zuix = this.zuix || {
 
-        /* component loading */
-        controller: controller,
-        load: load,
-        unload: unload,
-        componentize: componentize,
-        /* Zuix hooks */
-        hook: function(p,v) {
-            hooks(p, v);
-            return this;
-        },
+            /* Component loading methods */
+            controller: controller,
+            load: load,
+            unload: unload,
+            componentize: componentize,
 
-        /* utility methods */
+            /* Zuix hooks */
+            hook: function (p, v) {
+                hooks(p, v);
+                return this;
+            },
 
-        ZQuery: ZQuery,
-        $: z$,
-        field: field,
+            /* Utility methods */
+            $: z$,
+            field: field,
 
-        /* dev utility methods */
-        dumpCache: function () {
-            console.log("ZUIX", "Component Cache", _componentCache);
-        },
-        dumpContexts: function () {
-            console.log("ZUIX", "Loaded Component Instances", _contextRoot);
-        }
+            /* Access to classes proto */
+            TaskQueue: TaskQueue,
+            ZQuery: ZQuery,
 
-    };
+            /* Dev utility methods */
+            dumpCache: function () {
+                console.log("ZUIX", "Component Cache", _componentCache);
+            },
+            dumpContexts: function () {
+                console.log("ZUIX", "Loaded Component Instances", _contextRoot);
+            }
+
+        };
 
 
-
-    // TODO: implement <componentId>.css and <componentId>.model.js loading
-    // TODO: implement CSS pre-processing for <component>.css files
-    // TODO: (supporting nested rules for local component styles definitions)
-    // TODO: regexp /([.,\w])([^/{};]+)({)/g
+    // TODO: implement <componentId>.model.js loading
 
     // TODO: add zuix.options to configure stuff like
     // TODO: the css/html/js lookup base path (each individually own prop)
@@ -1241,7 +1324,5 @@
     // TODO: deprecate jQuery dependency
 
 
-
-
     return zuix;
-})();
+}).apply(window);

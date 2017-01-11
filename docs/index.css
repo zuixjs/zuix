@@ -40,6 +40,16 @@ h1, h2, h3, h4, h5, h6 {
 .md-24 {
     font-size: 24px;
 }
+.md-32 {
+    font-size: 32px;
+}
 .md-48 {
     font-size: 48px;
+}
+
+pre.terminal p {
+    padding: 24px;
+    font-size:14px;
+    line-height:16px;
+    background-color:rgba(230,230,230,0.5);
 }
