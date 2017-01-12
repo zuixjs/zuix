@@ -248,7 +248,7 @@
 
             // nest the CSS inside [data-ui-component='<componentId>']
             // so that the style is only applied to this component type
-            css = z$.wrapCss('[data-ui-component="'+this.componentId+'"]', css);
+            css = z$.wrapCss('[data-ui-component="'+this.componentId+'"]:not(.zuix-css-ignore)', css);
 
             // trigger `css:parse` hook before assigning content to the view
             var hookData = {content: css};
@@ -270,23 +270,42 @@
     ComponentContext.prototype.view = function (view) {
         if (typeof view === 'undefined') return this._view;
         if (typeof view === 'string') {
+            // load view from HTML source
 
             // trigger `html:parse` hook before assigning content to the view
             var hookData = {content: view};
             triggerHook(this, 'html:parse', hookData);
             view = hookData.content;
 
-            // add context to the view
-            this._view = z$.wrapElement('div', view);
+            if (!util.isNoU(this._container)) {
+                // append view content to the container
+                this._view = this._container;
+                this._view.innerHTML += view;
+            } else {
+                // TODO: orphan view is of no use? should throw an error
+                this._view = z$.wrapElement('div', view);
+            }
 
             // trigger `view:process` hook when the view is ready to be processed
             triggerHook(this, 'view:process', this._view);
 
-            // Zuix Componentizer is the last executed hook (built-in)
+            // ZUIX Componentizer is the last executed hook (built-in)
             componentize(this._view);
 
             this.updateModelView();
-        } else this._view = view;
+        } else {
+            // load inline view
+            this._view = view;
+        }
+
+        var v = z$(this._view);
+        if (this._options.css === false)
+        // disable local css styling for this instance
+            v.addClass('zuix-css-ignore');
+        else
+        // enable local css styling
+            v.removeClass('zuix-css-ignore');
+
         return this;
     };
     /***
@@ -528,9 +547,9 @@
                 // Static include should not have any controller
                 componentId = z$(this).attr('data-ui-include');
                 z$(this).attr('data-ui-component', componentId);
+                // disable controller auto-loading
                 if (util.isNoU(options.controller))
-                    options.controller = function () {
-                    };
+                    options.controller = null;
             }
 
             // TODO: Behavior are also definable in "data-ui-behavior" attribute
@@ -755,7 +774,7 @@
      * @param {ComponentContext} context
      */
     function loadController(context) {
-        if (context.controller() === null) {
+        if (typeof context.options().controller === 'undefined' && context.controller() === null) {
             tasker.queue('js:' + context.componentId, function () {
                 var task = this;
                 z$.ajax({
@@ -800,25 +819,18 @@
         if (!util.isNoU(context.view())) {
             var cached = getCachedComponent(context.componentId);
             if (cached === null) {
+                var c = z$.wrapElement('div', context.view().outerHTML);
                 _componentCache.push({
                     componentId: context.componentId,
-                    view: '<div>' + context.view().innerHTML + '</div>',
+                    view: c.innerHTML,
                     controller: context.controller()
                 });
             }
 
-            if (!util.isNoU(context.container())) {
-                var v = context.view();
-                if (v.parentNode)
-                    v.parentNode.removeChild(v);
-                context.container().appendChild(context.view());
-            }
-
             z$(context.view()).one('create', function () {
                 initComponent(context);
-            });
+            }).trigger('create');
 
-            z$(context.view()).trigger('create');
         } else {
             // TODO: report error
         }

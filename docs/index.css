@@ -47,6 +47,11 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 48px;
 }
 
+pre[class*="language-"] {
+    margin-top:0px;
+    margin-bottom:24px;
+}
+
 pre.terminal p {
     padding: 24px;
     font-size:14px;

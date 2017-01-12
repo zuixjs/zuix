@@ -1,54 +1,68 @@
 ### Installation
 
+#### Local
+
+Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js/master/build/js/zuix.min.js)**
+
+<pre data-line="20"><code class="language-html">
+    <script src="js/zuix.min.js"></script>
+</code></pre>
+
+#### CDN
+
+<pre data-line="20"><code class="language-html">
+    <script src="https://cdn.rawgit.com/genielabs/zuix-mvc-js/d99dd3b0/build/js/zuix.min.js"></script>
+</code></pre>
+
 <p>.</p>
-<small>(TODO: install instructions - stand alone,cdnjs,npm)</small>
+<small>(TODO: add npm)</small>
 <p>.</p>
 
 ### Quick start
 
-The starting point of your application will be an ```.html```
+The core functionality of *ZUIX* is the capability of loading contents
+or components from file.
+
+This makes possible creating a page and dynamically
+loading into it all other contents and components as needed.
+
+Using this approach, a page, may consist of an ```.html```
 file containing header includes, such as CSS styles, libraries and
-frameworks used by your application, including *ZUIX*.
+frameworks, including *ZUIX* and a body that will mostly have a few *include
+directives* to tell *ZUIX* what contents and components to load.
 
-Beside that, the body of this ```.html``` file,
-will be blank in most cases, and will only contain
-some include directives to tell ZUIX what content and components to load
-in the page.
-
-<small><strong>EXAMPLE - </strong></small> Content of file ```index.html```:
-<pre><code class="language-html">
+<small><strong>EXAMPLE - </strong></small>  File ```index.html```:
+<pre data-line="20"><code class="language-html">
 <html>
     <head>
+
         <!-- This example is using Google's Material Design UI -->
         <link rel="stylesheet" href="js/mdl/material.min.css">
         <script src="js/mdl/material.min.js"></script>
 
-        <!-- other css/script includes used in this application -->
+        <!-- ... other css/script used in this application ... -->
 
-        <!-- ZUIX include -->
+        <!-- ZUIX -->
         <script src="js/zuix.min.js"></script>
 
-        <!-- Load CSS and JavaScript associated to this page -->
+        <!-- CSS and JavaScript associated to this page -->
         <link  href="index.css" rel="stylesheet">
         <script src="index.js" defer type="text/javascript"></script>
 
     </head>
     <body>
-
         <!-- Load the application main page -->
         <div data-ui-include="site/layout/main"></div>
-
     </body>
 </html>
 </code></pre>
 
+The ```site/layout/main``` file, included at <u>line #20</u>, may also itself include other files
+like a common header and footer.
 
-The ```site/layout/main``` include, may also itself include other files.
-
-
-<small><strong>EXAMPLE - </strong></small> Content of file ```site/layout/main.html```:
-<pre><code class="language-html">
-<div layout="column center-top">
+<small><strong>EXAMPLE - </strong></small> File ```site/layout/main.html```:
+<pre data-line="3,7"><code class="language-html">
+<div layout="column top-center">
 
     <div data-ui-include="site/layout/header"></div>
 
@@ -60,29 +74,35 @@ The ```site/layout/main``` include, may also itself include other files.
 </code></pre>
 
 <a name="Content-Templates"></a>
-#### Static content and templates
+#### Content inclusion
 
-So, to include static content or a template, the ```data-ui-include``` attribute is used.
-The value of this attribute is the URL of the *HTML* file to include
-omitting its ```.html``` extension.
+So, as shown in the previous example, to load a content from file, the ```data-ui-include```
+attribute is used.
+The value of this attribute is the URL of the HTML file to include
+<u>without the ```.html``` extension</u>.
+
+The element with the ```data-ui-include``` attribute itself, will be the container
+wrapping the loaded content.
 
 The URL can either refer to a file on the local server or a remote one.
 
-<small><strong>EXAMPLE - </strong></small> Content of file ```site/common/links.html```:
+<small><strong>EXAMPLE - </strong></small> File [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
 <pre><code class="language-html">
-    <div layout="row center-left">
+    <div layout="row center-center">
         <a class="mdl-button mdl-js-button mdl-button--accent">Link 1</a>
         <a class="mdl-button mdl-js-button mdl-button--accent">Link 2</a>
         <a class="mdl-button mdl-js-button mdl-button--accent">Link 3</a>
     </div>
 </code></pre>
 
-Inclusion of the above file in another document:
+Inclusion of the above file in a page:
+
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
 Inclusion of the above file from a different server:
+
 <pre><code class="language-html">
     <div data-ui-include="https://genielabs.github.io/zuix-mvx-js/site/common/links"></div>
 </code></pre>
@@ -90,26 +110,44 @@ Inclusion of the above file from a different server:
 <small><strong>RESULT</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content_no_css"></div>
 
+##### Content styling
+
+When including content, after loading the HTML file,
+*ZUIX* will try to load from the same location a **CSS**
+file.
+
+If the style file is found, all style definitions contained in it,
+will be applied to the container where the content has been loaded.
+
+<small><strong>EXAMPLE - </strong></small> CSS file [site/common/links.css](https://genielabs.github.io/zuix-mvc-js/site/common/links.css)
+<pre><code class="language-css">
+div[layout] {
+    border: solid 1px lime;
+    padding: 16px;
+}
+</code></pre>
+
+<small><strong>RESULT</strong></small>
+<div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
 ----
 
 <mark>DRAFT TEXT BELOW THIS LINE</mark>
 
 ----
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
-##### Content styling <small>Local CSS, pre-processing <mark>WIP</mark></small>
 
-If a ```.css``` style file with the same base name of
-the ```data-ui-include``` attribute value is found, it will be loaded
-as well.
-The CSS definitions contained in this file will be applied only
-to the container of the included HTML.
-
-##### View Templates <small>Data Binding <mark>WIP</mark></small>
+##### Content templates <small>Data Binding <mark>WIP</mark></small>
 
 ```data-bind-model``` (optional - applied to container and children if not overridden),
 ```data-bind-to``` (field to bind to in the give model)
 
-##### Declaring an inline View template
+###### Inline template
 
 Inline view template definition is achieved by adding a ```data-ui-view``` attribute
 to the main container element of the view template.
@@ -121,23 +159,8 @@ The value of this field is meant to be an unique identifier.
     </div>
 </code></pre>
 
-##### Template inclusion
+##### Data binding
 
-A view template can be declared in its own HTML file
-just like already described for [Content Templates](#Content-Templates)
-or it can be declared inline. When declaring an inline template,
-the associated CSS can be declared either inline too or in a separate file.
-
-<small><strong>EXAMPLE - </strong></small> ...
-
-<pre><code class="language-html">
-    <!-- Content of "simple_view.html" file -->
-    <div>
-        This is a view template file
-    </div>
-</code></pre>
-
-<mark>**TODO** ... to be completed</mark>
 
 #### Components
 
