@@ -1,4 +1,11 @@
 div[layout] {
-    border: solid 1px lime;
     padding: 16px;
+    background-color: #1c88e6;
+    -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+    -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+    box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+}
+a {
+    color: white;
+    font-size: 18px;
 }

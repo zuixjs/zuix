@@ -1,16 +1,16 @@
-### Installation
+### Usage
 
-#### Local
+#### Local install
 
-Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js/master/build/js/zuix.min.js)**
+Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js/master/build/js/zuix.min.js)** and copy it to your local **js** folder.
 
-<pre data-line="20"><code class="language-html">
+<pre><code class="language-html">
     <script src="js/zuix.min.js"></script>
 </code></pre>
 
 #### CDN
 
-<pre data-line="20"><code class="language-html">
+<pre><code class="language-html">
     <script src="https://cdn.rawgit.com/genielabs/zuix-mvc-js/d99dd3b0/build/js/zuix.min.js"></script>
 </code></pre>
 
@@ -31,16 +31,12 @@ file containing header includes, such as CSS styles, libraries and
 frameworks, including *ZUIX* and a body that will mostly have a few *include
 directives* to tell *ZUIX* what contents and components to load.
 
-<small><strong>EXAMPLE - </strong></small>  File ```index.html```:
-<pre data-line="20"><code class="language-html">
+<small><strong>EXAMPLE - </strong></small>  **HTML** file ```index.html```:
+<pre data-line="16"><code class="language-html">
 <html>
     <head>
 
-        <!-- This example is using Google's Material Design UI -->
-        <link rel="stylesheet" href="js/mdl/material.min.css">
-        <script src="js/mdl/material.min.js"></script>
-
-        <!-- ... other css/script used in this application ... -->
+        <!-- ... other Script/CSS includes ... -->
 
         <!-- ZUIX -->
         <script src="js/zuix.min.js"></script>
@@ -57,10 +53,10 @@ directives* to tell *ZUIX* what contents and components to load.
 </html>
 </code></pre>
 
-The ```site/layout/main``` file, included at <u>line #20</u>, may also itself include other files
+The ```site/layout/main``` file, included at <u>line #16</u>, may also itself include other files
 like a common header and footer.
 
-<small><strong>EXAMPLE - </strong></small> File ```site/layout/main.html```:
+<small><strong>EXAMPLE - </strong></small> **HTML** file ```site/layout/main.html```:
 <pre data-line="3,7"><code class="language-html">
 <div layout="column top-center">
 
@@ -86,16 +82,16 @@ wrapping the loaded content.
 
 The URL can either refer to a file on the local server or a remote one.
 
-<small><strong>EXAMPLE - </strong></small> File [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
+<small><strong>EXAMPLE - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
 <pre><code class="language-html">
-    <div layout="row center-center">
-        <a class="mdl-button mdl-js-button mdl-button--accent">Link 1</a>
-        <a class="mdl-button mdl-js-button mdl-button--accent">Link 2</a>
-        <a class="mdl-button mdl-js-button mdl-button--accent">Link 3</a>
+    <div layout="row center-spread">
+        <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+        <a href="https://github.com/genielabs">@genielabs</a>
+        <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
     </div>
 </code></pre>
 
-Inclusion of the above file in a page:
+Inclusion of the above content in a page:
 
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
@@ -107,27 +103,90 @@ Inclusion of the above file from a different server:
     <div data-ui-include="https://genielabs.github.io/zuix-mvx-js/site/common/links"></div>
 </code></pre>
 
-<small><strong>RESULT</strong></small>
+<small><strong>PROCESSED OUTPUT</strong></small>
+<pre><code class="language-html">
+    <div data-ui-include="site/common/links"
+         data-ui-loaded="true"
+         data-ui-component="site/common/links">
+
+        <div layout="row center-spread">
+            <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+            <a href="https://github.com/genielabs">@genielabs</a>
+            <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
+        </div>
+
+    </div>
+</code></pre>
+
+<small><strong>RESULTING VIEW</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content_no_css"></div>
 
 ##### Content styling
 
 When including content, after loading the HTML file,
-*ZUIX* will try to load from the same location a **CSS**
-file.
+*ZUIX* will try to load a **CSS**
+file from the same location/basename.
 
 If the style file is found, all style definitions contained in it,
 will be applied to the container where the content has been loaded.
 
-<small><strong>EXAMPLE - </strong></small> CSS file [site/common/links.css](https://genielabs.github.io/zuix-mvc-js/site/common/links.css)
+<small><strong>EXAMPLE - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
+<pre><code class="language-html">
+    <div layout="row center-spread">
+        <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+        <a href="https://github.com/genielabs">@genielabs</a>
+        <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
+    </div>
+</code></pre>
+
+<small><strong>EXAMPLE - </strong></small> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix-mvc-js/site/common/links.css)
 <pre><code class="language-css">
 div[layout] {
-    border: solid 1px lime;
     padding: 16px;
+    background-color: #1c88e6;
+    -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+    -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+    box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+}
+a {
+    color: white;
+    font-size: 18px;
 }
 </code></pre>
 
-<small><strong>RESULT</strong></small>
+Inclusion of the above content:
+
+<pre><code class="language-html">
+    <div data-ui-include="site/common/links"></div>
+</code></pre>
+
+<small><strong>PROCESSED OUTPUT</strong></small>
+<pre><code class="language-html">
+    <div data-ui-include="site/common/links"
+         data-ui-loaded="true"
+         data-ui-component="site/common/links">
+
+        <div layout="row center-spread">
+            <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+            <a href="https://github.com/genielabs">@genielabs</a>
+            <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
+        </div>
+
+    </div>
+
+    <style type="text/css">
+    [data-ui-component="site/common/links"] div[layout] {
+        border: solid 1px lime;
+        padding: 16px;
+    }
+    [data-ui-component="site/common/links"] a {
+        color: blue;
+        font-size: 18px;
+    }
+    </style>
+</code></pre>
+
+<small><strong>RESULTING VIEW</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
 
 <p>&nbsp;</p>
