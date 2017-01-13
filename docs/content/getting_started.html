@@ -2,7 +2,7 @@
 
 #### Local install
 
-Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js/master/build/js/zuix.min.js)** and copy it to your local **js** folder.
+Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js/master/build/js/zuix.min.js)** and include it in the ```head``` section of the page.
 
 <pre><code class="language-html">
     <script src="js/zuix.min.js"></script>
@@ -10,13 +10,15 @@ Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js
 
 #### CDN
 
+Link the script as an external resource by adding the following in the ```head``` section of the page:
+
 <pre><code class="language-html">
     <script src="https://cdn.rawgit.com/genielabs/zuix-mvc-js/d99dd3b0/build/js/zuix.min.js"></script>
 </code></pre>
 
-<p>.</p>
-<small>(TODO: add npm)</small>
-<p>.</p>
+#### NPM / Bower
+
+<mark>(TODO: add npm and bower)</mark>
 
 ### Quick start
 
@@ -28,7 +30,7 @@ loading into it all other contents and components as needed.
 
 Using this approach, a page, may consist of an ```.html```
 file containing header includes, such as CSS styles, libraries and
-frameworks, including *ZUIX* and a body that will mostly have a few *include
+frameworks, including *ZUIX* and a body that will mostly have only a few *include
 directives* to tell *ZUIX* what contents and components to load.
 
 <small><strong>EXAMPLE - </strong></small>  **HTML** file ```index.html```:
@@ -91,7 +93,7 @@ The URL can either refer to a file on the local server or a remote one.
     </div>
 </code></pre>
 
-Inclusion of the above content in a page:
+Inclusion of the above file in a page:
 
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
@@ -103,7 +105,7 @@ Inclusion of the above file from a different server:
     <div data-ui-include="https://genielabs.github.io/zuix-mvx-js/site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong></small>
+<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after content is loaded into it</small>
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"
          data-ui-loaded="true"
@@ -123,9 +125,9 @@ Inclusion of the above file from a different server:
 
 ##### Content styling
 
-When including content, after loading the HTML file,
-*ZUIX* will try to load a **CSS**
-file from the same location/basename.
+When including content, after loading the ```.html``` file,
+*ZUIX* will try to load a ```.css``` style
+file with the same location/basename.
 
 If the style file is found, all style definitions contained in it,
 will be applied to the container where the content has been loaded.
@@ -154,13 +156,13 @@ a {
 }
 </code></pre>
 
-Inclusion of the above content:
+Inclusion of the above content in a page:
 
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong></small>
+<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after content is loaded into it</small>
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"
          data-ui-loaded="true"
