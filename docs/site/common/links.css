@@ -1,5 +1,6 @@
 div[layout] {
     padding: 16px;
+    margin: 24px;
     background-color: #1c88e6;
     -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
     -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);

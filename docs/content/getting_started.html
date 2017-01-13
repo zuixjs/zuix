@@ -72,15 +72,18 @@ like a common header and footer.
 </code></pre>
 
 <a name="Content-Templates"></a>
-#### Content inclusion
+#### Content inclusion <small>The View</small>
 
 So, as shown in the previous example, to load a content from file, the ```data-ui-include```
 attribute is used.
 The value of this attribute is the URL of the HTML file to include
 <u>without the ```.html``` extension</u>.
 
-The element with the ```data-ui-include``` attribute itself, will be the container
-wrapping the loaded content.
+This value is called the **View** *type identifier*,
+where the *View* represents the loadable content itself.
+
+After the content is loaded, it is appended to element declaring the ```data-ui-include``` attribute,
+that will then be the container wrapping the loaded content.
 
 The URL can either refer to a file on the local server or a remote one.
 
@@ -93,19 +96,19 @@ The URL can either refer to a file on the local server or a remote one.
     </div>
 </code></pre>
 
-Inclusion of the above file in a page:
+Inclusion of the above view in a page:
 
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-Inclusion of the above file from a different server:
+Inclusion of the above view from a different server:
 
 <pre><code class="language-html">
     <div data-ui-include="https://genielabs.github.io/zuix-mvx-js/site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after content is loaded into it</small>
+<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after the view is loaded into it</small>
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"
          data-ui-loaded="true"
@@ -125,12 +128,12 @@ Inclusion of the above file from a different server:
 
 ##### Content styling
 
-When including content, after loading the ```.html``` file,
+When including a view, after loading the ```.html``` file,
 *ZUIX* will try to load a ```.css``` style
 file with the same location/basename.
 
 If the style file is found, all style definitions contained in it,
-will be applied to the container where the content has been loaded.
+will be applied to the container where the view has been loaded.
 
 <small><strong>EXAMPLE - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
 <pre><code class="language-html">
@@ -145,6 +148,7 @@ will be applied to the container where the content has been loaded.
 <pre><code class="language-css">
 div[layout] {
     padding: 16px;
+    margin: 24px;
     background-color: #1c88e6;
     -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
     -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
@@ -156,13 +160,13 @@ a {
 }
 </code></pre>
 
-Inclusion of the above content in a page:
+Inclusion of the above view in a page:
 
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after content is loaded into it</small>
+<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after the view is loaded into it</small>
 <pre><code class="language-html">
     <div data-ui-include="site/common/links"
          data-ui-loaded="true"
@@ -178,11 +182,15 @@ Inclusion of the above content in a page:
 
     <style type="text/css">
     [data-ui-component="site/common/links"] div[layout] {
-        border: solid 1px lime;
         padding: 16px;
+        margin: 24px;
+        background-color: #1c88e6;
+        -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+        -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+        box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
     }
     [data-ui-component="site/common/links"] a {
-        color: blue;
+        color: white;
         font-size: 18px;
     }
     </style>
@@ -190,6 +198,11 @@ Inclusion of the above content in a page:
 
 <small><strong>RESULTING VIEW</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
+
+So the ```.css``` styles definitions are applied only to the loaded view type via
+the ```data-ui-component``` constraint, making possible to have a clean **global
+style** file for the whole application and a set of **view-local styles** that are
+applied to each view type individually.
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
