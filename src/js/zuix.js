@@ -66,9 +66,9 @@
      *    locales: Object|undefined
      * }} ContextModel
      *
-     * @typedef {Node|string} ContextView
+     * @typedef {Element|string} ContextView
      *
-     * @typedef {Node|string} ViewContainer
+     * @typedef {Element|string} ViewContainer
      *
      * @typedef {{
      *    contextId: Object|undefined The context id,
@@ -214,10 +214,10 @@
         return this;
     };
 
-    ComponentContext.prototype.updateModelView = function() {
+    ComponentContext.prototype.updateModelView = function () {
         if (!util.isNoU(this._view) && !util.isNoU(this._model)) {
             var _t = this;
-            z$(this._view).find('[data-ui-field]').each(function(a,b){
+            z$(this._view).find('[data-ui-field]').each(function (a, b) {
                 var field = z$(this);
                 var boundField = field.attr('data-bind-to');
                 if (util.isNoU(boundField))
@@ -248,7 +248,7 @@
 
             // nest the CSS inside [data-ui-component='<componentId>']
             // so that the style is only applied to this component type
-            css = z$.wrapCss('[data-ui-component="'+this.componentId+'"]:not(.zuix-css-ignore)', css);
+            css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
 
             // trigger `css:parse` hook before assigning content to the view
             var hookData = {content: css};
@@ -295,7 +295,11 @@
             this.updateModelView();
         } else {
             // load inline view
-            this._view = view;
+            if (!util.isNoU(this._container)) {
+                this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
+                this._view.removeAttribute('data-ui-view');
+                this._container.appendChild(this._view);
+            } else this._view = view;
         }
 
         var v = z$(this._view);
@@ -459,7 +463,7 @@
         var el = null;
         if (typeof this._fieldCache[f] === 'undefined') {
             el = globalSearch ? z$(field).get(0) : z$(this.view()).find('[data-ui-field=' + field + ']').get(0);
-            if (el.length)
+            if (!util.isNoU(el))
                 this._fieldCache[f] = el;
         } else {
             el = this._fieldCache[f];
@@ -522,7 +526,7 @@
         // TODO: add 'data-ui-loaded="true"' attribute after loading
         // to prevent loading twice
         z$(element).find('[data-ui-load],[data-ui-include]').each(function () {
-            if (z$(this).attr('data-ui-loaded') === true || z$(this).parent('pre,code').length) {
+            if (z$(this).attr('data-ui-loaded') === true || z$(this).parent('pre,code').length() > 0) {
                 console.log("ZUIX", "WARN", "Skipped", this);
                 return;
             }
@@ -583,6 +587,7 @@
      */
     function load(componentId, options) {
         // TODO: throw error on argument mismatch
+        // TODO: prevent load loops when including recursively a component
 
         /** @type {ComponentContext} */
         var context = null;
@@ -641,9 +646,9 @@
             if (cachedComponent !== null) {
                 context.view(cachedComponent.view);
             } else {
-                // TODO: replace $() with $(options.container)
+                // TODO: replace z$() with z$(options.container)
                 var inlineView = z$().find('[data-ui-view="' + context.componentId + '"]');
-                if (inlineView.length >= 1)
+                if (inlineView.length() > 0)
                     context.view(inlineView.get(0));
             }
 
@@ -660,7 +665,7 @@
                             task.end();
                             // View CSS loading
                             if (options.css !== false)
-                                loadViewCss( context, function() {
+                                loadViewCss(context, function () {
                                     // Controller loading
                                     loadController(context);
                                 });
@@ -1044,6 +1049,7 @@
         }
 
     }
+
     TaskQueue.prototype.queue = function (tid, fn) {
         return this.taskQueue(tid, fn);
     };
@@ -1063,7 +1069,7 @@
         /** @protected */
         this._selection = [];
 
-        if (util.isNoU(element))
+        if (typeof element === 'undefined')
             element = document.documentElement;
 
         if (element instanceof ZQuery)
@@ -1074,17 +1080,25 @@
             this._selection = [element];
         else if (typeof element === 'string')
             this._selection = document.documentElement.querySelectorAll(element);
-        else { //if (typeof element === 'string') {
+        else if (element !== null) { //if (typeof element === 'string') {
             console.log(typeof element);
             throw(element);
         }
         return this;
     }
-    ZQuery.prototype.parent = function () {
+    ZQuery.prototype.length = function () {
+        return this._selection.length;
+    };
+
+    ZQuery.prototype.parent = function (filter) {
+        if (!util.isNoU(filter))
+            return new ZQuery(z$.getClosest(this._selection[0], filter));
         return new ZQuery(this._selection[0].parentNode);
     };
     ZQuery.prototype.children = function (filter) {
         // TODO: implement filtering
+        if (!util.isNoU(filter))
+            return new ZQuery(this._selection[0].querySelectorAll(filter));
         return new ZQuery(this._selection[0].children);
     };
     ZQuery.prototype.get = function (i) {
@@ -1274,7 +1288,7 @@
             container.append(element);
         return container;
     };
-    z$.wrapCss = function(wrapperRule, css) {
+    z$.wrapCss = function (wrapperRule, css) {
         var wrapReX = /([.,\w])([^/{};]+)({)/g;
         var r, result = null, wrappedCss = '';
         while (r = wrapReX.exec(css)) {
@@ -1289,7 +1303,7 @@
         }
         return css;
     };
-    z$.appendCss = function(css, target) {
+    z$.appendCss = function (css, target) {
         var style = null;
         if (typeof css === 'string') {
             // output css
@@ -1308,6 +1322,30 @@
             head.appendChild(style);
         return style;
     };
+    z$.getClosest = function (elem, selector) {
+        // Element.matches() polyfill
+        if (!Element.prototype.matches) {
+            Element.prototype.matches =
+                Element.prototype.matchesSelector ||
+                Element.prototype.mozMatchesSelector ||
+                Element.prototype.msMatchesSelector ||
+                Element.prototype.oMatchesSelector ||
+                Element.prototype.webkitMatchesSelector ||
+                function (s) {
+                    var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                        i = matches.length;
+                    while (--i >= 0 && matches.item(i) !== this) {
+                    }
+                    return i > -1;
+                };
+        }
+        // Get closest match
+        for (; elem && elem !== document; elem = elem.parentNode) {
+            if (elem.matches(selector)) return elem;
+        }
+        return null;
+    };
+
 
 
     // Public ```zuix``` interface

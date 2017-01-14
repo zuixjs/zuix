@@ -10,7 +10,7 @@ Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js
 
 #### CDN
 
-Link the script as an external resource by adding the following in the ```head``` section of the page:
+Link the script as an external resource by adding the following line in the ```head``` section of the page:
 
 <pre><code class="language-html">
     <script src="https://cdn.rawgit.com/genielabs/zuix-mvc-js/d99dd3b0/build/js/zuix.min.js"></script>
@@ -20,21 +20,21 @@ Link the script as an external resource by adding the following in the ```head``
 
 <mark>(TODO: add npm and bower)</mark>
 
-### Quick start
+### Getting started
 
 The core functionality of *ZUIX* is the capability of loading contents
-or components from file.
+and components from file.
 
 This makes possible creating a page and dynamically
 loading into it all other contents and components as needed.
 
 Using this approach, a page, may consist of an ```.html```
 file containing header includes, such as CSS styles, libraries and
-frameworks, including *ZUIX* and a body that will mostly have only a few *include
-directives* to tell *ZUIX* what contents and components to load.
+frameworks, including *ZUIX* and a body that will mostly have only a few **include
+directives** that tell *ZUIX* what contents and components to load.
 
-<small><strong>EXAMPLE - </strong></small>  **HTML** file ```index.html```:
-<pre data-line="16"><code class="language-html">
+<small><strong>EXAMPLE PAGE - </strong></small>  **HTML** file ```index.html```:
+<pre data-line="18"><code class="language-html">
 <html>
     <head>
 
@@ -43,19 +43,22 @@ directives* to tell *ZUIX* what contents and components to load.
         <!-- ZUIX -->
         <script src="js/zuix.min.js"></script>
 
-        <!-- CSS and JavaScript associated to this page -->
+        <!-- CSS and JavaScript associated to the page
+            should be kept always in separate files -->
         <link  href="index.css" rel="stylesheet">
         <script src="index.js" defer type="text/javascript"></script>
 
     </head>
     <body>
-        <!-- Load the application main page -->
+
+        <!-- Load the application main page layout -->
         <div data-ui-include="site/layout/main"></div>
+
     </body>
 </html>
 </code></pre>
 
-The ```site/layout/main``` file, included at <u>line #16</u>, may also itself include other files
+The ```site/layout/main``` file, included at <u>line #18</u>, may also itself include other files
 like a common header and footer.
 
 <small><strong>EXAMPLE - </strong></small> **HTML** file ```site/layout/main.html```:
@@ -79,15 +82,15 @@ attribute is used.
 The value of this attribute is the URL of the HTML file to include
 <u>without the ```.html``` extension</u>.
 
-This value is called the **View** *type identifier*,
+This kind of URL is the **View** *type identifier*,
 where the *View* represents the loadable content itself.
 
 After the content is loaded, it is appended to element declaring the ```data-ui-include``` attribute,
-that will then be the container wrapping the loaded content.
+that will then be the container (view container) wrapping the loaded content.
 
-The URL can either refer to a file on the local server or a remote one.
+The *View type identifier* can either refer to a file on the local server or a remote one.
 
-<small><strong>EXAMPLE - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
+<small><strong>EXAMPLE VIEW - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
 <pre><code class="language-html">
     <div layout="row center-spread">
         <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
@@ -135,7 +138,7 @@ file with the same location/basename.
 If the style file is found, all style definitions contained in it,
 will be applied to the container where the view has been loaded.
 
-<small><strong>EXAMPLE - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
+<small><strong>EXAMPLE VIEW - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
 <pre><code class="language-html">
     <div layout="row center-spread">
         <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
@@ -144,7 +147,7 @@ will be applied to the container where the view has been loaded.
     </div>
 </code></pre>
 
-<small><strong>EXAMPLE - </strong></small> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix-mvc-js/site/common/links.css)
+<small><strong>EXAMPLE VIEW - </strong></small> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix-mvc-js/site/common/links.css)
 <pre><code class="language-css">
 div[layout] {
     padding: 16px;
@@ -216,7 +219,7 @@ applied to each view type individually.
 <p>&nbsp;</p>
 
 
-##### Content templates <small>Data Binding <mark>WIP</mark></small>
+##### View templates <small>Data Binding <mark>WIP</mark></small>
 
 ```data-bind-model``` (optional - applied to container and children if not overridden),
 ```data-bind-to``` (field to bind to in the give model)
@@ -485,47 +488,8 @@ file that will be loaded automatically if no inline controller is defined.
 
 
 
-<p>.</p>
-<p>.</p>
-<p>.</p>
+<p></p>
+<p></p>
 <p></p>
 
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-
-
-<pre><code class="language-html">
-    <div data-ui-view="simple_view"
-         class="material-icons mdl-badge mdl-badge--overlap"
-         data-badge="3">account_box</div>
-</code></pre>
-
-
-
-<div data-ui-view="simple_view" data-ui-field="simple_view_test" class="material-icons mdl-badge mdl-badge--overlap" data-badge="3">account_box</div>
-
-<div data-ui-field="simple_view_1"></div>
-<script>zuix.load('simple_view', {
-    container: zuix.field('simple_view_1'),
-    controller: zuix.controller(function (cp) {
-        cp.create = function () {
-            cp.view().find('div').on('click', function () {
-                $(this).attr('data-badge', 10);
-            });
-        }
-    })
-})</script>
-
-<p></p>
 
