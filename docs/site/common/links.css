@@ -1,4 +1,5 @@
 div[layout] {
+    width:auto;
     padding: 16px;
     margin: 24px;
     background-color: #1c88e6;
@@ -9,4 +10,5 @@ div[layout] {
 a {
     color: white;
     font-size: 18px;
+    text-decoration: none;
 }

@@ -202,10 +202,9 @@ Inclusion of the above view in a page:
 <small><strong>RESULTING VIEW</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
 
-So the ```.css``` styles definitions are applied only to the loaded view type via
-the ```data-ui-component``` constraint, making possible to have a clean **global
-style** file for the whole application and a set of **view-local styles** that are
-applied to each view type individually.
+So, as shown in the processed output, the ```.css``` style definitions are applied only to the loaded view type via
+the ```data-ui-component``` constraint, making possible to keep **global
+style** files separated from **view-local style** files.
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -494,7 +493,9 @@ file that will be loaded automatically if no inline controller is defined.
 
 <small>Result</small>
 <div self="size1of2">
-    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"></div>
+    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"
+         data-ui-options="main.options.codepen_example_01"
+    ></div>
 </div>
 
 <small>Component on CodePen</small>

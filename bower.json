@@ -1,12 +1,10 @@
 {
   "name": "zuix",
-  "description": "zuix, Javascript UI Components Enhancer. A lite MV* library.",
+  "description": "ZUIX, the easy shift to component-based development.",
   "main": [
     "src/js/zuix.js"
   ],
-  "dependencies": {
-    "jquery": "^2.0.2"
-  },
+  "dependencies": { },
   "devDependencies": {
     "google-closure-compiler-js": "^20161201.0.0",
     "gulp-install": "^0.6.0",
@@ -36,6 +34,9 @@
   },
   "ignore": [
     "**/.*",
+    "dist",
+    "docs",
+    "out",
     "node_modules",
     "bower_components"
   ],

@@ -39,6 +39,15 @@ var main = {
             mdl: true,
             prism: true,
             css: false
+        },
+        codepen_example_01: {
+            model: {
+                data: {
+                    title: 'ZUIX',
+                    subtitle: 'Data-binding test',
+                    description: 'Hello World!'
+                }
+            }
         }
     },
     // Component 'ui/layout/actions-view'

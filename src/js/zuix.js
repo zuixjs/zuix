@@ -174,8 +174,8 @@ function Zuix() {
             this.view(options.view);
             if (typeof options.css !== 'undefined')
                 this.style(options.css);
-            this.model(options.model);
             this.controller(options.controller);
+            this.model(options.model);
         }
         return this;
     };
@@ -886,10 +886,15 @@ function Zuix() {
             if (!util.isNoU(c.view()))
                 z$(c.view()).attr('data-ui-component', c.componentId);
 
+            // TODO: review/improve life-cycle
+
             if (util.isFunction(c.create)) c.create();
+
             //if (util.isFunction(c.bind)) c.bind();
+            context.updateModelView();
+            //if (util.isFunction(c.refresh)) c.refresh();
+
             if (util.isFunction(c.resume)) c.resume();
-            if (util.isFunction(c.refresh)) c.refresh();
         }
         if (util.isFunction(context.ready))
             context.ready(context);

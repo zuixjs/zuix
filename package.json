@@ -1,12 +1,12 @@
 {
   "name": "zuix",
   "version": "0.2.1",
-  "description": "Web UI components manager: a lite MV* library.",
+  "description": "ZUIX, the easy shift to component-based development.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
   "bin": {},
   "scripts": {
-    "info": "echo 'ZUIX MV* library'",
+    "info": "echo 'ZUIX, the easy shift to component-based development.'",
     "lint": "echo '=> linting' && jshint src/*.js",
     "test": "echo \"Error: not implemented\" && exit 1",
     "gulp": "echo '=> running gulp' && npm run lint && gulp build",
