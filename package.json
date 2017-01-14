@@ -1,6 +1,6 @@
 {
-  "name": "zuix-mvx",
-  "version": "0.1.0",
+  "name": "zuix",
+  "version": "0.2.1",
   "description": "Web UI components manager: a lite MV* library.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
@@ -14,9 +14,7 @@
     "build": "echo '=> building jUIce' && npm build:js",
     "start": "http-server docs/"
   },
-  "dependencies": {
-    "jquery": "^2.0.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "concat": "0.0.1-security",
     "google-closure-compiler-js": "^20161201.0.0",
@@ -31,14 +29,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/genielabs/js-zuix-mvx"
+    "url": "https://github.com/genielabs/zuix"
   },
   "keywords": [
     "javascript",
     "mvx",
     "framework",
     "components",
-    "ui"
+    "ui",
+    "web"
   ],
   "license": "Apache-2.0"
 }

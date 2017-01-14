@@ -18,16 +18,32 @@
 /**
  * Javascript UI components enhancer. A lite MV* library.
  * Find more details about zuix here:
- *   https://github.com/genielabs/zuix-mvx-js
+ *   https://github.com/genielabs/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
  */
+
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['zuix'], function () {
+            return (root.zuix = (factory).call(root));
+        });
+    } else if (typeof module === 'object' && module.exports) {
+        // Node
+        module.exports = (factory).call(root);
+    } else {
+        // Browser globals
+        root.zuix = (factory).call(root);
+    }
+}(this,
 
 /**
  * @class Zuix
  * @constructor
  */
-(function Zuix() {
+function Zuix() {
     "use strict";
 
     /**
@@ -526,11 +542,11 @@
         // TODO: add 'data-ui-loaded="true"' attribute after loading
         // to prevent loading twice
         z$(element).find('[data-ui-load],[data-ui-include]').each(function () {
-            if (z$(this).attr('data-ui-loaded') === true || z$(this).parent('pre,code').length() > 0) {
+            if (z$(this).attr('data-ui-loaded') === 'true' || z$(this).parent('pre,code').length() > 0) {
                 console.log("ZUIX", "WARN", "Skipped", this);
                 return;
             }
-            z$(this).attr('data-ui-loaded', true);
+            z$(this).attr('data-ui-loaded', 'true');
             /** @type {ContextOptions} */
             var options;
             if (!util.isNoU(z$(this).attr('data-ui-options'))) {
@@ -1409,5 +1425,5 @@
     // TODO: deprecate jQuery dependency
 
 
-    return zuix;
-}).apply(window);
+    return this.zuix;
+}));

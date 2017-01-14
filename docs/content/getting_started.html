@@ -2,7 +2,7 @@
 
 #### Local install
 
-Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js/master/build/js/zuix.min.js)** and include it in the ```head``` section of the page.
+Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix/master/build/js/zuix.min.js)** and include it in the ```head``` section of the page.
 
 <pre><code class="language-html">
     <script src="js/zuix.min.js"></script>
@@ -13,7 +13,7 @@ Download **[zuix.min.js](https://raw.githubusercontent.com/genielabs/zuix-mvc-js
 Link the script as an external resource by adding the following line in the ```head``` section of the page:
 
 <pre><code class="language-html">
-    <script src="https://cdn.rawgit.com/genielabs/zuix-mvc-js/d99dd3b0/build/js/zuix.min.js"></script>
+    <script src="...todo..."></script>
 </code></pre>
 
 #### NPM / Bower
@@ -90,10 +90,10 @@ that will then be the container (view container) wrapping the loaded content.
 
 The *View type identifier* can either refer to a file on the local server or a remote one.
 
-<small><strong>EXAMPLE VIEW - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
+<small><strong>EXAMPLE VIEW - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)
 <pre><code class="language-html">
     <div layout="row center-spread">
-        <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+        <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
         <a href="https://github.com/genielabs">@genielabs</a>
         <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
     </div>
@@ -108,7 +108,7 @@ Inclusion of the above view in a page:
 Inclusion of the above view from a different server:
 
 <pre><code class="language-html">
-    <div data-ui-include="https://genielabs.github.io/zuix-mvx-js/site/common/links"></div>
+    <div data-ui-include="https://genielabs.github.io/zuix/site/common/links"></div>
 </code></pre>
 
 <small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after the view is loaded into it</small>
@@ -118,7 +118,7 @@ Inclusion of the above view from a different server:
          data-ui-component="site/common/links">
 
         <div layout="row center-spread">
-            <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+            <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
             <a href="https://github.com/genielabs">@genielabs</a>
             <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
         </div>
@@ -138,16 +138,16 @@ file with the same location/basename.
 If the style file is found, all style definitions contained in it,
 will be applied to the container where the view has been loaded.
 
-<small><strong>EXAMPLE VIEW - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix-mvc-js/site/common/links.html)
+<small><strong>EXAMPLE VIEW - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)
 <pre><code class="language-html">
     <div layout="row center-spread">
-        <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+        <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
         <a href="https://github.com/genielabs">@genielabs</a>
         <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
     </div>
 </code></pre>
 
-<small><strong>EXAMPLE VIEW - </strong></small> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix-mvc-js/site/common/links.css)
+<small><strong>EXAMPLE VIEW - </strong></small> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix/site/common/links.css)
 <pre><code class="language-css">
 div[layout] {
     padding: 16px;
@@ -176,7 +176,7 @@ Inclusion of the above view in a page:
          data-ui-component="site/common/links">
 
         <div layout="row center-spread">
-            <a href="https://github.com/genielabs/zuix-mvc-js">ZUIX on GitHub</a>
+            <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
             <a href="https://github.com/genielabs">@genielabs</a>
             <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
         </div>
@@ -431,6 +431,15 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p></p>
 
+#### Guidelines
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
 
 ### More examples
 
@@ -463,7 +472,7 @@ file that will be loaded automatically if no inline controller is defined.
 
 <small>HTML</small>
 <pre><code class="language-markup">
-    <div data-ui-field="my-container"/>
+    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"></div>
 </code></pre>
 <small>JavaScript</small>
 <pre><code class="language-js">
@@ -471,16 +480,22 @@ file that will be loaded automatically if no inline controller is defined.
     // and override its controller logic
     // with an inline one
     zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
+        container: zuix.field('my-container'),
         controller: zuix.controller(function(cp) {
             // inline controller function
-            // TODO: implement your controller logic
+            // TODO: implement your own controller logic
         },
         ready: function (context) {
             // component loaded and ready
             console.log(context);
         }
-    }).append('my-container');
+    });
 </code></pre>
+
+<small>Result</small>
+<div self="size1of2">
+    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"></div>
+</div>
 
 <small>Component on CodePen</small>
 <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="zuix test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">zuix test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>

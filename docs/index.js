@@ -18,7 +18,7 @@
 /**
  * Javascript UI components enhancer. A lite MV* library.
  * Find more details about zuix here:
- *   https://github.com/genielabs/zuix-mvx-js
+ *   https://github.com/genielabs/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
  */
