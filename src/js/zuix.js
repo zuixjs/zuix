@@ -889,6 +889,7 @@ function Zuix() {
             // TODO: review/improve life-cycle
 
             if (util.isFunction(c.create)) c.create();
+            c.trigger('view:create');
 
             //if (util.isFunction(c.bind)) c.bind();
             context.updateModelView();
