@@ -833,6 +833,23 @@
             }
 
             z$(context.view()).one('create', function () {
+                z$(context.view()).find('script').each(function () {
+                    if (this.getAttribute('zuix-loaded') !== 'true') {
+                        this.setAttribute('zuix-loaded', 'true');
+                        var clonedScript = document.createElement('script');
+                        clonedScript.setAttribute('zuix-loaded', 'true');
+                        clonedScript.onload = function () {
+                            // TODO: ...
+                        };
+                        if (!util.isNoU(this.type) && this.type.length > 0)
+                            clonedScript.type = this.type;
+                        if (!util.isNoU(this.text) && this.text.length > 0)
+                            clonedScript.text = this.text;
+                        if (!util.isNoU(this.src) && this.src.length > 0)
+                            clonedScript.src = this.src;
+                        this.parentNode.insertBefore(clonedScript, this);
+                    }
+                });
                 initComponent(context);
             }).trigger('create');
 
@@ -1086,6 +1103,7 @@
         }
         return this;
     }
+
     ZQuery.prototype.length = function () {
         return this._selection.length;
     };
@@ -1345,7 +1363,6 @@
         }
         return null;
     };
-
 
 
     // Public ```zuix``` interface
