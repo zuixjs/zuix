@@ -239,8 +239,19 @@ function Zuix() {
                 if (util.isNoU(boundField))
                     boundField = field.attr('data-ui-field');
                 var boundData = util.propertyFromPath(_t._model, boundField);
-                if (!util.isNoU(boundData))
-                    this.innerHTML = boundData;
+                if (!util.isNoU(boundData)) {
+                    switch (this.tagName.toLowerCase()) {
+                        // TODO: complete binding cases
+                        case 'img':
+                            this.src = boundData;
+                            break;
+                        case 'input':
+                            this.value = boundData;
+                            break;
+                        default:
+                            this.innerHTML = boundData;
+                    }
+                }
             });
         }
     };
@@ -315,6 +326,7 @@ function Zuix() {
                 this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
                 this._view.removeAttribute('data-ui-view');
                 this._container.appendChild(this._view);
+                this._view = this._container;
             } else this._view = view;
         }
 
@@ -866,6 +878,15 @@ function Zuix() {
                         this.parentNode.insertBefore(clonedScript, this);
                     }
                 });
+
+                // give to inline scripts a little time to start before binding model
+                // TODO: optimize this
+                setTimeout(function () {
+                    var model = context.view().getAttribute('data-bind-model');
+                    if (!util.isNoU(model) && model.length > 0)
+                        context.model(util.propertyFromPath(window, model));
+                }, 500);
+
                 initComponent(context);
             }).trigger('create');
 

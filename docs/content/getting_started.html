@@ -199,6 +199,8 @@ Inclusion of the above content in a page:
 <small><strong>RESULTING VIEW</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
 
+<p>&nbsp;</p>
+
 So, as shown in the processed output, the ```.css``` style definitions
 are applied only to the loaded content via the ```data-ui-component``` constraint,
 making possible to keep **global style** files separated from **content-local style** files.
@@ -216,6 +218,41 @@ making possible to keep **global style** files separated from **content-local st
 
 
 ##### View Templates <small>Data Binding <mark>WIP</mark></small>
+
+A **View Template** is just like a loadable content with the exception
+that some fields in it are dynamically bound to a data model.
+
+For example:
+
+<pre><code class="language-html">
+<span data-bind-model="pluto_contact" class="mdl-chip mdl-chip--contact">
+    <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
+    <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
+</span>
+<script>
+pluto_contact = {
+    image: 'site/images/pluto.png',
+    name: 'Pluto Nash'
+};
+</script>
+</code></pre>
+
+
+<span data-ui-view="site/common/contact_chip" class="mdl-chip mdl-chip--contact">
+<img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
+<span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
+</span>
+
+<div data-ui-include="site/common/contact_chip"
+     data-bind-model="pluto_contact"></div>
+<script>
+pluto_contact = {
+    image: 'site/images/avatar_02.png',
+    name: 'John Doe'
+};
+</script>
+
+<p>.</p>
 
 ```data-bind-model``` (optional - applied to container and children if not overridden),
 ```data-bind-to``` (field to bind to in the give model)
@@ -487,7 +524,7 @@ file that will be loaded automatically if no inline controller is defined.
         }
     });
 </code></pre>
-
+<!--
 <small>Result</small>
 <div self="size1of2">
     <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"
@@ -499,7 +536,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="zuix test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">zuix test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
-
+-->
 <p></p>
 <p></p>
 <p></p>
