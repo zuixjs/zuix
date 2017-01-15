@@ -223,6 +223,97 @@ So, as shown in the processed output, the ```.css``` style definitions
 are applied only to the loaded content via the ```data-ui-component``` constraint,
 making possible to keep **global style** files separated from **content-local style** files.
 
+
+#### View Templates <small></small>
+
+In a more generic fashion, we call it **View Template** (or just *View*), that particular kind
+of content where some fields in it are bound to a *data model* and, so, that dynamically changes the shown
+data accordingly to it.
+
+A *View* can be either implemented in a file, like already described for
+[loading content](#Getting_Started--Content_Loading), or as an **inline** View, that is so
+placed in the same page rather than on a its own file.
+
+A view is declared inline by adding the ```data-ui-view``` attribute to its root element.
+The value of this attribute is meant to be a unique identifier and shall not match the path
+of any other view placed in a file or inline in the same page, unless we want to *override* it.
+
+<small><strong>EXAMPLE - </strong> Inline View Template</small>
+<pre><code class="language-html">
+<!-- definition of a inline view template -->
+<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
+    <img class="mdl-chip__contact" src="site/images/avatar_01.png">
+    <span class="mdl-chip__text">Contact Name</span>
+</span>
+</code></pre>
+
+<small><strong>RESULT</strong></small>
+<div class="content-padding">
+<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
+<img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
+<span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
+</span>
+</div>
+
+##### Data binding
+
+To bind elements of a view template to fields of a given data model, we set the ```data-ui-field``` attribute
+on these elements with the name of the model field that we want to bind to.
+
+<small><strong>EXAMPLE - </strong> Inline View Template with bound fields</small>
+<pre><code class="language-html">
+<!-- definition of a inline view template -->
+<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
+    <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
+    <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
+</span>
+</code></pre>
+
+Inclusion of the above view with the data model specified by the ```data-bind-model``` attribute
+
+<pre><code class="language-html">
+<div layout="row center-spread">
+    <!-- Foo Bar chip -->
+    <div data-ui-include="inline/common/contact_chip"
+         data-bind-model="foo_bar_contact"></div>
+    <!-- Jane Doe chip -->
+    <div data-ui-include="inline/common/contact_chip"
+         data-bind-model="jane_doe_contact"></div>
+</div>
+<script>
+    // example inline data model
+    foo_bar_contact = {
+        image: 'site/images/avatar_02.png',
+        name: 'Foo Bar'
+    };
+    jane_doe_contact = {
+        image: 'site/images/avatar_01.png',
+        name: 'Jane Doe'
+    };
+</script>
+</code></pre>
+
+<small><strong>RESULT</strong></small>
+<div layout="row center-spread">
+<div data-ui-include="inline/common/contact_chip"
+     data-bind-model="foo_bar_contact"></div>
+<div data-ui-include="inline/common/contact_chip"
+     data-bind-model="jane_doe_contact"></div>
+<script>
+    // example inline data model
+    foo_bar_contact = {
+        image: 'site/images/avatar_02.png',
+        name: 'Foo Bar'
+    };
+    jane_doe_contact = {
+        image: 'site/images/avatar_01.png',
+        name: 'Jane Doe'
+    };
+</script>
+</div>
+
+
+
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 
@@ -234,59 +325,6 @@ making possible to keep **global style** files separated from **content-local st
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 
-
-#### View Templates <small>Data Binding <mark>WIP</mark></small>
-
-In a more generic fashion, we call it **View Template** (or just *View*), that particular kind
-of content where some fields in it are bound to a *data model* and, so, that dynamically changes the shown
-data accordingly to it.
-
-A *View* can be both implemented in a file, like already described for
-[loading content](#Getting_Started--Content_Loading), or as an **inline** View, that is so
-place in the same page rather than on a its own file.
-
-A view can be declared inline by adding the ```data-ui-view``` attribute to its root element.
-The value of this attribute is meant to be a unique identifier and shall not match the path
-of any other view placed in a file, unless we want to *override* it.
-
-<small><strong>EXAMPLE - </strong> Inline View Template</small>
-<pre><code class="language-html">
-<!-- definition of a inline view template -->
-<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
-    <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
-    <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
-</span>
-</code></pre>
-
-<small><strong>RESULT</strong></small>
-<br/>
-<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
-<img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
-<span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
-</span>
-
-##### Data binding
-
-The ```data-ui-field``` .....
-
-<pre><code class="language-html">
-<div data-ui-include="inline/common/contact_chip" data-bind-model="pluto_contact"></div>
-<script>
-pluto_contact = {
-    image: 'site/images/avatar_02.png',
-    name: 'John Doe'
-};
-</script>
-</code></pre>
-
-<div data-ui-include="inline/common/contact_chip"
-     data-bind-model="pluto_contact"></div>
-<script>
-pluto_contact = {
-    image: 'site/images/avatar_02.png',
-    name: 'John Doe'
-};
-</script>
 
 <p>.</p>
 
