@@ -138,6 +138,9 @@ function Zuix() {
          */
         this._controller = null;
 
+        /** @protected */
+        this._updateTimeout = null;
+
         /**
          * Define the local behavior handler for this context instance only.
          * Any global behavior matching the same `componentId` will be overridden.
@@ -231,36 +234,12 @@ function Zuix() {
     };
 
     ComponentContext.prototype.updateModelView = function () {
-        if (!util.isNoU(this._view) && !util.isNoU(this._model)) {
-            var _t = this;
-            z$(this._view).find('[data-ui-field]').each(function (a, b) {
-                var field = z$(this);
-                var boundField = field.attr('data-bind-to');
-                if (util.isNoU(boundField))
-                    boundField = field.attr('data-ui-field');
-                if (util.isFunction(_t._model))
-                    (_t._model).call(_t._view, this, boundField);
-                else {
-                    var boundData = util.propertyFromPath(_t._model, boundField);
-                    if (util.isFunction(boundData)) {
-                        (boundData).call(_t._view, this, boundField);
-                    } else if (!util.isNoU(boundData)) {
-                        // try to guess target property
-                        switch (this.tagName.toLowerCase()) {
-                            // TODO: complete binding cases
-                            case 'img':
-                                this.src = boundData;
-                                break;
-                            case 'input':
-                                this.value = boundData;
-                                break;
-                            default:
-                                this.innerHTML = boundData;
-                        }
-                    }
-                }
-            });
-        }
+        if (this._updateTimeout != null)
+            clearTimeout(this._updateTimeout);
+        var _t = this;
+        this._updateTimeout = setTimeout(function(){
+            _t._updateModelViewFn();
+        }, 100);
     };
 
     /***
@@ -320,6 +299,27 @@ function Zuix() {
                 this._view = z$.wrapElement('div', view);
             }
 
+            z$(this._view).find('script').each(function () {
+                if (this.getAttribute('zuix-loaded') !== 'true') {
+                    this.setAttribute('zuix-loaded', 'true');
+                    _eval.call(window, this.innerHTML);
+                    /*
+                    var clonedScript = document.createElement('script');
+                    clonedScript.setAttribute('zuix-loaded', 'true');
+                    clonedScript.onload = function () {
+                        // TODO: ...
+                    };
+                    if (!util.isNoU(this.type) && this.type.length > 0)
+                        clonedScript.type = this.type;
+                    if (!util.isNoU(this.text) && this.text.length > 0)
+                        clonedScript.text = this.text;
+                    if (!util.isNoU(this.src) && this.src.length > 0)
+                        clonedScript.src = this.src;
+                    this.parentNode.insertBefore(clonedScript, this);
+                    */
+                }
+            });
+
             // trigger `view:process` hook when the view is ready to be processed
             triggerHook(this, 'view:process', this._view);
 
@@ -354,6 +354,7 @@ function Zuix() {
      */
     ComponentContext.prototype.controller = function (controller) {
         if (typeof controller === 'undefined') return this._controller;
+        // TODO: should dispose previous context controller first
         else this._controller = controller;
         return this;
     };
@@ -367,6 +368,41 @@ function Zuix() {
         else this._container = container;
         return this;
     };
+
+    /** @protected */
+    ComponentContext.prototype._updateModelViewFn = function() {
+        if (!util.isNoU(this._view) && !util.isNoU(this._model)) {
+            var _t = this;
+            z$(this._view).find('[data-ui-field]').each(function (a, b) {
+                var field = z$(this);
+                var boundField = field.attr('data-bind-to');
+                if (util.isNoU(boundField))
+                    boundField = field.attr('data-ui-field');
+                if (util.isFunction(_t._model))
+                    (_t._model).call(_t._view, this, boundField);
+                else {
+                    var boundData = util.propertyFromPath(_t._model, boundField);
+                    if (util.isFunction(boundData)) {
+                        (boundData).call(_t._view, this, boundField);
+                    } else if (!util.isNoU(boundData)) {
+                        // try to guess target property
+                        switch (this.tagName.toLowerCase()) {
+                            // TODO: complete binding cases
+                            case 'img':
+                                this.src = boundData;
+                                break;
+                            case 'input':
+                                this.value = boundData;
+                                break;
+                            default:
+                                this.innerHTML = boundData;
+                        }
+                    }
+                }
+            });
+        }
+    };
+
 
     /**
      * TODO: complete JSDoc
@@ -401,9 +437,10 @@ function Zuix() {
         /** @protected */
         this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
             if (!util.isNoU(target)) {
-                z$(target).off(eventPath, this.eventRouter);
+                var t = z$(target);
+                t.off(eventPath, this.eventRouter);
                 eventMap[eventPath] = handler_fn;
-                z$(target).on(eventPath, this.eventRouter);
+                t.on(eventPath, this.eventRouter);
             } else {
                 // TODO: should report missing target
             }
@@ -565,39 +602,46 @@ function Zuix() {
         // TODO: add 'data-ui-loaded="true"' attribute after loading
         // to prevent loading twice
         z$(element).find('[data-ui-load],[data-ui-include]').each(function () {
-            if (z$(this).attr('data-ui-loaded') === 'true' || z$(this).parent('pre,code').length() > 0) {
+            var v = z$(this);
+            if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
                 console.log("ZUIX", "WARN", "Skipped", this);
                 return;
             }
-            z$(this).attr('data-ui-loaded', 'true');
+            v.attr('data-ui-loaded', 'true');
             /** @type {ContextOptions} */
-            var options;
-            if (!util.isNoU(z$(this).attr('data-ui-options'))) {
-                options = util.propertyFromPath(window, z$(this).attr('data-ui-options'));
+            var options = v.attr('data-ui-options');
+            if (!util.isNoU(options)) {
+                options = util.propertyFromPath(window, options);
                 // copy passed options
-                options = util.cloneObject(options);
-            } else
-                options = {};
+                options = util.cloneObject(options) || {};
+            } else options = {};
 
             // Automatic view/container selection
-            if (util.isNoU(options.view) && !z$(this).isEmpty())
+            if (util.isNoU(options.view) && !v.isEmpty())
                 options.view = this;
-            else if (util.isNoU(options.view) && util.isNoU(options.container) && z$(this).isEmpty())
+            else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
                 options.container = this;
 
-            var componentId = z$(this).attr('data-ui-load');
+            var componentId = v.attr('data-ui-load');
             if (util.isNoU(componentId)) {
                 // Static include should not have any controller
-                componentId = z$(this).attr('data-ui-include');
-                z$(this).attr('data-ui-component', componentId);
+                componentId = v.attr('data-ui-include');
+                v.attr('data-ui-component', componentId);
                 // disable controller auto-loading
                 if (util.isNoU(options.controller))
-                    options.controller = null;
+                    options.controller = function(){}; // null
             }
+
+            // inline attributes have precedence over ```options```
+
+            var model = v.attr('data-bind-model');
+            if (!util.isNoU(model) && model.length > 0)
+                options.model = util.propertyFromPath(window, model);
 
             // TODO: Behavior are also definable in "data-ui-behavior" attribute
             // TODO: Events are also definable in "data-ui-on" attribute
             // util.propertyFromPath( ... )
+
             /*
              if (!util.isNoU(z$(this).attr('data-ui-ready')))
              options.ready = util.propertyFromPath(window, z$(this).attr('data-ui-ready'));
@@ -876,37 +920,7 @@ function Zuix() {
                     controller: context.controller()
                 });
             }
-
-            z$(context.view()).one('create', function () {
-                z$(context.view()).find('script').each(function () {
-                    if (this.getAttribute('zuix-loaded') !== 'true') {
-                        this.setAttribute('zuix-loaded', 'true');
-                        var clonedScript = document.createElement('script');
-                        clonedScript.setAttribute('zuix-loaded', 'true');
-                        clonedScript.onload = function () {
-                            // TODO: ...
-                        };
-                        if (!util.isNoU(this.type) && this.type.length > 0)
-                            clonedScript.type = this.type;
-                        if (!util.isNoU(this.text) && this.text.length > 0)
-                            clonedScript.text = this.text;
-                        if (!util.isNoU(this.src) && this.src.length > 0)
-                            clonedScript.src = this.src;
-                        this.parentNode.insertBefore(clonedScript, this);
-                    }
-                });
-
-                // give to inline scripts a little time to start before binding model
-                // TODO: optimize this
-                setTimeout(function () {
-                    var model = context.view().getAttribute('data-bind-model');
-                    if (!util.isNoU(model) && model.length > 0)
-                        context.model(util.propertyFromPath(window, model));
-                }, 500);
-
-                initComponent(context);
-            }).trigger('create');
-
+            initComponent(context);
         } else {
             // TODO: report error
         }
@@ -922,7 +936,7 @@ function Zuix() {
             var c = context._c = new ContextController(context);
 
             if (!util.isNoU(c.view()))
-                z$(c.view()).attr('data-ui-component', c.componentId);
+                c.view().setAttribute('data-ui-component', c.componentId);
 
             // TODO: review/improve life-cycle
 

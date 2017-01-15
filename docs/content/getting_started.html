@@ -262,7 +262,8 @@ on these elements with the name of the model field that we want to bind to.
 
 ###### Simple View-Model Binding
 
-```// automatic element property-field mapping```
+```// TODO: introduce automatic element property-field mapping```
+```// TODO: deprecate usage of ```data-bind-to``` in favour of field adapters
 
 <small><strong>EXAMPLE - </strong> Inline View Template with bound fields</small>
 <pre><code class="language-html">
@@ -300,17 +301,34 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 <small><strong>RESULT</strong></small>
 <div layout="row center-spread">
 <div data-ui-include="inline/common/contact_chip"
-     data-id="0" data-bind-model="chip_mv_adapter"></div>
+     data-id="0" data-bind-model="chip_vm_adapter"
+     data-ui-options="chip_view_options"></div>
 <div data-ui-include="inline/common/contact_chip"
-     data-id="1" data-bind-model="chip_mv_adapter"></div>
+     data-id="1" data-bind-model="chip_vm_adapter"
+     data-ui-options="chip_view_options"></div>
 <script>
     // items list
+    var chip_view_behavior = {
+        'mouseover': function () {
+            this.style.cursor = 'pointer';
+        },
+        'mouseout': function () {
+            this.style.cursor = 'default';
+        },
+        'click': function() {
+            console.log('CLICKED!!');
+            zuix.$(this).animateCss('pulse');
+        }
+    };
+    var chip_view_options = {
+        behavior: chip_view_behavior
+    };
     var chip_items = {
         "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
         "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'}
     };
     // example model view adapter
-    var chip_mv_adapter = function(element, field) {
+    var chip_vm_adapter = function(element, field) {
         var id = this.getAttribute('data-id');
         var value = chip_items[id][field];
         switch (field) {
@@ -332,19 +350,20 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 <pre><code class="language-html">
 <div layout="row center-spread">
     <div data-ui-include="inline/common/contact_chip"
-         data-bind-model="chip_mv_adapter"
+         data-bind-model="chip_vm_adapter"
          data-id="0"></div>
     <div data-ui-include="inline/common/contact_chip"
-         data-bind-model="chip_mv_adapter"
+         data-bind-model="chip_vm_adapter"
          data-id="1"></div>
 </div>
 <script>
-    // example inline data model
+    // items list
     chip_items = {
         "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
         "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'}
     };
-    chip_mv_adapter = function(element, field) {
+    // example view model adapter
+    chip_vm_adapter = function(element, field) {
         var id = this.getAttribute('data-id');
         var value = chip_items[id][field];
         switch (field) {
