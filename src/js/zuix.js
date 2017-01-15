@@ -392,6 +392,17 @@ function Zuix() {
         };
 
         /** @protected */
+        this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
+            if (!util.isNoU(target)) {
+                z$(target).off(eventPath, this.eventRouter);
+                eventMap[eventPath] = handler_fn;
+                z$(target).on(eventPath, this.eventRouter);
+            } else {
+                // TODO: should report missing target
+            }
+        };
+
+        /** @protected */
         this._fieldCache = [];
 
         /** @type {function} */
@@ -438,20 +449,20 @@ function Zuix() {
             // TODO: else-> should report anomaly
         };
         // create event map from context options
-        var options = context.options();
+        var options = context.options(), handler = null;
         if (!util.isNoU(options.on)) {
-            for (var eventPath in options.on) {
-                var handler = options.on[eventPath];
+            for (var ep in options.on) {
+                handler = options.on[ep];
                 // TODO: should log.warn if k already exists
-                self.addEvent(self.view(), eventPath, handler);
+                self.addEvent(self.view(), ep, handler);
             }
         }
         // create behavior map from context options
         if (!util.isNoU(options.behavior)) {
-            for (var eventPath in options.behavior) {
-                var handler = options.behavior[eventPath];
+            for (var bp in options.behavior) {
+                handler = options.behavior[bp];
                 // TODO: should log.warn if k already exists
-                self.addBehavior(self.view(), eventPath, handler);
+                self.addBehavior(self.view(), bp, handler);
             }
         }
 
@@ -460,23 +471,16 @@ function Zuix() {
         return this;
     }
 
+    // TODO: add jsDoc
     ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
-        if (!util.isNoU(target)) {
-            z$(target).off(eventPath, this.eventRouter);
-            this.context._eventMap[eventPath] = handler_fn;
-            z$(target).on(eventPath, this.eventRouter);
-        } else {
-            // TODO: should report missing view
-        }
+        this.mapEvent(this.context._eventMap, target, eventPath, handler_fn);
+        return this;
     };
+
+    // TODO: add jsDoc
     ContextController.prototype.addBehavior = function (target, eventPath, handler_fn) {
-        if (!util.isNoU(target)) {
-            z$(target).off(eventPath, this.eventRouter);
-            this.context._behaviorMap[eventPath] = handler_fn;
-            z$(target).on(eventPath, this.eventRouter);
-        } else {
-            // TODO: should report missing view
-        }
+        this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
+        return this;
     };
 
     /***
@@ -629,16 +633,14 @@ function Zuix() {
                 } else {
                     // if no context is already allocated
                     // with that id, then add a new one
-                    context = new ComponentContext(options);
-                    _contextRoot.push(context);
+                    context = createContext(options);
                 }
             } else {
                 if (options === false)
                     options = {};
                 // generate contextId (this is a bit buggy, but it's quick)
                 options.contextId = 'zuix-ctx-' + (++_contextSeqNum);
-                context = new ComponentContext(options);
-                _contextRoot.push(context);
+                context = createContext(options);
             }
         } else {
             // empty context
@@ -725,7 +727,7 @@ function Zuix() {
     function unload(context) {
         if (!util.isNoU(context) && !util.isNoU(context._c)) {
             if (!util.isNoU(context._c.view()))
-                context._c.view().removeAttr('data-ui-component');
+                context._c.view().removeAttribute('data-ui-component');
 
             //context.unregisterEvents();
             // TODO: unregister events and local context behavior
@@ -749,6 +751,12 @@ function Zuix() {
                 return false;
             }
         });
+        return context;
+    }
+
+    function createContext(options) {
+        var context = new ComponentContext(options);
+        _contextRoot.push(context);
         return context;
     }
 
@@ -1121,7 +1129,7 @@ function Zuix() {
      * ZQuery, a very small subset of jQuery-like functions
      * internally used in Zuix
      * @class ZQuery
-     * @param element {ZQuery|Array<Node>|Node|NodeList|undefined}
+     * @param element {ZQuery|Array<Node>|Node|NodeList|string|undefined}
      * @return {ZQuery}
      * @constructor
      */
@@ -1294,17 +1302,17 @@ function Zuix() {
             });
         return this;
     };
-    ZQuery.prototype.show = function () {
+    ZQuery.prototype.display = function (mode) {
         z$.each(this._selection, function (k, v) {
-            this.style.display = '';
+            this.style.display = mode;
         });
         return this;
     };
+    ZQuery.prototype.show = function () {
+        return this.display('');
+    };
     ZQuery.prototype.hide = function () {
-        z$.each(this._selection, function (k, v) {
-            this.style.display = 'none';
-        });
-        return this;
+        return this.display('none');
     };
 
     // ZQuery object factory and static methods
@@ -1321,6 +1329,7 @@ function Zuix() {
         return this;
     };
     z$.ajax = function ajax(opt) {
+        var url;
         if (!util.isNoU(opt) && !util.isNoU(opt.url))
             url = opt.url;
         else
@@ -1341,12 +1350,13 @@ function Zuix() {
     z$.wrapElement = function (containerTag, element) {
         //$(element).wrap($('<'+containerTag+'/>'));
         //return element;
+        /** @type Element */
         var container = document.createElement(containerTag);
         if (typeof element === 'string')
             container.innerHTML = element;
         else
         // TODO: test this, it may not work
-            container.append(element);
+            container.appendChild(element);
         return container;
     };
     z$.wrapCss = function (wrapperRule, css) {
@@ -1365,10 +1375,10 @@ function Zuix() {
         return css;
     };
     z$.appendCss = function (css, target) {
-        var style = null;
+        var style = null, head;
         if (typeof css === 'string') {
             // output css
-            var head = document.head || document.getElementsByTagName('head')[0];
+            head = document.head || document.getElementsByTagName('head')[0];
             style = document.createElement('style');
             style.type = 'text/css';
             if (style.styleSheet)
