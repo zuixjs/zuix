@@ -48,16 +48,18 @@ that can be conveniently organized in the directory tree.
 
 For example, the following page template
 
-<div self="size-1of2 center" layout="column center-spread" style="margin:24px; height: 320px">
+<div style="margin: 24px">
+<div self="size-1of2 center" layout="column center-center" style="height: 320px">
 <div self="size-x1" layout="column center-center" style="background-color: #E6DEC7;">header</div>
 <div self="size-x3" layout="column center-center" style="background-color: #E1F5F3;">main content</div>
 <div self="size-x1" layout="column center-center" style="background-color: #E6DEC7;">footer</div>
 </div>
+</div>
 
-could be implemented in the following files:
+could be implemented with the following files:
 
-- site/content/main.html
 - site/layout/header.html
+- site/content/main.html
 - site/layout/footer.html
 - **index.html**
 
@@ -70,7 +72,7 @@ To include a content, just add a ```div``` (or any other tag supposed to be a co
 with the attribute ```data-ui-include``` set to the path of the content that
 you want to be loaded.
 
-<small><strong>EXAMPLE PAGE - </strong></small>  **HTML** file ```index.html```:
+<small><strong>EXAMPLE PAGE - </strong> **HTML** file ```index.html```</small>
 <pre data-line="9,11,13"><code class="language-html">
 <html>
     <head>
@@ -98,7 +100,7 @@ Notice that the value of the ```data-ui-include``` attribute is the URL of the f
 The following example shows how a ```div``` will looks like after
 the content ```site/common/links``` is included into it.
 
-<small><strong>EXAMPLE</strong></small> - **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)
+<small><strong>EXAMPLE</strong> - **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)</small>
 <pre><code class="language-html">
     <!-- site/common/links --->
     <div layout="row center-spread">
@@ -129,7 +131,8 @@ Element including the above content
     </div>
 </code></pre>
 
-<small><strong>RESULTING VIEW</strong></small>
+<small><strong>RESULT</strong></small>
+
 <div data-ui-include="site/common/links" data-ui-options="main.options.content_no_css"></div>
 
 <p>&nbsp;</p>
@@ -150,7 +153,7 @@ file with the same location/basename.
 If the style file is found, all style definitions contained in it,
 will be applied to the container where the content has been loaded.
 
-<small><strong>EXAMPLE - </strong></small> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)
+<small><strong>EXAMPLE - </strong> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)</small>
 <pre><code class="language-html">
     <!-- site/common/links --->
     <div layout="row center-spread">
@@ -160,7 +163,7 @@ will be applied to the container where the content has been loaded.
     </div>
 </code></pre>
 
-<small><strong>EXAMPLE - </strong></small> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix/site/common/links.css)
+<small><strong>EXAMPLE - </strong> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix/site/common/links.css)</small>
 <pre><code class="language-css">
 div[layout] {
     padding: 16px;
@@ -211,7 +214,7 @@ Element including the above content
     </style>
 </code></pre>
 
-<small><strong>RESULTING VIEW</strong></small>
+<small><strong>RESULT</strong></small>
 <div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
 
 <p>&nbsp;</p>
@@ -232,31 +235,42 @@ making possible to keep **global style** files separated from **content-local st
 <p>&nbsp;</p>
 
 
-##### View Templates <small>Data Binding <mark>WIP</mark></small>
+#### View Templates <small>Data Binding <mark>WIP</mark></small>
 
-A **View Template** is just like a [loadable content](#Getting_Started--Content_Loading) with the exception
-that some fields in it are dynamically bound to a data model.
+In a more generic fashion, we call it **View Template** (or just *View*), that particular kind
+of content where some fields in it are bound to a *data model* and, so, that dynamically changes the shown
+data accordingly to it.
 
-For example:
+A *View* can be both implemented in a file, like already described for
+[loading content](#Getting_Started--Content_Loading), or as an **inline** View, that is so
+place in the same page rather than on a its own file.
 
+A view can be declared inline by adding the ```data-ui-view``` attribute to its root element.
+The value of this attribute is meant to be a unique identifier and shall not match the path
+of any other view placed in a file, unless we want to *override* it.
+
+<small><strong>EXAMPLE - </strong> Inline View Template</small>
 <pre><code class="language-html">
-<span data-ui-view="site/common/contact_chip" class="mdl-chip mdl-chip--contact">
+<!-- definition of a inline view template -->
+<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
     <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
     <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
 </span>
 </code></pre>
 
-
-<span data-ui-view="site/common/contact_chip" class="mdl-chip mdl-chip--contact">
+<small><strong>RESULT</strong></small>
+<br/>
+<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
 <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
 <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
 </span>
 
+##### Data binding
 
-
+The ```data-ui-field``` .....
 
 <pre><code class="language-html">
-<div data-ui-include="site/common/contact_chip" data-bind-model="pluto_contact"></div>
+<div data-ui-include="inline/common/contact_chip" data-bind-model="pluto_contact"></div>
 <script>
 pluto_contact = {
     image: 'site/images/avatar_02.png',
@@ -265,7 +279,7 @@ pluto_contact = {
 </script>
 </code></pre>
 
-<div data-ui-include="site/common/contact_chip"
+<div data-ui-include="inline/common/contact_chip"
      data-bind-model="pluto_contact"></div>
 <script>
 pluto_contact = {
@@ -277,22 +291,8 @@ pluto_contact = {
 <p>.</p>
 
 
-###### Inline template
 
-Inline view template definition is achieved by adding a ```data-ui-view``` attribute
-to the main container element of the view template.
-The value of this field is meant to be an unique identifier.
-
-<pre><code class="language-html">
-    <div data-ui-view="simple_view">
-        This is an inline view template
-    </div>
-</code></pre>
-
-##### Data binding
-
-
-#### Components
+#### Component Management
 
 A component is basically a [content template](#Content-Templates) (html/css/data model) with the
 plus of a piece of JavaScript code associated to it.
@@ -301,62 +301,11 @@ This JavaScript code is the ****Controller**** of the component and
 it implements the logic and behavior of it upon user interaction or
 when the bound data model is updated.
 
-#### Loading a component
+##### Loading a component
 
 To load a component, the ```data-ui-load``` attribute is used,
 where its value is the name of the view template
 that has to be applied to the component.
-
-<small><strong>EXAMPLE</strong></small> - Component Loading
-<pre><code class="language-html">
-    <!-- load 3 component instances using
-         the "simple_view" template -->
-    <div data-ui-load="site/common/links"></div>
-    <div data-ui-load="site/common/links"></div>
-    <div data-ui-load="site/common/links"></div>
-</code></pre>
-
-<small><strong>OUTPUT</strong></small>
-<pre><code class="language-html">
-<div layout="row center-left">
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 1
-    </a>
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 2
-    </a>
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 3
-    </a>
-</div>
-<div layout="row center-left">
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 1
-    </a>
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 2
-    </a>
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 3
-    </a>
-</div>
-<div layout="row center-left">
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 1
-    </a>
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 2
-    </a>
-    <a class="mdl-button mdl-js-button mdl-button--accent">
-        Link 3
-    </a>
-</div>
-</code></pre>
-
-<small><strong>RESULT</strong></small>
-<div data-ui-include="site/common/links" data-ui-options="main.options.content_no_css"></div>
-<div data-ui-include="site/common/links" data-ui-options="main.options.content_no_css"></div>
-<div data-ui-include="site/common/links" data-ui-options="main.options.content_no_css"></div>
 
 <p></p>
 
@@ -365,7 +314,7 @@ zuix will first look for an <em>inline view</em> matching the ```data-ui-view```
 value. If none found it will try to load it from <em>file</em>, by appending the ```.html```
 suffix to the template name.
 
-#### The Controller <small>component logic</small>
+##### The Controller <small>component logic</small>
 
 While in the previous steps we didn't need any JavaScript coding,
 adding the controller for the component logic will indeed require
@@ -438,7 +387,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p></p>
 
-#### Component events
+##### Component events
 
 <p></p>
 <p>.</p>
@@ -446,7 +395,7 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p></p>
 
-#### Component behaviors
+##### Component behaviors
 
 
 <p></p>
@@ -454,19 +403,19 @@ file that will be loaded automatically if no inline controller is defined.
 <p>.</p>
 <p>.</p>
 <p></p>
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+##### Component Life-Cycle
+
 
 
 #### Hooks
-
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-#### Component Life-Cycle
-
 
 <p></p>
 <p>.</p>
