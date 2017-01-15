@@ -1,6 +1,7 @@
 /**
  * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +17,12 @@
  */
 
 /**
- * Javascript UI components enhancer. A lite MV* library.
- * Find more details about zuix here:
- *   https://github.com/genielabs/zuix
+ *
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
  */
-
-
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['zuix'], function () {
-            return (root.zuix = (factory).call(root));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        // Node
-        module.exports = (factory).call(root);
-    } else {
-        // Browser globals
-        root.zuix = (factory).call(root);
-    }
-}(this,
 
 /**
  * @class Zuix
@@ -138,9 +123,6 @@ function Zuix() {
          */
         this._controller = null;
 
-        /** @protected */
-        this._updateTimeout = null;
-
         /**
          * Define the local behavior handler for this context instance only.
          * Any global behavior matching the same `componentId` will be overridden.
@@ -233,13 +215,38 @@ function Zuix() {
         return this;
     };
 
+    /** @protected */
     ComponentContext.prototype.updateModelView = function () {
-        if (this._updateTimeout != null)
-            clearTimeout(this._updateTimeout);
-        var _t = this;
-        this._updateTimeout = setTimeout(function(){
-            _t._updateModelViewFn();
-        }, 100);
+        if (!util.isNoU(this._view) && !util.isNoU(this._model)) {
+            var _t = this;
+            z$(this._view).find('[data-ui-field]').each(function (a, b) {
+                var field = z$(this);
+                var boundField = field.attr('data-bind-to');
+                if (util.isNoU(boundField))
+                    boundField = field.attr('data-ui-field');
+                if (util.isFunction(_t._model))
+                    (_t._model).call(_t._view, this, boundField);
+                else {
+                    var boundData = util.propertyFromPath(_t._model, boundField);
+                    if (util.isFunction(boundData)) {
+                        (boundData).call(_t._view, this, boundField);
+                    } else if (!util.isNoU(boundData)) {
+                        // try to guess target property
+                        switch (this.tagName.toLowerCase()) {
+                            // TODO: complete binding cases
+                            case 'img':
+                                this.src = boundData;
+                                break;
+                            case 'input':
+                                this.value = boundData;
+                                break;
+                            default:
+                                this.innerHTML = boundData;
+                        }
+                    }
+                }
+            });
+        }
     };
 
     /***
@@ -304,19 +311,19 @@ function Zuix() {
                     this.setAttribute('zuix-loaded', 'true');
                     _eval.call(window, this.innerHTML);
                     /*
-                    var clonedScript = document.createElement('script');
-                    clonedScript.setAttribute('zuix-loaded', 'true');
-                    clonedScript.onload = function () {
-                        // TODO: ...
-                    };
-                    if (!util.isNoU(this.type) && this.type.length > 0)
-                        clonedScript.type = this.type;
-                    if (!util.isNoU(this.text) && this.text.length > 0)
-                        clonedScript.text = this.text;
-                    if (!util.isNoU(this.src) && this.src.length > 0)
-                        clonedScript.src = this.src;
-                    this.parentNode.insertBefore(clonedScript, this);
-                    */
+                     var clonedScript = document.createElement('script');
+                     clonedScript.setAttribute('zuix-loaded', 'true');
+                     clonedScript.onload = function () {
+                     // TODO: ...
+                     };
+                     if (!util.isNoU(this.type) && this.type.length > 0)
+                     clonedScript.type = this.type;
+                     if (!util.isNoU(this.text) && this.text.length > 0)
+                     clonedScript.text = this.text;
+                     if (!util.isNoU(this.src) && this.src.length > 0)
+                     clonedScript.src = this.src;
+                     this.parentNode.insertBefore(clonedScript, this);
+                     */
                 }
             });
 
@@ -367,40 +374,6 @@ function Zuix() {
         if (util.isNoU(container)) return this._container;
         else this._container = container;
         return this;
-    };
-
-    /** @protected */
-    ComponentContext.prototype._updateModelViewFn = function() {
-        if (!util.isNoU(this._view) && !util.isNoU(this._model)) {
-            var _t = this;
-            z$(this._view).find('[data-ui-field]').each(function (a, b) {
-                var field = z$(this);
-                var boundField = field.attr('data-bind-to');
-                if (util.isNoU(boundField))
-                    boundField = field.attr('data-ui-field');
-                if (util.isFunction(_t._model))
-                    (_t._model).call(_t._view, this, boundField);
-                else {
-                    var boundData = util.propertyFromPath(_t._model, boundField);
-                    if (util.isFunction(boundData)) {
-                        (boundData).call(_t._view, this, boundField);
-                    } else if (!util.isNoU(boundData)) {
-                        // try to guess target property
-                        switch (this.tagName.toLowerCase()) {
-                            // TODO: complete binding cases
-                            case 'img':
-                                this.src = boundData;
-                                break;
-                            case 'input':
-                                this.value = boundData;
-                                break;
-                            default:
-                                this.innerHTML = boundData;
-                        }
-                    }
-                }
-            });
-        }
     };
 
 
@@ -1477,14 +1450,23 @@ function Zuix() {
 
         };
 
-
-    // TODO: implement <componentId>.model.js loading
-
     // TODO: add zuix.options to configure stuff like
     // TODO: the css/html/js lookup base path (each individually own prop)
 
-    // TODO: deprecate jQuery dependency
-
-
     return this.zuix;
-}));
+}
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['zuix'], function () {
+            return (root.zuix = (factory).call(root));
+        });
+    } else if (typeof module === 'object' && module.exports) {
+        // Node
+        module.exports = (factory).call(root);
+    } else {
+        // Browser globals
+        root.zuix = (factory).call(root);
+    }
+}(this, Zuix));
