@@ -238,18 +238,25 @@ function Zuix() {
                 var boundField = field.attr('data-bind-to');
                 if (util.isNoU(boundField))
                     boundField = field.attr('data-ui-field');
-                var boundData = util.propertyFromPath(_t._model, boundField);
-                if (!util.isNoU(boundData)) {
-                    switch (this.tagName.toLowerCase()) {
-                        // TODO: complete binding cases
-                        case 'img':
-                            this.src = boundData;
-                            break;
-                        case 'input':
-                            this.value = boundData;
-                            break;
-                        default:
-                            this.innerHTML = boundData;
+                if (util.isFunction(_t._model))
+                    (_t._model).call(_t._view, this, boundField);
+                else {
+                    var boundData = util.propertyFromPath(_t._model, boundField);
+                    if (util.isFunction(boundData)) {
+                        (boundData).call(_t._view, this, boundField);
+                    } else if (!util.isNoU(boundData)) {
+                        // try to guess target property
+                        switch (this.tagName.toLowerCase()) {
+                            // TODO: complete binding cases
+                            case 'img':
+                                this.src = boundData;
+                                break;
+                            case 'input':
+                                this.value = boundData;
+                                break;
+                            default:
+                                this.innerHTML = boundData;
+                        }
                     }
                 }
             });
@@ -740,13 +747,14 @@ function Zuix() {
 
     /***
      *
-     * @param {Object} contextId
+     * @param {Node|Object} contextId
      * @returns {ComponentContext}
      */
     function getContext(contextId) {
         var context = null;
         z$.each(_contextRoot, function (k, v) {
-            if (util.objectEquals(v.contextId, contextId)) {
+            if ((contextId instanceof Node && v.view() === contextId)
+                || util.objectEquals(v.contextId, contextId)) {
                 context = v;
                 return false;
             }
@@ -860,7 +868,8 @@ function Zuix() {
         if (!util.isNoU(context.view())) {
             var cached = getCachedComponent(context.componentId);
             if (cached === null) {
-                var c = z$.wrapElement('div', context.view().outerHTML);
+                var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
+                var c = z$.wrapElement('div', html);
                 _componentCache.push({
                     componentId: context.componentId,
                     view: c.innerHTML,
@@ -1428,6 +1437,7 @@ function Zuix() {
             load: load,
             unload: unload,
             componentize: componentize,
+            context: getContext,
 
             /* Zuix hooks */
             hook: function (p, v) {
