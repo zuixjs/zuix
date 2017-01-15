@@ -22,12 +22,20 @@ Link the script as an external resource by adding the following line in the ```h
 
 ### Getting started
 
+To start using **ZUIX** add the following line before the end of the ```body``` of your page.
+
+<pre><code class="language-html">
+    <script type="text/javascript">zuix.componentize();</script>
+</code></pre>
+
 This guide is organized in three sections with different
 difficulty grades:
 
 - Content Management <small>(beginner)</small>
-- View Template and Data Binding <small>(intermediate)</small>
-- Component Management <small>(advanced)</small>
+- View Template and Data Binding <small>(intermediate-)</small>
+- Component Management <small>(intermediate+)</small>
+
+<small><strong>P.S.</strong> Just in case you already started wondering, the *beginner* grade stands for "With basic HTML and Javascript knowledge".</small>
 
 #### Content Management
 
@@ -41,9 +49,9 @@ that can be conveniently organized in the directory tree.
 For example, the following page template
 
 <div self="size-1of2 center" layout="column center-spread" style="margin:24px; height: 320px">
-<div self="size-x1" layout="column center-center" style="background-color: #e6e191;">header</div>
-<div self="size-x3" layout="column center-center" style="background-color: #d3f5ec;">main content</div>
-<div self="size-x1" layout="column center-center" style="background-color: #e6e191;">footer</div>
+<div self="size-x1" layout="column center-center" style="background-color: #E6DEC7;">header</div>
+<div self="size-x3" layout="column center-center" style="background-color: #E1F5F3;">main content</div>
+<div self="size-x1" layout="column center-center" style="background-color: #E6DEC7;">footer</div>
 </div>
 
 could be implemented in the following files:
@@ -54,6 +62,13 @@ could be implemented in the following files:
 - **index.html**
 
 where the ```index.html``` is the main page that will include the other files.
+
+<a id="Getting_Started--Content_Loading"></a>
+##### Loading content
+
+To include a content, just add a ```div``` (or any other tag supposed to be a container element)
+with the attribute ```data-ui-include``` set to the path of the content that
+you want to be loaded.
 
 <small><strong>EXAMPLE PAGE - </strong></small>  **HTML** file ```index.html```:
 <pre data-line="9,11,13"><code class="language-html">
@@ -75,12 +90,13 @@ where the ```index.html``` is the main page that will include the other files.
 </code></pre>
 
 The ```data-ui-include``` attribute used at lines 9-11-13, will instruct *ZUIX*
-to load the specified content and to append it to the wrapping ```div``` element.
-The value of the ```data-ui-include``` attribute is the URL of the file to include
+to load the specified content into each ```div``` element.
+
+Notice that the value of the ```data-ui-include``` attribute is the URL of the file to include
 <u>without</u> the ```.html``` extension.
 
-The following example shows how the ```data-ui-include``` element
-will looks like after the content is included.
+The following example shows how a ```div``` will looks like after
+the content ```site/common/links``` is included into it.
 
 <small><strong>EXAMPLE</strong></small> - **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)
 <pre><code class="language-html">
@@ -92,14 +108,14 @@ will looks like after the content is included.
     </div>
 </code></pre>
 
-Inclusion of the above content in a page:
+Element including the above content
 
 <pre><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong> - inclusion ```div``` after the ```.html``` is loaded into it</small>
+<small><strong>PROCESSED OUTPUT</strong> - resulting ```div``` after content is loaded into it</small>
 <pre><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links" data-ui-loaded="true"
@@ -125,10 +141,10 @@ specifying the absolute URL:
     <div data-ui-include="https://genielabs.github.io/zuix/site/common/links"></div>
 </code></pre>
 
-##### Content styling
+##### Styling content
 
 When including a content, after loading the ```.html``` file,
-*ZUIX* will try to load a ```.css``` style
+*ZUIX* will also try to load a ```.css``` style
 file with the same location/basename.
 
 If the style file is found, all style definitions contained in it,
@@ -160,15 +176,14 @@ a {
 }
 </code></pre>
 
-
-Inclusion of the above content in a page:
+Element including the above content
 
 <pre><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong> inclusion ```div``` after the content is loaded into it</small>
+<small><strong>PROCESSED OUTPUT</strong> resulting ```div``` after content is loaded into it</small>
 <pre><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links"  data-ui-loaded="true"
@@ -219,22 +234,16 @@ making possible to keep **global style** files separated from **content-local st
 
 ##### View Templates <small>Data Binding <mark>WIP</mark></small>
 
-A **View Template** is just like a loadable content with the exception
+A **View Template** is just like a [loadable content](#Getting_Started--Content_Loading) with the exception
 that some fields in it are dynamically bound to a data model.
 
 For example:
 
 <pre><code class="language-html">
-<span data-bind-model="pluto_contact" class="mdl-chip mdl-chip--contact">
+<span data-ui-view="site/common/contact_chip" class="mdl-chip mdl-chip--contact">
     <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
     <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
 </span>
-<script>
-pluto_contact = {
-    image: 'site/images/pluto.png',
-    name: 'Pluto Nash'
-};
-</script>
 </code></pre>
 
 
@@ -242,6 +251,19 @@ pluto_contact = {
 <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
 <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
 </span>
+
+
+
+
+<pre><code class="language-html">
+<div data-ui-include="site/common/contact_chip" data-bind-model="pluto_contact"></div>
+<script>
+pluto_contact = {
+    image: 'site/images/avatar_02.png',
+    name: 'John Doe'
+};
+</script>
+</code></pre>
 
 <div data-ui-include="site/common/contact_chip"
      data-bind-model="pluto_contact"></div>
@@ -254,8 +276,6 @@ pluto_contact = {
 
 <p>.</p>
 
-```data-bind-model``` (optional - applied to container and children if not overridden),
-```data-bind-to``` (field to bind to in the give model)
 
 ###### Inline template
 
