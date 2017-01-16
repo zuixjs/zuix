@@ -312,6 +312,7 @@ Inclusion of the above view in the same page
 So, to bind elements of a view template to fields of a given data model, we set the ```data-ui-field``` attribute
 on these elements with the name of the model field that we want to bind to.
 
+<a id="Getting_Started--Basic_Binding"></a>
 ###### Basic Binding
 
 When providing a simple data model like the one described in the previous example,
@@ -355,37 +356,16 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 </code></pre>
 
 <small><strong>RESULT</strong></small>
-<div layout="row center-spread">
+<div data-ui-view="chip_example_result" layout="row center-spread">
 <div data-ui-include="inline/common/contact_chip"
-     data-id="0" data-bind-model="chip_adapter"
-     data-ui-options="chip_view_options"></div>
+     data-id="0" data-bind-model="chip_adapter"></div>
 <div data-ui-include="inline/common/contact_chip"
-     data-id="1" data-bind-model="chip_adapter"
-     data-ui-options="chip_view_options"></div>
+     data-id="1" data-bind-model="chip_adapter"></div>
 <script>
-    // items list
-    var chip_view_behavior = {
-        'mouseover': function () {
-            this.style.cursor = 'pointer';
-        },
-        'mouseout': function () {
-            this.style.cursor = 'default';
-        },
-        'click': function() {
-            zuix.$(this).animateCss('pulse').find('img').animateCss('rubberBand');
-        }
-    };
-    var chip_view_options = {
-        behavior: chip_view_behavior,
-        on: {
-            'click': function() {
-                console.log('CLICKED!!');
-            }
-        }
-    };
     var chip_items = {
         "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
-        "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'}
+        "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'},
+        "2": { name: 'Mikey M.', image: 'site/images/avatar_03.png'}
     };
     // example model view adapter
     var chip_adapter = function(element, field) {
@@ -408,27 +388,23 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 ###### Binding Adapters
 
 Sometimes it might be required to have more control over
-how a value of a field affects what the resulting view will be.
+how the value of a model's field affects the view.
 For this purpose *Binding Adapters* can be used rather than
-*Basic Binding*.
+*[Basic Binding](#Getting_Started--Basic_Binding)*.
 
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+A *binding adapter* is a function that gets called when the data model
+associated to a view is updated.
 
-----
+    function vm_binding_adapter(element, field) {
+        // adapter code ...
+    }
 
-<mark>DRAFT TEXT BELOW THIS LINE</mark>
+where ```element``` is the view element that needs to be updated,
+```field``` is the name of the bound field in the model and the
+context object **this**, is the view itself.
 
-----
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-A *binding adapter* is a function that gets called when .... <mark>TODO</mark>
-
-<p>&nbsp;</p>
-
-<pre><code class="language-html">
+<small><strong>EXAMPLE - </strong> Using a binding adapter</small>
+<pre data-line="3,6,16"><code class="language-html">
 <div layout="row center-spread">
     <div data-ui-include="inline/common/contact_chip"
          data-bind-model="chip_adapter"
@@ -445,24 +421,100 @@ A *binding adapter* is a function that gets called when .... <mark>TODO</mark>
     };
     // example adapter
     chip_adapter = function(element, field) {
+        // the context 'this', is the View itself
         var id = this.getAttribute('data-id');
+        // get the value of 'field' in the data model
         var value = chip_items[id][field];
+        // use the value to update the bound 'element'
         switch (field) {
             case 'name':
                 element.innerHTML = value;
                 break;
             case 'image':
-                element.src = value;
+                // show place-holder if no image is provided
+                if (value == '')
+                    element.src = 'site/images/chip_placeholder.png';
+                else
+                    element.src = value;
                 break;
         }
     };
 </script>
 </code></pre>
 
-
+<small><strong>RESULT</strong></small>
+<div data-ui-include="chip_example_result"></div>
 
 
 ##### Behaviors
+
+A behavior is basically a function that describe how a view
+will behave upon certain events like on user interaction events.
+For example a view could animate if tapped.
+
+
+<small><strong>EXAMPLE - </strong> Implmenting behavior</small>
+<pre data-line="4,15"><code class="language-html">
+<div layout="row center-left">
+<div data-ui-include="inline/common/contact_chip"
+     data-id="2" data-bind-model="chip_adapter"
+     data-ui-options="chip_view_options"></div>
+</div>
+<script>
+chip_view_behavior = {
+    'mouseover': function () {
+        zuix.$(this).css('cursor', 'pointer');
+    },
+    'mouseout': function () {
+        zuix.$(this).css('cursor', 'default')
+            .find('img')
+                .animateCss('swing');
+    },
+    'click': function() {
+        zuix.$(this).animateCss('pulse')
+            .find('img')
+                .animateCss('bounce');
+    }
+};
+chip_view_options = {
+    behavior: chip_view_behavior
+}
+</script>
+</code></pre>
+
+<small><strong>RESULT</strong></small>
+
+<div layout="row center-left">
+<div data-ui-include="inline/common/contact_chip"
+     data-id="2" data-bind-model="chip_adapter"
+     data-ui-options="chip_view_options"></div>
+</div>
+<script>
+    // items list
+    var chip_view_behavior = {
+        'mouseover': function () {
+            zuix.$(this).css('cursor', 'pointer');
+        },
+        'mouseout': function () {
+            zuix.$(this).css('cursor', 'default')
+                .find('img')
+                .animateCss('swing');
+        },
+        'click': function() {
+            zuix.$(this).animateCss('pulse')
+                .find('img')
+                .animateCss('bounce');
+        }
+    };
+    var chip_view_options = {
+        behavior: chip_view_behavior,
+        on: {
+            'click': function() {
+                console.log('CLICKED!!');
+            }
+        }
+    };
+</script>
 
 
 <p></p>
@@ -479,13 +531,25 @@ A *binding adapter* is a function that gets called when .... <mark>TODO</mark>
 <p>.</p>
 <p></p>
 
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+----
+
+<mark>DRAFT TEXT BELOW THIS LINE</mark>
+
+----
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
 <p>.</p>
 
 
 
 #### Component Management
 
-A component is basically a [content template](#Content-Templates) (html/css/data model) with the
+A component is like a [content template](#Content-Templates) (html/css/data model) with the
 plus of a piece of JavaScript code associated to it.
 
 This JavaScript code is the ****Controller**** of the component and

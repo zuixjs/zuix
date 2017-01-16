@@ -183,15 +183,15 @@ setTimeout(function () {
 }, 5000);
 
 zuix.ZQuery.prototype.animateCss  = function (animationName, callback) {
+    // TODO: should iterate -> this.each(...)
     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
     if (this.hasClass('animated'))
         this.trigger('animationend');
+    var _t = this;
     this.addClass('animated ' + animationName).one(animationEnd, function () {
         zuix.$(this).removeClass('animated ' + animationName);
-        if (typeof callback === 'function') {
-            callback.this = this;
-            callback(animationName);
-        }
+        if (typeof callback === 'function')
+            callback.call(_t.get(0), animationName);
     });
     return this;
 };

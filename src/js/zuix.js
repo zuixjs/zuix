@@ -1181,6 +1181,15 @@ function Zuix() {
         z$.each(this._selection, iterationCallback);
         return this;
     };
+    ZQuery.prototype.css = function (attr, val) {
+        if (util.isNoU(val))
+            return this._selection[0].style[attr];
+        else
+            this.each(function (k, v) {
+                this.style[attr] = val;
+            });
+        return this;
+    };
     ZQuery.prototype.attr = function (attr, val) {
         if (util.isNoU(val))
             return this._selection[0].getAttribute(attr);
