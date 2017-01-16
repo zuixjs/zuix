@@ -101,7 +101,7 @@ The following example shows how a ```div``` will looks like after
 the content ```site/common/links``` is included into it.
 
 <small><strong>EXAMPLE</strong> - **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)</small>
-<pre><code class="language-html">
+<pre data-line="1"><code class="language-html">
     <!-- site/common/links --->
     <div layout="row center-spread">
         <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
@@ -112,13 +112,13 @@ the content ```site/common/links``` is included into it.
 
 Element including the above content
 
-<pre><code class="language-html">
+<pre data-line="1"><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
 <small><strong>PROCESSED OUTPUT</strong> - resulting ```div``` after content is loaded into it</small>
-<pre><code class="language-html">
+<pre data-line="1,4"><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links" data-ui-loaded="true"
          data-ui-component="site/common/links">
@@ -164,7 +164,7 @@ will be applied to the container where the content has been loaded.
 </code></pre>
 
 <small><strong>EXAMPLE - </strong> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix/site/common/links.css)</small>
-<pre><code class="language-css">
+<pre data-line="1,9"><code class="language-css">
 div[layout] {
     padding: 16px;
     margin: 24px;
@@ -187,7 +187,7 @@ Element including the above content
 </code></pre>
 
 <small><strong>PROCESSED OUTPUT</strong> resulting ```div``` after content is loaded into it</small>
-<pre><code class="language-html">
+<pre data-line="12,20"><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links"  data-ui-loaded="true"
          data-ui-component="site/common/links">
@@ -226,28 +226,74 @@ making possible to keep **global style** files separated from **content-local st
 
 #### View Templates <small></small>
 
-In a more generic fashion, we call it **View Template** (or just *View*), that particular kind
-of content where some fields in it are bound to a *data model* and, so, that dynamically changes the shown
-data accordingly to it.
+In a more generic fashion, we call it **View Template** (or just *View*),
+when we refer to that particular kind of content where some elements
+in it are bound to fields of a *data model* and, so, that dynamically
+change the shown data accordingly to it.
+
+The ```data-ui-field``` attribute, placed on elements of a view template,
+is used to bind them to the associated fields in the model.
+
+<small><strong>EXAMPLE - HTML</strong> View Template</small>
+<pre data-line="3,6"><code class="language-html">
+<!-- View Template - Article item summary -->
+<div class="article">
+    <h3 data-ui-field="title">
+        Article Title
+    </h3>
+    <div data-ui-field="summary">
+        This is the place holder for the article summary.
+    </div>
+</div>
+</code></pre>
+
+<small><strong>DATA MODEL</strong> Example instance</small>
+<pre data-line="2,3"><code class="language-js">
+model = {
+    title: 'Pizza recipe',
+    summary: 'Classic homemade pizza recipe, including ...'
+}
+</code></pre>
+
+<small><strong>RESULT</strong></small>
+<div self="size-1of2" class="zuix-example article mdl-shadow--6dp">
+<h4 data-ui-field="title">Pizza recipe</h4>
+<div data-ui-field="summary">
+    Classic homemade pizza recipe, including pizza dough and toppings, step-by-step instructions with photos.
+</div>
+</div>
+<style>
+.zuix-example.article {
+margin: 12px 36px 24px;
+padding: 0px 12px 12px;
+opacity: 0.6;
+}
+.zuix-example.article h4 {
+margin-top: 0; margin-bottom: 0;
+}
+</style>
 
 A *View* can be either implemented in a file, like already described for
 [loading content](#Getting_Started--Content_Loading), or as an **inline** View, that is so
 placed in the same page rather than on a its own file.
+
+###### Inline View Template
 
 A view is declared inline by adding the ```data-ui-view``` attribute to its root element.
 The value of this attribute is meant to be a unique identifier and shall not match the path
 of any other view placed in a file or inline in the same page, unless we want to *override* it.
 
 <small><strong>EXAMPLE - </strong> Inline View Template</small>
-<pre><code class="language-html">
+<pre data-line="2"><code class="language-html">
 <!-- definition of a inline view template -->
-<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact">
+<span data-ui-view="inline/common/contact_chip"
+      class="mdl-chip mdl-chip--contact">
     <img class="mdl-chip__contact" src="site/images/avatar_01.png">
     <span class="mdl-chip__text">Contact Name</span>
 </span>
 </code></pre>
 
-Inclusion of the above view
+Inclusion of the above view in the same page
 
 <pre><code class="language-html">
     <div data-ui-include="inline/common/contact_chip"></div>
@@ -263,13 +309,17 @@ Inclusion of the above view
 
 ##### Data Binding
 
-To bind elements of a view template to fields of a given data model, we set the ```data-ui-field``` attribute
+So, to bind elements of a view template to fields of a given data model, we set the ```data-ui-field``` attribute
 on these elements with the name of the model field that we want to bind to.
 
 ###### Basic Binding
 
-    // TODO: introduce automatic element property-field mapping
-    // TODO: deprecate use of 'data-bind-to' in favour of binding adapters
+When providing a simple data model like the one described in the previous example,
+the model's field is automatically mapped to a certain element's property
+depending on the type of the binding element.
+For instance, if the element is an ```image```, then the mapped property
+will be ```.src```, while for a ```div``` or a ```p``` it will be
+the ```.innerHTML``` property.
 
 <small><strong>EXAMPLE - </strong> Inline View Template with bound fields</small>
 <pre><code class="language-html">
@@ -282,7 +332,7 @@ on these elements with the name of the model field that we want to bind to.
 
 Inclusion of the above view with the data model specified by the ```data-bind-model``` attribute
 
-<pre><code class="language-html">
+<pre data-line="4,7,11,15"><code class="language-html">
 <div layout="row center-spread">
     <!-- Foo Bar chip -->
     <div data-ui-include="inline/common/contact_chip"
@@ -357,6 +407,27 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 
 ###### Binding Adapters
 
+Sometimes it might be required to have more control over
+how a value of a field affects what the resulting view will be.
+For this purpose *Binding Adapters* can be used rather than
+*Basic Binding*.
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+----
+
+<mark>DRAFT TEXT BELOW THIS LINE</mark>
+
+----
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+A *binding adapter* is a function that gets called when .... <mark>TODO</mark>
+
+<p>&nbsp;</p>
+
 <pre><code class="language-html">
 <div layout="row center-spread">
     <div data-ui-include="inline/common/contact_chip"
@@ -391,19 +462,8 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 
 
 
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+##### Behaviors
 
-----
-
-<mark>DRAFT TEXT BELOW THIS LINE</mark>
-
-----
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-###### Events
 
 <p></p>
 <p>.</p>
@@ -411,8 +471,7 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 <p>.</p>
 <p></p>
 
-###### Behaviors
-
+##### Events
 
 <p></p>
 <p>.</p>
@@ -615,8 +674,10 @@ file that will be loaded automatically if no inline controller is defined.
 <script src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 -->
-<p></p>
-<p></p>
-<p></p>
 
 
+
+<p></p>
+<p></p>
+<p></p>
+<small>**ZUIX** Quick Start Guide. &copy; Generoso Martello 2016-2017.</small>
