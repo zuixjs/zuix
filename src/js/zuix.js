@@ -538,6 +538,11 @@ function Zuix() {
     /** @protected */
     var _contextSeqNum = 0;
 
+    /** @protected */
+    var _lazyQueued = []; // Lazy loading - queued elements
+    /** @protected */
+    var _lazyLoaders = []; // "data-ui-lazyload" elements
+
 
     /**
      * TODO: describe
@@ -572,66 +577,88 @@ function Zuix() {
      * @param [element] {Node}
      */
     function componentize(element) {
-        // TODO: add 'data-ui-loaded="true"' attribute after loading
-        // to prevent loading twice
-        z$(element).find('[data-ui-load],[data-ui-include]').each(function () {
-            var v = z$(this);
-            if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
-                console.log("ZUIX", "WARN", "Skipped", this);
-                return;
-            }
-            v.attr('data-ui-loaded', 'true');
-            /** @type {ContextOptions} */
-            var options = v.attr('data-ui-options');
-            if (!util.isNoU(options)) {
-                options = util.propertyFromPath(window, options);
-                // copy passed options
-                options = util.cloneObject(options) || {};
-            } else options = {};
+        if (tasker.requestLock(componentize)) {
+            z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
+                // override lazy loading if 'forceload' is specified for the current element
+                if (this.getAttribute('data-ui-forceload') === 'true') {
+                    loadInline(this);
+                    return true;
+                }
+                // defer element loading if lazy loading is enabled and the element is not in view
+                var lazyLoad = z$.getClosest(this, '[data-ui-lazyload=true]');
+                if (lazyLoad !== null) {
+                    if (_lazyLoaders.indexOf(lazyLoad) == -1) {
+                        _lazyLoaders.push(lazyLoad);
+                        z$(lazyLoad).on('scroll', function () {
+                            componentize(lazyLoad);
+                        });
+                    }
+                    var position = z$.getPosition(this);
+                    if (!position.visible) {
+                        if (_lazyQueued.indexOf(this) == -1) {
+                            _lazyQueued.push(this);
+                        }
+                        // Not in view: defer element loading and
+                        // process next inline element
+                        return true;
+                    }
+                }
+                // proceed loading inline element
+                var queued = _lazyQueued.indexOf(this);
+                if (queued > -1)
+                    _lazyQueued.splice(queued, 1);
+                loadInline(this);
+            });
+            tasker.releaseLock(componentize);
+        } else tasker.lockLater(componentize, function() {
+                componentize(element);
+            }, 200);
+    }
 
-            // Automatic view/container selection
-            if (util.isNoU(options.view) && !v.isEmpty())
-                options.view = this;
-            else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
-                options.container = this;
+    /** @protected */
+    function loadInline(element) {
+        var v = z$(element);
+        if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
+            console.log("ZUIX", "WARN", "Skipped", element);
+            return;
+        }
+        v.attr('data-ui-loaded', 'true');
+        /** @type {ContextOptions} */
+        var options = v.attr('data-ui-options');
+        if (!util.isNoU(options)) {
+            options = util.propertyFromPath(window, options);
+            // copy passed options
+            options = util.cloneObject(options) || {};
+        } else options = {};
 
-            var componentId = v.attr('data-ui-load');
-            if (util.isNoU(componentId)) {
-                // Static include should not have any controller
-                componentId = v.attr('data-ui-include');
-                v.attr('data-ui-component', componentId);
-                // disable controller auto-loading
-                if (util.isNoU(options.controller))
-                    options.controller = function(){}; // null
-            }
+        // Automatic view/container selection
+        if (util.isNoU(options.view) && !v.isEmpty())
+            options.view = element;
+        else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
+            options.container = element;
 
-            // inline attributes have precedence over ```options```
+        var componentId = v.attr('data-ui-load');
+        if (util.isNoU(componentId)) {
+            // Static include should not have any controller
+            componentId = v.attr('data-ui-include');
+            v.attr('data-ui-component', componentId);
+            // disable controller auto-loading
+            if (util.isNoU(options.controller))
+                options.controller = function(){}; // null
+        }
 
-            var model = v.attr('data-bind-model');
-            if (!util.isNoU(model) && model.length > 0)
-                options.model = util.propertyFromPath(window, model);
+        // inline attributes have precedence over ```options```
 
-            // TODO: Behavior are also definable in "data-ui-behavior" attribute
-            // TODO: Events are also definable in "data-ui-on" attribute
-            // util.propertyFromPath( ... )
+        var model = v.attr('data-bind-model');
+        if (!util.isNoU(model) && model.length > 0)
+            options.model = util.propertyFromPath(window, model);
 
-            /*
-             if (!util.isNoU(z$(this).attr('data-ui-ready')))
-             options.ready = util.propertyFromPath(window, z$(this).attr('data-ui-ready'));
-             if (!util.isNoU(z$(this).attr('data-ui-error')))
-             options.error = util.propertyFromPath(window, z$(this).attr('data-ui-error'));
-             if (!util.isNoU(z$(this).attr('data-ui-container')))
-             options.container = field(z$(this).attr('data-ui-container'));
-             if (!util.isNoU(z$(this).attr('data-ui-model')))
-             options.model = util.propertyFromPath(window, z$(this).attr('data-ui-model'));
-             if (!util.isNoU(z$(this).attr('data-ui-view')))
-             options.view = field(z$(this).attr('data-ui-view'));
-             if (!util.isNoU(z$(this).attr('data-ui-controller')))
-             options.controller = util.propertyFromPath(window, z$(this).attr('data-ui-controller'));
-             */
+        // TODO: Behavior are also definable in "data-ui-behavior" attribute
+        // TODO: Events are also definable in "data-ui-on" attribute
+        // TODO: perhaps "data-ui-ready" and "data-ui-error" too
+        // util.propertyFromPath( ... )
 
-            load(componentId, options);
-        });
+        load(componentId, options);
     }
 
     /**
@@ -1058,6 +1085,7 @@ function Zuix() {
         var _t = this;
         _t._worker = null;
         _t._taskList = [];
+        _t._requests = [];
         _t.taskQueue = function (tid, fn) {
             _t._taskList.push({
                 tid: tid,
@@ -1113,12 +1141,39 @@ function Zuix() {
         }
 
     }
-
-    TaskQueue.prototype.queue = function (tid, fn) {
+    TaskQueue.prototype.queue = function(tid, fn) {
         return this.taskQueue(tid, fn);
+    };
+    TaskQueue.prototype.requestLock = function(obj) {
+        if (!util.isNoU(obj._taskerLock))
+            return false;
+        obj._taskerLock = true;
+        return true;
+    };
+    TaskQueue.prototype.releaseLock = function(obj) {
+        // prevent flooding
+        setTimeout(function () {
+            delete obj._taskerLock;
+        }, 100);
+    };
+    TaskQueue.prototype.lockLater = function(obj, handler, delay) {
+        var _t = this;
+        if (util.isNoU(obj._taskerLock))
+            handler();
+        else {
+            if (util.isNoU(obj._taskerTimeout)) {
+                obj._taskerTimeout = true;
+                obj._taskerTimeout = setTimeout(function () {
+                    delete obj._taskerTimeout;
+                    _t.lockLater(obj, handler, delay);
+                }, delay);
+            }
+        }
+        return true;
     };
 
     var tasker = new TaskQueue();
+
 
 
     /**
@@ -1399,28 +1454,58 @@ function Zuix() {
         return style;
     };
     z$.getClosest = function (elem, selector) {
-        // Element.matches() polyfill
-        if (!Element.prototype.matches) {
-            Element.prototype.matches =
-                Element.prototype.matchesSelector ||
-                Element.prototype.mozMatchesSelector ||
-                Element.prototype.msMatchesSelector ||
-                Element.prototype.oMatchesSelector ||
-                Element.prototype.webkitMatchesSelector ||
-                function (s) {
-                    var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                        i = matches.length;
-                    while (--i >= 0 && matches.item(i) !== this) {
-                    }
-                    return i > -1;
-                };
-        }
         // Get closest match
         for (; elem && elem !== document; elem = elem.parentNode) {
             if (elem.matches(selector)) return elem;
         }
         return null;
     };
+    z$.getPosition = function (el) {
+        var visible = z$.isInView(el);
+        var x = 0, y = 0;
+        while (el) {
+            if (el.tagName == "BODY") {
+                // deal with browser quirks with body/window/document and page scroll
+                var scrollX = el.scrollLeft || document.documentElement.scrollLeft;
+                var scrollY = el.scrollTop || document.documentElement.scrollTop;
+                x += (el.offsetLeft - scrollX + el.clientLeft);
+                y += (el.offsetTop - scrollY + el.clientTop);
+            } else {
+                // for all other non-BODY elements
+                x += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                y += (el.offsetTop - el.scrollTop + el.clientTop);
+            }
+            el = el.offsetParent;
+        }
+        return {
+            x: x,
+            y: y,
+            visible: visible
+        };
+    };
+    z$.isInView = function(el) {
+        var rect = el.getBoundingClientRect();
+        return rect.bottom > 0 && rect.right > 0
+            && rect.left < (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+            && rect.top < (window.innerHeight || document.documentElement.clientHeight); /* or $(window).height() */
+    };
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+        Element.prototype.matches =
+            Element.prototype.matchesSelector ||
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.msMatchesSelector ||
+            Element.prototype.oMatchesSelector ||
+            Element.prototype.webkitMatchesSelector ||
+            function (s) {
+                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                    i = matches.length;
+                while (--i >= 0 && matches.item(i) !== this) {
+                }
+                return i > -1;
+            };
+    }
+
 
 
     // Public ```zuix``` interface

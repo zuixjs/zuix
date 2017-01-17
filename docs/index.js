@@ -93,26 +93,37 @@ var main = {
 };
 
 // Zuix hook handlers
-var loader = zuix.$(zuix.field('loader'));
+var splashScreen = zuix.$(zuix.field('splashScreen'));
+var loaderMessage = zuix.$(zuix.field('loaderMessage'));
 zuix
 .hook('load:begin', function(a,b){
-    loader.show();
+    if (splashScreen) splashScreen.show();
+    loaderMessage.show();
 
 }).hook('load:step', function(a,b){
 
 }).hook('load:next', function(a,b){
-    zuix.$(zuix.field('loader-progress')).html(b.task).prev().animateCss('bounce');
+    if (splashScreen)
+        zuix.$(zuix.field('loader-progress'))
+            .html(b.task).prev()
+            .animateCss('bounce');
+    loaderMessage.html(b.task)
+        .animateCss('bounce');
 
 }).hook('load:end', function(a,b){
-    loader.animateCss('fadeOutUp', function(){
-       loader.hide();
-    });
-    zuix.$(zuix.field('main')).animateCss('fadeIn', function(){
-        loader.hide();
-    });
-
-    // Force opening of all non-local links in a new window
-    zuix.$('a[href*="://"]').attr('target','_blank');
+    if (splashScreen) {
+        // this is only executed once, on app startup
+        var s = splashScreen; splashScreen = false;
+        s.animateCss('fadeOutUp', function(){
+            s.hide();
+        });
+        // fade in main page
+        var main = zuix.field('main');
+        zuix.$(main).animateCss('fadeIn', function(){
+            s.hide();
+        });
+    }
+    loaderMessage.hide();
 
 }).hook('html:parse', function (h, w) {
     // ShowDown - Markdown compiler
@@ -128,6 +139,8 @@ zuix
         zuix.$(block).addClass('language-javascript');
         Prism.highlightElement(block);
     });
+    // Force opening of all non-local links in a new window
+    zuix.$('a[href*="://"]').attr('target','_blank');
     // TODO: move MDL to 'view:ready' hook and remove setTimeout
     // Material Design Light  DOM upgrade
     if (componentHandler) {

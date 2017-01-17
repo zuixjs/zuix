@@ -79,7 +79,7 @@
 
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
-
+<div style="position:absolute" data-ui-field="loaderMessage"></div>
             <!-- zuix "ui/layout/actions-view" layout -->
             <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
@@ -127,7 +127,7 @@
             </section>
 
             <!-- page 2 -->
-            <section>
+            <section data-ui-lazyload="true">
                 <div layout="column top-center" self="size-x1" class="page-content content-padding">
                     <!-- Your content goes here -->
                     <div self="size-medium top-center" class="section-content">
@@ -159,8 +159,8 @@
 
 
 <!-- Loader Overlay -->
-<div data-ui-field="loader" layout="column stretch-stretch"
-     style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100">
+<div data-ui-field="splashScreen" layout="column stretch-stretch"
+     style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100;">
     <div layout="column bottom-center">
         <div class="animated infinite pulse">
             <h5 layout="row center-center">

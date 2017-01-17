@@ -144,6 +144,10 @@ specifying the absolute URL:
     <div data-ui-include="https://genielabs.github.io/zuix/site/common/links"></div>
 </code></pre>
 
+##### Lazy loading
+
+<mark>TODO: show use of ```data-ui-lazyload``` and ```data-ui-forceload``` attributes</mark>
+
 ##### Styling content
 
 When including a content, after loading the ```.html``` file,
@@ -155,12 +159,12 @@ will be applied to the container where the content has been loaded.
 
 <small><strong>EXAMPLE - </strong> **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)</small>
 <pre><code class="language-html">
-    <!-- site/common/links --->
-    <div layout="row center-spread">
-        <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
-        <a href="https://github.com/genielabs">@genielabs</a>
-        <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
-    </div>
+<!-- site/common/links --->
+<div layout="row center-spread">
+    <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
+    <a href="https://github.com/genielabs">@genielabs</a>
+    <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
+</div>
 </code></pre>
 
 <small><strong>EXAMPLE - </strong> **CSS** file [site/common/links.css](https://genielabs.github.io/zuix/site/common/links.css)</small>
@@ -188,34 +192,36 @@ Element including the above content
 
 <small><strong>PROCESSED OUTPUT</strong> resulting ```div``` after content is loaded into it</small>
 <pre data-line="12,20"><code class="language-html">
-    <!-- include common links -->
-    <div data-ui-include="site/common/links"  data-ui-loaded="true"
-         data-ui-component="site/common/links">
-        <!-- site/common/links --->
-        <div layout="row center-spread">
-            <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
-            <a href="https://github.com/genielabs">@genielabs</a>
-            <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
-        </div>
+<!-- include common links -->
+<div data-ui-include="site/common/links"  data-ui-loaded="true"
+     data-ui-component="site/common/links">
+    <!-- site/common/links --->
+    <div layout="row center-spread">
+        <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
+        <a href="https://github.com/genielabs">@genielabs</a>
+        <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
     </div>
-    <style type="text/css">
-    [data-ui-component="site/common/links"] div[layout] {
-        padding: 16px;
-        margin: 24px;
-        background-color: #1c88e6;
-        -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
-        -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
-        box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
-    }
-    [data-ui-component="site/common/links"] a {
-        color: white;
-        font-size: 18px;
-    }
-    </style>
+</div>
+<style type="text/css">
+[data-ui-component="site/common/links"] div[layout] {
+    padding: 16px;
+    margin: 24px;
+    background-color: #1c88e6;
+    -webkit-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+    -moz-box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+    box-shadow: 9px 10px 36px -7px rgba(0,0,0,0.58);
+}
+[data-ui-component="site/common/links"] a {
+    color: white;
+    font-size: 18px;
+}
+</style>
 </code></pre>
 
 <small><strong>RESULT</strong></small>
-<div data-ui-include="site/common/links" data-ui-options="main.options.content"></div>
+<div data-ui-include="site/common/links"
+     data-ui-options="main.options.content"
+     data-ui-forceload="true"></div>
 
 <p>&nbsp;</p>
 
@@ -343,15 +349,15 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
          data-bind-model="jane_doe_contact"></div>
 </div>
 <script>
-    // example inline data model
-    foo_bar_contact = {
-        image: 'site/images/avatar_02.png',
-        name: 'Foo Bar'
-    };
-    jane_doe_contact = {
-        image: 'site/images/avatar_01.png',
-        name: 'Jane Doe'
-    };
+// example inline data model
+foo_bar_contact = {
+    image: 'site/images/avatar_02.png',
+    name: 'Foo Bar'
+};
+jane_doe_contact = {
+    image: 'site/images/avatar_01.png',
+    name: 'Jane Doe'
+};
 </script>
 </code></pre>
 
@@ -362,25 +368,25 @@ Inclusion of the above view with the data model specified by the ```data-bind-mo
 <div data-ui-include="inline/common/contact_chip"
      data-id="1" data-bind-model="chip_adapter"></div>
 <script>
-    var chip_items = {
-        "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
-        "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'},
-        "2": { name: 'Mikey M.', image: 'site/images/avatar_03.png'}
-    };
-    // example model view adapter
-    var chip_adapter = function(element, field) {
-        var id = this.getAttribute('data-id');
-        var value = chip_items[id][field];
-        switch (field) {
-            case 'name':
-                element.innerHTML = value;
-                break;
-            case 'image':
-                element.src = value;
-                break;
-        }
-        console.log(this, id, element, field, chip_items[id][field]);
-    };
+var chip_items = {
+    "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
+    "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'},
+    "2": { name: 'Mikey M.', image: 'site/images/avatar_03.png'}
+};
+// example model view adapter
+var chip_adapter = function(element, field) {
+    var id = this.getAttribute('data-id');
+    var value = chip_items[id][field];
+    switch (field) {
+        case 'name':
+            element.innerHTML = value;
+            break;
+        case 'image':
+            element.src = value;
+            break;
+    }
+    console.log(this, id, element, field, chip_items[id][field]);
+};
 </script>
 </div>
 
@@ -414,31 +420,31 @@ context object **this**, is the view itself.
          data-id="1"></div>
 </div>
 <script>
-    // items list
-    chip_items = {
-        "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
-        "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'}
-    };
-    // example adapter
-    chip_adapter = function(element, field) {
-        // the context 'this', is the View itself
-        var id = this.getAttribute('data-id');
-        // get the value of 'field' in the data model
-        var value = chip_items[id][field];
-        // use the value to update the bound 'element'
-        switch (field) {
-            case 'name':
-                element.innerHTML = value;
-                break;
-            case 'image':
-                // show place-holder if no image is provided
-                if (value == '')
-                    element.src = 'site/images/chip_placeholder.png';
-                else
-                    element.src = value;
-                break;
-        }
-    };
+// items list
+chip_items = {
+    "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
+    "1": { name: 'Jane Doe', image: 'site/images/avatar_01.png'}
+};
+// example adapter
+chip_adapter = function(element, field) {
+    // the context 'this', is the View itself
+    var id = this.getAttribute('data-id');
+    // get the value of 'field' in the data model
+    var value = chip_items[id][field];
+    // use the value to update the bound 'element'
+    switch (field) {
+        case 'name':
+            element.innerHTML = value;
+            break;
+        case 'image':
+            // show place-holder if no image is provided
+            if (value == '')
+                element.src = 'site/images/chip_placeholder.png';
+            else
+                element.src = value;
+            break;
+    }
+};
 </script>
 </code></pre>
 
@@ -452,9 +458,8 @@ A behavior is basically a function that describe how a view
 will behave upon certain events like on user interaction events.
 For example a view could animate if tapped.
 
-
 <small><strong>EXAMPLE - </strong> Implmenting behavior</small>
-<pre data-line="4,15"><code class="language-html">
+<pre data-line="4,22"><code class="language-html">
 <div layout="row center-left">
 <div data-ui-include="inline/common/contact_chip"
      data-id="2" data-bind-model="chip_adapter"
@@ -490,38 +495,31 @@ chip_view_options = {
      data-ui-options="chip_view_options"></div>
 </div>
 <script>
-    // items list
-    var chip_view_behavior = {
-        'mouseover': function () {
-            zuix.$(this).css('cursor', 'pointer');
-        },
-        'mouseout': function () {
-            zuix.$(this).css('cursor', 'default')
-                .find('img')
-                .animateCss('swing');
-        },
+// items list
+var chip_view_behavior = {
+    'mouseover': function () {
+        zuix.$(this).css('cursor', 'pointer');
+    },
+    'mouseout': function () {
+        zuix.$(this).css('cursor', 'default')
+            .find('img')
+            .animateCss('swing');
+    },
+    'click': function() {
+        zuix.$(this).animateCss('pulse')
+            .find('img')
+            .animateCss('bounce');
+    }
+};
+var chip_view_options = {
+    behavior: chip_view_behavior,
+    on: {
         'click': function() {
-            zuix.$(this).animateCss('pulse')
-                .find('img')
-                .animateCss('bounce');
+            console.log('CLICKED!!');
         }
-    };
-    var chip_view_options = {
-        behavior: chip_view_behavior,
-        on: {
-            'click': function() {
-                console.log('CLICKED!!');
-            }
-        }
-    };
+    }
+};
 </script>
-
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
 
 ##### Events
 
