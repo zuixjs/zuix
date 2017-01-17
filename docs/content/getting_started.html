@@ -50,9 +50,9 @@ For example, the following page template
 
 <div style="margin: 24px">
 <div self="size-1of2 center" layout="column center-center" style="height: 320px">
-<div self="size-x1" layout="column center-center" style="background-color: #E6DEC7;">header</div>
-<div self="size-x3" layout="column center-center" style="background-color: #E1F5F3;">main content</div>
-<div self="size-x1" layout="column center-center" style="background-color: #E6DEC7;">footer</div>
+<div self="size-x1" layout="column center-center" class="mdl-color--blue-100">header</div>
+<div self="size-x3" layout="column center-center" class="mdl-color--teal-50">main content</div>
+<div self="size-x1" layout="column center-center" class="mdl-color--blue-100">footer</div>
 </div>
 </div>
 
@@ -144,9 +144,41 @@ specifying the absolute URL:
     <div data-ui-include="https://genielabs.github.io/zuix/site/common/links"></div>
 </code></pre>
 
-##### Lazy loading
+##### Lazy loading <small>- on-demand content composition</small>
 
-<mark>TODO: show use of ```data-ui-lazyload``` and ```data-ui-forceload``` attributes</mark>
+When having a long content with a bunch of other *includes* in it,
+it is sometimes desirable to have the content loaded only when
+it actually comes into the user screen's view.
+This kind of *on-demand* content composition, is called
+*lazy loading*.
+
+To enable this features, set the attribute ```data-ui-lazyload="true"```
+on the same element we want to enable lazy loading on, or on a container
+element so that all the "include" elements contained in it will inherit
+the option.
+In this last case, all container's children will be lazy-loaded.
+
+To force loading of a particular element that currently
+inherits lazy-loading, we set on it the attribute ```data-ui-forceload="true"```.
+
+<small><strong>EXAMPLE - </strong> Use of lazy loading option</small>
+<pre data-line="1,5"><code class="language-html">
+<div data-ui-lazyload="true">
+    <!-- the "content/preface" include will load anyway
+          because of the 'data-ui-forceload' option -->
+    <div data-ui-include="content/preface"
+         data-ui-forceload="true"></div>
+    <!-- following 'includes' inherits 'data-ui-lazyload' from
+         the parent and these will be loaded only when the user
+         scrolls the page down to them -->
+    <div data-ui-include="content/chapter_01"></div>
+    <div data-ui-include="content/chapter_02"></div>
+    <!-- ... --->
+    <div data-ui-include="content/chapter_12"></div>
+    <div data-ui-include="content/appendix"></div>
+</div>
+</code></pre>
+
 
 ##### Styling content
 
@@ -307,7 +339,7 @@ Inclusion of the above view in the same page
 
 <small><strong>RESULT</strong></small>
 <div class="content-padding">
-<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact mdl-shadow--4dp">
+<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact mdl-color--blue mdl-color-text--white mdl-shadow--4dp">
 <img data-ui-field="image" class="mdl-chip__contact" src="site/images/avatar_01.png">
 <span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
 </span>
@@ -456,7 +488,7 @@ chip_adapter = function(element, field) {
 
 A behavior is basically a function that describe how a view
 will behave upon certain events like on user interaction events.
-For example a view could animate if tapped.
+For example a view could animate if clicked.
 
 <small><strong>EXAMPLE - </strong> Implmenting behavior</small>
 <pre data-line="4,22"><code class="language-html">
@@ -489,7 +521,7 @@ chip_view_options = {
 
 <small><strong>RESULT</strong></small>
 
-<div layout="row center-left">
+<div layout="row center-left" class="content-padding">
 <div data-ui-include="inline/common/contact_chip"
      data-id="2" data-bind-model="chip_adapter"
      data-ui-options="chip_view_options"></div>
