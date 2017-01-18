@@ -93,8 +93,9 @@ var main = {
 };
 
 // Zuix hook handlers
-var splashScreen = zuix.$(zuix.field('splashScreen'));
+var splashScreen = zuix.$(zuix.field('splashScreen')).show();
 var loaderMessage = zuix.$(zuix.field('loaderMessage'));
+var mainPage = zuix.$(zuix.field('main')).hide();
 zuix
 .hook('load:begin', function(a,b){
     if (splashScreen) splashScreen.show();
@@ -118,10 +119,9 @@ zuix
             s.hide();
         });
         // fade in main page
-        var main = zuix.field('main');
-        zuix.$(main).animateCss('fadeIn', function(){
+        mainPage.animateCss('fadeIn', function(){
             s.hide();
-        });
+        }).show();
     }
     loaderMessage.hide();
 
@@ -175,27 +175,8 @@ function changePage(e, i) {
     }
 }
 
-/*
- // Example of loading UI logic from two different components
- // into the same view
- var test = zuix.load('ui/layout/actions-view', {
- view: zuix.field('content-pages'),
- ready: function(c) {
- c.on('item:click', function (e, i) {
- console.log(this);
- console.log(i);
- });
- }
- });
- */
-
-// debug
-setTimeout(function () {
-    zuix.dumpCache();
-    zuix.dumpContexts();
-}, 5000);
-
-zuix.ZQuery.prototype.animateCss  = function (animationName, callback) {
+// animateCss extension method for ZQuery
+zuix.zQuery.prototype.animateCss  = function (animationName, callback) {
     // TODO: should iterate -> this.each(...)
     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
     if (this.hasClass('animated'))
@@ -208,3 +189,9 @@ zuix.ZQuery.prototype.animateCss  = function (animationName, callback) {
     });
     return this;
 };
+
+// debug stuff
+setTimeout(function () {
+    zuix.dumpCache();
+    zuix.dumpContexts();
+}, 5000);

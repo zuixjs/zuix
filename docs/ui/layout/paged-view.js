@@ -46,6 +46,7 @@ zuix.controller(function (ctx) {
         if (p != currentPage) {
             currentPage = p;
             pages.eq(p).show();
+            zuix.componentize();
             if (oldPage != -1) {
                 pages.eq(oldPage).hide();
                 ctx.trigger('page:change', {
