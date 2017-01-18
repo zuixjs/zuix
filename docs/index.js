@@ -39,15 +39,6 @@ var main = {
             mdl: true,
             prism: true,
             css: false
-        },
-        codepen_example_01: {
-            model: {
-                data: {
-                    title: 'ZUIX',
-                    subtitle: 'Data-binding test',
-                    description: 'Hello World!'
-                }
-            }
         }
     },
     // Component 'ui/layout/actions-view'
@@ -175,8 +166,8 @@ function changePage(e, i) {
     }
 }
 
-// animateCss extension method for ZQuery
-zuix.zQuery.prototype.animateCss  = function (animationName, callback) {
+// animateCss extension method for ZxQuery
+zuix.ZxQuery.prototype.animateCss  = function (animationName, callback) {
     // TODO: should iterate -> this.each(...)
     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
     if (this.hasClass('animated'))

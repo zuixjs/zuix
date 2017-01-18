@@ -27,7 +27,7 @@
 "use strict";
 
 var z$ =
-    require('../helpers/zQuery');
+    require('../helpers/ZxQuery');
 var util =
     require('../helpers/Util');
 

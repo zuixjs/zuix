@@ -31,7 +31,7 @@ var util =
 var TaskQueue =
     require('../helpers/TaskQueue');
 var z$ =
-    require('../helpers/zQuery');
+    require('../helpers/ZxQuery');
 
 /**
  * @class Zuix
@@ -551,7 +551,7 @@ function Zuix() {
 
         /* Access to classes proto */
         TaskQueue: TaskQueue,
-        zQuery: z$.zQuery,
+        ZxQuery: z$.ZxQuery,
 
         /* Dev utility methods */
         dumpCache: function () {

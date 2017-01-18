@@ -293,10 +293,10 @@ var util = _dereq_('./Util.js');
 /**
  *
  * @param what
- * @returns {zQuery}
+ * @returns {ZxQuery}
  */
 var z$ = function (what) {
-    return new zQuery(what);
+    return new ZxQuery(what);
 };
 z$.find = function (filter) {
     return z$().find(filter);
@@ -411,7 +411,7 @@ z$.isInView = function (el) {
         && rect.top < (window.innerHeight || document.documentElement.clientHeight);
     /* or $(window).height() */
 };
-z$.zQuery = zQuery;
+z$.ZxQuery = ZxQuery;
 
 // Element.matches() polyfill
 if (!Element.prototype.matches) {
@@ -432,21 +432,21 @@ if (!Element.prototype.matches) {
 
 
 /**
- * zQuery, a very small subset of jQuery-like functions
+ * ZxQuery, a very small subset of jQuery-like functions
  * internally used in Zuix
- * @class zQuery
- * @param element {zQuery|Array<Node>|Node|NodeList|string|undefined}
- * @return {zQuery}
+ * @class ZxQuery
+ * @param element {ZxQuery|Array<Node>|Node|NodeList|string|undefined}
+ * @return {ZxQuery}
  * @constructor
  */
-function zQuery(element) {
+function ZxQuery(element) {
     /** @protected */
     this._selection = [];
 
     if (typeof element === 'undefined')
         element = document.documentElement;
 
-    if (element instanceof zQuery)
+    if (element instanceof ZxQuery)
         return element;
     else if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))
         this._selection = element;
@@ -461,37 +461,37 @@ function zQuery(element) {
     return this;
 }
 
-zQuery.prototype.length = function () {
+ZxQuery.prototype.length = function () {
     return this._selection.length;
 };
 
-zQuery.prototype.parent = function (filter) {
+ZxQuery.prototype.parent = function (filter) {
     if (!util.isNoU(filter))
-        return new zQuery(z$.getClosest(this._selection[0], filter));
-    return new zQuery(this._selection[0].parentNode);
+        return new ZxQuery(z$.getClosest(this._selection[0], filter));
+    return new ZxQuery(this._selection[0].parentNode);
 };
-zQuery.prototype.children = function (filter) {
+ZxQuery.prototype.children = function (filter) {
     // TODO: implement filtering
     if (!util.isNoU(filter))
-        return new zQuery(this._selection[0].querySelectorAll(filter));
-    return new zQuery(this._selection[0].children);
+        return new ZxQuery(this._selection[0].querySelectorAll(filter));
+    return new ZxQuery(this._selection[0].children);
 };
-zQuery.prototype.get = function (i) {
+ZxQuery.prototype.get = function (i) {
     if (util.isNoU(i))
         i = 0;
     return this._selection[i];
 };
-zQuery.prototype.eq = function (i) {
-    return new zQuery(this._selection[i]);
+ZxQuery.prototype.eq = function (i) {
+    return new ZxQuery(this._selection[i]);
 };
-zQuery.prototype.find = function (selector) {
-    return new zQuery(this._selection[0].querySelectorAll(selector));
+ZxQuery.prototype.find = function (selector) {
+    return new ZxQuery(this._selection[0].querySelectorAll(selector));
 };
-zQuery.prototype.each = function (iterationCallback) {
+ZxQuery.prototype.each = function (iterationCallback) {
     z$.each(this._selection, iterationCallback);
     return this;
 };
-zQuery.prototype.css = function (attr, val) {
+ZxQuery.prototype.css = function (attr, val) {
     if (util.isNoU(val))
         return this._selection[0].style[attr];
     else
@@ -500,7 +500,7 @@ zQuery.prototype.css = function (attr, val) {
         });
     return this;
 };
-zQuery.prototype.attr = function (attr, val) {
+ZxQuery.prototype.attr = function (attr, val) {
     if (util.isNoU(val))
         return this._selection[0].getAttribute(attr);
     else
@@ -509,7 +509,7 @@ zQuery.prototype.attr = function (attr, val) {
         });
     return this;
 };
-zQuery.prototype.trigger = function (eventPath, eventData) {
+ZxQuery.prototype.trigger = function (eventPath, eventData) {
     var event;
     if (window.CustomEvent) {
         event = new CustomEvent(eventPath, {detail: eventData});
@@ -522,7 +522,7 @@ zQuery.prototype.trigger = function (eventPath, eventData) {
     });
     return this;
 };
-zQuery.prototype.one = function (eventPath, eventHandler) {
+ZxQuery.prototype.one = function (eventPath, eventHandler) {
     var fired = false;
     this.on(eventPath, function (a, b) {
         if (fired) return;
@@ -532,7 +532,7 @@ zQuery.prototype.one = function (eventPath, eventHandler) {
     });
     return this;
 };
-zQuery.prototype.on = function (eventPath, eventHandler) {
+ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, v) {
         var _t = this;
@@ -542,7 +542,7 @@ zQuery.prototype.on = function (eventPath, eventHandler) {
     });
     return this;
 };
-zQuery.prototype.off = function (eventPath, eventHandler) {
+ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, v) {
         var _t = this;
@@ -552,11 +552,11 @@ zQuery.prototype.off = function (eventPath, eventHandler) {
     });
     return this;
 };
-zQuery.prototype.isEmpty = function () {
+ZxQuery.prototype.isEmpty = function () {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 // TODO: the following methods could be deprecated
-zQuery.prototype.css = function (attr, val) {
+ZxQuery.prototype.css = function (attr, val) {
     if (util.isNoU(val))
         return this._selection[0].style[attr];
     else
@@ -565,7 +565,7 @@ zQuery.prototype.css = function (attr, val) {
         });
     return this;
 };
-zQuery.prototype.addClass = function (className) {
+ZxQuery.prototype.addClass = function (className) {
     var classes = className.match(/\S+/g) || [];
     z$.each(this._selection, function (k, v) {
         if (this.classList) {
@@ -577,7 +577,7 @@ zQuery.prototype.addClass = function (className) {
     });
     return this;
 };
-zQuery.prototype.hasClass = function (className) {
+ZxQuery.prototype.hasClass = function (className) {
     var classes = className.match(/\S+/g) || [];
     var success = false;
     var cls = this._selection[0];
@@ -590,7 +590,7 @@ zQuery.prototype.hasClass = function (className) {
     });
     return success;
 };
-zQuery.prototype.removeClass = function (className) {
+ZxQuery.prototype.removeClass = function (className) {
     var classes = className.match(/\S+/g) || [];
     z$.each(this._selection, function (k, v) {
         if (this.classList) {
@@ -602,13 +602,13 @@ zQuery.prototype.removeClass = function (className) {
     });
     return this;
 };
-zQuery.prototype.prev = function () {
-    return new zQuery(this._selection[0].previousElementSibling);
+ZxQuery.prototype.prev = function () {
+    return new ZxQuery(this._selection[0].previousElementSibling);
 };
-zQuery.prototype.next = function () {
-    return new zQuery(this._selection[0].nextElementSibling);
+ZxQuery.prototype.next = function () {
+    return new ZxQuery(this._selection[0].nextElementSibling);
 };
-zQuery.prototype.html = function (htmlText) {
+ZxQuery.prototype.html = function (htmlText) {
     if (util.isNoU(htmlText))
         return this._selection[0].innerHTML;
     else
@@ -617,16 +617,16 @@ zQuery.prototype.html = function (htmlText) {
         });
     return this;
 };
-zQuery.prototype.display = function (mode) {
+ZxQuery.prototype.display = function (mode) {
     z$.each(this._selection, function (k, v) {
         this.style.display = mode;
     });
     return this;
 };
-zQuery.prototype.show = function () {
+ZxQuery.prototype.show = function () {
     return this.display('');
 };
-zQuery.prototype.hide = function () {
+ZxQuery.prototype.hide = function () {
     return this.display('none');
 };
 
@@ -647,7 +647,6 @@ module.exports =  z$;
         root.zuix = (factory).call(root);
     }
 }(this, _dereq_('./zuix/Zuix.js')));
-
 },{"./zuix/Zuix.js":7}],5:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -678,7 +677,7 @@ module.exports =  z$;
 "use strict";
 
 var z$ =
-    _dereq_('../helpers/zQuery');
+    _dereq_('../helpers/ZxQuery');
 var util =
     _dereq_('../helpers/Util');
 
@@ -977,7 +976,7 @@ ComponentContext.prototype.container = function (container) {
 
 
 module.exports = ComponentContext;
-},{"../helpers/Util":2,"../helpers/zQuery":3}],6:[function(_dereq_,module,exports){
+},{"../helpers/Util":2,"../helpers/ZxQuery":3}],6:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1007,7 +1006,7 @@ module.exports = ComponentContext;
 "use strict";
 
 var z$ =
-    _dereq_('../helpers/zQuery');
+    _dereq_('../helpers/ZxQuery');
 
 /**
  * Describes the types of objects used in a ComponentContext.
@@ -1199,7 +1198,7 @@ ContextController.prototype.clearCache = function () {
 
 
 module.exports = ContextController;
-},{"../helpers/zQuery":3}],7:[function(_dereq_,module,exports){
+},{"../helpers/ZxQuery":3}],7:[function(_dereq_,module,exports){
 /**
  * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1233,7 +1232,7 @@ var util =
 var TaskQueue =
     _dereq_('../helpers/TaskQueue');
 var z$ =
-    _dereq_('../helpers/zQuery');
+    _dereq_('../helpers/ZxQuery');
 
 /**
  * @class Zuix
@@ -1753,7 +1752,7 @@ function Zuix() {
 
         /* Access to classes proto */
         TaskQueue: TaskQueue,
-        zQuery: z$.zQuery,
+        ZxQuery: z$.ZxQuery,
 
         /* Dev utility methods */
         dumpCache: function () {
@@ -1773,6 +1772,6 @@ function Zuix() {
 
 module.exports = Zuix;
 
-},{"../helpers/TaskQueue":1,"../helpers/Util":2,"../helpers/zQuery":3,"./ComponentContext":5,"./ContextController":6}]},{},[4])
+},{"../helpers/TaskQueue":1,"../helpers/Util":2,"../helpers/ZxQuery":3,"./ComponentContext":5,"./ContextController":6}]},{},[4])
 (4)
 });

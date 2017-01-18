@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var browserify = require('gulp-browserify');
 var rename = require('gulp-rename');
 module.exports = function() {
-    return gulp.src('src/js/zuix.js', { read: false }).
+    return gulp.src('src/js/main.js', { read: false }).
         pipe(browserify({
             standalone: 'zuix'
         }))

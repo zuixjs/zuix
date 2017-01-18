@@ -27,7 +27,7 @@
 "use strict";
 
 var z$ =
-    require('../helpers/zQuery');
+    require('../helpers/ZxQuery');
 
 /**
  * Describes the types of objects used in a ComponentContext.
