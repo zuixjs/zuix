@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
  *
@@ -24,19 +23,20 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
-
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define('zuix', function () {
-            return (root.zuix = (factory).call(root));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        // Node
-        module.exports = (factory).call(root);
-    } else {
-        // Browser globals
-        root.zuix = (factory).call(root);
-    }
-}(this, require('./zuix/Zuix.js')));
+/**
+ *
+ * @typedef {{
+ *    contextId: Object|undefined The context id,
+ *    container: Node|undefined The container element,
+ *    componentId: string|undefined The component identifier,
+ *    model: ContextModel|undefined The data model,
+ *    view: ContextView|undefined The view element,
+ *    css: Element|string|undefined,
+ *    controller: ContextControllerCallback|undefined The controller handler,
+ *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
+ *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
+ *    ready: ContextReadyCallback|undefined The ready callback, called once the component is succesfully loaded,
+ *    error: ContextErrorCallback|undefined The error callback, called when error occurs
+ * }} ContextOptions
+ *
+ */

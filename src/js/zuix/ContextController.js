@@ -29,47 +29,6 @@
 var z$ =
     require('../helpers/ZxQuery');
 
-/**
- * Describes the types of objects used in a ComponentContext.
- *
- * @callback ContextReadyCallback
- * @param {ComponentContext} context
- *
- * @callback ContextErrorCallback
- * @param {ComponentContext} context
- * @param {Object} error
- *
- * @callback EventCallback
- * @param {string} event path
- * @param {Object} data
- *
- * @typedef {!{string, function}} EventMapping
- *
- * @typedef {{
-     *    data: Object|undefined,
-     *    locales: Object|undefined
-     * }} ContextModel
- *
- * @typedef {Element|string} ContextView
- *
- * @typedef {Element|string} ViewContainer
- *
- * @typedef {{
-     *    contextId: Object|undefined The context id,
-     *    container: Node|undefined The container element,
-     *    componentId: string|undefined The component identifier,
-     *    model: ContextModel|undefined The data model,
-     *    view: ContextView|undefined The view element,
-     *    css: Element|string|undefined,
-     *    controller: ContextControllerCallback|undefined The controller handler,
-     *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
-     *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
-     *    ready: ContextReadyCallback|undefined The ready callback, called once the component is succesfully loaded,
-     *    error: ContextErrorCallback|undefined The error callback, called when error occurs
-     * }} ContextOptions
- *
- */
-
 
 /**
  * TODO: complete JSDoc
@@ -216,6 +175,5 @@ ContextController.prototype.field = function (field, globalSearch) {
 ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;
 };
-
 
 module.exports = ContextController;

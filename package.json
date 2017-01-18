@@ -1,7 +1,7 @@
 {
   "name": "zuix",
   "version": "0.2.1",
-  "description": "ZUIX, the easy shift to component-based development.",
+  "description": "ZUIX, a Javascript library for handling web components and content.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
   "bin": {},
@@ -17,19 +17,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "concat": "0.0.1-security",
-    "google-closure-compiler-js": "^20161201.0.0",
     "gulp-browserify": "^0.5.1",
-    "gulp-concat": "^2.6.1",
+    "gulp-closure-compiler": "^0.4.0",
     "gulp-install": "^0.6.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^1.9.1",
     "http-server": "^0.9.0",
     "jsdoc": "^3.4.3",
-    "jshint": "^2.9.4",
-    "npm-cli": "^0.1.0",
-    "uglify-js": "^2.7.5",
-    "vinyl-source-stream": "^1.1.0"
+    "npm-cli": "^0.1.0"
   },
   "repository": {
     "type": "git",
@@ -38,8 +32,11 @@
   "keywords": [
     "javascript",
     "mvx",
+    "library",
     "framework",
     "components",
+    "content manager",
+    "component manager",
     "ui",
     "web"
   ],

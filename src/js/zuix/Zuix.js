@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
  *
@@ -75,12 +74,6 @@ function Zuix() {
     var _lazyLoaders = []; // "data-ui-lazyload" elements
 
 
-    /**
-     * TODO: describe
-     *
-     * @callback ContextControllerCallback
-     * @param {ContextController} ctx
-     */
     /**
      * TODO: describe
      *

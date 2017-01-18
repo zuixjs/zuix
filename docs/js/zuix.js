@@ -258,7 +258,6 @@ module.exports = {
     evalJs: eval
 
 };
-
 },{}],3:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -289,147 +288,6 @@ module.exports = {
 "use strict";
 
 var util = _dereq_('./Util.js');
-
-/**
- *
- * @param what
- * @returns {ZxQuery}
- */
-var z$ = function (what) {
-    return new ZxQuery(what);
-};
-z$.find = function (filter) {
-    return z$().find(filter);
-};
-z$.each = function (items, iterationCallback) {
-    for (var i = 0, len = items.length; i < len; i++)
-        if (iterationCallback.call(items[i], i, items[i]) === false)
-            break;
-    return this;
-};
-z$.ajax = function ajax(opt) {
-    var url;
-    if (!util.isNoU(opt) && !util.isNoU(opt.url))
-        url = opt.url;
-    else
-        url = opt;
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            if (util.isFunction(opt.success)) opt.success(xhr.responseText);
-        }
-        else {
-            if (util.isFunction(opt.error)) opt.error(xhr);
-        }
-    };
-    xhr.send();
-    return this;
-};
-z$.wrapElement = function (containerTag, element) {
-    //$(element).wrap($('<'+containerTag+'/>'));
-    //return element;
-    /** @type Element */
-    var container = document.createElement(containerTag);
-    if (typeof element === 'string')
-        container.innerHTML = element;
-    else
-    // TODO: test this, it may not work
-        container.appendChild(element);
-    return container;
-};
-z$.wrapCss = function (wrapperRule, css) {
-    var wrapReX = /([.,\w])([^/{};]+)({)/g;
-    var r, result = null, wrappedCss = '';
-    while (r = wrapReX.exec(css)) {
-        if (result != null)
-            wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);
-        result = r;
-    }
-    if (result != null)
-        wrappedCss += wrapperRule + ' ' + css.substring(result.index);
-    if (wrappedCss != '') {
-        css = wrappedCss;
-    }
-    return css;
-};
-z$.appendCss = function (css, target) {
-    var style = null, head;
-    if (typeof css === 'string') {
-        // output css
-        head = document.head || document.getElementsByTagName('head')[0];
-        style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet)
-            style.styleSheet.cssText = css;
-        else
-            style.appendChild(document.createTextNode(css));
-    } else if (css instanceof Element) style = css;
-    // remove previous style node
-    if (!util.isNoU(target))
-        head.removeChild(target);
-    if (!util.isNoU(style))
-        head.appendChild(style);
-    return style;
-};
-z$.getClosest = function (elem, selector) {
-    // Get closest match
-    for (; elem && elem !== document; elem = elem.parentNode) {
-        if (elem.matches(selector)) return elem;
-    }
-    return null;
-};
-z$.getPosition = function (el) {
-    var visible = z$.isInView(el);
-    var x = 0, y = 0;
-    while (el) {
-        if (el.tagName == "BODY") {
-            // deal with browser quirks with body/window/document and page scroll
-            var scrollX = el.scrollLeft || document.documentElement.scrollLeft;
-            var scrollY = el.scrollTop || document.documentElement.scrollTop;
-            x += (el.offsetLeft - scrollX + el.clientLeft);
-            y += (el.offsetTop - scrollY + el.clientTop);
-        } else {
-            // for all other non-BODY elements
-            x += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-            y += (el.offsetTop - el.scrollTop + el.clientTop);
-        }
-        el = el.offsetParent;
-    }
-    return {
-        x: x,
-        y: y,
-        visible: visible
-    };
-};
-z$.isInView = function (el) {
-    if (el.offsetParent === null)
-        return false;
-    var rect = el.getBoundingClientRect();
-    return rect.bottom > 0 && rect.right > 0
-        && rect.left < (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
-        && rect.top < (window.innerHeight || document.documentElement.clientHeight);
-    /* or $(window).height() */
-};
-z$.ZxQuery = ZxQuery;
-
-// Element.matches() polyfill
-if (!Element.prototype.matches) {
-    Element.prototype.matches =
-        Element.prototype.matchesSelector ||
-        Element.prototype.mozMatchesSelector ||
-        Element.prototype.msMatchesSelector ||
-        Element.prototype.oMatchesSelector ||
-        Element.prototype.webkitMatchesSelector ||
-        function (s) {
-            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                i = matches.length;
-            while (--i >= 0 && matches.item(i) !== this) {
-            }
-            return i > -1;
-        };
-}
-
 
 /**
  * ZxQuery, a very small subset of jQuery-like functions
@@ -630,9 +488,178 @@ ZxQuery.prototype.hide = function () {
     return this.display('none');
 };
 
+
+/**
+ *
+ * @param what
+ * @returns {ZxQuery}
+ */
+var z$ = function (what) {
+    return new ZxQuery(what);
+};
+z$.find = function (filter) {
+    return z$().find(filter);
+};
+z$.each = function (items, iterationCallback) {
+    for (var i = 0, len = items.length; i < len; i++)
+        if (iterationCallback.call(items[i], i, items[i]) === false)
+            break;
+    return this;
+};
+z$.ajax = function ajax(opt) {
+    var url;
+    if (!util.isNoU(opt) && !util.isNoU(opt.url))
+        url = opt.url;
+    else
+        url = opt;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            if (util.isFunction(opt.success)) opt.success(xhr.responseText);
+        }
+        else {
+            if (util.isFunction(opt.error)) opt.error(xhr);
+        }
+    };
+    xhr.send();
+    return this;
+};
+z$.wrapElement = function (containerTag, element) {
+    //$(element).wrap($('<'+containerTag+'/>'));
+    //return element;
+    /** @type Element */
+    var container = document.createElement(containerTag);
+    if (typeof element === 'string')
+        container.innerHTML = element;
+    else
+    // TODO: test this, it may not work
+        container.appendChild(element);
+    return container;
+};
+z$.wrapCss = function (wrapperRule, css) {
+    var wrapReX = /([.,\w])([^/{};]+)({)/g;
+    var r, result = null, wrappedCss = '';
+    while (r = wrapReX.exec(css)) {
+        if (result != null)
+            wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);
+        result = r;
+    }
+    if (result != null)
+        wrappedCss += wrapperRule + ' ' + css.substring(result.index);
+    if (wrappedCss != '') {
+        css = wrappedCss;
+    }
+    return css;
+};
+z$.appendCss = function (css, target) {
+    var style = null, head;
+    if (typeof css === 'string') {
+        // output css
+        head = document.head || document.getElementsByTagName('head')[0];
+        style = document.createElement('style');
+        style.type = 'text/css';
+        if (style.styleSheet)
+            style.styleSheet.cssText = css;
+        else
+            style.appendChild(document.createTextNode(css));
+    } else if (css instanceof Element) style = css;
+    // remove previous style node
+    if (!util.isNoU(target))
+        head.removeChild(target);
+    if (!util.isNoU(style))
+        head.appendChild(style);
+    return style;
+};
+z$.getClosest = function (elem, selector) {
+    // Get closest match
+    for (; elem && elem !== document; elem = elem.parentNode) {
+        if (elem.matches(selector)) return elem;
+    }
+    return null;
+};
+z$.getPosition = function (el) {
+    var visible = z$.isInView(el);
+    var x = 0, y = 0;
+    while (el) {
+        if (el.tagName == "BODY") {
+            // deal with browser quirks with body/window/document and page scroll
+            var scrollX = el.scrollLeft || document.documentElement.scrollLeft;
+            var scrollY = el.scrollTop || document.documentElement.scrollTop;
+            x += (el.offsetLeft - scrollX + el.clientLeft);
+            y += (el.offsetTop - scrollY + el.clientTop);
+        } else {
+            // for all other non-BODY elements
+            x += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+            y += (el.offsetTop - el.scrollTop + el.clientTop);
+        }
+        el = el.offsetParent;
+    }
+    return {
+        x: x,
+        y: y,
+        visible: visible
+    };
+};
+z$.isInView = function (el) {
+    if (el.offsetParent === null)
+        return false;
+    var rect = el.getBoundingClientRect();
+    return rect.bottom > 0 && rect.right > 0
+        && rect.left < (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+        && rect.top < (window.innerHeight || document.documentElement.clientHeight);
+    /* or $(window).height() */
+};
+z$.ZxQuery = ZxQuery;
+
+// Element.matches() polyfill
+if (!Element.prototype.matches) {
+    Element.prototype.matches =
+        Element.prototype.matchesSelector ||
+        Element.prototype.mozMatchesSelector ||
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.oMatchesSelector ||
+        Element.prototype.webkitMatchesSelector ||
+        function (s) {
+            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                i = matches.length;
+            while (--i >= 0 && matches.item(i) !== this) {
+            }
+            return i > -1;
+        };
+}
+
 module.exports =  z$;
 
 },{"./Util.js":2}],4:[function(_dereq_,module,exports){
+/**
+ * @license
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ *
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+"use strict";
+
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -680,15 +707,6 @@ var z$ =
     _dereq_('../helpers/ZxQuery');
 var util =
     _dereq_('../helpers/Util');
-
-/**
- * Component Cache object.
- * @typedef {{
-     *      componentId: string The id of the cached component,
-     *      view: ContextView The view,
-     *      controller: ContextControllerCallback The function of the controller controller.
-     * }} ComponentCache
- */
 
 /***
  * TODO: describe this class...
@@ -1008,47 +1026,6 @@ module.exports = ComponentContext;
 var z$ =
     _dereq_('../helpers/ZxQuery');
 
-/**
- * Describes the types of objects used in a ComponentContext.
- *
- * @callback ContextReadyCallback
- * @param {ComponentContext} context
- *
- * @callback ContextErrorCallback
- * @param {ComponentContext} context
- * @param {Object} error
- *
- * @callback EventCallback
- * @param {string} event path
- * @param {Object} data
- *
- * @typedef {!{string, function}} EventMapping
- *
- * @typedef {{
-     *    data: Object|undefined,
-     *    locales: Object|undefined
-     * }} ContextModel
- *
- * @typedef {Element|string} ContextView
- *
- * @typedef {Element|string} ViewContainer
- *
- * @typedef {{
-     *    contextId: Object|undefined The context id,
-     *    container: Node|undefined The container element,
-     *    componentId: string|undefined The component identifier,
-     *    model: ContextModel|undefined The data model,
-     *    view: ContextView|undefined The view element,
-     *    css: Element|string|undefined,
-     *    controller: ContextControllerCallback|undefined The controller handler,
-     *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
-     *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
-     *    ready: ContextReadyCallback|undefined The ready callback, called once the component is succesfully loaded,
-     *    error: ContextErrorCallback|undefined The error callback, called when error occurs
-     * }} ContextOptions
- *
- */
-
 
 /**
  * TODO: complete JSDoc
@@ -1196,11 +1173,9 @@ ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;
 };
 
-
 module.exports = ContextController;
 },{"../helpers/ZxQuery":3}],7:[function(_dereq_,module,exports){
 /**
- * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
  *
@@ -1276,12 +1251,6 @@ function Zuix() {
     var _lazyLoaders = []; // "data-ui-lazyload" elements
 
 
-    /**
-     * TODO: describe
-     *
-     * @callback ContextControllerCallback
-     * @param {ContextController} ctx
-     */
     /**
      * TODO: describe
      *
@@ -1771,7 +1740,6 @@ function Zuix() {
 }
 
 module.exports = Zuix;
-
 },{"../helpers/TaskQueue":1,"../helpers/Util":2,"../helpers/ZxQuery":3,"./ComponentContext":5,"./ContextController":6}]},{},[4])
 (4)
 });
