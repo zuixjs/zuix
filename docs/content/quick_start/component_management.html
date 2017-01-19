@@ -1,0 +1,216 @@
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+----
+
+<mark>DRAFT TEXT BELOW THIS LINE</mark>
+
+----
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<p>.</p>
+
+
+
+#### Component Management
+
+A component is like a [content template](#Content-Templates) (html/css/data model) with the
+plus of a piece of JavaScript code associated to it.
+
+This JavaScript code is the ****Controller**** of the component and
+it implements the logic and behavior of it upon user interaction or
+when the bound data model is updated.
+
+##### Loading a component
+
+To load a component, the ```data-ui-load``` attribute is used,
+where its value is the name of the view template
+that has to be applied to the component.
+
+<p></p>
+
+<small><strong>NOTE:</strong></small>
+zuix will first look for an <em>inline view</em> matching the ```data-ui-view```
+value. If none found it will try to load it from <em>file</em>, by appending the ```.html```
+suffix to the template name.
+
+##### The Controller <small>component logic</small>
+
+While in the previous steps we didn't need any JavaScript coding,
+adding the controller for the component logic will indeed require
+to code a JavaScript handler for it.
+The handler can be specified either inline or into a sperate JavaScript
+file that will be loaded automatically if no inline controller is defined.
+
+
+<style type="text/css">
+    /*
+     * Custom keyword styles
+     */
+    .token.keyword.keyword-data-ui-load, .token.keyword.keyword-load {
+        color: #f92672;
+    }
+    .token.zuix_obj {
+        color: purple;
+    }
+    .token.zuix_ctr {
+        color: gray;
+    }
+</style>
+
+
+
+<small>
+    <strong>INLINE CONTROLLER (METHOD 1)</strong>
+    The controller is specified in the ```data-ui-controller```
+    attribute.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <div data-ui-load="simple_view" data-ui-controller="exampleController"/>
+    <script>
+    var exampleController = zuix.controller(function(cp){
+        cp.create = function() {
+            cp.view().html('Helllo World!');
+        }
+    });
+    </script>
+</code></pre>
+
+
+<small>
+    <strong>INLINE CONTROLLER (METHOD 2)</strong>
+    The controller is passed with the options
+    of the ```zuix.load(view,options)``` method.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <script>
+    var componentContext = zuix.load('simple_view', {
+        controller: zuix.controller(function(cp){
+            cp.create = function() {
+                cp.view().html('Helllo World!');
+            }
+        }),
+        ready: function (context) {
+            console.log('component loading complete');
+            console.log(context);
+        }
+    });
+    componentContext.append(my_container);
+    </script>
+</code></pre>
+
+##### Applying a same Controller to different Views
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+##### Component Life-Cycle
+
+
+
+#### Hooks
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+
+#### About caching
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+#### Guidelines
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+
+### More examples
+
+<p>.</p>
+
+<!-- zuix "ui/layout/actions-view" layout -->
+<div data-ui-load="ui/layout/actions-view" layout="row center-center">
+<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+<i class="material-icons md-48">dashboard</i>
+<br>
+<small>ZUIX</small>
+</div>
+<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+<i class="material-icons md-48">school</i>
+<br>
+<small>Getting Started</small>
+</div>
+<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
+<i class="material-icons md-48">import_contacts</i>
+<br>
+<small>API Docs</small>
+</div>
+</div>
+
+<p>.</p>
+
+...
+
+##### Example 1 - Loading external hosted component
+
+<small>HTML</small>
+<pre><code class="language-markup">
+    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"></div>
+</code></pre>
+<small>JavaScript</small>
+<pre><code class="language-js">
+    // load a component from CodePen
+    // and override its controller logic
+    // with an inline one
+    zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
+        container: zuix.field('my-container'),
+        controller: zuix.controller(function(cp) {
+            // inline controller function
+            // TODO: implement your own controller logic
+        },
+        ready: function (context) {
+            // component loaded and ready
+            console.log(context);
+        }
+    });
+</code></pre>
+<!--
+<small>Result</small>
+<div self="size1of2">
+    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"
+         data-ui-options="main.options.codepen_example_01"
+    ></div>
+</div>
+
+<small>Component on CodePen</small>
+<p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="zuix test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">zuix test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+-->
+
+
+
+<p></p>
+<p></p>
+<p></p>
+<small>**ZUIX** Quick Start Guide. &copy; Generoso Martello 2016-2017.</small>

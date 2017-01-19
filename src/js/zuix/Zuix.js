@@ -104,8 +104,8 @@ function Zuix() {
         // Throttle method
         if (tasker.requestLock(componentize)) {
             z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
-                // override lazy loading if 'forceload' is specified for the current element
-                if (this.getAttribute('data-ui-forceload') === 'true') {
+                // override lazy loading if 'lazyload' is set to 'false' for the current element
+                if (_isCrawlerBotClient || this.getAttribute('data-ui-lazyload') == 'false') {
                     loadInline(this);
                     return true;
                 }
@@ -517,8 +517,13 @@ function Zuix() {
         return this;
     }
 
-
-
+    // Browser Agent / Bot detection
+    var _isCrawlerBotClient = false;
+    if (navigator && navigator.userAgent)
+        _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
+            .test(navigator.userAgent);
+    if (_isCrawlerBotClient)
+        console.log(navigator.userAgent, "is a bot, ignoring 'data-ui-lazyload' option.");
 
     // Public ```zuix``` interface
 

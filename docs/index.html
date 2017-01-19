@@ -79,7 +79,10 @@
 
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
+
+<!-- TODO: move loader message to a proper location -->
 <div style="position:absolute" data-ui-field="loaderMessage"></div>
+
             <!-- zuix "ui/layout/actions-view" layout -->
             <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
@@ -119,7 +122,8 @@
                         <p>&nbsp;</p>
 
                         <!-- include content from local resource -->
-                        <div data-ui-include="content/about" data-ui-options="main.options.content_no_css"></div>
+                        <div data-ui-include="content/about"
+                             data-ui-options="main.options.content_no_css"></div>
 
                     </div>
 
@@ -133,7 +137,9 @@
                     <div self="size-medium top-center" class="section-content">
 
                         <!-- include content from local resource -->
-                        <div data-ui-include="content/getting_started" data-ui-options="main.options.content_no_css"></div>
+                        <div data-ui-include="content/quick_start/getting_started"
+                             data-ui-options="main.options.content_no_css"
+                             class="progressive-content-container"></div>
 
                     </div>
                 </div>
@@ -146,7 +152,8 @@
                     <div self="size-medium top-center" class="section-content">
 
                         <!-- include content from local resource -->
-                        <div data-ui-include="content/api_overview" data-ui-options="main.options.content_no_css"></div>
+                        <div data-ui-include="content/api_overview"
+                             data-ui-options="main.options.content_no_css"></div>
 
                     </div>
                 </div>

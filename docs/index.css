@@ -58,3 +58,8 @@ pre.terminal p {
     line-height:16px;
     background-color:rgba(230,230,230,0.5);
 }
+
+.progressive-content-container {
+    margin-bottom:60px;
+    border-top: dotted 1px rgba(230,230,230,0.5);
+}
