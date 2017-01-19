@@ -105,7 +105,7 @@ function Zuix() {
         if (tasker.requestLock(componentize)) {
             z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
                 // override lazy loading if 'lazyload' is set to 'false' for the current element
-                if (_isCrawlerBotClient || this.getAttribute('data-ui-lazyload') == 'false') {
+                if (!lazyLoadEnabled() || this.getAttribute('data-ui-lazyload') == 'false') {
                     loadInline(this);
                     return true;
                 }
@@ -517,8 +517,14 @@ function Zuix() {
         return this;
     }
 
+    function lazyLoadEnabled(enable) {
+        if (enable != null)
+            _disableLazyLoading = !enable;
+        return !_isCrawlerBotClient && !_disableLazyLoading;
+    }
+
     // Browser Agent / Bot detection
-    var _isCrawlerBotClient = false;
+    var _isCrawlerBotClient = false, _disableLazyLoading = false;
     if (navigator && navigator.userAgent)
         _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
             .test(navigator.userAgent);

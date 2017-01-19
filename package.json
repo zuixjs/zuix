@@ -5,14 +5,10 @@
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
   "bin": {},
-  "main": "index.js",
   "scripts": {
-    "info": "echo 'ZUIX, the easy shift to component-based development.'",
-    "lint": "echo '=> linting' && jshint src/*.js",
+    "info": "echo 'ZUIX, the easy shift to component-based web development.'",
     "test": "echo \"Error: not implemented\" && exit 1",
-    "gulp": "echo '=> running gulp' && npm run lint && gulp build",
-    "build:js": "echo '=> building jUIce' && npm run lint && npm run gulp",
-    "build": "echo '=> building jUIce' && npm build:js",
+    "build": "echo '=> running gulp' && gulp build",
     "start": "http-server docs/"
   },
   "dependencies": {},

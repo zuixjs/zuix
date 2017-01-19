@@ -175,17 +175,7 @@ ZxQuery.prototype.addClass = function (className) {
     return this;
 };
 ZxQuery.prototype.hasClass = function (className) {
-    var classes = className.match(/\S+/g) || [];
-    var success = false;
-    var cls = this._selection[0];
-    z$.each(classes, function (k, v) {
-        if (cls)
-            success = cls.classList.contains(v);
-        else
-            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(cls.className));
-        if (success) return false;
-    });
-    return success;
+    return z$.hasClass(this._selection[0], className);
 };
 ZxQuery.prototype.removeClass = function (className) {
     var classes = className.match(/\S+/g) || [];
@@ -244,6 +234,18 @@ z$.each = function (items, iterationCallback) {
         if (iterationCallback.call(items[i], i, items[i]) === false)
             break;
     return this;
+};
+z$.hasClass = function(el, className) {
+    var classes = className.match(/\S+/g) || [];
+    var success = false;
+    z$.each(classes, function (k, v) {
+        if (el.classList)
+            success = el.classList.contains(v);
+        else
+            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(el.className));
+        if (success) return false;
+    });
+    return success;
 };
 z$.ajax = function ajax(opt) {
     var url;

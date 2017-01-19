@@ -1,8 +1,10 @@
 {
   "name": "zuix",
-  "description": "ZUIX, a Javascript library for handling web components and content.",
+  "description": "ZUIX, a Javascript library for component based web development and content management.",
   "main": [
-    "src/js/main.js"
+    "build/js/zuix.js",
+    "build/js/zuix.min.js",
+    "build/js/zuix.min.js.map"
   ],
   "dependencies": { },
   "devDependencies": {
@@ -15,7 +17,9 @@
     "npm-cli": "^0.1.0"
   },
   "moduleType": [
-    "globals"
+    "amd",
+    "globals",
+    "node"
   ],
   "keywords": [
     "javascript",
