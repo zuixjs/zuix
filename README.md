@@ -1,8 +1,4 @@
-## zuix
-
-#### JavaScript library for component-based development
-
-**ZUIX** is a library for **component based** Web/SPA development implementing **MV\*** design pattern.
+A JavaScript library for component-based web development and content management.
 
 ### Usage
 
@@ -22,6 +18,10 @@ Link the script as an external resource by adding the following line in the ```h
     <script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>
 </code></pre>
 
+#### Bower
+
+    bower install zuix
+
 #### NPM
 
 Install development package
@@ -35,11 +35,6 @@ Build source and create minified version in ```./build/js``` folder:
 Start local web server
 
     npm start
-
-
-#### Bower
-
-    bower install zuix
 
 #### Quick Start Guide
 

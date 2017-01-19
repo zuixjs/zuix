@@ -2,9 +2,7 @@
   "name": "zuix",
   "description": "ZUIX, a Javascript library for component based web development and content management.",
   "main": [
-    "build/js/zuix.js",
-    "build/js/zuix.min.js",
-    "build/js/zuix.min.js.map"
+    "build/js/zuix.js"
   ],
   "dependencies": { },
   "devDependencies": {
