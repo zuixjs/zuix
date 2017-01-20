@@ -436,17 +436,7 @@ ZxQuery.prototype.addClass = function (className) {
     return this;
 };
 ZxQuery.prototype.hasClass = function (className) {
-    var classes = className.match(/\S+/g) || [];
-    var success = false;
-    var cls = this._selection[0];
-    z$.each(classes, function (k, v) {
-        if (cls)
-            success = cls.classList.contains(v);
-        else
-            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(cls.className));
-        if (success) return false;
-    });
-    return success;
+    return z$.hasClass(this._selection[0], className);
 };
 ZxQuery.prototype.removeClass = function (className) {
     var classes = className.match(/\S+/g) || [];
@@ -469,13 +459,14 @@ ZxQuery.prototype.next = function () {
 ZxQuery.prototype.html = function (htmlText) {
     if (util.isNoU(htmlText))
         return this._selection[0].innerHTML;
-    else
-        this.each(function (k, v) {
-            this.innerHTML = htmlText;
-        });
+    this.each(function (k, v) {
+        this.innerHTML = htmlText;
+    });
     return this;
 };
 ZxQuery.prototype.display = function (mode) {
+    if (util.isNoU(mode))
+        return this._selection[0].style.display;
     z$.each(this._selection, function (k, v) {
         this.style.display = mode;
     });
@@ -505,6 +496,18 @@ z$.each = function (items, iterationCallback) {
         if (iterationCallback.call(items[i], i, items[i]) === false)
             break;
     return this;
+};
+z$.hasClass = function(el, className) {
+    var classes = className.match(/\S+/g) || [];
+    var success = false;
+    z$.each(classes, function (k, v) {
+        if (el.classList)
+            success = el.classList.contains(v);
+        else
+            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(el.className));
+        if (success) return false;
+    });
+    return success;
 };
 z$.ajax = function ajax(opt) {
     var url;
@@ -900,6 +903,46 @@ ComponentContext.prototype.style = function (css) {
     // TODO: should throw error if ```css``` is not a valid type
     return this;
 };
+/**
+ *
+ * @param callback
+ * @returns {ComponentContext}
+ */
+ComponentContext.prototype.loadCss = function (callback) {
+    var context = this;
+    z$.ajax({
+        url: context.componentId + ".css?" + new Date().getTime(),
+        success: function (viewCss) {
+            context.style(viewCss);
+            if (util.isFunction(callback))
+                (callback).call(context);
+        },
+        error: function (err) {
+            console.log(err, context);
+            if (util.isFunction(callback))
+                (callback).call(context);
+        }
+    });
+    return this;
+};
+ComponentContext.prototype.loadHtml = function(callback) {
+    var context = this;
+    z$.ajax({
+        url: context.componentId + ".html?" + new Date().getTime(),
+        success: function (viewHtml) {
+            context.view(viewHtml);
+            if (util.isFunction(callback))
+                (callback).call(context);
+        },
+        error: function (err) {
+            console.log(err, context);
+            if (util.isFunction(callback))
+                (callback).call(context, err);
+        }
+    });
+    return this;
+};
+
 /***
  *
  * @param {ContextView|string|undefined} [view]
@@ -920,8 +963,10 @@ ComponentContext.prototype.view = function (view) {
             this._view = this._container;
             this._view.innerHTML += view;
         } else {
-            // TODO: orphan view is of no use? should throw an error
-            this._view = z$.wrapElement('div', view);
+            var viewDiv = z$.wrapElement('div', view);
+            if (this._view != null)
+                this._view.innerHTML = viewDiv.innerHTML;
+            else this._view = viewDiv;
         }
 
         z$(this._view).find('script').each(function () {
@@ -1036,6 +1081,7 @@ var z$ =
 function ContextController(context) {
     var self = this;
 
+    /** @protected */
     this.context = context;
 
     // TODO: should improve/deprecate this.componentId?
@@ -1056,7 +1102,26 @@ function ContextController(context) {
     this.behavior = function () {
         return context.behavior;
     };
-
+    /** @type {function} */
+    this.loadCss = function(callback) {
+        var _ctrl = this;
+        context.loadCss(function () {
+            // TODO: ?
+            if (typeof callback === 'function')
+                (callback).call(_ctrl);
+        });
+        return this;
+    };
+    /** @type {function} */
+    this.loadHtml = function(callback) {
+        var _ctrl = this;
+        context.loadHtml(function () {
+            // TODO: ?
+            if (typeof callback === 'function')
+                (callback).call(_ctrl);
+        });
+        return this;
+    };
     /** @protected */
     this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
         if (target != null) {
@@ -1282,7 +1347,7 @@ function Zuix() {
         if (tasker.requestLock(componentize)) {
             z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
                 // override lazy loading if 'lazyload' is set to 'false' for the current element
-                if (!isLazyLoadEnabled() || this.getAttribute('data-ui-lazyload') == 'false') {
+                if (!lazyLoadEnabled() || this.getAttribute('data-ui-lazyload') == 'false') {
                     loadInline(this);
                     return true;
                 }
@@ -1458,7 +1523,7 @@ function Zuix() {
                             task.end();
                             console.log(err, context);
                             if (util.isFunction(options.error))
-                                context.error(context, err);
+                                (context.error).call(context, err);
                         }
                     });
 
@@ -1543,25 +1608,10 @@ function Zuix() {
         // CSS is optional, so no error is thrown on load error
         tasker.queue('css:' + context.componentId, function () {
             var task = this;
-            z$.ajax({
-                url: context.componentId + ".css?" + new Date().getTime(),
-                success: function (viewCss) {
-                    context.style(viewCss);
-                    task.end();
-                    if (util.isFunction(callback))
-                        callback.call(context);
-                },
-                error: function (err) {
-                    task.end();
-                    console.log(err, context);
-                    if (util.isFunction(callback))
-                        callback.call(context);
-                }
+            context.loadCss(function () {
+               task.end();
             });
-
         });
-
-
     }
 
     /***
@@ -1575,18 +1625,20 @@ function Zuix() {
                 z$.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
                     success: function (ctrlJs) {
+                        // TODO: improve js parsing!
                         try {
+                            var fn = ctrlJs.indexOf('function');
                             var il = ctrlJs.indexOf('.load');
-                            if (il > 1)
+                            if (il > 1 && il < fn)
                                 ctrlJs = ctrlJs.substring(0, il - 4);
                             var ih = ctrlJs.indexOf('.controller');
-                            if (ih > 1)
+                            if (ih > 1 && il < fn)
                                 ctrlJs = ctrlJs.substring(ih + 11);
                             context.controller(getController(ctrlJs));
                         } catch (e) {
                             console.log(e, ctrlJs, context);
                             if (util.isFunction(context.error))
-                                context.error(context, e);
+                                (context.error).call(context, e);
                             return;
                         }
                         createComponent(context);
@@ -1597,7 +1649,7 @@ function Zuix() {
                         createComponent(context);
                         console.log(err, context);
                         if (util.isFunction(context.error))
-                            context.error(context, err);
+                            (context.error).call(context, err);
                     }
                 });
             });
@@ -1652,7 +1704,7 @@ function Zuix() {
             if (util.isFunction(c.resume)) c.resume();
         }
         if (util.isFunction(context.ready))
-            context.ready(context);
+            (context.ready).call(context);
     }
 
     /***
@@ -1664,8 +1716,15 @@ function Zuix() {
     function getController(javascriptCode) {
         var instance = function (ctx) {
         };
-        if (typeof javascriptCode === 'string')
-            instance = (eval).call(this, javascriptCode);
+        if (typeof javascriptCode === 'string') {
+            try {
+                instance = (eval).call(this, javascriptCode);
+            } catch(e) {
+                // TODO: should trigger a global hook
+                // eg. 'controller:error'
+                console.log(this, e, javascriptCode);
+            }
+        }
         return instance;
     }
 
@@ -1694,14 +1753,14 @@ function Zuix() {
         return this;
     }
 
-    function isLazyLoadEnabled(enable) {
+    function lazyLoadEnabled(enable) {
         if (enable != null)
             _disableLazyLoading = !enable;
         return !_isCrawlerBotClient && !_disableLazyLoading;
     }
 
     // Browser Agent / Bot detection
-    var _isCrawlerBotClient = false, _disableLazyLoading = true;
+    var _isCrawlerBotClient = false, _disableLazyLoading = false;
     if (navigator && navigator.userAgent)
         _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
             .test(navigator.userAgent);
@@ -1719,6 +1778,7 @@ function Zuix() {
         unload: unload,
         componentize: componentize,
         context: getContext,
+        lazyLoad: lazyLoadEnabled,
 
         /* Zuix hooks */
         hook: function (p, v) {

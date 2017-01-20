@@ -281,7 +281,7 @@ function Zuix() {
                             task.end();
                             console.log(err, context);
                             if (util.isFunction(options.error))
-                                context.error(context, err);
+                                (context.error).call(context, err);
                         }
                     });
 
@@ -366,25 +366,10 @@ function Zuix() {
         // CSS is optional, so no error is thrown on load error
         tasker.queue('css:' + context.componentId, function () {
             var task = this;
-            z$.ajax({
-                url: context.componentId + ".css?" + new Date().getTime(),
-                success: function (viewCss) {
-                    context.style(viewCss);
-                    task.end();
-                    if (util.isFunction(callback))
-                        callback.call(context);
-                },
-                error: function (err) {
-                    task.end();
-                    console.log(err, context);
-                    if (util.isFunction(callback))
-                        callback.call(context);
-                }
+            context.loadCss(function () {
+               task.end();
             });
-
         });
-
-
     }
 
     /***
@@ -398,18 +383,20 @@ function Zuix() {
                 z$.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
                     success: function (ctrlJs) {
+                        // TODO: improve js parsing!
                         try {
+                            var fn = ctrlJs.indexOf('function');
                             var il = ctrlJs.indexOf('.load');
-                            if (il > 1)
+                            if (il > 1 && il < fn)
                                 ctrlJs = ctrlJs.substring(0, il - 4);
                             var ih = ctrlJs.indexOf('.controller');
-                            if (ih > 1)
+                            if (ih > 1 && il < fn)
                                 ctrlJs = ctrlJs.substring(ih + 11);
                             context.controller(getController(ctrlJs));
                         } catch (e) {
                             console.log(e, ctrlJs, context);
                             if (util.isFunction(context.error))
-                                context.error(context, e);
+                                (context.error).call(context, e);
                             return;
                         }
                         createComponent(context);
@@ -420,7 +407,7 @@ function Zuix() {
                         createComponent(context);
                         console.log(err, context);
                         if (util.isFunction(context.error))
-                            context.error(context, err);
+                            (context.error).call(context, err);
                     }
                 });
             });
@@ -475,7 +462,7 @@ function Zuix() {
             if (util.isFunction(c.resume)) c.resume();
         }
         if (util.isFunction(context.ready))
-            context.ready(context);
+            (context.ready).call(context);
     }
 
     /***
@@ -487,8 +474,15 @@ function Zuix() {
     function getController(javascriptCode) {
         var instance = function (ctx) {
         };
-        if (typeof javascriptCode === 'string')
-            instance = (eval).call(this, javascriptCode);
+        if (typeof javascriptCode === 'string') {
+            try {
+                instance = (eval).call(this, javascriptCode);
+            } catch(e) {
+                // TODO: should trigger a global hook
+                // eg. 'controller:error'
+                console.log(this, e, javascriptCode);
+            }
+        }
         return instance;
     }
 
@@ -542,6 +536,7 @@ function Zuix() {
         unload: unload,
         componentize: componentize,
         context: getContext,
+        lazyLoad: lazyLoadEnabled,
 
         /* Zuix hooks */
         hook: function (p, v) {

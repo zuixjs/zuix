@@ -198,13 +198,14 @@ ZxQuery.prototype.next = function () {
 ZxQuery.prototype.html = function (htmlText) {
     if (util.isNoU(htmlText))
         return this._selection[0].innerHTML;
-    else
-        this.each(function (k, v) {
-            this.innerHTML = htmlText;
-        });
+    this.each(function (k, v) {
+        this.innerHTML = htmlText;
+    });
     return this;
 };
 ZxQuery.prototype.display = function (mode) {
+    if (util.isNoU(mode))
+        return this._selection[0].style.display;
     z$.each(this._selection, function (k, v) {
         this.style.display = mode;
     });

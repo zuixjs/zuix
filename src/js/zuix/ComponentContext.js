@@ -223,6 +223,46 @@ ComponentContext.prototype.style = function (css) {
     // TODO: should throw error if ```css``` is not a valid type
     return this;
 };
+/**
+ *
+ * @param callback
+ * @returns {ComponentContext}
+ */
+ComponentContext.prototype.loadCss = function (callback) {
+    var context = this;
+    z$.ajax({
+        url: context.componentId + ".css?" + new Date().getTime(),
+        success: function (viewCss) {
+            context.style(viewCss);
+            if (util.isFunction(callback))
+                (callback).call(context);
+        },
+        error: function (err) {
+            console.log(err, context);
+            if (util.isFunction(callback))
+                (callback).call(context);
+        }
+    });
+    return this;
+};
+ComponentContext.prototype.loadHtml = function(callback) {
+    var context = this;
+    z$.ajax({
+        url: context.componentId + ".html?" + new Date().getTime(),
+        success: function (viewHtml) {
+            context.view(viewHtml);
+            if (util.isFunction(callback))
+                (callback).call(context);
+        },
+        error: function (err) {
+            console.log(err, context);
+            if (util.isFunction(callback))
+                (callback).call(context, err);
+        }
+    });
+    return this;
+};
+
 /***
  *
  * @param {ContextView|string|undefined} [view]
@@ -243,8 +283,10 @@ ComponentContext.prototype.view = function (view) {
             this._view = this._container;
             this._view.innerHTML += view;
         } else {
-            // TODO: orphan view is of no use? should throw an error
-            this._view = z$.wrapElement('div', view);
+            var viewDiv = z$.wrapElement('div', view);
+            if (this._view != null)
+                this._view.innerHTML = viewDiv.innerHTML;
+            else this._view = viewDiv;
         }
 
         z$(this._view).find('script').each(function () {

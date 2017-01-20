@@ -1,0 +1,14 @@
+div[data-ui-field="preview"] {
+    position: relative;
+    overflow:hidden;
+    width:390px;
+    height: 240px;
+}
+div[data-ui-field="preview"] img {
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+img {
+    margin:8px;
+}

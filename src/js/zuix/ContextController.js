@@ -39,6 +39,7 @@ var z$ =
 function ContextController(context) {
     var self = this;
 
+    /** @protected */
     this.context = context;
 
     // TODO: should improve/deprecate this.componentId?
@@ -59,7 +60,26 @@ function ContextController(context) {
     this.behavior = function () {
         return context.behavior;
     };
-
+    /** @type {function} */
+    this.loadCss = function(callback) {
+        var _ctrl = this;
+        context.loadCss(function () {
+            // TODO: ?
+            if (typeof callback === 'function')
+                (callback).call(_ctrl);
+        });
+        return this;
+    };
+    /** @type {function} */
+    this.loadHtml = function(callback) {
+        var _ctrl = this;
+        context.loadHtml(function () {
+            // TODO: ?
+            if (typeof callback === 'function')
+                (callback).call(_ctrl);
+        });
+        return this;
+    };
     /** @protected */
     this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
         if (target != null) {

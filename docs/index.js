@@ -39,6 +39,14 @@ var main = {
             mdl: true,
             prism: true,
             css: false
+        },
+        example_component: {
+            behavior: {
+                // animate entering/exiting pages on page:change event
+                'page:change': function(e, i) {
+                    changePage.call(this, e, i, 'zoomIn', 'zoomOut', 'Up', 'Down');
+                }
+            }
         }
     },
     // Component 'ui/layout/actions-view'
@@ -56,8 +64,8 @@ var main = {
             }
         },
         // component ready callback
-        ready: function (ctx) {
-            console.log("ZUIX", "INFO", "Top menu ready.", ctx);
+        ready: function () {
+            console.log("ZUIX", "INFO", "Top menu ready.", this);
         }
     },
 
@@ -74,10 +82,10 @@ var main = {
             // animate entering/exiting pages on page:change event
             'page:change': changePage
         },
-        ready: function (ctx) {
+        ready: function () {
             // store a reference to this component once it's loaded
-            pagedView = ctx;
-            console.log("ZUIX", "INFO", "Paged view ready.", ctx);
+            pagedView = this;
+            console.log("ZUIX", "INFO", "Paged view ready.", this);
         }
     }
 
@@ -87,6 +95,7 @@ var main = {
 var splashScreen = zuix.$(zuix.field('splashScreen')).show();
 var loaderMessage = zuix.$(zuix.field('loaderMessage'));
 var mainPage = zuix.$(zuix.field('main')).hide();
+//zuix.lazyLoad(false);
 zuix
 .hook('load:begin', function(a,b){
     if (splashScreen) splashScreen.show();
@@ -150,17 +159,23 @@ function menuItemClicked(e, i) {
 }
 
 // PagedView `page:change` behavior handler
-function changePage(e, i) {
+function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
+    if (effectIn == null) effectIn = 'bounceIn';
+    if (effectOut == null) effectOut = 'bounceOut';
     // Animate page changing
     var pages = zuix.$(this).children();
     if (i.page > i.old) {
-        pages.eq(i.page).animateCss('bounceInRight').show();
-        pages.eq(i.old).animateCss('bounceOutLeft', function () {
+        if (dirIn == null) dirIn = 'Right';
+        if (dirOut == null) dirOut = 'Left';
+        pages.eq(i.page).animateCss(effectIn+dirIn).show();
+        pages.eq(i.old).animateCss(effectOut+dirOut, function () {
             pages.eq(i.old).hide();
         }).show();
     } else {
-        pages.eq(i.page).animateCss('bounceInLeft').show();
-        pages.eq(i.old).animateCss('bounceOutRight', function () {
+        if (dirIn == null) dirIn = 'Left';
+        if (dirOut == null) dirOut = 'Right';
+        pages.eq(i.page).animateCss(effectIn+dirIn).show();
+        pages.eq(i.old).animateCss(effectOut+dirOut, function () {
             pages.eq(i.old).hide();
         }).show();
     }

@@ -6,17 +6,13 @@ A JavaScript library for component-based web development and content management.
 
 Download **[zuix.min.js](https://genielabs.github.io/zuix/js/zuix.min.js)** and include it in the ```head``` section of the page.
 
-<pre><code class="language-html">
-    <script src="js/zuix.min.js"></script>
-</code></pre>
+```<script src="js/zuix.min.js"></script>```
 
 #### CDN
 
 Link the script as an external resource by adding the following line in the ```head``` section of the page:
 
-<pre><code class="language-html">
-    <script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>
-</code></pre>
+```<script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>```
 
 #### Bower
 
