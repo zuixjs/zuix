@@ -1,12 +1,16 @@
 div[data-ui-field="preview"] {
     position: relative;
     overflow:hidden;
-    width: auto;
     height: 240px;
 }
 div[data-ui-field="preview"] img {
-    position: absolute;
 }
 img {
     margin:8px;
+}
+.abs_pos {
+    position: absolute;
+    width: 100%;
+    height: 240px;
+    text-align: center;
 }
