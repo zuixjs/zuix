@@ -455,9 +455,7 @@ function Zuix() {
             if (util.isFunction(c.create)) c.create();
             c.trigger('view:create');
 
-            //if (util.isFunction(c.bind)) c.bind();
             context.updateModelView();
-            //if (util.isFunction(c.refresh)) c.refresh();
 
             if (util.isFunction(c.resume)) c.resume();
         }

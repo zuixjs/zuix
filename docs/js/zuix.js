@@ -814,16 +814,6 @@ ComponentContext.prototype.on = function (a, b) {
     return this._c.on(a, b);
 };
 
-/**
- * TODO: describe
- * @param apiMethodName {string}
- * @param options {Object}
- */
-ComponentContext.prototype.invoke = function (apiMethodName, options) {
-    // TODO: throw error if _c (controller instance) is not yet ready
-    return this._c.invoke(apiMethodName, options)
-};
-
 /***
  *
  * @param {ContextModel|undefined} [model]
@@ -867,6 +857,8 @@ ComponentContext.prototype.updateModelView = function () {
                 }
             }
         });
+        if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
+            this._c.refresh();
     }
 };
 
@@ -1122,17 +1114,6 @@ function ContextController(context) {
         });
         return this;
     };
-    /** @protected */
-    this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
-        if (target != null) {
-            var t = z$(target);
-            t.off(eventPath, this.eventRouter);
-            eventMap[eventPath] = handler_fn;
-            t.on(eventPath, this.eventRouter);
-        } else {
-            // TODO: should report missing target
-        }
-    };
 
     /** @protected */
     this._fieldCache = [];
@@ -1149,8 +1130,6 @@ function ContextController(context) {
     this.refresh = null;
     /** @type {function} */
     this.event = null; // UI event stream handler (eventPath,eventValue)
-    /** @type {function} */
-    this.api = null; // handler for component API (command,options)
 
     /** @type {function} */
     this.trigger = function (eventPath, eventData) {
@@ -1164,13 +1143,18 @@ function ContextController(context) {
         this.addEvent(self.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
     };
-    /** @type {function} */
-    this.invoke = function (command, options) {
-        // used by consumers to invoke a component API command
-        if (typeof self.api === 'function')
-            self.api(command, options);
+    /** @protected */
+    this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
+        if (target != null) {
+            var t = z$(target);
+            t.off(eventPath, this.eventRouter);
+            eventMap[eventPath] = handler_fn;
+            t.on(eventPath, this.eventRouter);
+        } else {
+            // TODO: should report missing target
+        }
     };
-    /** @type {function} */
+    /** @protected */
     this.eventRouter = function (e) {
         //if (typeof self.behavior() === 'function')
         //    self.behavior().call(self.view(), a, b);
@@ -1180,6 +1164,7 @@ function ContextController(context) {
             context._eventMap[e.type].call(self.view(), e, e.detail);
         // TODO: else-> should report anomaly
     };
+
     // create event map from context options
     var options = context.options(), handler = null;
     if (options.on != null) {
@@ -1220,7 +1205,7 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
  *
  * @param {!string} field Name of the `data-ui-field` to search
  * @param {boolean} [globalSearch] Search a generic field attribute
- * @returns {Node}
+ * @returns {Element}
  */
 ContextController.prototype.field = function (field, globalSearch) {
     var f = globalSearch ? '@' + field : field;
@@ -1697,9 +1682,7 @@ function Zuix() {
             if (util.isFunction(c.create)) c.create();
             c.trigger('view:create');
 
-            //if (util.isFunction(c.bind)) c.bind();
             context.updateModelView();
-            //if (util.isFunction(c.refresh)) c.refresh();
 
             if (util.isFunction(c.resume)) c.resume();
         }

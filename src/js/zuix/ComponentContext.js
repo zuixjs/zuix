@@ -134,16 +134,6 @@ ComponentContext.prototype.on = function (a, b) {
     return this._c.on(a, b);
 };
 
-/**
- * TODO: describe
- * @param apiMethodName {string}
- * @param options {Object}
- */
-ComponentContext.prototype.invoke = function (apiMethodName, options) {
-    // TODO: throw error if _c (controller instance) is not yet ready
-    return this._c.invoke(apiMethodName, options)
-};
-
 /***
  *
  * @param {ContextModel|undefined} [model]
@@ -187,6 +177,8 @@ ComponentContext.prototype.updateModelView = function () {
                 }
             }
         });
+        if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
+            this._c.refresh();
     }
 };
 

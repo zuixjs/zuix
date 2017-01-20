@@ -4,13 +4,12 @@ zuix.controller(function (ctx) {
         var view = zuix.$(ctx.view());
         //view.get(0).style.visibility = 'hidden';
 
-        // read inline image list before loading the
-        // slideshow HTML layout
+        // read inline image list
         var items = [];
         var index = 0;
         zuix.$.each(ctx.view().childNodes, function(e,i) {
             if (this instanceof Element) {
-                //this.style.display = 'none';
+                // add image and attach click listener
                 this.index = index++;
                 items.push(this);
                 zuix.$(this).on('click', function(){
@@ -20,8 +19,10 @@ zuix.controller(function (ctx) {
         });
 
         // load css and html for this component
-        ctx.loadCss(function () { });
-        ctx.loadHtml(function () {
+        // TODO: replace these two calls with a single
+        // TODO:   ctx.loadView(...)
+        ctx.loadCss(function() { });
+        ctx.loadHtml(function() {
             // move image list inside the horiz. thumb list
             var itemList = ctx.field('list');
             zuix.$.each(items, function() {
@@ -47,15 +48,6 @@ zuix.controller(function (ctx) {
         currentItem = -1;
     };
 
-    ctx.api = function (command, options) {
-        switch (command) {
-            case 'slide':
-            case 'setSlide':
-                setSlide(options);
-                break;
-        }
-    };
-
     // Private Members
 
     var currentItem = -1;
@@ -63,23 +55,36 @@ zuix.controller(function (ctx) {
     function setSlide(p) {
         if (currentItem == p) return;
         currentItem = p;
-        var item = zuix.$(ctx.field('list')).children().eq(p);
-        item.animateCss('pulse');
+        var itemList = zuix.$(ctx.field('list'))
+            .children()
+            .removeClass('selected');
+        var item = itemList.eq(p);
+        item.addClass('selected').animateCss('pulse');
+        //ctx.field('list').scrollLeft = zuix.$.getPosition(item.get(0)).x - ctx.field('list').parentNode.clientWidth / 2;
         var img1 = zuix.$(ctx.field('img1'));
         var img2 = zuix.$(ctx.field('img2'));
         if (img1.display() == 'none') {
             img1.attr('src', item.attr('data-href'));
-            img1.animateCss('zoomInUp', function () {
-                img2.hide();
-            }).show();
-            img2.animateCss('zoomOutDown');
+            img1.parent().css('zIndex', 10);
+            img1.show();
+            img2.parent().css('zIndex', 1);
+            img2.hide();
+            animateSlide(img1, img2);
         } else {
             img2.attr('src', item.attr('data-href'));
-            img2.animateCss('zoomInUp', function () {
-                img1.hide();
-            }).show();
-            img1.animateCss('zoomOutDown');
+            img2.parent().css('zIndex', 10);
+            img2.show();
+            img1.parent().css('zIndex', 1);
+            img1.hide();
+            animateSlide(img2, img1);
         }
+    }
+
+    function animateSlide(slideIn, slideOut) {
+        slideIn.animateCss('zoomInUp').show();
+        slideOut.animateCss('zoomOutDown', function () {
+            slideOut.hide();
+        }).show();
     }
 
 });

@@ -39,14 +39,6 @@ var main = {
             mdl: true,
             prism: true,
             css: false
-        },
-        example_component: {
-            behavior: {
-                // animate entering/exiting pages on page:change event
-                'page:change': function(e, i) {
-                    changePage.call(this, e, i, 'zoomIn', 'zoomOut', 'Up', 'Down');
-                }
-            }
         }
     },
     // Component 'ui/layout/actions-view'
@@ -154,7 +146,7 @@ zuix
 // Top menu `item:click` event handler
 function menuItemClicked(e, i) {
     if (pagedView)
-        pagedView.invoke('setPage', i);
+        pagedView.setPage(i);
     console.log("item::click@ActionsView", i);
 }
 

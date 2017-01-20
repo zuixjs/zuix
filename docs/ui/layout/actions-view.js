@@ -21,15 +21,6 @@ zuix.controller(function (ctx) {
 
     };
 
-    ctx.api = function (command, options) {
-        switch (command) {
-            case 'select':
-            case 'setSelected':
-                setSelected(options);
-                break;
-        }
-    };
-
     // Private Members
 
     var selectedItem = -1;

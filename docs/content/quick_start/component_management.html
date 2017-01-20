@@ -1,10 +1,60 @@
 #### Component Management
 
+Beside standard events and behaviors handling, an included view (or content)
+cannot implement more complex UI logic.
+
+To fill this gap, *components* are used. Differently from a simple
+view, a component has a piece of *JavaScript* code associated
+to it and can so implement complex UI logic and functionality through it.
+
+This JavaScript code is called the **Controller** of the component
+and it is an handler function that implements the following
+interface:
+
+- create() (called when the component is created)
+- destroy() (called when the component is destroyed)
+- refresh() (called on model change)
+
+<small><strong>Example</strong> Controller initialization</small>
+
+```
+var ctrl = zuix.controller(function(zc) {
+    zc.create = function() {
+    };
+    zc.destroy = function() {
+    };
+    zc.refresh = function() {
+    };
+});
+```
+
+A functional controller should at least implement the *create* method.
+
+So a complete component may consist of three files:
+
+    (component_name).css
+    (component_name).html
+    (component_name).js
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
 
 <div data-ui-field="test"
 data-ui-load="site/common/slideshow"
 data-ui-options="main.options.example_component"
 style="visibility:hidden;background: black">
+<img src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=60&auto=compress"
+     data-href="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=240&auto=compress">
+<img src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=60&auto=compress"
+     data-href="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=240&auto=compress">
+<img src="https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?h=60&auto=compress"
+     data-href="https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?h=240&auto=compress">
+<img src="https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=60&auto=compress"
+     data-href=https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=240&auto=compress">
 <img src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=60&auto=compress"
      data-href="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=240&auto=compress">
 <img src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=60&auto=compress"
@@ -30,12 +80,6 @@ style="visibility:hidden;background: black">
 
 <p>.</p>
 
-A component is like a [content template](#Content-Templates) (html/css/data model) with the
-plus of a piece of JavaScript code associated to it.
-
-This JavaScript code is the ****Controller**** of the component and
-it implements the logic and behavior of it upon user interaction or
-when the bound data model is updated.
 
 ##### Loading a component
 
