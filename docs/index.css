@@ -63,3 +63,19 @@ pre.terminal p {
     margin-bottom:60px;
     border-top: dotted 1px rgba(230,230,230,0.5);
 }
+
+.site-footer {
+    height:30px;
+    max-height: 30px;
+    border-top: 2px solid rgba(150,150,0,0.2);
+    font-size: 10px;
+}
+.site-footer i {
+    font-size:9px;
+}
+[data-ui-field="loaderMessage"] {
+    padding: 4px;
+    text-align: center;
+    opacity: 0.65;
+    font-size: 10px;
+}

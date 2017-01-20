@@ -80,9 +80,6 @@
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
 
-<!-- TODO: move loader message to a proper location -->
-<div style="position:absolute" data-ui-field="loaderMessage"></div>
-
             <!-- zuix "ui/layout/actions-view" layout -->
             <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
@@ -162,6 +159,12 @@
         </div>
 
     </main>
+    <div class="mdl-color--grey-200">
+        <div data-ui-field="loaderMessage"></div>
+    </div>
+    <footer class="site-footer mdl-color--yellow" layout="row center-center">
+        <i class="material-icons">dashboard</i> <strong>ZUIX</strong> &nbsp;&nbsp; &copy; &nbsp; G-Labs 2016-2017
+    </footer>
 </div>
 
 
