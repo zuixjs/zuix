@@ -159,17 +159,21 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     if (i.page > i.old) {
         if (dirIn == null) dirIn = 'Right';
         if (dirOut == null) dirOut = 'Left';
-        pages.eq(i.page).animateCss(effectIn+dirIn).show();
+        pages.eq(i.page).animateCss(effectIn+dirIn)
+            .css('overflow', 'hidden').show();
         pages.eq(i.old).animateCss(effectOut+dirOut, function () {
-            pages.eq(i.old).hide();
-        }).show();
+            pages.eq(i.page).css('overflow', 'auto');
+            pages.eq(i.old).css('overflow', 'auto').hide();
+        }).css('overflow', 'hidden').show();
     } else {
         if (dirIn == null) dirIn = 'Left';
         if (dirOut == null) dirOut = 'Right';
-        pages.eq(i.page).animateCss(effectIn+dirIn).show();
+        pages.eq(i.page).animateCss(effectIn+dirIn)
+            .css('overflow', 'hidden').show();
         pages.eq(i.old).animateCss(effectOut+dirOut, function () {
-            pages.eq(i.old).hide();
-        }).show();
+            pages.eq(i.page).css('overflow', 'auto');
+            pages.eq(i.old).css('overflow', 'auto').hide();
+        }).css('overflow', 'hidden').show();
     }
 }
 

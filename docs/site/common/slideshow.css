@@ -14,7 +14,7 @@ div[data-ui-field="preview"] img {
 }
 
 div[data-ui-field="list"] {
-    height: 80px;
+    height: 86px;
     overflow: hidden;
     overflow-x: auto;
     white-space: nowrap;
