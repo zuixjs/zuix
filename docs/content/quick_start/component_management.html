@@ -5,30 +5,275 @@ cannot implement more complex UI logic.
 
 To fill this gap, *components* are used. Differently from a simple
 view, a component has a piece of *JavaScript* code associated
-to it and can so implement complex UI logic and functionality through it.
+to it and can so implement complex UI logic and functionality.
 
 This JavaScript code is called the **Controller** of the component
 and it is an handler function that implements the following
-interface:
+two methods:
 
-- create() (called when the component is created)
-- destroy() (called when the component is destroyed)
-- refresh() (called on model change)
+- **create()**
+    called when the component is created
+- **destroy()**
+    called when the component is destroyed
 
-<small><strong>Example</strong> Controller initialization</small>
 
-```
-var ctrl = zuix.controller(function(zc) {
-    zc.create = function() {
-    };
-    zc.destroy = function() {
-    };
-    zc.refresh = function() {
-    };
+For example consider an action menu component implemented with
+an MDL FAB that, when clicked, will shows up some action buttons.
+
+Example - MDL action menu
+
+<pre><code class="language-html">
+<div layout="row center-left">
+    <!-- FAB menu button -->
+    <div style="max-width: 56px;">
+        <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
+            <i class="material-icons">settings</i>
+        </a>
+    </div>
+    <!-- menu actions buttons -->
+    <div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">edit</i>
+        </div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">insert_comment</i>
+        </div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">delete_forever</i>
+        </div>
+    </div>
+</div>
+</code></pre>
+
+That will output the following
+
+<div layout="row center-left" class="content-padding">
+<!-- FAB menu button -->
+<div style="max-width: 56px;">
+<a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
+<i class="material-icons">settings</i>
+</a>
+</div>
+<!-- menu actions buttons -->
+<div>
+<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+<i class="material-icons">edit</i>
+</div>
+<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+<i class="material-icons">insert_comment</i>
+</div>
+<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+<i class="material-icons">delete_forever</i>
+</div>
+</div>
+</div>
+
+which actually looks good, but it's not animated and also
+we won't be able to know when the user clicked a button by just
+using event or behavior handlers of the view.
+
+For that purpose we need to write the *JavaScript* code
+that implements the component's controller.
+
+The *controller* code will take care of collapsing/expanding
+the actions buttons when the user clicks the FAB button.
+It will also cause an ```item:click``` event when an
+action buttons is clicked.
+
+The *JavaScript* code can be either be placed inline or in a separate file.
+
+
+
+
+<div data-ui-field="example-toolbar"
+data-ui-options="example_toolbar_options"
+data-ui-load="site/components/toolbar"
+-data-ui-lazyload="false"
+class="content-padding"
+layout="row center-left">
+<!-- toolbar actions -->
+<!-- Colored FAB button with ripple -->
+<div style="max-width: 56px;">
+<a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
+<i class="material-icons">settings</i>
+</a>
+</div>
+<div>
+<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+<i class="material-icons">edit</i>
+</div>
+<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+<i class="material-icons">insert_comment</i>
+</div>
+<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+<i class="material-icons">delete_forever</i>
+</div>
+</div>
+</div>
+<style>
+[data-ui-load="site/components/toolbar"] [class*="mdl-button--mini-fab"] {
+margin: 4px 0 4px 16px;
+}
+</style>
+<script>
+var example_toolbar_options = {
+    on: {
+        'item:click': function (e, i) {
+            console.log('Toolbar clicked ', i, this);
+        }
+    }
+};
+</script>
+
+
+
+
+##### Loading a component
+
+To load a component, the ```data-ui-load``` attribute is used.
+It will work just like the ```data-ui-include```, but it will also load the
+controller code.
+
+There are different ways of using this attribute.
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+----
+
+<mark>DRAFT TEXT BELOW THIS LINE</mark>
+
+----
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+###### Component bundled with its own View
+
+<pre><code class="language-html">
+<div data-ui-view="site/components/toolbar"
+     data-ui-load="site/components/toolbar"
+     data-ui-options="componentOptions">
+     <!-- inline component view -->
+    <h3 data-ui-field="title"></h3>
+</div>
+<script>
+var exampleController = zuix.controller(function(cp){
+    cp.create = function() {
+        cp.field('title').html('Helllo World!');
+    }
 });
-```
+var componentOptions = { controller: exampleController };
+</script>
+</code></pre>
 
-A functional controller should at least implement the *create* method.
+or in a file...
+....
+
+
+- <mark>Component with both view and controller on a file</mark>
+- <mark>Component with inline view and controller on a file</mark>
+- <mark>Component with inline view and inline controller</mark>
+- <mark>Component with controller only (?)</mark>
+
+
+<small>
+    <strong>Inline controller</strong>
+    The controller is specified in the ```data-ui-options```
+    attribute.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <div data-ui-load="site/components/actions_menu"
+         data-ui-options="componentOptions"></div>
+    <script>
+    var exampleController = zuix.controller(function(cp){
+        cp.create = function() {
+            cp.view().html('Helllo World!');
+        }
+    });
+    var componentOptions = {
+        controller: exampleController,
+        ready: function () {
+            console.log('Loading complete.');
+            console.log('Component object', this);
+        },
+        error: function(error) {
+            console.log('Loading error!', error);
+        }
+    };
+    </script>
+</code></pre>
+
+<!--
+<small>
+    <strong>INLINE CONTROLLER (METHOD 2)</strong>
+    The controller is passed with the options
+    of the ```zuix.load(view,options)``` method.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <script>
+    var exampleController = zuix.controller(function(cp){
+        cp.create = function() {
+            cp.view().html('Helllo World!');
+        }
+    });
+    var componentContext = zuix.load('simple_view', {
+        controller: exampleController,
+        ready: function () {
+            console.log('Component loading complete');
+            console.log('Component Context', this);
+        },
+        error: function(error) {
+            console.log('Component loading error', error);
+        }
+    });
+    componentContext.append(my_container);
+    </script>
+</code></pre>
+-->
+
+<small><strong>EXAMPLE</strong> Controller implementation</small>
+
+<pre><code class="language-js">
+zuix.controller(function (cp) {
+    var toolbar, fab, actions;
+    var open = false;
+
+    cp.create = function () {
+
+        // toolbar view
+        toolbar = zuix.$(cp.view());
+
+        // fab button
+        fab = toolbar.children().eq(0);
+        fab.on('click', function () {
+            toolbarToggle();
+        });
+
+        // actions buttons
+        actions = toolbar.children().eq(1)
+                    .css('overflow', 'hidden')
+                    .children();
+        actions.each(function (index) {
+            zuix.$(this).on('click', function () {
+                toolbarToggle();
+                cp.trigger('item:click', index);
+            }).css('visibility','hidden');
+        });
+
+    };
+
+});
+</code></pre>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
 So a complete component may consist of three files:
 
@@ -44,7 +289,7 @@ So a complete component may consist of three files:
 
 
 <div data-ui-field="test"
-data-ui-load="site/common/slideshow"
+data-ui-load="site/components/slideshow"
 data-ui-options="main.options.example_component"
 style="visibility:hidden;background: black">
 <img src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=60&auto=compress"
@@ -65,34 +310,7 @@ style="visibility:hidden;background: black">
      data-href=https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=240&auto=compress">
 </div>
 
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-----
-
-<mark>DRAFT TEXT BELOW THIS LINE</mark>
-
-----
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
 <p>.</p>
-
-
-##### Loading a component
-
-To load a component, the ```data-ui-load``` attribute is used,
-where its value is the name of the view template
-that has to be applied to the component.
-
-<p></p>
-
-<small><strong>NOTE:</strong></small>
-zuix will first look for an <em>inline view</em> matching the ```data-ui-view```
-value. If none found it will try to load it from <em>file</em>, by appending the ```.html```
-suffix to the template name.
 
 ##### The Controller <small>component logic</small>
 
@@ -118,46 +336,6 @@ file that will be loaded automatically if no inline controller is defined.
     }
 </style>
 
-
-
-<small>
-    <strong>INLINE CONTROLLER (METHOD 1)</strong>
-    The controller is specified in the ```data-ui-controller```
-    attribute.
-</small>
-<pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-load="simple_view" data-ui-controller="exampleController"/>
-    <script>
-    var exampleController = zuix.controller(function(cp){
-        cp.create = function() {
-            cp.view().html('Helllo World!');
-        }
-    });
-    </script>
-</code></pre>
-
-
-<small>
-    <strong>INLINE CONTROLLER (METHOD 2)</strong>
-    The controller is passed with the options
-    of the ```zuix.load(view,options)``` method.
-</small>
-<pre><code class="language-html keyword-start line-numbers">
-    <script>
-    var componentContext = zuix.load('simple_view', {
-        controller: zuix.controller(function(cp){
-            cp.create = function() {
-                cp.view().html('Helllo World!');
-            }
-        }),
-        ready: function (context) {
-            console.log('component loading complete');
-            console.log(context);
-        }
-    });
-    componentContext.append(my_container);
-    </script>
-</code></pre>
 
 ##### Applying a same Controller to different Views
 
@@ -203,25 +381,6 @@ file that will be loaded automatically if no inline controller is defined.
 ### More examples
 
 <p>.</p>
-
-<!-- zuix "ui/layout/actions-view" layout -->
-<div data-ui-load="ui/layout/actions-view" layout="row center-center">
-<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-<i class="material-icons md-48">dashboard</i>
-<br>
-<small>ZUIX</small>
-</div>
-<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-<i class="material-icons md-48">school</i>
-<br>
-<small>Getting Started</small>
-</div>
-<div style="height: 96px;" align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-<i class="material-icons md-48">import_contacts</i>
-<br>
-<small>API Docs</small>
-</div>
-</div>
 
 <p>.</p>
 

@@ -334,6 +334,11 @@ ZxQuery.prototype.children = function (filter) {
         return new ZxQuery(this._selection[0].querySelectorAll(filter));
     return new ZxQuery(this._selection[0].children);
 };
+ZxQuery.prototype.reverse = function () {
+    var elements = (Array.prototype.slice).call(this._selection, 0);
+    this._selection = elements.reverse();
+    return this;
+};
 ZxQuery.prototype.get = function (i) {
     if (util.isNoU(i))
         i = 0;

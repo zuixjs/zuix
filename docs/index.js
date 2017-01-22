@@ -178,14 +178,28 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
 }
 
 // animateCss extension method for ZxQuery
-zuix.ZxQuery.prototype.animateCss  = function (animationName, callback) {
-    // TODO: should iterate -> this.each(...)
+zuix.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
+    var callback, options;
+    if (typeof param2 === 'function') {
+        options = param1;
+        callback = param2;
+    } else {
+        if (typeof param1 === 'function')
+            callback = param1;
+        else options = param1;
+    }
+    // TODO: should run all the following code for each element in the ZxQuery selection
+    var prefixes = [ '-webkit', '-moz', '-ms' ];
+    for(var key in options)
+        for (var p in prefixes)
+            this.css(prefixes[p] + '-animation-' + key, options[key]);
     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
     if (this.hasClass('animated'))
         this.trigger('animationend');
     var _t = this;
     this.addClass('animated ' + animationName).one(animationEnd, function () {
         zuix.$(this).removeClass('animated ' + animationName);
+        // TODO: should remove css options as well
         if (typeof callback === 'function')
             callback.call(_t.get(0), animationName);
     });
