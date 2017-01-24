@@ -41,7 +41,7 @@ var main = {
             css: false
         }
     },
-    // Component 'ui/layout/actions-view'
+    // Component 'ui/layout/actions_view'
     topMenu: {
         // actions map
         on: {
@@ -61,7 +61,7 @@ var main = {
         }
     },
 
-    // Component 'ui/layout/paged-view'
+    // Component 'ui/layout/paged_view'
     contentPager: {
         // actions map
         on: {

@@ -19,20 +19,20 @@ zuix.controller(function (ctx) {
         });
 
         // load css and html for this component
-        // TODO: replace these two calls with a single
-        // TODO:   ctx.loadView(...)
-        ctx.loadCss(function() { });
-        ctx.loadHtml(function() {
-            // move image list inside the horiz. thumb list
-            var itemList = ctx.field('list');
-            zuix.$.each(items, function() {
-                itemList.appendChild(this);
-            });
-            setSlide(0);
-            setTimeout(function () {
-                view.get(0).style.visibility = '';
-                view.animateCss('zoomIn');
-            }, 500);
+        ctx.loadCss();
+        ctx.loadHtml({
+            then: function () {
+                // move image list inside the horiz. thumb list
+                var itemList = ctx.field('list');
+                zuix.$.each(items, function () {
+                    itemList.appendChild(this);
+                });
+                setSlide(0);
+                setTimeout(function () {
+                    view.get(0).style.visibility = '';
+                    view.animateCss('zoomIn');
+                }, 500);
+            }
         });
 
         // exposed methods

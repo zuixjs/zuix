@@ -7,16 +7,25 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Dosis', sans-serif !important;
     padding-top: 12px;
     padding-bottom: 12px;
-    font-weight: 700;
     text-transform: none;
+    font-weight: 700;
+}
+h3 {
+    text-align: center;
+}
+h3, h4 {
+    font-weight: 500;
+}
+h5, h6 {
+    font-weight: 500;
 }
 
-[data-ui-component="ui/layout/actions-view"] div {
+[data-ui-component="ui/layout/actions_view"] div {
     min-width: 140px;
     height: 72px;
 }
 
-[data-ui-component="ui/layout/actions-view"] .is-active {
+[data-ui-component="ui/layout/actions_view"] .is-active {
     background-color: yellow;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     cursor: default;

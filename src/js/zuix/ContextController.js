@@ -44,13 +44,14 @@ function ContextController(context) {
 
     // TODO: should improve/deprecate this.componentId?
     this.componentId = context.componentId;
-    /** @type {ContextView} */
+
+    /** @type {ContextView} */ // read-only
     this.view = function () {
         return context.view()
     };
     /** @type {ContextModel} */
-    this.model = function () {
-        return context.model()
+    this.model = function (model) {
+        return context.model(model)
     };
     /** @type {function} */
     this.expose = function (methodName, handler) {
@@ -60,25 +61,35 @@ function ContextController(context) {
     this.behavior = function () {
         return context.behavior;
     };
+
+    /** @protected */
+    this._childNodes = [];
     /** @type {function} */
-    this.loadCss = function(callback) {
-        var _ctrl = this;
-        context.loadCss(function () {
-            // TODO: ?
-            if (typeof callback === 'function')
-                (callback).call(_ctrl);
+    this.saveView = function () {
+        this.restoreView();
+        z$.each(this.view().childNodes, function () {
+            self._childNodes.push(this);
         });
-        return this;
     };
+    this.restoreView = function() {
+        if (this._childNodes.length > 0) {
+            self.view().innerHTML = '';
+            z$.each(self._childNodes, function () {
+                self.view().appendChild(this);
+            });
+            this._childNodes.length = 0;
+        }
+    };
+
     /** @type {function} */
-    this.loadHtml = function(callback) {
-        var _ctrl = this;
-        context.loadHtml(function () {
-            // TODO: ?
-            if (typeof callback === 'function')
-                (callback).call(_ctrl);
-        });
-        return this;
+    this.loadHtml = function(options) {
+        this.saveView();
+        return context.loadHtml(options);
+    };
+
+    /** @type {function} */
+    this.loadCss = function(options) {
+        return context.loadCss(options);
     };
 
     /** @protected */

@@ -81,7 +81,7 @@ function ComponentContext(options, eventCallback) {
     this._behaviorMap = [];
 
     /**
-     * @protected
+     * --@-protected
      * @type {ContextController}
      */
     this._c = null;
@@ -142,16 +142,49 @@ ComponentContext.prototype.on = function (a, b) {
 ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
     else this._model = model; // model can be set to null
-    this.updateModelView();
+    this.modelToView();
     return this;
 };
-
-/** @protected */
-ComponentContext.prototype.updateModelView = function () {
+/**
+ *
+ * @return {ComponentContext}
+ */
+ComponentContext.prototype.viewToModel = function() {
+    var _t = this;
+    this._model = {};
+    // create data model from inline view fields
+    z$(this._view).find('[data-ui-field]').each(function () {
+        var field = z$(this);
+        if (field.parent('pre,code').length() > 0)
+            return true;
+        var name = field.attr('data-ui-field');
+        var value = '';
+        switch(this.tagName.toLowerCase()) {
+            // TODO: complete binding cases
+            case 'img':
+                value = this.src;
+                break;
+            case 'input':
+                value = this.value;
+                break;
+            default:
+                value = this.innerHTML;
+        }
+        _t._model[name] = value;
+    });
+    return this;
+};
+/**
+ *
+ * @return {ComponentContext}
+ */
+ComponentContext.prototype.modelToView = function () {
     if (this._view != null && this._model != null) {
         var _t = this;
         z$(this._view).find('[data-ui-field]').each(function () {
             var field = z$(this);
+            if (field.parent('pre,code').length() > 0)
+                return true;
             var boundField = field.attr('data-bind-to');
             if (boundField == null)
                 boundField = field.attr('data-ui-field');
@@ -177,9 +210,11 @@ ComponentContext.prototype.updateModelView = function () {
                 }
             }
         });
-        if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
-            this._c.refresh();
+        // TODO: deprecate this
+        //if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
+        //    this._c.refresh();
     }
+    return this;
 };
 
 /***
@@ -204,7 +239,7 @@ ComponentContext.prototype.style = function (css) {
         css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
 
         // trigger `css:parse` hook before assigning content to the view
-        var hookData = {content: css};
+        var hookData = { content: css };
         this.trigger(this, 'css:parse', hookData);
         css = hookData.content;
 
@@ -220,38 +255,32 @@ ComponentContext.prototype.style = function (css) {
  * @param callback
  * @returns {ComponentContext}
  */
-ComponentContext.prototype.loadCss = function (callback) {
+ComponentContext.prototype.loadCss = function (options) {
     var context = this;
+
+    var cssPath = context.componentId + ".css?" + new Date().getTime();
+    if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.path))
+        cssPath = options.path;
+
     z$.ajax({
-        url: context.componentId + ".css?" + new Date().getTime(),
+        url: cssPath,
         success: function (viewCss) {
             context.style(viewCss);
-            if (util.isFunction(callback))
-                (callback).call(context);
+            if (util.isFunction(options.success))
+                (options.success).call(context);
         },
         error: function (err) {
             console.log(err, context);
-            if (util.isFunction(callback))
-                (callback).call(context);
-        }
-    });
-    return this;
-};
-ComponentContext.prototype.loadHtml = function(callback) {
-    var context = this;
-    z$.ajax({
-        url: context.componentId + ".html?" + new Date().getTime(),
-        success: function (viewHtml) {
-            context.view(viewHtml);
-            if (util.isFunction(callback))
-                (callback).call(context);
+            if (util.isFunction(options.error))
+                (options.error).call(context, err);
         },
-        error: function (err) {
-            console.log(err, context);
-            if (util.isFunction(callback))
-                (callback).call(context, err);
+        then: function () {
+            if (util.isFunction(options.then))
+                (options.then).call(context);
         }
     });
+
     return this;
 };
 
@@ -305,7 +334,6 @@ ComponentContext.prototype.view = function (view) {
         // trigger `view:process` hook when the view is ready to be processed
         this.trigger(this, 'view:process', this._view);
 
-        this.updateModelView();
     } else {
         // load inline view
         if (this._container != null) {
@@ -324,8 +352,51 @@ ComponentContext.prototype.view = function (view) {
     // enable local css styling
         v.removeClass('zuix-css-ignore');
 
+    this.modelToView();
+
     return this;
 };
+ComponentContext.prototype.loadHtml = function(options) {
+    var context = this;
+
+    var htmlPath = context.componentId;
+    if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.path))
+        htmlPath = options.path;
+
+    // TODO: replace z$() with z$(options.container)
+    var inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
+    if (inlineView.length() > 0) {
+        context.view(inlineView.get(0).outerHTML);
+        if (util.isFunction(options.success))
+            (options.success).call(context);
+        if (util.isFunction(options.then))
+            (options.then).call(context);
+    } else {
+        if (htmlPath == context.componentId)
+            htmlPath +=  '.html?' + new Date().getTime();
+        z$.ajax({
+            url: htmlPath,
+            success: function (viewHtml) {
+                context.view(viewHtml);
+                if (util.isFunction(options.success))
+                    (options.success).call(context);
+            },
+            error: function (err) {
+                console.log(err, context);
+                if (util.isFunction(options.error))
+                    (options.error).call(context, err);
+            },
+            then: function () {
+                if (util.isFunction(options.then))
+                    (options.then).call(context);
+            }
+        });
+    }
+
+    return this;
+};
+
 /***
  *
  * @param {ContextControllerCallback|undefined} [controller]

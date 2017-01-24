@@ -529,6 +529,7 @@ z$.ajax = function ajax(opt) {
         else {
             if (util.isFunction(opt.error)) opt.error(xhr);
         }
+        if (util.isFunction(opt.then)) opt.then(xhr);
     };
     xhr.send();
     return this;
@@ -778,7 +779,7 @@ function ComponentContext(options, eventCallback) {
     this._behaviorMap = [];
 
     /**
-     * @protected
+     * --@-protected
      * @type {ContextController}
      */
     this._c = null;
@@ -839,16 +840,49 @@ ComponentContext.prototype.on = function (a, b) {
 ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
     else this._model = model; // model can be set to null
-    this.updateModelView();
+    this.modelToView();
     return this;
 };
-
-/** @protected */
-ComponentContext.prototype.updateModelView = function () {
+/**
+ *
+ * @return {ComponentContext}
+ */
+ComponentContext.prototype.viewToModel = function() {
+    var _t = this;
+    this._model = {};
+    // create data model from inline view fields
+    z$(this._view).find('[data-ui-field]').each(function () {
+        var field = z$(this);
+        if (field.parent('pre,code').length() > 0)
+            return true;
+        var name = field.attr('data-ui-field');
+        var value = '';
+        switch(this.tagName.toLowerCase()) {
+            // TODO: complete binding cases
+            case 'img':
+                value = this.src;
+                break;
+            case 'input':
+                value = this.value;
+                break;
+            default:
+                value = this.innerHTML;
+        }
+        _t._model[name] = value;
+    });
+    return this;
+};
+/**
+ *
+ * @return {ComponentContext}
+ */
+ComponentContext.prototype.modelToView = function () {
     if (this._view != null && this._model != null) {
         var _t = this;
         z$(this._view).find('[data-ui-field]').each(function () {
             var field = z$(this);
+            if (field.parent('pre,code').length() > 0)
+                return true;
             var boundField = field.attr('data-bind-to');
             if (boundField == null)
                 boundField = field.attr('data-ui-field');
@@ -874,9 +908,11 @@ ComponentContext.prototype.updateModelView = function () {
                 }
             }
         });
-        if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
-            this._c.refresh();
+        // TODO: deprecate this
+        //if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
+        //    this._c.refresh();
     }
+    return this;
 };
 
 /***
@@ -901,7 +937,7 @@ ComponentContext.prototype.style = function (css) {
         css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
 
         // trigger `css:parse` hook before assigning content to the view
-        var hookData = {content: css};
+        var hookData = { content: css };
         this.trigger(this, 'css:parse', hookData);
         css = hookData.content;
 
@@ -917,38 +953,32 @@ ComponentContext.prototype.style = function (css) {
  * @param callback
  * @returns {ComponentContext}
  */
-ComponentContext.prototype.loadCss = function (callback) {
+ComponentContext.prototype.loadCss = function (options) {
     var context = this;
+
+    var cssPath = context.componentId + ".css?" + new Date().getTime();
+    if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.path))
+        cssPath = options.path;
+
     z$.ajax({
-        url: context.componentId + ".css?" + new Date().getTime(),
+        url: cssPath,
         success: function (viewCss) {
             context.style(viewCss);
-            if (util.isFunction(callback))
-                (callback).call(context);
+            if (util.isFunction(options.success))
+                (options.success).call(context);
         },
         error: function (err) {
             console.log(err, context);
-            if (util.isFunction(callback))
-                (callback).call(context);
-        }
-    });
-    return this;
-};
-ComponentContext.prototype.loadHtml = function(callback) {
-    var context = this;
-    z$.ajax({
-        url: context.componentId + ".html?" + new Date().getTime(),
-        success: function (viewHtml) {
-            context.view(viewHtml);
-            if (util.isFunction(callback))
-                (callback).call(context);
+            if (util.isFunction(options.error))
+                (options.error).call(context, err);
         },
-        error: function (err) {
-            console.log(err, context);
-            if (util.isFunction(callback))
-                (callback).call(context, err);
+        then: function () {
+            if (util.isFunction(options.then))
+                (options.then).call(context);
         }
     });
+
     return this;
 };
 
@@ -1002,7 +1032,6 @@ ComponentContext.prototype.view = function (view) {
         // trigger `view:process` hook when the view is ready to be processed
         this.trigger(this, 'view:process', this._view);
 
-        this.updateModelView();
     } else {
         // load inline view
         if (this._container != null) {
@@ -1021,8 +1050,51 @@ ComponentContext.prototype.view = function (view) {
     // enable local css styling
         v.removeClass('zuix-css-ignore');
 
+    this.modelToView();
+
     return this;
 };
+ComponentContext.prototype.loadHtml = function(options) {
+    var context = this;
+
+    var htmlPath = context.componentId;
+    if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.path))
+        htmlPath = options.path;
+
+    // TODO: replace z$() with z$(options.container)
+    var inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
+    if (inlineView.length() > 0) {
+        context.view(inlineView.get(0).outerHTML);
+        if (util.isFunction(options.success))
+            (options.success).call(context);
+        if (util.isFunction(options.then))
+            (options.then).call(context);
+    } else {
+        if (htmlPath == context.componentId)
+            htmlPath +=  '.html?' + new Date().getTime();
+        z$.ajax({
+            url: htmlPath,
+            success: function (viewHtml) {
+                context.view(viewHtml);
+                if (util.isFunction(options.success))
+                    (options.success).call(context);
+            },
+            error: function (err) {
+                console.log(err, context);
+                if (util.isFunction(options.error))
+                    (options.error).call(context, err);
+            },
+            then: function () {
+                if (util.isFunction(options.then))
+                    (options.then).call(context);
+            }
+        });
+    }
+
+    return this;
+};
+
 /***
  *
  * @param {ContextControllerCallback|undefined} [controller]
@@ -1095,13 +1167,14 @@ function ContextController(context) {
 
     // TODO: should improve/deprecate this.componentId?
     this.componentId = context.componentId;
-    /** @type {ContextView} */
+
+    /** @type {ContextView} */ // read-only
     this.view = function () {
         return context.view()
     };
     /** @type {ContextModel} */
-    this.model = function () {
-        return context.model()
+    this.model = function (model) {
+        return context.model(model)
     };
     /** @type {function} */
     this.expose = function (methodName, handler) {
@@ -1111,25 +1184,35 @@ function ContextController(context) {
     this.behavior = function () {
         return context.behavior;
     };
+
+    /** @protected */
+    this._childNodes = [];
     /** @type {function} */
-    this.loadCss = function(callback) {
-        var _ctrl = this;
-        context.loadCss(function () {
-            // TODO: ?
-            if (typeof callback === 'function')
-                (callback).call(_ctrl);
+    this.saveView = function () {
+        this.restoreView();
+        z$.each(this.view().childNodes, function () {
+            self._childNodes.push(this);
         });
-        return this;
     };
+    this.restoreView = function() {
+        if (this._childNodes.length > 0) {
+            self.view().innerHTML = '';
+            z$.each(self._childNodes, function () {
+                self.view().appendChild(this);
+            });
+            this._childNodes.length = 0;
+        }
+    };
+
     /** @type {function} */
-    this.loadHtml = function(callback) {
-        var _ctrl = this;
-        context.loadHtml(function () {
-            // TODO: ?
-            if (typeof callback === 'function')
-                (callback).call(_ctrl);
-        });
-        return this;
+    this.loadHtml = function(options) {
+        this.saveView();
+        return context.loadHtml(options);
+    };
+
+    /** @type {function} */
+    this.loadCss = function(options) {
+        return context.loadCss(options);
     };
 
     /** @protected */
@@ -1317,6 +1400,8 @@ function Zuix() {
     /** @protected */
     var _lazyLoaders = []; // "data-ui-lazyload" elements
 
+    /** @protected */
+    var _globalHandlers = {};
 
     /**
      * TODO: describe
@@ -1324,8 +1409,13 @@ function Zuix() {
      * @param callback {ContextControllerCallback}
      * @returns {ContextControllerCallback}
      */
-    function controller(callback) {
-        return callback;
+    function controller(handler) {
+        if (typeof handler['for'] !== 'function')
+            handler['for'] = function(componentId) {
+                _globalHandlers[componentId] = handler;
+                return handler;
+            };
+        return handler;
     }
 
     /**
@@ -1401,9 +1491,10 @@ function Zuix() {
         } else options = {};
 
         // Automatic view/container selection
-        if (util.isNoU(options.view) && !v.isEmpty())
+        if (util.isNoU(options.view) && !v.isEmpty()) {
             options.view = element;
-        else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
+            options.viewDeferred = true;
+        } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
             options.container = element;
 
         var componentId = v.attr('data-ui-load');
@@ -1481,11 +1572,6 @@ function Zuix() {
              }*/
         }
 
-        // pick it from cache if found
-        var cachedComponent = getCachedComponent(context.componentId);
-        if (cachedComponent !== null && util.isNoU(context.controller()))
-            context.controller(cachedComponent.controller);
-
         if (util.isFunction(options.ready))
             context.ready = options.ready;
         if (util.isFunction(options.error))
@@ -1493,45 +1579,56 @@ function Zuix() {
 
         if (util.isNoU(options.view)) {
 
-            if (cachedComponent !== null) {
+            // pick it from cache if found
+            var cachedComponent = getCachedComponent(context.componentId);
+            if (cachedComponent !== null && util.isNoU(context.controller()))
+                context.controller(cachedComponent.controller);
+
+            if (cachedComponent !== null && cachedComponent.view != null)
                 context.view(cachedComponent.view);
-            } else {
+            else {
+/*
                 // TODO: replace z$() with z$(options.container)
                 var inlineView = z$().find('[data-ui-view="' + context.componentId + '"]');
                 if (inlineView.length() > 0)
-                    context.view(inlineView.get(0));
-            }
+                    context.view(inlineView.get(0).outerHTML);
+*/
+                // if not able to inherit the view from the base cachedComponent
+                // or from an inline element, then load the view from web
+                if (util.isNoU(context.view())) {
+                    // Load View
+                    tasker.queue('html:' + context.componentId, function () {
+                        var task = this;
 
-            // if not able to inherit the view from the base cachedComponent
-            // or from an inline element, then load the view from web
-            if (util.isNoU(context.view())) {
-                // Load View
-                tasker.queue('html:' + context.componentId, function () {
-                    var task = this;
-                    z$.ajax({
-                        url: context.componentId + ".html?" + new Date().getTime(),
-                        success: function (viewHtml) {
-                            context.view(viewHtml);
-                            task.end();
-                            // View CSS loading
-                            if (options.css !== false)
-                                loadViewCss(context, function () {
-                                    // Controller loading
+                        context.loadHtml({
+                            success: function () {
+                                if (options.css !== false)
+                                    context.loadCss({
+                                        error: function(err) {
+                                            console.log(err, context);
+                                        },
+                                        then: function () {
+                                            loadController(context);
+                                        }
+                                    });
+                                else {
                                     loadController(context);
-                                });
-                            else loadController(context);
-                        },
-                        error: function (err) {
-                            task.end();
-                            console.log(err, context);
-                            if (util.isFunction(options.error))
-                                (context.error).call(context, err);
-                        }
-                    });
+                                }
+                            },
+                            error: function (err) {
+                                console.log(err, context);
+                                if (util.isFunction(options.error))
+                                    (context.error).call(context, err);
+                            },
+                            then: function() {
+                                task.end();
+                            }
+                        });
 
-                });
-                // defer controller loading
-                return context;
+                    });
+                    // defer controller loading
+                    return context;
+                }
             }
         } else {
             context.view(options.view);
@@ -1605,56 +1702,49 @@ function Zuix() {
         return cached;
     }
 
-
-    function loadViewCss(context, callback) {
-        // CSS is optional, so no error is thrown on load error
-        tasker.queue('css:' + context.componentId, function () {
-            var task = this;
-            context.loadCss(function () {
-               task.end();
-            });
-        });
-    }
-
     /***
      *
      * @param {ComponentContext} context
      */
     function loadController(context) {
         if (typeof context.options().controller === 'undefined' && context.controller() === null) {
-            tasker.queue('js:' + context.componentId, function () {
-                var task = this;
-                z$.ajax({
-                    url: context.componentId + ".js?" + new Date().getTime(),
-                    success: function (ctrlJs) {
-                        // TODO: improve js parsing!
-                        try {
-                            var fn = ctrlJs.indexOf('function');
-                            var il = ctrlJs.indexOf('.load');
-                            if (il > 1 && il < fn)
-                                ctrlJs = ctrlJs.substring(0, il - 4);
-                            var ih = ctrlJs.indexOf('.controller');
-                            if (ih > 1 && il < fn)
-                                ctrlJs = ctrlJs.substring(ih + 11);
-                            context.controller(getController(ctrlJs));
-                        } catch (e) {
-                            console.log(e, ctrlJs, context);
+            if (util.isFunction(_globalHandlers[context.componentId])) {
+                context.controller(_globalHandlers[context.componentId]);
+                createComponent(context);
+            } else
+                tasker.queue('js:' + context.componentId, function () {
+                    var task = this;
+                    z$.ajax({
+                        url: context.componentId + ".js?" + new Date().getTime(),
+                        success: function (ctrlJs) {
+                            // TODO: improve js parsing!
+                            try {
+                                var fn = ctrlJs.indexOf('function');
+                                var il = ctrlJs.indexOf('.load');
+                                if (il > 1 && il < fn)
+                                    ctrlJs = ctrlJs.substring(0, il - 4);
+                                var ih = ctrlJs.indexOf('.controller');
+                                if (ih > 1 && il < fn)
+                                    ctrlJs = ctrlJs.substring(ih + 11);
+                                context.controller(getController(ctrlJs));
+                            } catch (e) {
+                                console.log(e, ctrlJs, context);
+                                if (util.isFunction(context.error))
+                                    (context.error).call(context, e);
+                                return;
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err, context);
                             if (util.isFunction(context.error))
-                                (context.error).call(context, e);
-                            return;
+                                (context.error).call(context, err);
+                        },
+                        then: function () {
+                            task.end();
+                            createComponent(context);
                         }
-                        createComponent(context);
-                        task.end();
-                    },
-                    error: function (err) {
-                        task.end();
-                        createComponent(context);
-                        console.log(err, context);
-                        if (util.isFunction(context.error))
-                            (context.error).call(context, err);
-                    }
+                    });
                 });
-            });
         } else {
             createComponent(context);
         }
@@ -1666,15 +1756,17 @@ function Zuix() {
      */
     function createComponent(context) {
         if (!util.isNoU(context.view())) {
-            var cached = getCachedComponent(context.componentId);
-            if (cached === null) {
-                var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
-                var c = z$.wrapElement('div', html);
-                _componentCache.push({
-                    componentId: context.componentId,
-                    view: c.innerHTML,
-                    controller: context.controller()
-                });
+            if (!context.options().viewDeferred) {
+                var cached = getCachedComponent(context.componentId);
+                if (cached === null) {
+                    var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
+                    var c = z$.wrapElement('div', html);
+                    _componentCache.push({
+                        componentId: context.componentId,
+                        view: c.innerHTML,
+                        controller: context.controller()
+                    });
+                }
             }
             initComponent(context);
         } else {
@@ -1691,17 +1783,29 @@ function Zuix() {
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
 
-            if (!util.isNoU(c.view()))
+            if (!util.isNoU(c.view())) {
                 c.view().setAttribute('data-ui-component', c.componentId);
+                // if no model is supplied, try auto-create from view fields
+                if (util.isNoU(context.model()) && !util.isNoU(context.view()))
+                    context.viewToModel();
+                if (context.options().viewDeferred) {
+                    context.options().viewDeferred = false;
+                    // save the original inline view
+                    // before loading the view template
+                    // it can be then restored with c.restoreView()
+                    c.saveView();
+                    context.loadCss();
+                    context.loadHtml();
+                }
+            }
 
             // TODO: review/improve life-cycle
 
             if (util.isFunction(c.create)) c.create();
             c.trigger('view:create');
 
-            context.updateModelView();
-
-            if (util.isFunction(c.resume)) c.resume();
+            // TODO: is this to be deprecated?
+            //if (util.isFunction(c.resume)) c.resume();
         }
         if (util.isFunction(context.ready))
             (context.ready).call(context);
@@ -1773,11 +1877,11 @@ function Zuix() {
     var zuix = {
 
         /* Component loading methods */
-        controller: controller,
         load: load,
         unload: unload,
-        componentize: componentize,
         context: getContext,
+        controller: controller,
+        componentize: componentize,
         lazyLoad: lazyLoadEnabled,
 
         /* Zuix hooks */

@@ -56,7 +56,8 @@ The ```data-ui-include``` attribute used at lines 9-11-13, will instruct *ZUIX*
 to load the specified content into each ```div``` element.
 
 Notice that the value of the ```data-ui-include``` attribute is the URL of the file to include
-<u>without</u> the ```.html``` extension.
+<u>without</u> the ```.html``` extension. This value is the
+*component identifier*.
 
 The following example shows how a ```div``` will looks like after
 the content ```site/common/links``` is included into it.
@@ -105,7 +106,7 @@ specifying the absolute URL:
     <div data-ui-include="https://genielabs.github.io/zuix/site/common/links"></div>
 </code></pre>
 
-##### Lazy loading <small>- on-demand content composition</small>
+##### Lazy loading
 
 When dealing with big pages that request to load a bunch
 of *includes*, it is perhaps desirable to have the content

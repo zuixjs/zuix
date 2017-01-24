@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="description" content="A JavaScript library for component-based web development and content management.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>zuix: a lite MV* library</title>
+    <title>zuix.js</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -39,12 +39,12 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.yellow-pink.min.css"/>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
-    <!--link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,400,700&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Dosis:500,700" rel="stylesheet">
+    <!--link href="https://fonts.googleapis.com/css?family=Titillium+Web:300,500,700&amp;subset=latin-ext" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&amp;subset=latin-ext" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Kreon:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Kreon:400,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amaranth:400,700" rel="stylesheet"-->
-    <link href="https://fonts.googleapis.com/css?family=Cairo:200,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cairo:400,700" rel="stylesheet">
     <!--link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto+Slab:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -80,8 +80,8 @@
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
 
-            <!-- zuix "ui/layout/actions-view" layout -->
-            <div data-ui-load="ui/layout/actions-view" data-ui-options="main.topMenu" layout="row center-center">
+            <!-- zuix "ui/layout/actions_view" layout -->
+            <div data-ui-load="ui/layout/actions_view" data-ui-options="main.topMenu" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
                     <i class="material-icons md-18">home</i>
                     <small>Home</small>
@@ -100,8 +100,8 @@
     </header>
     <main class="mdl-layout__content">
 
-        <!-- zuix "ui/layout/paged-view" layout -->
-        <div data-ui-load="ui/layout/paged-view" data-ui-options="main.contentPager">
+        <!-- zuix "ui/layout/paged_view" layout -->
+        <div data-ui-load="ui/layout/paged_view" data-ui-options="main.contentPager">
 
             <!-- page 1 -->
             <section>

@@ -268,6 +268,7 @@ z$.ajax = function ajax(opt) {
         else {
             if (util.isFunction(opt.error)) opt.error(xhr);
         }
+        if (util.isFunction(opt.then)) opt.then(xhr);
     };
     xhr.send();
     return this;

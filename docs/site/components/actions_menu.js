@@ -42,16 +42,16 @@ zuix.controller(function (ctx) {
             if (open)
                 button
                     .animateCss('fadeInLeftBig', {
-                        delay: (i/10)+'s',
+                        delay: (i / 10) + 's',
                         duration: '0.35s'
-                    }).css('visibility','visible');
+                    }).css('visibility', 'visible');
             else
                 button
                     .animateCss('fadeOutLeftBig', {
-                        delay: (i/8)+'s',
+                        delay: (i / 8) + 's',
                         duration: '1.0s'
                     }, function () {
-                        zuix.$(this).css('visibility','hidden');
+                        zuix.$(this).css('visibility', 'hidden');
                     });
         }).reverse();
         fab.css('-webkit-animation-duration', '0.6s').animateCss('rubberBand');
