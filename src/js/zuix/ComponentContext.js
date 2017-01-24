@@ -170,7 +170,17 @@ ComponentContext.prototype.viewToModel = function() {
             default:
                 value = this.innerHTML;
         }
-        _t._model[name] = value;
+        // dotted field path
+        if (name.indexOf('.')>0) {
+            var path = name.split('.');
+            var cur = _t._model;
+            for (var p = 0; p < path.length - 1; p++) {
+                if (typeof cur[path[p]] === 'undefined')
+                    cur[path[p]] = {};
+                cur = cur[path[p]];
+            }
+            cur[path[path.length - 1]] = value;
+        } else _t._model[name] = value;
     });
     return this;
 };

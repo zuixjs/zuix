@@ -216,6 +216,14 @@ ZxQuery.prototype.display = function (mode) {
     });
     return this;
 };
+ZxQuery.prototype.visibility = function (mode) {
+    if (util.isNoU(mode))
+        return this._selection[0].style.visibility;
+    z$.each(this._selection, function (k, v) {
+        this.style.visibility = mode;
+    });
+    return this;
+};
 ZxQuery.prototype.show = function () {
     return this.display('');
 };

@@ -45,6 +45,7 @@ Component's methods:
 - ```cp.field(fieldName)``` - get from the component's view the element with matching ```data-ui-field``` attribute
 - ```cp.model([mode])``` - get/set the data model object
 - ```cp.options([options])``` - get/set the component's options
+- ```cp.trigger(eventPath, eventValue)``` - trigger an event
 - ```cp.loadHtml([options])``` - replace the current view with another one
 - ```cp.loadCss([options])``` - replace the current view's style with another one
 - ```cp.saveView([options])``` - save the current view
@@ -55,52 +56,102 @@ Component's methods:
 To load a component, the ```data-ui-load``` attribute is used. The value of this
 attribute is the *component identifier*. Also a ```data-ui-options```
 attribute might be provided as for all other options/features already described
-for ```data-ui-include``` in [content loading](#Getting_Started--Content_Loading).
-
-<small><strong>EXAMPLE</strong> Loading of the component ```path/to/component_name```</small>
-```html
-<div data-ui-load="path/to/component_name"></div>
-```
-
-
-
-
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-----
-
-<mark>DRAFT TEXT BELOW THIS LINE</mark>
-
-----
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-
-
+for ```data-ui-include``` in [content loading](#Getting_Started--Content_Loading),
+such as *lazy loading* and *data binding*.
 
 For example, consider the following "Summary Card" component, which
-shows a title, a summary text and a link to open the full article.
+shows a title, a summary text, a button to share and a button to open
+the full article.
 
 <small><strong>EXAMPLE</strong> View template for the component ```site/components/summary_card```</small>
-<pre data-line="3,5,10"><code class="language-html">
+<pre data-line="3,5,10,14"><code class="language-html">
 <div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
     <div class="mdl-card__title">
-        <h2 data-ui-field="title" class="mdl-card__title-text">Welcome</h2>
+        <h2 data-ui-field="title" class="mdl-card__title-text">Title</h2>
     </div>
-    <div data-ui-field="summary" class="mdl-card__supporting-text">
+    <div layout="column bottom-center" data-ui-field="summary" class="mdl-card__supporting-text">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         Mauris sagittis pellentesque lacus eleifend lacinia...
     </div>
-    <div class="mdl-card__actions mdl-card--border">
-        <a data-ui-field="button-read" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-            Read more
+    <div class="mdl-card__actions">
+        <a data-ui-field="button-share" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">share</i>
+            Share
+        </a>
+        <a data-ui-field="button-read" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">open_in_new</i>
+            Read
         </a>
     </div>
 </div>
 </code></pre>
+
+<small><strong>PREVIEW</strong> Preview of view template ```site/components/summary_card```</small>
+<div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
+<div class="mdl-card__title">
+<h2 data-ui-field="title" class="mdl-card__title-text">Title</h2>
+</div>
+<div layout="column bottom-center" data-ui-field="summary" class="mdl-card__supporting-text">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Mauris sagittis pellentesque lacus eleifend lacinia...
+</div>
+<div class="mdl-card__actions" align="right">
+<a data-ui-field="button-share" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+    <i class="material-icons">share</i>
+    Share
+</a>
+<a data-ui-field="button-read" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+    <i class="material-icons">open_in_new</i>
+    Read
+</a>
+</div>
+</div>
+<style>
+    .mdl-card[data-ui-view="site/components/summary_card"]
+    { width: 300px; }
+    [data-ui-view="site/components/summary_card"]
+    .mdl-card__title {
+        font-size: 24px;
+        color: black;
+        height: 96px;
+        background: #C8E6C9 center / cover;
+    }
+    [data-ui-view="site/components/summary_card"]
+    .mdl-card__title h2 {
+        font-weight: 700;
+        -webkit-text-stroke: 1pt rgba(255,255,255,0.6);
+    }
+    [data-ui-view="site/components/summary_card"]
+    .mdl-card__supporting-text {
+        width: 100%;
+    }
+    [data-ui-view="site/components/summary_card"]
+    .mdl-card__supporting-text {
+        height: 90px;
+        overflow-y: auto;
+    }
+    [data-ui-view="site/components/summary_card"]
+    .mdl-card__menu {
+        color: #fff;
+    }
+</style>
+<script>
+zuix.controller(function(cp) {
+
+    cp.create = function() {
+        // fire 'item:read' event on 'read' button click
+        zuix.$(cp.field('button-read')).on('click', function () {
+            cp.trigger('item:read', {});
+        });
+        zuix.$(cp.field('button-share')).on('click', function () {
+            cp.trigger('item:share', {});
+        });
+    };
+
+}).for('site/components/summary_card');
+</script>
+
+<p>&nbsp;</p>
 
 The above view template can be either placed in-line or
 in files (```site/components/summary_card.html``` - ```site/components/summary_card.css```),
@@ -111,9 +162,11 @@ in which case the ```data-ui-view``` attribute can be omitted.
 zuix.controller(function(cp) {
 
     cp.create = function() {
-        // bind UI events
-        cp.field('button-read').on('click', function() { ... };
-        // etc...
+        // fire 'item:read' event on 'read' button click
+        var buttonRead = cp.field('button-read');
+        zuix.$(buttonRead).on('click', function () {
+            cp.trigger('item:read', {});
+        });
     };
 
 }).for('site/components/summary_card');
@@ -123,116 +176,114 @@ Also the controller code can be either placed in-line or
 in its own file (```site/components/summary_card.js```),
 in which case the instruction ```.for('site/components/summary_card')``` can be omitted.
 
-<small><strong>EXAMPLE</strong> Inclusion of the component ```site/components/summary_card```</small>
+<small><strong>EXAMPLE</strong> Loading two instances of the component ```site/components/summary_card```</small>
 ```html
-<div data-ui-load="site/components/summary_card"></div>
-```
-
-<small><strong>RESULT</strong> Component ```site/components/actions_menu```</small>
-
-<div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
-<div class="mdl-card__title">
-<h2 data-ui-field="title" class="mdl-card__title-text">Welcome</h2>
-</div>
-<div data-ui-field="summary" class="mdl-card__supporting-text">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Mauris sagittis pellentesque lacus eleifend lacinia...
-</div>
-<div class="mdl-card__actions mdl-card--border">
-<a data-ui-field="button-read" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-Read more
-</a>
-</div>
+<!-- Card 1 -->
+<div data-ui-load="site/components/summary_card"
+     data-ui-options="example_card_1_options"
+     class="example_card_1">
+    <div data-ui-field="title">Introduction to JavaScript</div>
+    <div data-ui-field="summary">This updated and expanded second edition ...</div>
 </div>
 <style>
-    [data-ui-component="site/components/summary_card"]
-    .mdl-card { width: auto; }
+    .example_card_1 .mdl-card__title {
+        background: url('site/images/cover_javascript.jpg') center / cover;
+    }
 </style>
 <script>
-    zuix.controller(function(cp) {
+    example_card_1_options = {
+        on: {
+            'item:read': function () {
+                // TODO: open the popup with content
+            }
+        }
+    };
+</script>
+<!-- Card 2 -->
+<div data-ui-load="site/components/summary_card">
+    <div data-ui-field="title">Recipes 1-2-3</div>
+    <div data-ui-field="summary">An ingenious repertoire of dishes that..</div>
+</div>
+<!-- ... -->
+```
 
-        cp.create = function() {
-            // load the view template
-            zuix.$(cp.field('button-read')).on('click', function () {
-                console.log('clicked!');
-                cp.restoreView();
+<small><strong>RESULT</strong></small>
+<div layout="rows center-stretch">
+
+<div data-ui-load="site/components/summary_card"
+ data-ui-options="example_card_1_options"
+ class="example_card_1">
+<div data-ui-field="title">Introduction to JavaScript</div>
+<div data-ui-field="summary">This updated and expanded second edition of the 'Introduction to JavaScript' provides a user-friendly introduction to the subject.</div>
+</div>
+
+<style>
+.example_card_1 .mdl-card__title {
+    background: url('site/images/cover_javascript.jpg') center / cover;
+}
+</style>
+
+<script>
+example_card_show_delay = 0.1;
+example_card_1_options = {
+    css: false,
+    on: {
+        'view:create': animation_reveal,
+        'item:read': function () {
+            // TODO:... open the popup with content
+            zuix.$(this).animateCss('pulse', { duration: '0.2s' });
+            /*var i = 1, blocks = zuix.$(this.firstElementChild).children();
+            blocks.each(function () {
+                zuix.$(this).animateCss('pulse', { delay: ((i/15))+'s', duration: '0.15ds' });
+                i++;
+            });*/
+        },
+        'item:share': function () {
+            zuix.$(this).animateCss('flipOutY', function () {
+                //zuix.$(this).visibility('hidden');
+                animation_reveal.call(this);
             });
-        };
-
-    }).for('site/components/summary_card');
+        }
+    }
+};
+function animation_reveal () {
+    zuix.$(this).animateCss('fadeInDown', { delay: '0.5s', duration: '0.3s' });
+    var i = 1, blocks = zuix.$(this.firstElementChild).children();
+    blocks.each(function () {
+        zuix.$(this).animateCss('bounceInDown', { delay: (0.5+(i/20))+'s', duration: (0.3+(i/10))+'s' });
+        i++;
+    });
+}
 </script>
 
-
-Or with inline data-binding.....
-
-
-```html
-<div data-ui-load="site/components/summary_card">
-    <div data-ui-field="title">Article 1</div>
-    <div data-ui-field="summary">Text of article 1 summary...</div>
-</div>
-<div data-ui-load="site/components/summary_card">
-    <div data-ui-field="title">Article 2</div>
-    <div data-ui-field="summary">Text of article 2 summary...</div>
-</div>
-```
-
-
-<div layout="row center-stretch">
-<div data-ui-load="site/components/summary_card">
-<div data-ui-field="title">Change Template on click</div>
-<div data-ui-field="summary">Text of article 1 summary...</div>
-</div>
-<div data-ui-load="site/components/summary_card">
-<div data-ui-field="title">Article 2</div>
-<div data-ui-field="summary">Text of article 2 summary...</div>
-</div>
+<div data-ui-load="site/components/summary_card"
+  data-ui-options="example_card_1_options"
+  class="example_card_2">
+<div data-ui-field="title">Recipes 1-2-3</div>
+<div data-ui-field="summary">An ingenious repertoire of dishes that use only three simple ingredients presents more than 250 delectable recipes.</div>
 </div>
 
-
-
-```js
-zuix.controller(function(cp) {
-
-    cp.create = function() { /* called after loading, when the component is created */ };
-
-    cp.destroy = function() { /* called when the component is destroyed */ }
-
-}).for('path/to/component_name');
-```
-
-
-
-##### Inline Component
-
-
-
-
-<small><strong>COMPONENT SCHEMA</strong> Inline definition of the component identified by ```path/to/component_name```</small>
-<pre data-line="2,5,8"><code class="language-html">
-<div data-ui-view="path/to/component_name">
-    <!-- HTML View -->
-</div>
 <style>
-    /*--  CSS View's Style -*/
+.example_card_2 .mdl-card__title {
+    background: url('site/images/cover_recipes.jpg') center / cover;
+}
 </style>
-<script>
-    //--   JS Controller
-    zuix.controller(function(cp) {
 
-        cp.create = function() { /* ... */ };
-
-        cp.destroy = function() { /* ... */ }
-
-    }).for('path/to/component_name');
-</script>
-</code></pre>
+</div>
 
 
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
 
+<h4 align="center"><mark>DRAFT TEXT BELOW THIS LINE</mark></h4>
+---
 
-The following example is an "action menu" component.
+##### More Examples
 
+The following example is an "Action Menu" component.
 
 <small><strong>EXAMPLE COMPONENT</strong> Inline definition of the component ```site/components/actions_menu```</small>
 <pre data-line="1,24,30"><code class="language-html">
@@ -280,7 +331,6 @@ Loading of the above component
 <div data-ui-field="example-actions_menu"
  data-ui-options="example_action_menu_options"
  data-ui-load="site/components/actions_menu"
- -data-ui-lazyload="false"
  class="content-padding"
  layout="row center-left">
 <!-- menu actions -->
@@ -309,6 +359,8 @@ Loading of the above component
 </style>
 <script>
 var example_action_menu_options = {
+    css: false,
+    html: false,
     on: {
         'item:click': function (e, i) {
             console.log('Action menu clicked ', i, this);
@@ -317,28 +369,6 @@ var example_action_menu_options = {
 };
 </script>
 
-
-
-A component can also be implemented in files:
-
-- *(componentId)*.html
-- *(componentId)*.css
-- *(componentId)*.js
-
-
-
-This JavaScript code is the so called **Controller** of the component
-and it is an handler function that implements the following
-two methods:
-
-- **create()**
-called when the component is created
-- **destroy()**
-called when the component is destroyed
-
-
-For example consider an action menu component implemented with
-an MDL FAB that, when clicked, will shows up some action buttons.
 
 Example - MDL action menu
 
@@ -365,89 +395,17 @@ Example - MDL action menu
 </div>
 </code></pre>
 
-That will output the following
-
-<div layout="row center-left" class="content-padding">
-<!-- FAB menu button -->
-<div style="max-width: 56px;">
-<a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
-<i class="material-icons">settings</i>
-</a>
-</div>
-<!-- menu actions buttons -->
-<div>
-<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
-<i class="material-icons">edit</i>
-</div>
-<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
-<i class="material-icons">insert_comment</i>
-</div>
-<div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
-<i class="material-icons">delete_forever</i>
-</div>
-</div>
-</div>
-
-which actually looks good, but it's not animated and also
-we won't be able to know when the user clicked a button by just
-using event or behavior handlers of the view.
-
-For that purpose we need to write the *JavaScript* code
-that implements the component's controller.
 
 The *controller* code will take care of collapsing/expanding
 the actions buttons when the user clicks the FAB button.
 It will also cause an ```item:click``` event when an
 action buttons is clicked.
 
-The *JavaScript* code can be either be placed inline or in a separate file.
 
-
-
-
-
-
-
-
-There are different ways for loading a component.
-The previous example is a component
-
-
-###### Inline Component
-
-
-
-###### Component bundled with its own View
-
-<pre><code class="language-html">
-<div data-ui-view="site/components/actions_menu"
-     data-ui-load="site/components/actions_menu"
-     data-ui-options="componentOptions">
-     <!-- inline component view -->
-    <h3 data-ui-field="title"></h3>
-</div>
-<script>
-var exampleController = zuix.controller(function(cp){
-    cp.create = function() {
-        cp.field('title').html('Helllo World!');
-    }
-});
-var componentOptions = { controller: exampleController };
-</script>
-</code></pre>
-
-or in a file...
-....
-
-
-- <mark>Component with both view and controller on a file</mark>
-- <mark>Component with inline view and controller on a file</mark>
-- <mark>Component with inline view and inline controller</mark>
-- <mark>Component with controller only (?)</mark>
 
 
 <small>
-    <strong>Inline controller</strong>
+    <strong>Controller passed in the component options</strong>
     The controller is specified in the ```data-ui-options```
     attribute.
 </small>
@@ -472,34 +430,6 @@ or in a file...
     };
     </script>
 </code></pre>
-
-<!--
-<small>
-    <strong>INLINE CONTROLLER (METHOD 2)</strong>
-    The controller is passed with the options
-    of the ```zuix.load(view,options)``` method.
-</small>
-<pre><code class="language-html keyword-start line-numbers">
-    <script>
-    var exampleController = zuix.controller(function(cp){
-        cp.create = function() {
-            cp.view().html('Helllo World!');
-        }
-    });
-    var componentContext = zuix.load('simple_view', {
-        controller: exampleController,
-        ready: function () {
-            console.log('Component loading complete');
-            console.log('Component Context', this);
-        },
-        error: function(error) {
-            console.log('Component loading error', error);
-        }
-    });
-    componentContext.append(my_container);
-    </script>
-</code></pre>
--->
 
 <small><strong>EXAMPLE</strong> Controller implementation</small>
 
@@ -535,23 +465,7 @@ zuix.controller(function (cp) {
 });
 </code></pre>
 
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 
-So a complete component may consist of three files:
-
-    (component_name).css
-    (component_name).html
-    (component_name).js
-
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 
@@ -606,7 +520,11 @@ style="visibility:hidden;background: black">
 
 ##### Component Life-Cycle
 
-
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
 
 #### Hooks
 
@@ -636,15 +554,9 @@ style="visibility:hidden;background: black">
 <p></p>
 
 
-### More examples
 
-<p>.</p>
-
-<p>.</p>
-
-...
-
-##### Example 1 - Loading external hosted component
+<!--
+##### Example - Loading external hosted component
 
 <small>HTML</small>
 <pre><code class="language-markup">
@@ -667,12 +579,12 @@ style="visibility:hidden;background: black">
         }
     });
 </code></pre>
-<!--
 <small>Result</small>
 <div self="size1of2">
-    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"
-         data-ui-options="main.options.codepen_example_01"
-    ></div>
+<div data-ui-load="https://codepen.io/genielabs/pen/RomJZy">
+<h4 data-ui-field="data.title">Test title...</h4>
+<p data-ui-field="data.description">Test description...</p>
+</div>
 </div>
 
 <small>Component on CodePen</small>

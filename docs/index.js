@@ -39,10 +39,15 @@ var main = {
             mdl: true,
             prism: true,
             css: false
+        },
+        component_no_css: {
+            css: false
         }
     },
     // Component 'ui/layout/actions_view'
     topMenu: {
+        css: false,
+        html: false,
         // actions map
         on: {
             // call 'menuItemClicked' handler when a menu item is clicked
@@ -63,6 +68,8 @@ var main = {
 
     // Component 'ui/layout/paged_view'
     contentPager: {
+        css: false,
+        html: false,
         // actions map
         on: {
             'page:change': function (e, i) {
@@ -199,7 +206,9 @@ zuix.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
     var _t = this;
     this.addClass('animated ' + animationName).one(animationEnd, function () {
         zuix.$(this).removeClass('animated ' + animationName);
-        // TODO: should remove css options as well
+        for(var key in options)
+            for (var p in prefixes)
+                zuix.$(_t).css(prefixes[p] + '-animation-' + key, '');
         if (typeof callback === 'function')
             callback.call(_t.get(0), animationName);
     });

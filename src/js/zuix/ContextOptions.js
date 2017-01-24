@@ -32,6 +32,7 @@
  *    model: ContextModel|undefined The data model,
  *    view: ContextView|undefined The view element,
  *    css: Element|string|undefined,
+ *    html: boolean|undefined,
  *    controller: ContextControllerCallback|undefined The controller handler,
  *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
  *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,

@@ -131,7 +131,7 @@ after its loaded.
 <p data-ui-field="name">Mr. Brown</p>
 <p data-ui-field="image">site/images/avatar_02.png</p>
 </div>
-<div data-ui-include="inline/common/contact_chip" class="mdl-color--white">
+<div data-ui-include="inline/common/contact_chip" data-ui-options="main.options.component_no_css" class="mdl-color--white">
 <p data-ui-field="name">Mr. Brown</p>
 <p data-ui-field="image">site/images/avatar_02.png</p>
 </div>
@@ -170,7 +170,7 @@ and the network is slow).
 <span data-ui-field="name">Mrs. Black</span>
 </div>
 </div>
-<div data-ui-include="inline/common/contact_chip" class="mdl-color--white">
+<div data-ui-include="inline/common/contact_chip" data-ui-options="main.options.component_no_css" class="mdl-color--white">
 <img width="48" height="48" data-ui-field="image" src="site/images/avatar_01.png">
 <span data-ui-field="name">Mrs. Black</span>
 </div>
@@ -207,9 +207,11 @@ a_random_contact = {
 <small><strong>RESULT</strong></small>
 <div data-ui-view="chip_example_result" layout="row center-spread">
 <div data-ui-include="inline/common/contact_chip"
-  data-id="0" data-bind-model="chip_adapter"></div>
+  data-id="0" data-bind-model="chip_adapter"
+  data-ui-options="main.options.component_no_css"></div>
 <div data-ui-include="inline/common/contact_chip"
-  data-id="1" data-bind-model="chip_adapter"></div>
+  data-id="1" data-bind-model="chip_adapter"
+  data-ui-options="main.options.component_no_css"></div>
 <script>
 var chip_items = {
     "0": { name: 'Foo Bar', image: 'site/images/avatar_02.png'},
@@ -291,7 +293,7 @@ chip_adapter = function(element, field) {
 </code></pre>
 
 <small><strong>RESULT</strong></small>
-<div data-ui-include="chip_example_result"></div>
+<div data-ui-include="chip_example_result" data-ui-options="main.options.component_no_css"></div>
 
 <a id="Getting-Started__Behaviors"></a>
 ##### Behaviors
@@ -327,6 +329,7 @@ chip_view_behavior = {
     }
 };
 chip_view_options = {
+    css: false,
     behavior: chip_view_behavior
 }
 </script>
@@ -399,6 +402,7 @@ var chip_view_behavior = {
     }
 };
 var chip_view_options = {
+    css: false,
     behavior: chip_view_behavior,
     on: {
         'click': function() {

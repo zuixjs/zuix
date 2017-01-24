@@ -2,7 +2,7 @@ zuix.controller(function (ctx) {
 
     ctx.create = function() {
         var view = zuix.$(ctx.view());
-        //view.get(0).style.visibility = 'hidden';
+        view.visibility('hidden');
 
         // read inline image list
         var items = [];
@@ -19,7 +19,7 @@ zuix.controller(function (ctx) {
         });
 
         // load css and html for this component
-        ctx.loadCss();
+        //ctx.loadCss();
         ctx.loadHtml({
             then: function () {
                 // move image list inside the horiz. thumb list
@@ -29,8 +29,8 @@ zuix.controller(function (ctx) {
                 });
                 setSlide(0);
                 setTimeout(function () {
-                    view.get(0).style.visibility = '';
                     view.animateCss('zoomIn');
+                    view.visibility('');
                 }, 500);
             }
         });

@@ -477,6 +477,14 @@ ZxQuery.prototype.display = function (mode) {
     });
     return this;
 };
+ZxQuery.prototype.visibility = function (mode) {
+    if (util.isNoU(mode))
+        return this._selection[0].style.visibility;
+    z$.each(this._selection, function (k, v) {
+        this.style.visibility = mode;
+    });
+    return this;
+};
 ZxQuery.prototype.show = function () {
     return this.display('');
 };
@@ -868,7 +876,17 @@ ComponentContext.prototype.viewToModel = function() {
             default:
                 value = this.innerHTML;
         }
-        _t._model[name] = value;
+        // dotted field path
+        if (name.indexOf('.')>0) {
+            var path = name.split('.');
+            var cur = _t._model;
+            for (var p = 0; p < path.length - 1; p++) {
+                if (typeof cur[path[p]] === 'undefined')
+                    cur[path[p]] = {};
+                cur = cur[path[p]];
+            }
+            cur[path[path.length - 1]] = value;
+        } else _t._model[name] = value;
     });
     return this;
 };
@@ -1438,6 +1456,7 @@ function Zuix() {
         // Throttle method
         if (tasker.requestLock(componentize)) {
             z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
+//                this.style.visibility = 'hidden';
                 // override lazy loading if 'lazyload' is set to 'false' for the current element
                 if (!lazyLoadEnabled() || this.getAttribute('data-ui-lazyload') == 'false') {
                     loadInline(this);
@@ -1724,14 +1743,16 @@ function Zuix() {
                                 if (il > 1 && il < fn)
                                     ctrlJs = ctrlJs.substring(0, il - 4);
                                 var ih = ctrlJs.indexOf('.controller');
-                                if (ih > 1 && il < fn)
+                                if (ih > 1 && ih < fn)
                                     ctrlJs = ctrlJs.substring(ih + 11);
+                                var ec = ctrlJs.indexOf('//<--controller');
+                                if (ec > 0)
+                                    ctrlJs = ctrlJs.substring(0, ec);
                                 context.controller(getController(ctrlJs));
                             } catch (e) {
                                 console.log(e, ctrlJs, context);
                                 if (util.isFunction(context.error))
                                     (context.error).call(context, e);
-                                return;
                             }
                         },
                         error: function (err) {
@@ -1788,15 +1809,20 @@ function Zuix() {
                 // if no model is supplied, try auto-create from view fields
                 if (util.isNoU(context.model()) && !util.isNoU(context.view()))
                     context.viewToModel();
+                c.trigger('view:apply');
                 if (context.options().viewDeferred) {
                     context.options().viewDeferred = false;
                     // save the original inline view
                     // before loading the view template
                     // it can be then restored with c.restoreView()
                     c.saveView();
-                    context.loadCss();
-                    context.loadHtml();
+                    if (context.options().css !== false)
+                        context.loadCss();
+                    if (context.options().html !== false)
+                        context.loadHtml();
                 }
+
+                context.view().style.visibility = '';
             }
 
             // TODO: review/improve life-cycle
