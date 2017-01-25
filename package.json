@@ -1,7 +1,7 @@
 {
   "name": "zuix",
   "version": "0.2.5",
-  "description": "ZUIX, a Javascript library for handling web components and content.",
+  "description": "JavaScript UI content and component manager for creating sites and web apps.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
   "bin": {},

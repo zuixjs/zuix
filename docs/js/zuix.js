@@ -1080,10 +1080,14 @@ ComponentContext.prototype.loadHtml = function(options) {
     if (!util.isNoU(options.path))
         htmlPath = options.path;
 
-    // TODO: replace z$() with z$(options.container)
+    // TODO: check if view caching is working in this case too
     var inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
     if (inlineView.length() > 0) {
-        context.view(inlineView.get(0).outerHTML);
+        var inlineElement = inlineView.get(0);
+        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement)))
+            context.view(inlineElement);
+        else
+            context.view(inlineElement.outerHTML);
         if (util.isFunction(options.success))
             (options.success).call(context);
         if (util.isFunction(options.then))
@@ -1456,7 +1460,7 @@ function Zuix() {
         // Throttle method
         if (tasker.requestLock(componentize)) {
             z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
-//                this.style.visibility = 'hidden';
+                this.style.visibility = 'hidden';
                 // override lazy loading if 'lazyload' is set to 'false' for the current element
                 if (!lazyLoadEnabled() || this.getAttribute('data-ui-lazyload') == 'false') {
                     loadInline(this);

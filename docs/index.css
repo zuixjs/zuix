@@ -88,3 +88,8 @@ pre.terminal p {
     opacity: 0.65;
     font-size: 10px;
 }
+
+.content-loader {
+    text-align: center;
+    padding: 24px;
+}

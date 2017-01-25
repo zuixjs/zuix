@@ -2,11 +2,12 @@
 <!--suppress JSCheckFunctionSignatures -->
 <html lang="en">
 <head>
+    <title>zuix.js</title>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A JavaScript library for component-based web development and content management.">
+    <meta name="description" content="JavaScript UI content and component manager for creating sites and web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>zuix.js</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -34,19 +35,11 @@
     <script src="js/mdl/material.min.js"></script>
 
     <!-- Theme -->
-    <!--link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css"-->
-    <!--link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.cyan-light_blue.min.css"-->
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.yellow-pink.min.css"/>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Dosis:500,700" rel="stylesheet">
-    <!--link href="https://fonts.googleapis.com/css?family=Titillium+Web:300,500,700&amp;subset=latin-ext" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&amp;subset=latin-ext" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Kreon:400,400,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Amaranth:400,700" rel="stylesheet"-->
     <link href="https://fonts.googleapis.com/css?family=Cairo:300,700" rel="stylesheet">
-    <!--link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto+Slab:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- FLA, flex layout attributes -->
@@ -68,7 +61,6 @@
     <!-- Main Page includes -->
     <link rel="stylesheet" href="index.css">
     <script defer type="text/javascript" src="index.js"></script>
-
 </head>
 <body>
 
@@ -174,7 +166,7 @@
 <div data-ui-field="splashScreen" layout="column stretch-stretch"
      style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100;">
     <div layout="column bottom-center">
-        <div class="animated pulse">
+        <div class="animated infinite pulse">
             <h5 layout="row center-center">
                 <i class="material-icons md-24">dashboard</i>
                 <span class="md-32">Z</span><span class="md-24">UIX</span>
