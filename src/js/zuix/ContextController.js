@@ -33,11 +33,12 @@ var z$ =
 /**
  * TODO: complete JSDoc
  *
+ * @param {ComponentContext} context
  * @returns {ContextController}
  * @constructor
  */
 function ContextController(context) {
-    var self = this;
+    var _t = this;
 
     /** @protected */
     this.context = context;
@@ -45,11 +46,26 @@ function ContextController(context) {
     // TODO: should improve/deprecate this.componentId?
     this.componentId = context.componentId;
 
-    /** @type {ContextView} */ // read-only
-    this.view = function () {
-        return context.view()
+    this._view = null;
+    /**
+     *
+     * @param what {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
+     * @return {ZxQuery}
+     */
+    this.view = function (what) {
+        if (context.view() != null || this._view !== context.view())
+            return this._view = (what == null ? z$(context.view())
+                : typeof what === 'string' ? z$(context.view()).find(what)
+                    : z$(what));
+        else if (this._view !== null)
+            return this._view;
+        else
+            throw({
+                message: 'Not attacched to a view yet.',
+                source: this
+            });
     };
-    /** @type {ContextModel} */
+    /** @type {object} */
     this.model = function (model) {
         return context.model(model)
     };
@@ -67,15 +83,15 @@ function ContextController(context) {
     /** @type {function} */
     this.saveView = function () {
         this.restoreView();
-        z$.each(this.view().childNodes, function () {
-            self._childNodes.push(this);
+        this.view().children().each(function () {
+            _t._childNodes.push(this);
         });
     };
     this.restoreView = function() {
         if (this._childNodes.length > 0) {
-            self.view().innerHTML = '';
-            z$.each(self._childNodes, function () {
-                self.view().appendChild(this);
+            _t.view().html('');
+            z$.each(_t._childNodes, function () {
+                _t.view().append(this);
             });
             this._childNodes.length = 0;
         }
@@ -111,13 +127,13 @@ function ContextController(context) {
     /** @type {function} */
     this.trigger = function (eventPath, eventData) {
         if (context._eventMap[eventPath] == null)
-            this.addEvent(self.view(), eventPath, null);
+            this.addEvent(context.view(), eventPath, null);
         // TODO: ...
-        z$(self.view()).trigger(eventPath, eventData);
+        _t.view().trigger(eventPath, eventData);
     };
     /** @type {function} */
     this.on = function (eventPath, handler_fn) {
-        this.addEvent(self.view(), eventPath, handler_fn);
+        this.addEvent(context.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
     };
     /** @protected */
@@ -133,12 +149,12 @@ function ContextController(context) {
     };
     /** @protected */
     this.eventRouter = function (e) {
-        //if (typeof self.behavior() === 'function')
-        //    self.behavior().call(self.view(), a, b);
+        //if (typeof _t.behavior() === 'function')
+        //    _t.behavior().call(_t.view(), a, b);
         if (typeof context._behaviorMap[e.type] === 'function')
-            context._behaviorMap[e.type].call(self.view(), e, e.detail);
+            context._behaviorMap[e.type].call(context.view(), e, e.detail);
         if (typeof context._eventMap[e.type] === 'function')
-            context._eventMap[e.type].call(self.view(), e, e.detail);
+            context._eventMap[e.type].call(context.view(), e, e.detail);
         // TODO: else-> should report anomaly
     };
 
@@ -148,7 +164,7 @@ function ContextController(context) {
         for (var ep in options.on) {
             handler = options.on[ep];
             // TODO: should log.warn if k already exists
-            self.addEvent(self.view(), ep, handler);
+            _t.addEvent(context.view(), ep, handler);
         }
     }
     // create behavior map from context options
@@ -156,7 +172,7 @@ function ContextController(context) {
         for (var bp in options.behavior) {
             handler = options.behavior[bp];
             // TODO: should log.warn if k already exists
-            self.addBehavior(self.view(), bp, handler);
+            _t.addBehavior(context.view(), bp, handler);
         }
     }
 
@@ -176,23 +192,29 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
     this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
     return this;
 };
-
 /***
  * Search and cache this view elements.
  *
  * @param {!string} field Name of the `data-ui-field` to search
- * @param {boolean} [globalSearch] Search a generic field attribute
- * @returns {Element}
+ * @returns {ZxQuery}
  */
-ContextController.prototype.field = function (field, globalSearch) {
-    var f = globalSearch ? '@' + field : field;
-    var el = null;
-    if (typeof this._fieldCache[f] === 'undefined') {
-        el = globalSearch ? z$(field).get(0) : z$(this.view()).find('[data-ui-field=' + field + ']').get(0);
-        if (el != null)
-            this._fieldCache[f] = el;
+ContextController.prototype.field = function (field) {
+    var _t = this, el = null;
+    if (typeof this._fieldCache[field] === 'undefined') {
+        el = this.view().find('[data-ui-field=' + field + ']');
+        if (el != null) {
+            // ZxQuery base methods override
+            el.on = function (eventPath, eventHandler) {
+                if (typeof eventHandler === 'string') {
+                    var eh = eventHandler;
+                    eventHandler = function () { _t.trigger(eh); }
+                }
+                z$.ZxQuery.prototype.on.call(el, eventPath, eventHandler);
+            };
+            this._fieldCache[field] = el;
+        }
     } else {
-        el = this._fieldCache[f];
+        el = this._fieldCache[field];
     }
     return el;
 };

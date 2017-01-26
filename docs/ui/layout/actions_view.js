@@ -1,9 +1,9 @@
-zuix.controller(function (ctx) {
+zuix.controller(function (cp) {
 
-    ctx.create = function () {
+    cp.create = function () {
 
-        zuix.$(ctx.view()).children().each(function (index) {
-            zuix.$(this).on('click', function () {
+        cp.view().children().each(function (index) {
+            cp.view(this).on('click', function () {
                 setSelected(index);
             });
         });
@@ -11,11 +11,11 @@ zuix.controller(function (ctx) {
 
     };
 
-    ctx.destroy = function () {
+    cp.destroy = function () {
 
-        zuix.$(ctx.view()).children().each(function () {
-            zuix.$(this).off('click');
-            zuix.$(this).removeClass('is-active');
+        cp.$().children().each(function () {
+            cp.view(this).off('click');
+            cp.view(this).removeClass('is-active');
         });
         selectedItem = -1;
 
@@ -26,13 +26,13 @@ zuix.controller(function (ctx) {
     var selectedItem = -1;
 
     function setSelected(index) {
-        var actions = zuix.$(ctx.view()).children();
+        var actions = cp.view().children();
         actions.each(function () {
-            zuix.$(this).removeClass('is-active');
+            cp.view(this).removeClass('is-active');
         });
         if (index != selectedItem)
             actions.eq(index).addClass('is-active');
-        ctx.trigger('item:click', index);
+        cp.trigger('item:click', index);
     }
 
 });

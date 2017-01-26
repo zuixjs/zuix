@@ -3,6 +3,10 @@ body {
     font-family: 'Cairo', 'Titillium+Web', sans-serif !important;
 }
 
+p {
+    font-size: 1.1em;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Dosis', sans-serif !important;
     padding-top: 12px;
@@ -68,11 +72,6 @@ pre.terminal p {
     background-color:rgba(230,230,230,0.5);
 }
 
-.progressive-content-container {
-    margin-bottom:60px;
-    border-top: dotted 1px rgba(230,230,230,0.5);
-}
-
 .site-footer {
     height:30px;
     max-height: 30px;
@@ -92,4 +91,9 @@ pre.terminal p {
 .content-loader {
     text-align: center;
     padding: 24px;
+}
+
+.progressive-content-container {
+    margin-bottom:60px;
+    border-top: dotted 1px rgba(230,230,230,0.5);
 }

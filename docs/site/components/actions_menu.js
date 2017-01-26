@@ -5,7 +5,7 @@ zuix.controller(function (ctx) {
     ctx.create = function () {
 
         // toolbar view
-        toolbar = zuix.$(ctx.view());
+        toolbar = ctx.view();
         // fab button
         fab = toolbar.children().eq(0);
         fab.on('click', function () {

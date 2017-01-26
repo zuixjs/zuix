@@ -1,48 +1,47 @@
-zuix.controller(function (ctx) {
+zuix.controller(function (cp) {
 
-    ctx.create = function() {
-        var view = zuix.$(ctx.view());
-        view.visibility('hidden');
+    cp.create = function() {
+        cp.view().visibility('hidden');
 
         // read inline image list
         var items = [];
         var index = 0;
-        zuix.$.each(ctx.view().childNodes, function(e,i) {
+        cp.view().children().each(function(e,i) {
             if (this instanceof Element) {
                 // add image and attach click listener
                 this.index = index++;
                 items.push(this);
-                zuix.$(this).on('click', function(){
+                cp.view(this).on('click', function(){
                     setSlide(this.index);
                 });
             }
         });
 
         // load css and html for this component
-        //ctx.loadCss();
-        ctx.loadHtml({
+        //cp.loadCss();
+        cp.loadHtml({
             then: function () {
                 // move image list inside the horiz. thumb list
-                var itemList = ctx.field('list');
-                zuix.$.each(items, function () {
-                    itemList.appendChild(this);
+                var itemList = cp.field('list');
+                cp.view(items).each(function () {
+                    itemList.append(this);
                 });
                 setSlide(0);
                 setTimeout(function () {
-                    view.animateCss('zoomIn');
-                    view.visibility('');
+                    cp.view().animateCss('zoomIn');
+                    cp.view().visibility('');
                 }, 500);
             }
         });
 
         // exposed methods
-        //ctx.expose('setSlide', function (i) {
+        //cp.expose('setSlide', function (i) {
         //    setSlide(i);
         //});
     };
 
-    ctx.destroy = function () {
-        zuix.$(ctx.view()).children().each(function () {
+    cp.destroy = function () {
+        cp.view().children().each(function () {
             // TODO: should restore original container styles
         });
         currentItem = -1;
@@ -55,14 +54,14 @@ zuix.controller(function (ctx) {
     function setSlide(p) {
         if (currentItem == p) return;
         currentItem = p;
-        var itemList = zuix.$(ctx.field('list'))
+        var itemList = cp.field('list')
             .children()
             .removeClass('selected');
         var item = itemList.eq(p);
         item.addClass('selected').animateCss('pulse');
-        //ctx.field('list').scrollLeft = zuix.$.getPosition(item.get(0)).x - ctx.field('list').parentNode.clientWidth / 2;
-        var img1 = zuix.$(ctx.field('img1'));
-        var img2 = zuix.$(ctx.field('img2'));
+        //cp.field('list').scrollLeft = zuix.$.getPosition(item.get(0)).x - cp.field('list').parentNode.clientWidth / 2;
+        var img1 = cp.field('img1');
+        var img2 = cp.field('img2');
         if (img1.display() == 'none') {
             img1.attr('src', item.attr('data-href'));
             img1.parent().css('zIndex', 10);

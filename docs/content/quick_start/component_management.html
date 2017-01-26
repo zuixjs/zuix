@@ -1,55 +1,21 @@
 #### Component Management
 
 Exception made for handling of standard events and behaviors,
-a view cannot implement a more complex UI logic.
+a [view template](#Getting_Started--View_Templates) cannot implement a more complex UI logic.
 
 This is where *components* are being used. Differently from a
-view, a component has a piece of *JavaScript* code associated
+view template, a component has a piece of *JavaScript* code associated
 to it and can so control any element in its view and implement
 any kind of UI functionality.
 
-This JavaScript code is the **Controller** (or *Presenter*)
-of the component.
+This piece of JavaScript code is the **Controller** (or *Presenter*)
+of the component and it consist of a function handler with two
+interface methods: **create** and **destroy**, that are obviously
+called respectively at the start and the end of the component
+life-cycle.
 
-<small><strong>EXAMPLE</strong> Declaration of a generic controller for ```path/to/component_name```</small>
-<pre><code class="language-js">
-// Controller of component 'path/to/component_name'
-zuix.controller(function(cp) {
-
-    cp.create = function() { /* called after loading, when the component is created */ };
-
-    cp.destroy = function() { /* called when the component is destroyed */ }
-
-}).for('path/to/component_name');
-</code></pre>
-
-
-##### The Controller
-
-The ```cp``` object passed to the controller handler is the controller instance itself and exposes
-the following fields/methods.
-
-Component's life-cycle handlers:
-
-- ```cp.create = function() {..}```
-
-    *handler function* that gets called after loading, when the component is created
-
-- ```cp.destroy = function() {..}```
-
-    *handler function* called when the component is destroyed
-
-Component's methods:
-
-- ```cp.view()``` - get the component's view element
-- ```cp.field(fieldName)``` - get from the component's view the element with matching ```data-ui-field``` attribute
-- ```cp.model([mode])``` - get/set the data model object
-- ```cp.options([options])``` - get/set the component's options
-- ```cp.trigger(eventPath, eventValue)``` - trigger an event
-- ```cp.loadHtml([options])``` - replace the current view with another one
-- ```cp.loadCss([options])``` - replace the current view's style with another one
-- ```cp.saveView([options])``` - save the current view
-- ```cp.restoreView([options])``` - restore a previously saved view
+To declare a component controller the ```zuix.controller(...)``` method is
+used. This will be described in next paragraph.
 
 ##### Loading a component
 
@@ -63,13 +29,13 @@ For example, consider the following "Summary Card" component, which
 shows a title, a summary text, a button to share and a button to open
 the full article.
 
-<small><strong>EXAMPLE</strong> View template for the component ```site/components/summary_card```</small>
+<small><strong>EXAMPLE</strong> Declaration of view template for the component ```site/components/summary_card```</small>
 <pre data-line="3,5,10,14"><code class="language-html">
 <div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
     <div class="mdl-card__title">
         <h2 data-ui-field="title" class="mdl-card__title-text">Title</h2>
     </div>
-    <div layout="column bottom-center" data-ui-field="summary" class="mdl-card__supporting-text">
+    <div data-ui-field="summary" class="mdl-card__supporting-text">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         Mauris sagittis pellentesque lacus eleifend lacinia...
     </div>
@@ -91,7 +57,7 @@ the full article.
 <div class="mdl-card__title">
 <h2 data-ui-field="title" class="mdl-card__title-text">Title</h2>
 </div>
-<div layout="column bottom-center" data-ui-field="summary" class="mdl-card__supporting-text">
+<div data-ui-field="summary" layout="column spread-stretch" class="mdl-card__supporting-text">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Mauris sagittis pellentesque lacus eleifend lacinia...
 </div>
@@ -139,13 +105,8 @@ Mauris sagittis pellentesque lacus eleifend lacinia...
 zuix.controller(function(cp) {
 
     cp.create = function() {
-        // fire 'item:read' event on 'read' button click
-        zuix.$(cp.field('button-read')).on('click', function () {
-            cp.trigger('item:read', {});
-        });
-        zuix.$(cp.field('button-share')).on('click', function () {
-            cp.trigger('item:share', {});
-        });
+        cp.field('button-read').on('click', 'item:read');
+        cp.field('button-share').on('click', 'item:share');
     };
 
 }).for('site/components/summary_card');
@@ -153,59 +114,62 @@ zuix.controller(function(cp) {
 
 <p>&nbsp;</p>
 
-The above view template can be either placed in-line or
+The above view template declaration can be either placed in the same document (in-line) or
 in files (```site/components/summary_card.html``` - ```site/components/summary_card.css```),
 in which case the ```data-ui-view``` attribute can be omitted.
 
 <small><strong>EXAMPLE</strong> Controller for the component ```site/components/summary_card```</small>
-<pre data-line="5"><code>
+<pre><code>
 zuix.controller(function(cp) {
 
     cp.create = function() {
-        // fire 'item:read' event on 'read' button click
-        var buttonRead = cp.field('button-read');
-        zuix.$(buttonRead).on('click', function () {
-            cp.trigger('item:read', {});
-        });
+        // UI event handlers
+        cp.field('button-read').on('click', 'item:read');
+        cp.field('button-share').on('click', 'item:share');
     };
 
 }).for('site/components/summary_card');
 </code></pre>
 
-Also the controller code can be either placed in-line or
+Also the controller declaration can be placed in the same document or
 in its own file (```site/components/summary_card.js```),
 in which case the instruction ```.for('site/components/summary_card')``` can be omitted.
 
+To actually create an instance of the above component, the ```data-ui-load``` attribute is used.
+
 <small><strong>EXAMPLE</strong> Loading two instances of the component ```site/components/summary_card```</small>
-```html
+<pre data-line="2,8"><code class="language-html">
 <!-- Card 1 -->
-<div data-ui-load="site/components/summary_card"
-     data-ui-options="example_card_1_options"
-     class="example_card_1">
+<div data-ui-load="site/components/summary_card" data-id="0"
+     data-ui-options="example_card_options">
     <div data-ui-field="title">Introduction to JavaScript</div>
     <div data-ui-field="summary">This updated and expanded second edition ...</div>
 </div>
-<style>
-    .example_card_1 .mdl-card__title {
-        background: url('site/images/cover_javascript.jpg') center / cover;
-    }
-</style>
-<script>
-    example_card_1_options = {
-        on: {
-            'item:read': function () {
-                // TODO: open the popup with content
-            }
-        }
-    };
-</script>
 <!-- Card 2 -->
-<div data-ui-load="site/components/summary_card">
+<div data-ui-load="site/components/summary_card" data-id="1"
+     data-ui-options="example_card_options">
     <div data-ui-field="title">Recipes 1-2-3</div>
     <div data-ui-field="summary">An ingenious repertoire of dishes that..</div>
 </div>
-<!-- ... -->
-```
+<script>
+example_card_options = {
+    on: {
+        'item:read': function () {
+            var id = this.getAttribute('data-id');
+            // TODO: open_the_content(id);
+        },
+        'item:share': function () {
+            var id = this.getAttribute('data-id');
+            // TODO: open_share_dialog(id)
+        }
+    },
+    behavior: {
+        'item:read': function () { /*...*/ },
+        'item:share': function () { /*...*/ }
+    }
+};
+</script>
+</code></pre>
 
 <small><strong>RESULT</strong></small>
 <div layout="rows center-stretch">
@@ -270,6 +234,67 @@ function animation_reveal () {
 </style>
 
 </div>
+
+
+
+<p>&nbsp;</p>
+
+
+##### The Controller
+
+The controller of a component....
+
+<small><strong>EXAMPLE</strong> Declaration of a generic controller for ```path/to/component_name```</small>
+<pre data-line="2"><code class="language-js">
+// Controller of component 'path/to/component_name'
+zuix.controller(function(cp) {
+
+    cp.create = function() { /* called after loading, when the component is created */ };
+
+    cp.destroy = function() { /* called when the component is destroyed */ }
+
+}).for('path/to/component_name');
+</code></pre>
+
+The ```cp``` object passed to the controller handler
+is the controller instance itself and exposes
+the following fields/methods.
+
+Component's life-cycle handlers:
+
+- ```cp.create = function() { ... }```
+<br>*handler function* that gets called after loading, when the component is created
+
+- ```cp.destroy = function() { ... }```
+<br>*handler function* called when the component is destroyed
+
+Component's core methods:
+
+- ```cp.view([selector])```
+<br/>get the component's view or if a *selector* is specified, get
+the view's elements matching the *selector* criteria.
+The returned value is a *ZxQuery* object. To get the underlying
+DOM *Element* object, use  the *ZxQuery***.get()** method
+(eg. ```var el = cp.view().get();```).
+
+- ```cp.field(fieldName)```
+<br/>get the view's element with matching ```data-ui-field``` attribute.
+The returned value is a *ZxQuery* object. To get the underlying
+DOM *Element* object, use  the *ZxQuery***.get()** method
+(eg. <small>```var el = cp.view().get();```</small>).
+
+- ```cp.model([mode])```
+<br/><em>get/set the data model object.</em>
+
+- ```cp.trigger(eventPath, eventValue)```
+<br/><em>trigger a component event.</em>
+
+- ```cp.options([options])```
+<br/><em>get/set the component's options.</em>
+
+- ```cp.expose(methodName, handler)```
+<br/><em>expose a component's method.</em>
+
 
 
 <p></p>
@@ -507,24 +532,6 @@ style="visibility:hidden;background: black">
         color: gray;
     }
 </style>
-
-
-##### Applying a same Controller to different Views
-
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
-
-##### Component Life-Cycle
-
-<p></p>
-<p>.</p>
-<p>.</p>
-<p>.</p>
-<p></p>
 
 #### Hooks
 

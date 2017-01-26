@@ -91,9 +91,9 @@ var main = {
 };
 
 // Zuix hook handlers
-var splashScreen = zuix.$(zuix.field('splashScreen')).show();
-var loaderMessage = zuix.$(zuix.field('loaderMessage'));
-var mainPage = zuix.$(zuix.field('main')).hide();
+var splashScreen = zuix.field('splashScreen').show();
+var loaderMessage = zuix.field('loaderMessage');
+var mainPage = zuix.field('main').hide();
 //zuix.lazyLoad(false);
 zuix
 .hook('load:begin', function(a,b){
@@ -104,7 +104,7 @@ zuix
 
 }).hook('load:next', function(a,b){
     if (splashScreen)
-        zuix.$(zuix.field('loader-progress'))
+        zuix.field('loader-progress')
             .html(b.task).prev()
             .animateCss('bounce');
     loaderMessage.html(b.task)

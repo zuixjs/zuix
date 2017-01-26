@@ -292,8 +292,9 @@ var util = _dereq_('./Util.js');
 /**
  * ZxQuery, a very small subset of jQuery-like functions
  * internally used in Zuix
+ *
  * @class ZxQuery
- * @param element {ZxQuery|Array<Node>|Node|NodeList|string|undefined}
+ * @param element {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
  * @return {ZxQuery}
  * @constructor
  */
@@ -339,9 +340,14 @@ ZxQuery.prototype.reverse = function () {
     this._selection = elements.reverse();
     return this;
 };
+/**
+ *
+ *
+ * @param i
+ * @return {Node|Element}
+ */
 ZxQuery.prototype.get = function (i) {
-    if (util.isNoU(i))
-        i = 0;
+    if (util.isNoU(i)) i = 0;
     return this._selection[i];
 };
 ZxQuery.prototype.eq = function (i) {
@@ -469,6 +475,18 @@ ZxQuery.prototype.html = function (htmlText) {
     });
     return this;
 };
+/**
+ *
+ * @param el {ZxQueryArgument}
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.append = function (el) {
+    if (typeof el === 'string')
+        this._selection[0].innerHTML += el;
+    else
+        this._selection[0].appendChild(el);
+    return this;
+};
 ZxQuery.prototype.display = function (mode) {
     if (util.isNoU(mode))
         return this._selection[0].style.display;
@@ -495,7 +513,7 @@ ZxQuery.prototype.hide = function () {
 
 /**
  *
- * @param what
+ * @param what {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
  * @returns {ZxQuery}
  */
 var z$ = function (what) {
@@ -1002,8 +1020,8 @@ ComponentContext.prototype.loadCss = function (options) {
 
 /***
  *
- * @param {ContextView|string|undefined} [view]
- * @returns {ComponentContext|ContextView}
+ * @param {Node|string|undefined} [view]
+ * @returns {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
     if (typeof view === 'undefined') return this._view;
@@ -1178,11 +1196,12 @@ var z$ =
 /**
  * TODO: complete JSDoc
  *
+ * @param {ComponentContext} context
  * @returns {ContextController}
  * @constructor
  */
 function ContextController(context) {
-    var self = this;
+    var _t = this;
 
     /** @protected */
     this.context = context;
@@ -1190,11 +1209,26 @@ function ContextController(context) {
     // TODO: should improve/deprecate this.componentId?
     this.componentId = context.componentId;
 
-    /** @type {ContextView} */ // read-only
-    this.view = function () {
-        return context.view()
+    this._view = null;
+    /**
+     *
+     * @param what {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
+     * @return {ZxQuery}
+     */
+    this.view = function (what) {
+        if (context.view() != null || this._view !== context.view())
+            return this._view = (what == null ? z$(context.view())
+                : typeof what === 'string' ? z$(context.view()).find(what)
+                    : z$(what));
+        else if (this._view !== null)
+            return this._view;
+        else
+            throw({
+                message: 'Not attacched to a view yet.',
+                source: this
+            });
     };
-    /** @type {ContextModel} */
+    /** @type {object} */
     this.model = function (model) {
         return context.model(model)
     };
@@ -1212,15 +1246,15 @@ function ContextController(context) {
     /** @type {function} */
     this.saveView = function () {
         this.restoreView();
-        z$.each(this.view().childNodes, function () {
-            self._childNodes.push(this);
+        this.view().children().each(function () {
+            _t._childNodes.push(this);
         });
     };
     this.restoreView = function() {
         if (this._childNodes.length > 0) {
-            self.view().innerHTML = '';
-            z$.each(self._childNodes, function () {
-                self.view().appendChild(this);
+            _t.view().html('');
+            z$.each(_t._childNodes, function () {
+                _t.view().append(this);
             });
             this._childNodes.length = 0;
         }
@@ -1256,13 +1290,13 @@ function ContextController(context) {
     /** @type {function} */
     this.trigger = function (eventPath, eventData) {
         if (context._eventMap[eventPath] == null)
-            this.addEvent(self.view(), eventPath, null);
+            this.addEvent(context.view(), eventPath, null);
         // TODO: ...
-        z$(self.view()).trigger(eventPath, eventData);
+        _t.view().trigger(eventPath, eventData);
     };
     /** @type {function} */
     this.on = function (eventPath, handler_fn) {
-        this.addEvent(self.view(), eventPath, handler_fn);
+        this.addEvent(context.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
     };
     /** @protected */
@@ -1278,12 +1312,12 @@ function ContextController(context) {
     };
     /** @protected */
     this.eventRouter = function (e) {
-        //if (typeof self.behavior() === 'function')
-        //    self.behavior().call(self.view(), a, b);
+        //if (typeof _t.behavior() === 'function')
+        //    _t.behavior().call(_t.view(), a, b);
         if (typeof context._behaviorMap[e.type] === 'function')
-            context._behaviorMap[e.type].call(self.view(), e, e.detail);
+            context._behaviorMap[e.type].call(context.view(), e, e.detail);
         if (typeof context._eventMap[e.type] === 'function')
-            context._eventMap[e.type].call(self.view(), e, e.detail);
+            context._eventMap[e.type].call(context.view(), e, e.detail);
         // TODO: else-> should report anomaly
     };
 
@@ -1293,7 +1327,7 @@ function ContextController(context) {
         for (var ep in options.on) {
             handler = options.on[ep];
             // TODO: should log.warn if k already exists
-            self.addEvent(self.view(), ep, handler);
+            _t.addEvent(context.view(), ep, handler);
         }
     }
     // create behavior map from context options
@@ -1301,7 +1335,7 @@ function ContextController(context) {
         for (var bp in options.behavior) {
             handler = options.behavior[bp];
             // TODO: should log.warn if k already exists
-            self.addBehavior(self.view(), bp, handler);
+            _t.addBehavior(context.view(), bp, handler);
         }
     }
 
@@ -1321,23 +1355,29 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
     this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
     return this;
 };
-
 /***
  * Search and cache this view elements.
  *
  * @param {!string} field Name of the `data-ui-field` to search
- * @param {boolean} [globalSearch] Search a generic field attribute
- * @returns {Element}
+ * @returns {ZxQuery}
  */
-ContextController.prototype.field = function (field, globalSearch) {
-    var f = globalSearch ? '@' + field : field;
-    var el = null;
-    if (typeof this._fieldCache[f] === 'undefined') {
-        el = globalSearch ? z$(field).get(0) : z$(this.view()).find('[data-ui-field=' + field + ']').get(0);
-        if (el != null)
-            this._fieldCache[f] = el;
+ContextController.prototype.field = function (field) {
+    var _t = this, el = null;
+    if (typeof this._fieldCache[field] === 'undefined') {
+        el = this.view().find('[data-ui-field=' + field + ']');
+        if (el != null) {
+            // ZxQuery base methods override
+            el.on = function (eventPath, eventHandler) {
+                if (typeof eventHandler === 'string') {
+                    var eh = eventHandler;
+                    eventHandler = function () { _t.trigger(eh); }
+                }
+                z$.ZxQuery.prototype.on.call(el, eventPath, eventHandler);
+            };
+            this._fieldCache[field] = el;
+        }
     } else {
-        el = this._fieldCache[f];
+        el = this._fieldCache[field];
     }
     return el;
 };
@@ -1428,7 +1468,7 @@ function Zuix() {
     /**
      * TODO: describe
      *
-     * @param callback {ContextControllerCallback}
+     * @param handler {ContextControllerCallback}
      * @returns {ContextControllerCallback}
      */
     function controller(handler) {
@@ -1445,10 +1485,11 @@ function Zuix() {
      *
      * @param {!string} fieldName The class to check for.
      * @param {!Node} [container] Starting DOM element for this search.
-     * @returns {Node}
+     * @returns {ZxQuery}
      */
     function field(fieldName, container) {
-        return z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]').get(0);
+        // TODO: implement caching ?
+        return z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]');
     }
 
     /**
@@ -1667,7 +1708,7 @@ function Zuix() {
     function unload(context) {
         if (!util.isNoU(context) && !util.isNoU(context._c)) {
             if (!util.isNoU(context._c.view()))
-                context._c.view().removeAttribute('data-ui-component');
+                context._c.view().attr('data-ui-component', null);
 
             //context.unregisterEvents();
             // TODO: unregister events and local context behavior
@@ -1809,7 +1850,7 @@ function Zuix() {
             var c = context._c = new ContextController(context);
 
             if (!util.isNoU(c.view())) {
-                c.view().setAttribute('data-ui-component', c.componentId);
+                c.view().attr('data-ui-component', c.componentId);
                 // if no model is supplied, try auto-create from view fields
                 if (util.isNoU(context.model()) && !util.isNoU(context.view()))
                     context.viewToModel();
@@ -1826,7 +1867,7 @@ function Zuix() {
                         context.loadHtml();
                 }
 
-                context.view().style.visibility = '';
+                c.view().css('visibility', '');
             }
 
             // TODO: review/improve life-cycle
@@ -1924,7 +1965,7 @@ function Zuix() {
         $: z$,
         field: field,
 
-        /* Access to classes proto */
+        /* Expose classes proto */
         TaskQueue: TaskQueue,
         ZxQuery: z$.ZxQuery,
 

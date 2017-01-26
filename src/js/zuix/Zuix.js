@@ -79,7 +79,7 @@ function Zuix() {
     /**
      * TODO: describe
      *
-     * @param callback {ContextControllerCallback}
+     * @param handler {ContextControllerCallback}
      * @returns {ContextControllerCallback}
      */
     function controller(handler) {
@@ -96,10 +96,11 @@ function Zuix() {
      *
      * @param {!string} fieldName The class to check for.
      * @param {!Node} [container] Starting DOM element for this search.
-     * @returns {Node}
+     * @returns {ZxQuery}
      */
     function field(fieldName, container) {
-        return z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]').get(0);
+        // TODO: implement caching ?
+        return z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]');
     }
 
     /**
@@ -318,7 +319,7 @@ function Zuix() {
     function unload(context) {
         if (!util.isNoU(context) && !util.isNoU(context._c)) {
             if (!util.isNoU(context._c.view()))
-                context._c.view().removeAttribute('data-ui-component');
+                context._c.view().attr('data-ui-component', null);
 
             //context.unregisterEvents();
             // TODO: unregister events and local context behavior
@@ -460,7 +461,7 @@ function Zuix() {
             var c = context._c = new ContextController(context);
 
             if (!util.isNoU(c.view())) {
-                c.view().setAttribute('data-ui-component', c.componentId);
+                c.view().attr('data-ui-component', c.componentId);
                 // if no model is supplied, try auto-create from view fields
                 if (util.isNoU(context.model()) && !util.isNoU(context.view()))
                     context.viewToModel();
@@ -477,7 +478,7 @@ function Zuix() {
                         context.loadHtml();
                 }
 
-                context.view().style.visibility = '';
+                c.view().css('visibility', '');
             }
 
             // TODO: review/improve life-cycle
@@ -575,7 +576,7 @@ function Zuix() {
         $: z$,
         field: field,
 
-        /* Access to classes proto */
+        /* Expose classes proto */
         TaskQueue: TaskQueue,
         ZxQuery: z$.ZxQuery,
 

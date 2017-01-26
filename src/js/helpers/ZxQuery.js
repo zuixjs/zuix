@@ -31,8 +31,9 @@ var util = require('./Util.js');
 /**
  * ZxQuery, a very small subset of jQuery-like functions
  * internally used in Zuix
+ *
  * @class ZxQuery
- * @param element {ZxQuery|Array<Node>|Node|NodeList|string|undefined}
+ * @param element {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
  * @return {ZxQuery}
  * @constructor
  */
@@ -78,9 +79,14 @@ ZxQuery.prototype.reverse = function () {
     this._selection = elements.reverse();
     return this;
 };
+/**
+ *
+ *
+ * @param i
+ * @return {Node|Element}
+ */
 ZxQuery.prototype.get = function (i) {
-    if (util.isNoU(i))
-        i = 0;
+    if (util.isNoU(i)) i = 0;
     return this._selection[i];
 };
 ZxQuery.prototype.eq = function (i) {
@@ -208,6 +214,18 @@ ZxQuery.prototype.html = function (htmlText) {
     });
     return this;
 };
+/**
+ *
+ * @param el {ZxQueryArgument}
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.append = function (el) {
+    if (typeof el === 'string')
+        this._selection[0].innerHTML += el;
+    else
+        this._selection[0].appendChild(el);
+    return this;
+};
 ZxQuery.prototype.display = function (mode) {
     if (util.isNoU(mode))
         return this._selection[0].style.display;
@@ -234,7 +252,7 @@ ZxQuery.prototype.hide = function () {
 
 /**
  *
- * @param what
+ * @param what {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
  * @returns {ZxQuery}
  */
 var z$ = function (what) {

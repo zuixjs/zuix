@@ -1,6 +1,4 @@
-A JavaScript library for component-based web development and content management.
-
-### Usage
+JavaScript UI content and component manager for creating sites and web apps.
 
 #### Local copy
 

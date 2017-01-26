@@ -1,40 +1,6 @@
-### <small>zuix</small> API documentation
+### API
 
 The ```zuix``` global object exposes the following methods:
-
-#### ```zuix.load( name [, options] )```
-
-Loads a component and returns the associated ```{ComponentContext}``` object.
-
-This method will try in order:
-- succesfully get the view associated to the component ```name``` or fire the ```options.error``` callback on failure
-- if previous step was succesfull it will cache the view (other components may refer the same view)
-- then it will try to load a {ContextController} either from the inline ```options.controller``` or
-from the ```name```.js
-
-<pre><strong>Method summary</strong>
-    <small>{ComponentContext}</small> zuix.<strong>load</strong>( <em>view</em> [, <em>options</em>] )
-
-<strong>Parameters</strong>
-    <small>{string|jQuery|HTMLElement}</small> <em>view</em>
-    Mixed type parameter that can be either one of the following:
-    - a ```string``` with the value matching the ```data-ui-view```
-      attribute of an inline element in the document
-    - a ```string``` indicating the relative or absolute path
-      of the view file (without the .html extension)
-    - a ```{jQuery}``` $(element)
-    - a ```HTMLElement```
-    <small>{ContextOptions}</small> <em>options</em>
-        Options object used to initialize the component context.
-
-<strong>Returns</strong>
-    <small>{ComponentContext}</small>
-    The loaded component context.
-</pre>
-
-#### ```zuix.unload( context )```
-
-...
 
 #### ```zuix.controller( controller_impl )```
 
@@ -53,137 +19,66 @@ Initializes a controller function.
 
 </pre>
 
-The <code>{ContextController}</code> function skelton is described below:
-
-<pre><code class="language-js">
-function (cp) {
-
-    cp.create = function () {
-        // Called as soon as the component context
-        // is created. Add initizlization code
-        // and register UI  event handlers here.
-    };
-
-    cp.destroy = function() {
-        // Called as soon as the component context
-        // is destroyed. Dispose any allocated resource here.
-    };
-
-    cp.resume = function () {
-        // Called automatically after cp.create()
-        // and any time back from cp.pause().
-    };
-
-    cp.pause = function() {
-        // Called when the component is
-        // requested to pause. Stop any background
-        // operation here
-        // (eg. event handlers and background workers)
-    };
-
-    cp.refresh = function () {
-        // Called when the bound data set (model) has changed.
-    };
-
-    cp.event = function (eventPath, eventValue) {
-        // Called when a component event is fired.
-    };
-
-    cp.api = function(command, options) {
-        // Called when a local API command is invoked.
-    };
-
-};
-</code></pre>
-
-<p></p>
-
-<code>cp</code> is the <code>{ComponentContext}</code> object
-that is passed to the <code>{ContextController}</code> function
-once the related component is created.
-
-When calling the <code>zuix.controller(...)</code> method, the passed
-<code>{ContextController}</code> function can implement none, one or more of the
-<code>cp</code> context handlers.
-
-
-
-
-##### cp <code>{ComponentContext}</code> object summary
-
-<pre><strong>Event Handlers</strong></pre>
-<pre><code class="language-js">
-
-    // on component created
-    cp.create = function() { ... };
-    // on component resumed
-    cp.resume = function() { ... };
-    // on component paused
-    cp.pause = function() { ... }
-    // on component destroyed
-    cp.destroy = function() { ... }
-    // on component refresh
-    cp.refresh = function() { ... }
-    // on component event
-    cp.event = function(eventPath, eventValue) { ... }
-    // on component command
-    cp.api = function(apiCommand, options) { ... }
-
-</code></pre>
-
-All of the above handler methods return ```{ComponentContext}.this```.
-
-<pre><strong>Methods</strong></pre>
-<pre><code class="language-js">
-
-    // @returns {jQuery}
-    cp.field(fieldName[, globalSearch]);
-    // @returns {ComponentContext}.this
-    cp.trigger(eventPath, eventValue)
-    // @returns {ComponentContext}.this
-    cp.on(eventPath, handlerFn)
-    // @returns {ComponentContext}.this
-    cp.invoke(apiCommand, options)
-    // @returns {ComponentContext}.this
-    cp.expose(methodName, handler)
-
-</code></pre>
-
-<pre><strong>Properties</strong></pre>
-<pre><code class="language-js">
-
-    // @type {jQuery}
-    cp.view
-    // @type {JSON}
-    cp.model
-
-</code></pre>
-
 #### ```zuix.field( name [, container])```
 
-Returns the ```{jQuery}``` object of the element having ```data-ui-field``` attribute matching ```name```.
-If no ```container``` specified the search range will cover the entire document.
+Returns the ```{ZxQuery}``` object of the element having ```data-ui-field``` attribute matching ```name```.
+If no ```container``` specified the search range will be the entire document.
 
 <pre><strong>Method summary</strong>
-    <small>{jQuery}</small> zuix.<strong>field</strong>( <em>name</em> [, <em>container</em>] )
+    <small>{ZxQuery}</small> zuix.<strong>field</strong>( <em>name</em> [, <em>container</em>] )
 
 <strong>Parameters</strong>
     <small>{string}</small> <em>name</em>
         ...
-    <small>{string|jQuery|HTMLElement}</small> <em>container</em>
-        A valid jQuery element/selector.
+    <small>{string|ZxQuery|HTMLElement}</small> <em>container</em>
+        A valid ZxQuery element/selector.
 
 <strong>Returns</strong>
-    <small>{jQuery}</small>
-    The {jQuery} element with ```data-ui-field``` matching ```name```.
+    <small>{ZxQuery}</small>
+    The {ZxQuery} element with ```data-ui-field``` matching ```name```.
 </pre>
 
 #### ```zuix.include( view [, container] )```
 
-#### ```zuix.hook( eventName, handler_fn )```
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
 
-#### ```zuix.requires( context, varNameOrTestFn )```
-#### ```zuix.conflicts( context, varNameOrTestFn )```
+#### ```zuix.load( name [, options] )```
+
+Loads a component and returns the associated ```{ComponentContext}``` object.
+
+<pre><strong>Method summary</strong>
+    <small>{ComponentContext}</small> zuix.<strong>load</strong>( <em>view</em> [, <em>options</em>] )
+
+<strong>Parameters</strong>
+    <small>{string|ZxQuery|HTMLElement}</small> <em>view</em>
+    Mixed type parameter that can be either one of the following:
+    - a ```string``` with the value matching the ```data-ui-view```
+      attribute of an inline element in the document
+    - a ```string``` indicating the relative or absolute path
+      of the view file (without the .html extension)
+    - a ```{ZxQuery}``` $(element)
+    - a ```HTMLElement```
+    <small>{ContextOptions}</small> <em>options</em>
+        Options object used to initialize the component context.
+
+<strong>Returns</strong>
+    <small>{ComponentContext}</small>
+    The loaded component context.
+</pre>
+
+#### ```zuix.unload( context )```
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+#### ```zuix.hook( eventName, handler_fn )```
 
 <p></p>
 <p>.</p>
