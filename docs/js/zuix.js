@@ -1103,6 +1103,7 @@ ComponentContext.prototype.loadHtml = function(options) {
     if (inlineView.length() > 0) {
         var inlineElement = inlineView.get(0);
         if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement)))
+            // TODO: test this case
             context.view(inlineElement);
         else
             context.view(inlineElement.outerHTML);

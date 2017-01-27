@@ -388,6 +388,11 @@ chip_view_options = {
 <script>
 // items list
 var chip_view_behavior = {
+    'view:create': function () {
+        zuix.$(this)
+            .find('img')
+            .animateCss('bounce', { delay: '1s' });
+    },
     'mouseover': function () {
         zuix.$(this).css('cursor', 'pointer');
     },

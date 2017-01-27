@@ -29,6 +29,8 @@ For example, consider the following "Summary Card" component, which
 shows a title, a summary text, a button to share and a button to open
 the full article.
 
+The component will consist of a view template and a controller.
+
 <small><strong>EXAMPLE</strong> Declaration of view template for the component ```site/components/summary_card```</small>
 <pre data-line="3,5,10,14"><code class="language-html">
 <div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
@@ -114,7 +116,7 @@ zuix.controller(function(cp) {
 
 <p>&nbsp;</p>
 
-The above view template declaration can be either placed in the same document (in-line) or
+The view template declaration can be either placed in the same document (in-line) or
 in files (```site/components/summary_card.html``` - ```site/components/summary_card.css```),
 in which case the ```data-ui-view``` attribute can be omitted.
 
@@ -135,7 +137,7 @@ Also the controller declaration can be placed in the same document or
 in its own file (```site/components/summary_card.js```),
 in which case the instruction ```.for('site/components/summary_card')``` can be omitted.
 
-To actually create an instance of the above component, the ```data-ui-load``` attribute is used.
+To actually create an instance of the component, the ```data-ui-load``` attribute is used.
 
 <small><strong>EXAMPLE</strong> Loading two instances of the component ```site/components/summary_card```</small>
 <pre data-line="2,8"><code class="language-html">
@@ -195,7 +197,12 @@ example_card_1_options = {
         'view:create': animation_reveal,
         'item:read': function () {
             // TODO:... open the popup with content
-            zuix.$(this).animateCss('pulse', { duration: '0.2s' });
+            var card = zuix.$(this).children().eq(0)
+                .addClass('mdl-shadow--8dp');
+            zuix.$(this)
+                .animateCss('pulse', { duration: '0.2s' }, function () {
+                    card.removeClass('mdl-shadow--8dp')
+                });
             /*var i = 1, blocks = zuix.$(this.firstElementChild).children();
             blocks.each(function () {
                 zuix.$(this).animateCss('pulse', { delay: ((i/15))+'s', duration: '0.15ds' });
@@ -211,7 +218,11 @@ example_card_1_options = {
     }
 };
 function animation_reveal () {
-    zuix.$(this).animateCss('fadeInDown', { delay: '0.5s', duration: '0.3s' });
+    var card = zuix.$(this).children().eq(0)
+        .addClass('mdl-shadow--6dp');
+    zuix.$(this).animateCss('fadeInDown', { delay: '0.5s', duration: '0.3s' }, function () {
+        card.removeClass('mdl-shadow--6dp');
+    });
     var i = 1, blocks = zuix.$(this.firstElementChild).children();
     blocks.each(function () {
         zuix.$(this).animateCss('bounceInDown', { delay: (0.5+(i/20))+'s', duration: (0.3+(i/10))+'s' });
@@ -242,7 +253,12 @@ function animation_reveal () {
 
 ##### The Controller
 
-The controller of a component....
+When all elements of a component are loaded (html, css, js) the
+controller method ```create()``` is called.
+When otherwise a component is requestd to unload, the ```destroy()```
+method is called.
+
+The following snippet shows the skelton of a controller declaration.
 
 <small><strong>EXAMPLE</strong> Declaration of a generic controller for ```path/to/component_name```</small>
 <pre data-line="2"><code class="language-js">
@@ -260,15 +276,15 @@ The ```cp``` object passed to the controller handler
 is the controller instance itself and exposes
 the following fields/methods.
 
-Component's life-cycle handlers:
+###### Life-cycle handlers
 
 - ```cp.create = function() { ... }```
-<br>*handler function* that gets called after loading, when the component is created
+<br>optional *handler* function that gets called after loading, when the component is created.
 
 - ```cp.destroy = function() { ... }```
-<br>*handler function* called when the component is destroyed
+<br>*optional *handler* function called when the component is destroyed
 
-Component's core methods:
+###### Helper methods
 
 - ```cp.view([selector])```
 <br/>get the component's view or if a *selector* is specified, get
@@ -295,7 +311,10 @@ DOM *Element* object, use  the *ZxQuery***.get()** method
 - ```cp.expose(methodName, handler)```
 <br/><em>expose a component's method.</em>
 
+###### ZxQuery DOM helper class
 
+*ZxQuery* is a *ZUIX* built-in class that implements a very
+lite subset of jQuery-like functionality.
 
 <p></p>
 <p>.</p>

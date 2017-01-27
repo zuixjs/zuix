@@ -29,7 +29,7 @@
 var util = require('./Util.js');
 
 /**
- * ZxQuery, a very small subset of jQuery-like functions
+ * ZxQuery, a very lite subset of jQuery-like functions
  * internally used in Zuix
  *
  * @class ZxQuery
