@@ -391,9 +391,10 @@ z$.find = function (filter) {
     return z$().find(filter);
 };
 z$.each = function (items, iterationCallback) {
-    for (var i = 0, len = items.length; i < len; i++)
-        if (iterationCallback.call(items[i], i, items[i]) === false)
-            break;
+    if (items != null)
+        for (var i = 0, len = items.length; i < len; i++)
+            if (iterationCallback.call(items[i], i, items[i]) === false)
+                break;
     return this;
 };
 z$.hasClass = function(el, className) {

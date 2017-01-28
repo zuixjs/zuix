@@ -162,22 +162,23 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     if (effectIn == null) effectIn = 'bounceIn';
     if (effectOut == null) effectOut = 'bounceOut';
     // Animate page changing
+    var options = { duration: '.5s' };
     var pages = zuix.$(this).children();
     if (i.page > i.old) {
         if (dirIn == null) dirIn = 'Right';
         if (dirOut == null) dirOut = 'Left';
-        pages.eq(i.page).animateCss(effectIn+dirIn)
+        pages.eq(i.page).animateCss(effectIn+dirIn, options)
             .css('overflow', 'hidden').show();
-        pages.eq(i.old).animateCss(effectOut+dirOut, function () {
+        pages.eq(i.old).animateCss(effectOut+dirOut, options, function () {
             pages.eq(i.page).css('overflow', 'auto');
             pages.eq(i.old).css('overflow', 'auto').hide();
         }).css('overflow', 'hidden').show();
     } else {
         if (dirIn == null) dirIn = 'Left';
         if (dirOut == null) dirOut = 'Right';
-        pages.eq(i.page).animateCss(effectIn+dirIn)
+        pages.eq(i.page).animateCss(effectIn+dirIn, options)
             .css('overflow', 'hidden').show();
-        pages.eq(i.old).animateCss(effectOut+dirOut, function () {
+        pages.eq(i.old).animateCss(effectOut+dirOut, options, function () {
             pages.eq(i.page).css('overflow', 'auto');
             pages.eq(i.old).css('overflow', 'auto').hide();
         }).css('overflow', 'hidden').show();

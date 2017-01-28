@@ -2,7 +2,11 @@ var gulp = require('gulp');
 var dox = require("gulp-dox");
 
 module.exports = function () {
-    return gulp.src('./src/js/helpers/ZxQuery.js')
+    gulp.src('./src/js/zuix/Zuix.js')
         .pipe(dox())
         .pipe(gulp.dest('./docs/content/api'));
+    gulp.src('./src/js/helpers/ZxQuery.js')
+        .pipe(dox())
+        .pipe(gulp.dest('./docs/content/api'));
+    return true;
 };

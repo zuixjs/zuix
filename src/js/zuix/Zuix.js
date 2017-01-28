@@ -81,6 +81,7 @@ function Zuix() {
     /**
      * TODO: describe
      *
+     * @memberOf Zuix
      * @param handler {ContextControllerCallback}
      * @returns {ContextControllerCallback}
      */
@@ -96,6 +97,7 @@ function Zuix() {
     /**
      * Returns Node with `ZUIX_FIELD_ATTRIBUTE` attribute matching `fieldName` .
      *
+     * @memberOf Zuix
      * @param {!string} fieldName The class to check for.
      * @param {!Node} [container] Starting DOM element for this search.
      * @returns {ZxQuery}
@@ -108,6 +110,7 @@ function Zuix() {
     /**
      * TODO: describe
      *
+     * @memberOf Zuix
      * @param [element] {Node}
      */
     function componentize(element) {
@@ -201,6 +204,7 @@ function Zuix() {
     /**
      * Loads a component with the given options.
      *
+     * @memberOf Zuix
      * @param {!string} componentId The id/name of the component we want to load.
      * @param {ContextOptions} [options] context options used to initialize the loaded component
      * @returns {ComponentContext}
@@ -316,6 +320,7 @@ function Zuix() {
 
     /**
      *
+     * @memberOf Zuix
      * @param context {ComponentContext}
      */
     function unload(context) {
@@ -341,6 +346,7 @@ function Zuix() {
 
     /**
      *
+     * @memberOf Zuix
      * @param {Node|Object} contextId
      * @returns {ComponentContext}
      */
@@ -358,6 +364,7 @@ function Zuix() {
 
     /**
      *
+     * @memberOf Zuix
      * @param contextId
      */
     function removeContext(contextId) {

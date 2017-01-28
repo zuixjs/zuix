@@ -136,30 +136,3 @@ pre.terminal p {
     margin-bottom:60px;
     border-top: dotted 1px rgba(230,230,230,0.5);
 }
-
-
-.jsdocs small {
-    font-weight:bold;
-}
-
-.jsdocs h2 {
-    font-size: 200%;
-    color:teal;
-}
-.jsdocs h6 {
-    font-size: 140%;
-    text-align: left;
-    color:teal;
-    margin-top:32px;
-    margin-bottom:0;
-}
-.jsdocs strong {
-    font-size: 90%;
-    color:dimgray;
-    margin-left: 24px;
-}
-
-.jsdocs p {
-    margin-bottom:6px;
-}
-
