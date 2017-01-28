@@ -33,6 +33,8 @@ var z$ =
     require('../helpers/ZxQuery');
 
 /**
+ *  ZUIX, Javascript library for component-based development.
+ *
  * @class Zuix
  * @constructor
  */
@@ -330,7 +332,14 @@ function Zuix() {
         }
     }
 
-    /***
+    /** @protected */
+    function createContext(options) {
+        var context = new ComponentContext(options, triggerHook);
+        _contextRoot.push(context);
+        return context;
+    }
+
+    /**
      *
      * @param {Node|Object} contextId
      * @returns {ComponentContext}
@@ -347,12 +356,10 @@ function Zuix() {
         return context;
     }
 
-    function createContext(options) {
-        var context = new ComponentContext(options, triggerHook);
-        _contextRoot.push(context);
-        return context;
-    }
-
+    /**
+     *
+     * @param contextId
+     */
     function removeContext(contextId) {
         // TODO: removeContext
     }
@@ -362,7 +369,7 @@ function Zuix() {
     }
 
     /***
-     *
+     * @protected
      * @param {Object} componentId
      * @returns {ComponentCache}
      */
@@ -378,7 +385,7 @@ function Zuix() {
     }
 
     /***
-     *
+     * @protected
      * @param {ComponentContext} context
      */
     function loadController(context) {
@@ -428,7 +435,7 @@ function Zuix() {
     }
 
     /***
-     *
+     * @protected
      * @param context {ComponentContext}
      */
     function createComponent(context) {
@@ -452,7 +459,7 @@ function Zuix() {
     }
 
     /***
-     *
+     * @protected
      * @param {ComponentContext} context
      */
     function initComponent(context) {
@@ -494,7 +501,7 @@ function Zuix() {
     }
 
     /***
-     *
+     * @protected
      * @param javascriptCode string
      * @returns {ContextControllerCallback}
      */
@@ -517,7 +524,7 @@ function Zuix() {
 
     // TODO: following code to be sorted/re-arranged
 
-
+    /** @protected */
     function triggerHook(context, path, data) {
 
         // TODO: call all registered callback
@@ -530,8 +537,10 @@ function Zuix() {
 
     }
 
+    /** @protected */
     var _hooksCallbacks = [];
 
+    /** @protected */
     function hooks(path, handler) {
         if (util.isNoU(handler))
             return _hooksCallbacks[path];
@@ -539,6 +548,7 @@ function Zuix() {
         return this;
     }
 
+    /** @protected */
     function lazyLoadEnabled(enable) {
         if (enable != null)
             _disableLazyLoading = !enable;
@@ -546,6 +556,7 @@ function Zuix() {
     }
 
     // Browser Agent / Bot detection
+    /** @protected */ /** @protected */
     var _isCrawlerBotClient = false, _disableLazyLoading = false;
     if (navigator && navigator.userAgent)
         _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
@@ -571,6 +582,7 @@ function Zuix() {
             hooks(p, v);
             return this;
         },
+        trigger: triggerHook,
 
         /* Utility methods */
         $: z$,

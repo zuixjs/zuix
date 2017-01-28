@@ -1,0 +1,1632 @@
+[
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Copyright 2015-2017 G-Labs. All Rights Reserved.<br />        <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p><p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);<br />you may not use this file except in compliance with the License.<br />You may obtain a copy of the License at</p><pre><code> http://www.apache.org/licenses/LICENSE-2.0\n</code></pre><p>Unless required by applicable law or agreed to in writing, software<br />distributed under the License is distributed on an &quot;AS IS&quot; BASIS,<br />WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br />See the License for the specific language governing permissions and<br />limitations under the License.</p>",
+      "summary": "<p>Copyright 2015-2017 G-Labs. All Rights Reserved.<br />        <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p>",
+      "body": "<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);<br />you may not use this file except in compliance with the License.<br />You may obtain a copy of the License at</p><pre><code> http://www.apache.org/licenses/LICENSE-2.0\n</code></pre><p>Unless required by applicable law or agreed to in writing, software<br />distributed under the License is distributed on an &quot;AS IS&quot; BASIS,<br />WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br />See the License for the specific language governing permissions and<br />limitations under the License.</p>"
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 1,
+    "codeStart": 17
+  },
+  {
+    "tags": [
+      {
+        "type": "author",
+        "string": "Generoso Martello <generoso@martello.com>",
+        "html": "<p>Generoso Martello <a href=\"&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x67;&#101;&#x6e;&#x65;&#x72;&#x6f;&#115;&#x6f;&#64;&#x6d;&#97;&#114;&#x74;&#101;&#108;&#108;&#x6f;&#x2e;&#99;&#111;&#x6d;\">&#x67;&#101;&#x6e;&#x65;&#x72;&#x6f;&#115;&#x6f;&#64;&#x6d;&#97;&#114;&#x74;&#101;&#108;&#108;&#x6f;&#x2e;&#99;&#111;&#x6d;</a></p>"
+      }
+    ],
+    "description": {
+      "full": "<p>This file is part of<br /> ZUIX, Javascript library for component-based development.<br />       <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p>",
+      "summary": "<p>This file is part of<br /> ZUIX, Javascript library for component-based development.<br />       <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 18,
+    "codeStart": 27,
+    "code": "\"use strict\";\n\nvar util = require('./Util.js');",
+    "ctx": false
+  },
+  {
+    "tags": [
+      {
+        "type": "class",
+        "string": "ZxQuery",
+        "html": "<p>ZxQuery</p>"
+      },
+      {
+        "type": "param",
+        "string": "{Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element]",
+        "name": "[element]",
+        "description": "",
+        "types": [
+          "Object",
+          "ZxQuery",
+          "Array.<Node>",
+          "Node",
+          "NodeList",
+          "string"
+        ],
+        "typesDescription": "<code>Object</code>|<a href=\"ZxQuery.html\">ZxQuery</a>|<code>Array</code>.&lt;<code>Node</code>&gt;|<code>Node</code>|<code>NodeList</code>|<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "html": "<p>{Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element]</p>"
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* instance object.",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> instance object.</p>"
+      },
+      {
+        "type": "constructor",
+        "string": "",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "<p>ZxQuery, a very lite subset of jQuery-like functions<br />internally used in Zuix.</p><p>The constructor takes one optional argument that can be<br />a DOM element, a node list or a valid DOM query selector string expression.<br />If no parameter is given, the ZxQuery will wrap the root <em>document</em> element.</p>",
+      "summary": "<p>ZxQuery, a very lite subset of jQuery-like functions<br />internally used in Zuix.</p>",
+      "body": "<p>The constructor takes one optional argument that can be<br />a DOM element, a node list or a valid DOM query selector string expression.<br />If no parameter is given, the ZxQuery will wrap the root <em>document</em> element.</p>"
+    },
+    "isPrivate": false,
+    "isConstructor": true,
+    "isClass": true,
+    "isEvent": false,
+    "ignore": false,
+    "line": 31,
+    "codeStart": 44,
+    "code": "function ZxQuery(element) {",
+    "ctx": {
+      "type": "constructor",
+      "name": "ZxQuery",
+      "string": "ZxQuery()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "protected",
+        "string": "",
+        "visibility": "protected",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 45,
+    "codeStart": 46,
+    "code": "this._selection = [];\n\nif (typeof element === 'undefined')\n    element = document.documentElement;\n\nif (element instanceof ZxQuery)\n    return element;\nelse if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))\n    this._selection = element;\nelse if (element instanceof HTMLElement || element instanceof Node)\n    this._selection = [element];\nelse if (typeof element === 'string')\n    this._selection = document.documentElement.querySelectorAll(element);\nelse if (element !== null) { //if (typeof element === 'string') {\n    console.log(typeof element);\n    throw(element);\n}\nreturn this;\n}",
+    "ctx": {
+      "type": "property",
+      "receiver": "this",
+      "name": "_selection",
+      "value": "[]",
+      "string": "this._selection"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{Number} Number of DOM elements in the current selection.",
+        "types": [
+          "Number"
+        ],
+        "typesDescription": "<code>Number</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>Number of DOM elements in the current selection.</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Number of elements in current DOM selection.</p>",
+      "summary": "<p>Number of elements in current DOM selection.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 65,
+    "codeStart": 69,
+    "code": "ZxQuery.prototype.length = function () {\n    return this._selection.length;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "length",
+      "string": "ZxQuery.prototype.length()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} filter A valid DOM query selector filter",
+        "name": "filter",
+        "description": "<p>A valid DOM query selector filter</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} A new *ZxQuery* object with the *parent* selection.",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>A new <em>ZxQuery</em> object with the <em>parent</em> selection.</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Get the closest parent matching the selector filter.</p>",
+      "summary": "<p>Get the closest parent matching the selector filter.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 72,
+    "codeStart": 77,
+    "code": "ZxQuery.prototype.parent = function (filter) {\n    if (!util.isNoU(filter))\n        return new ZxQuery(z$.getClosest(this._selection[0], filter));\n    return new ZxQuery(this._selection[0].parentNode);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "parent",
+      "string": "ZxQuery.prototype.parent()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} filter A valid DOM query selector filter",
+        "name": "filter",
+        "description": "<p>A valid DOM query selector filter</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery}  A new *ZxQuery* object with the *children* selection.",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>A new <em>ZxQuery</em> object with the <em>children</em> selection.</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Get the children matching the given selector filter.</p>",
+      "summary": "<p>Get the children matching the given selector filter.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 82,
+    "codeStart": 87,
+    "code": "ZxQuery.prototype.children = function (filter) {\n    // TODO: implement filtering\n    if (!util.isNoU(filter))\n        return new ZxQuery(this._selection[0].querySelectorAll(filter));\n    return new ZxQuery(this._selection[0].children);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "children",
+      "string": "ZxQuery.prototype.children()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Reverse the order of elements in current selection.</p>",
+      "summary": "<p>Reverse the order of elements in current selection.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 93,
+    "codeStart": 97,
+    "code": "ZxQuery.prototype.reverse = function () {\n    var elements = (Array.prototype.slice).call(this._selection, 0);\n    this._selection = elements.reverse();\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "reverse",
+      "string": "ZxQuery.prototype.reverse()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{number} i Position of element",
+        "name": "i",
+        "description": "<p>Position of element</p>",
+        "types": [
+          "number"
+        ],
+        "typesDescription": "<code>number</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{Node|Element} The *DOM* element",
+        "types": [
+          "Node",
+          "Element"
+        ],
+        "typesDescription": "<code>Node</code>|<code>Element</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>DOM</em> element</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Get the DOM element at given position in the current selection.<br />If no index is provided, the default element will be returned<br />(the one at position 0).</p>",
+      "summary": "<p>Get the DOM element at given position in the current selection.<br />If no index is provided, the default element will be returned<br />(the one at position 0).</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 102,
+    "codeStart": 109,
+    "code": "ZxQuery.prototype.get = function (i) {\n    if (util.isNoU(i)) i = 0;\n    return this._selection[i];\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "get",
+      "string": "ZxQuery.prototype.get()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{number} i Position of element",
+        "name": "i",
+        "description": "<p>Position of element</p>",
+        "types": [
+          "number"
+        ],
+        "typesDescription": "<code>number</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} A new *ZxQuery* object",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>A new <em>ZxQuery</em> object</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Get the ZxQuery object for then element at the given<br />position in the current selection.</p>",
+      "summary": "<p>Get the ZxQuery object for then element at the given<br />position in the current selection.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 113,
+    "codeStart": 119,
+    "code": "ZxQuery.prototype.eq = function (i) {\n    return new ZxQuery(this._selection[i]);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "eq",
+      "string": "ZxQuery.prototype.eq()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} selector A valid *DOM* query selector",
+        "name": "selector",
+        "description": "<p>A valid <em>DOM</em> query selector</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} A new *ZxQuery* object",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>A new <em>ZxQuery</em> object</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Select all descendants matching the given <em>DOM</em> query selector filter.</p>",
+      "summary": "<p>Select all descendants matching the given <em>DOM</em> query selector filter.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 122,
+    "codeStart": 127,
+    "code": "ZxQuery.prototype.find = function (selector) {\n    return new ZxQuery(this._selection[0].querySelectorAll(selector));\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "find",
+      "string": "ZxQuery.prototype.find()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{function} iterationCallback The callback *fn* to call at each iteration",
+        "name": "iterationCallback",
+        "description": "<p>The callback <em>fn</em> to call at each iteration</p>",
+        "types": [
+          "function"
+        ],
+        "typesDescription": "<code>function</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Iterate through all <em>DOM</em> elements in the current selection.<br />The context object <em>this</em> of the iteration callback will be the<br /><em>DOM</em> element corresponding the current iteration. If the callback<br />returns <em>false</em>, the iteration loop will interrupt.</p>",
+      "summary": "<p>Iterate through all <em>DOM</em> elements in the current selection.<br />The context object <em>this</em> of the iteration callback will be the<br /><em>DOM</em> element corresponding the current iteration. If the callback<br />returns <em>false</em>, the iteration loop will interrupt.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 130,
+    "codeStart": 138,
+    "code": "ZxQuery.prototype.each = function (iterationCallback) {\n    z$.each(this._selection, iterationCallback);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "each",
+      "string": "ZxQuery.prototype.each()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} attr The attribute name",
+        "name": "attr",
+        "description": "<p>The attribute name</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{string|undefined} [val] The attribute value",
+        "name": "[val]",
+        "description": "<p>The attribute value</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself",
+        "types": [
+          "string",
+          "ZxQuery"
+        ],
+        "typesDescription": "<code>string</code>|<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>attr</em> attribute value when no <em>val</em> specified, otherwise the <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Gets or sets the given element attribute.</p>",
+      "summary": "<p>Gets or sets the given element attribute.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 142,
+    "codeStart": 148,
+    "code": "ZxQuery.prototype.attr = function (attr, val) {\n    if (util.isNoU(val))\n        return this._selection[0].getAttribute(attr);\n    else\n        this.each(function (k, v) {\n            this.setAttribute(attr, val);\n        });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "attr",
+      "string": "ZxQuery.prototype.attr()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} eventPath Path of the event to trigger.",
+        "name": "eventPath",
+        "description": "<p>Path of the event to trigger.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{object} eventData Value of the event.",
+        "name": "eventData",
+        "description": "<p>Value of the event.</p>",
+        "types": [
+          "object"
+        ],
+        "typesDescription": "<code>object</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Trigger a component event.</p>",
+      "summary": "<p>Trigger a component event.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 157,
+    "codeStart": 163,
+    "code": "ZxQuery.prototype.trigger = function (eventPath, eventData) {\n    var event;\n    if (window.CustomEvent) {\n        event = new CustomEvent(eventPath, {detail: eventData});\n    } else {\n        event = document.createEvent('CustomEvent');\n        event.initCustomEvent(eventPath, true, true, eventData);\n    }\n    this.each(function (k, v) {\n        this.dispatchEvent(event);\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "trigger",
+      "string": "ZxQuery.prototype.trigger()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} eventPath Event path",
+        "name": "eventPath",
+        "description": "<p>Event path</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{function} eventHandler Event handler",
+        "name": "eventHandler",
+        "description": "<p>Event handler</p>",
+        "types": [
+          "function"
+        ],
+        "typesDescription": "<code>function</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Listen once for the given event.</p>",
+      "summary": "<p>Listen once for the given event.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 176,
+    "codeStart": 182,
+    "code": "ZxQuery.prototype.one = function (eventPath, eventHandler) {\n    var fired = false;\n    this.on(eventPath, function (a, b) {\n        if (fired) return;\n        fired = true;\n        z$(this).off(eventPath, eventHandler);\n        (eventHandler).call(this, a, b);\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "one",
+      "string": "ZxQuery.prototype.one()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} eventPath Event path",
+        "name": "eventPath",
+        "description": "<p>Event path</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{function} eventHandler Event handler",
+        "name": "eventHandler",
+        "description": "<p>Event handler</p>",
+        "types": [
+          "function"
+        ],
+        "typesDescription": "<code>function</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Listen for the given event.</p>",
+      "summary": "<p>Listen for the given event.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 192,
+    "codeStart": 198,
+    "code": "ZxQuery.prototype.on = function (eventPath, eventHandler) {\n    var events = eventPath.match(/\\S+/g) || [];\n    this.each(function (k, v) {\n        var _t = this;\n        z$.each(events, function (k, v) {\n            _t.addEventListener(v, eventHandler, false);\n        });\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "on",
+      "string": "ZxQuery.prototype.on()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} eventPath Event path",
+        "name": "eventPath",
+        "description": "<p>Event path</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{function} eventHandler Event handler",
+        "name": "eventHandler",
+        "description": "<p>Event handler</p>",
+        "types": [
+          "function"
+        ],
+        "typesDescription": "<code>function</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Stop listening for the given event.</p>",
+      "summary": "<p>Stop listening for the given event.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 208,
+    "codeStart": 214,
+    "code": "ZxQuery.prototype.off = function (eventPath, eventHandler) {\n    var events = eventPath.match(/\\S+/g) || [];\n    this.each(function (k, v) {\n        var _t = this;\n        z$.each(events, function (k, v) {\n            _t.removeEventListener(v, eventHandler);\n        });\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "off",
+      "string": "ZxQuery.prototype.off()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{boolean} *true* if the element is empty, *false* otherwise",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p><em>true</em> if the element is empty, <em>false</em> otherwise</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Returns <em>true</em> if the element is empty.</p>",
+      "summary": "<p>Returns <em>true</em> if the element is empty.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 224,
+    "codeStart": 228,
+    "code": "ZxQuery.prototype.isEmpty = function () {\n    return (this._selection[0].innerHTML.replace(/\\s/g, '').length === 0);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "isEmpty",
+      "string": "ZxQuery.prototype.isEmpty()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} attr The CSS property name",
+        "name": "attr",
+        "description": "<p>The CSS property name</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{string|undefined} [val] The attribute value.",
+        "name": "[val]",
+        "description": "<p>The attribute value.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{string|ZxQuery} The *attr* css value when no *val* specified, otherwise the *ZxQuery* object itself",
+        "types": [
+          "string",
+          "ZxQuery"
+        ],
+        "typesDescription": "<code>string</code>|<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>attr</em> css value when no <em>val</em> specified, otherwise the <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Sets or gets the given css property.</p>",
+      "summary": "<p>Sets or gets the given css property.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 231,
+    "codeStart": 237,
+    "code": "ZxQuery.prototype.css = function (attr, val) {\n    if (util.isNoU(val))\n        return this._selection[0].style[attr];\n    else\n        this.each(function (k, v) {\n            this.style[attr] = val;\n        });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "css",
+      "string": "ZxQuery.prototype.css()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} className The css class name.",
+        "name": "className",
+        "description": "<p>The css class name.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Adds the given css class to the element class list.</p>",
+      "summary": "<p>Adds the given css class to the element class list.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 246,
+    "codeStart": 251,
+    "code": "ZxQuery.prototype.addClass = function (className) {\n    var classes = className.match(/\\S+/g) || [];\n    z$.each(this._selection, function (k, v) {\n        if (this.classList) {\n            var _t = this;\n            z$.each(classes, function (k, v) {\n                _t.classList.add(v);\n            });\n        } else this.className += ' ' + className;\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "addClass",
+      "string": "ZxQuery.prototype.addClass()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} className The css class name.",
+        "name": "className",
+        "description": "<p>The css class name.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{boolean} *true* if the element has the *className* css class, *false* otherwise",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p><em>true</em> if the element has the <em>className</em> css class, <em>false</em> otherwise</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Returns <em>true</em> if the element contains the given css class.</p>",
+      "summary": "<p>Returns <em>true</em> if the element contains the given css class.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 263,
+    "codeStart": 268,
+    "code": "ZxQuery.prototype.hasClass = function (className) {\n    return z$.hasClass(this._selection[0], className);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "hasClass",
+      "string": "ZxQuery.prototype.hasClass()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string} className The css class name.",
+        "name": "className",
+        "description": "<p>The css class name.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Removes the given css class to the element class list.</p>",
+      "summary": "<p>Removes the given css class to the element class list.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 271,
+    "codeStart": 276,
+    "code": "ZxQuery.prototype.removeClass = function (className) {\n    var classes = className.match(/\\S+/g) || [];\n    z$.each(this._selection, function (k, v) {\n        if (this.classList) {\n            var _t = this;\n            z$.each(classes, function (k, v) {\n                _t.classList.remove(v);\n            });\n        } else this.className = this.className.replace(new RegExp('(^|\\\\b)' + className.split(' ').join('|') + '(\\\\b|$)', 'gi'), ' ');\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "removeClass",
+      "string": "ZxQuery.prototype.removeClass()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{ZxQuery} A new *ZxQuery* object",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>A new <em>ZxQuery</em> object</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Moves to the previous sibling in the DOM.</p>",
+      "summary": "<p>Moves to the previous sibling in the DOM.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 288,
+    "codeStart": 292,
+    "code": "ZxQuery.prototype.prev = function () {\n    return new ZxQuery(this._selection[0].previousElementSibling);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "prev",
+      "string": "ZxQuery.prototype.prev()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{ZxQuery} A new *ZxQuery* object",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>A new <em>ZxQuery</em> object</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Moves to the next sibling in the DOM.</p>",
+      "summary": "<p>Moves to the next sibling in the DOM.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 295,
+    "codeStart": 299,
+    "code": "ZxQuery.prototype.next = function () {\n    return new ZxQuery(this._selection[0].nextElementSibling);\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "next",
+      "string": "ZxQuery.prototype.next()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string|undefined} [htmlText] HTML markup text.",
+        "name": "[htmlText]",
+        "description": "<p>HTML markup text.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery}",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{ZxQuery}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Gets or sets the HTML markup.</p>",
+      "summary": "<p>Gets or sets the HTML markup.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 302,
+    "codeStart": 307,
+    "code": "ZxQuery.prototype.html = function (htmlText) {\n    if (util.isNoU(htmlText))\n        return this._selection[0].innerHTML;\n    this.each(function (k, v) {\n        this.innerHTML = htmlText;\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "html",
+      "string": "ZxQuery.prototype.html()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.",
+        "name": "el",
+        "description": "<p>Element to append.</p>",
+        "types": [
+          "Object",
+          "ZxQuery",
+          "Array.<Node>",
+          "Node",
+          "NodeList",
+          "string"
+        ],
+        "typesDescription": "<code>Object</code>|<a href=\"ZxQuery.html\">ZxQuery</a>|<code>Array</code>.&lt;<code>Node</code>&gt;|<code>Node</code>|<code>NodeList</code>|<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Appends the given element/markup to the current element.</p>",
+      "summary": "<p>Appends the given element/markup to the current element.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 315,
+    "codeStart": 320,
+    "code": "ZxQuery.prototype.append = function (el) {\n    if (typeof el === 'string')\n        this._selection[0].innerHTML += el;\n    else\n        this._selection[0].appendChild(el);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "append",
+      "string": "ZxQuery.prototype.append()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.",
+        "name": "el",
+        "description": "<p>Element to append.</p>",
+        "types": [
+          "Object",
+          "ZxQuery",
+          "Array.<Node>",
+          "Node",
+          "NodeList",
+          "string"
+        ],
+        "typesDescription": "<code>Object</code>|<a href=\"ZxQuery.html\">ZxQuery</a>|<code>Array</code>.&lt;<code>Node</code>&gt;|<code>Node</code>|<code>NodeList</code>|<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Prepends the given element/markup to the current element.</p>",
+      "summary": "<p>Prepends the given element/markup to the current element.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 327,
+    "codeStart": 332,
+    "code": "ZxQuery.prototype.prepend = function (el) {\n    if (typeof el === 'string')\n        this._selection[0].innerHTML = el + this._selection[0].innerHTML;\n    else\n        this._selection[0].insertBefore(el, this._selection[0].innerHTML.firstElementChild);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "prepend",
+      "string": "ZxQuery.prototype.prepend()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string|undefined} [mode] The display value.",
+        "name": "[mode]",
+        "description": "<p>The display value.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{string|ZxQuery} The *display* css value when no *mode* specified, otherwise the *ZxQuery* object itself",
+        "types": [
+          "string",
+          "ZxQuery"
+        ],
+        "typesDescription": "<code>string</code>|<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>display</em> css value when no <em>mode</em> specified, otherwise the <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Gets or sets the css display property.</p>",
+      "summary": "<p>Gets or sets the css display property.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 339,
+    "codeStart": 344,
+    "code": "ZxQuery.prototype.display = function (mode) {\n    if (util.isNoU(mode))\n        return this._selection[0].style.display;\n    z$.each(this._selection, function (k, v) {\n        this.style.display = mode;\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "display",
+      "string": "ZxQuery.prototype.display()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{string|undefined} [mode] The visibility value.",
+        "name": "[mode]",
+        "description": "<p>The visibility value.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{string|ZxQuery} The *visibility* css value when no *mode* specified, otherwise the *ZxQuery* object itself",
+        "types": [
+          "string",
+          "ZxQuery"
+        ],
+        "typesDescription": "<code>string</code>|<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>visibility</em> css value when no <em>mode</em> specified, otherwise the <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Gets or sets the css visibility property.</p>",
+      "summary": "<p>Gets or sets the css visibility property.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 352,
+    "codeStart": 357,
+    "code": "ZxQuery.prototype.visibility = function (mode) {\n    if (util.isNoU(mode))\n        return this._selection[0].style.visibility;\n    z$.each(this._selection, function (k, v) {\n        this.style.visibility = mode;\n    });\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "visibility",
+      "string": "ZxQuery.prototype.visibility()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Sets the css display property to &#39;&#39;.</p>",
+      "summary": "<p>Sets the css display property to &#39;&#39;.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 365,
+    "codeStart": 369,
+    "code": "ZxQuery.prototype.show = function () {\n    return this.display('');\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "show",
+      "string": "ZxQuery.prototype.show()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "return",
+        "string": "{ZxQuery} The *ZxQuery* object itself",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p>The <em>ZxQuery</em> object itself</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Sets the css display property to &#39;none&#39;.</p>",
+      "summary": "<p>Sets the css display property to &#39;none&#39;.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 372,
+    "codeStart": 376,
+    "code": "ZxQuery.prototype.hide = function () {\n    return this.display('none');\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "ZxQuery",
+      "cons": "ZxQuery",
+      "name": "hide",
+      "string": "ZxQuery.prototype.hide()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "[what] {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined}",
+        "name": "[what]",
+        "description": "<p>{Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined}</p>",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false
+      },
+      {
+        "type": "returns",
+        "string": "{ZxQuery}",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{ZxQuery}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Exported ZxQuery interface.</p>",
+      "summary": "<p>Exported ZxQuery interface.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 381,
+    "codeStart": 387,
+    "code": "var z$ = function (what) {\n    return new ZxQuery(what);\n};\nz$.find = function (filter) {\n    return z$().find(filter);\n};\nz$.each = function (items, iterationCallback) {\n    for (var i = 0, len = items.length; i < len; i++)\n        if (iterationCallback.call(items[i], i, items[i]) === false)\n            break;\n    return this;\n};\nz$.hasClass = function(el, className) {\n    var classes = className.match(/\\S+/g) || [];\n    var success = false;\n    z$.each(classes, function (k, v) {\n        if (el.classList)\n            success = el.classList.contains(v);\n        else\n            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(el.className));\n        if (success) return false;\n    });\n    return success;\n};\nz$.ajax = function ajax(opt) {\n    var url;\n    if (!util.isNoU(opt) && !util.isNoU(opt.url))\n        url = opt.url;\n    else\n        url = opt;\n    var xhr = new XMLHttpRequest();\n    xhr.open('GET', url);\n    xhr.onload = function () {\n        if (xhr.status === 200) {\n            if (util.isFunction(opt.success)) opt.success(xhr.responseText);\n        }\n        else {\n            if (util.isFunction(opt.error)) opt.error(xhr);\n        }\n        if (util.isFunction(opt.then)) opt.then(xhr);\n    };\n    xhr.send();\n    return this;\n};\nz$.wrapElement = function (containerTag, element) {\n    //$(element).wrap($('<'+containerTag+'/>'));\n    //return element;",
+    "ctx": {
+      "type": "function",
+      "name": "z$",
+      "string": "z$()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "type",
+        "string": "Element",
+        "types": [
+          "lemen"
+        ],
+        "typesDescription": "<a href=\"lemen.html\">lemen</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "html": "<p>Element</p>"
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 434,
+    "codeStart": 435,
+    "code": "var container = document.createElement(containerTag);\nif (typeof element === 'string')\n    container.innerHTML = element;\nelse\n// TODO: test this, it may not work\n    container.appendChild(element);\nreturn container;\n};\nz$.wrapCss = function (wrapperRule, css) {\nvar wrapReX = /([.,\\w])([^/{};]+)({)/g;\nvar r, result = null, wrappedCss = '';\nwhile (r = wrapReX.exec(css)) {\n    if (result != null)\n        wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);\n    result = r;\n}\nif (result != null)\n    wrappedCss += wrapperRule + ' ' + css.substring(result.index);\nif (wrappedCss != '') {\n    css = wrappedCss;\n}\nreturn css;\n};\nz$.appendCss = function (css, target) {\nvar style = null, head;\nif (typeof css === 'string') {\n    // output css\n    head = document.head || document.getElementsByTagName('head')[0];\n    style = document.createElement('style');\n    style.type = 'text/css';\n    if (style.styleSheet)\n        style.styleSheet.cssText = css;\n    else\n        style.appendChild(document.createTextNode(css));\n} else if (css instanceof Element) style = css;\n// remove previous style node\nif (!util.isNoU(target))\n    head.removeChild(target);\nif (!util.isNoU(style))\n    head.appendChild(style);\nreturn style;\n};\nz$.getClosest = function (elem, selector) {\n// Get closest match\nfor (; elem && elem !== document; elem = elem.parentNode) {\n    if (elem.matches(selector)) return elem;\n}\nreturn null;\n};\nz$.getPosition = function (el) {\nvar visible = z$.isInView(el);\nvar x = 0, y = 0;\nwhile (el) {\n    if (el.tagName == \"BODY\") {\n        // deal with browser quirks with body/window/document and page scroll\n        var scrollX = el.scrollLeft || document.documentElement.scrollLeft;\n        var scrollY = el.scrollTop || document.documentElement.scrollTop;\n        x += (el.offsetLeft - scrollX + el.clientLeft);\n        y += (el.offsetTop - scrollY + el.clientTop);\n    } else {\n        // for all other non-BODY elements\n        x += (el.offsetLeft - el.scrollLeft + el.clientLeft);\n        y += (el.offsetTop - el.scrollTop + el.clientTop);\n    }\n    el = el.offsetParent;\n}\nreturn {\n    x: x,\n    y: y,\n    visible: visible\n};\n};\nz$.isInView = function (el) {\nif (el.offsetParent === null)\n    return false;\nvar rect = el.getBoundingClientRect();\nreturn rect.bottom > 0 && rect.right > 0\n    && rect.left < (window.innerWidth || document.documentElement.clientWidth)",
+    "ctx": {
+      "type": "declaration",
+      "name": "container",
+      "value": "document.createElement(containerTag)",
+      "string": "container"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>or $(window).width()</p>",
+      "summary": "<p>or $(window).width()</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 512,
+    "codeStart": 513,
+    "code": "&& rect.top < (window.innerHeight || document.documentElement.clientHeight);",
+    "ctx": false
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>or $(window).height()</p>",
+      "summary": "<p>or $(window).height()</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 514,
+    "codeStart": 515,
+    "code": "};\nz$.ZxQuery = ZxQuery;\n\n// Element.matches() polyfill\nif (!Element.prototype.matches) {\n    Element.prototype.matches =\n        Element.prototype.matchesSelector ||\n        Element.prototype.mozMatchesSelector ||\n        Element.prototype.msMatchesSelector ||\n        Element.prototype.oMatchesSelector ||\n        Element.prototype.webkitMatchesSelector ||\n        function (s) {\n            var matches = (this.document || this.ownerDocument).querySelectorAll(s),\n                i = matches.length;\n            while (--i >= 0 && matches.item(i) !== this) {\n            }\n            return i > -1;\n        };\n}\n// window.CustomEvent polyfill for IE>=9\n(function () {\n    if ( typeof window.CustomEvent === \"function\" ) return false;\n    function CustomEvent ( event, params ) {\n        params = params || { bubbles: false, cancelable: false, detail: undefined };\n        var evt = document.createEvent( 'CustomEvent' );\n        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );\n        return evt;\n    }\n    CustomEvent.prototype = window.Event.prototype;\n    window.CustomEvent = CustomEvent;\n})();\n\nmodule.exports =  z$;",
+    "ctx": false
+  }
+]

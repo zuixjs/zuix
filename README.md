@@ -24,7 +24,7 @@ Install development package
 
 Build source and create minified version in ```./build/js``` folder:
 
-    gulp build
+    gulp browserify ; gulp compile ; gulp dox ; gulp dist
 
 Start local web server
 

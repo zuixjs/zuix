@@ -1,10 +1,20 @@
+html{ font-size:100%; }
+@media( min-width:60em ){ html { font-size: 100% } }
 body {
     background: url(images/skyline-texture.png);
-    font-family: 'Cairo', 'Titillium+Web', sans-serif !important;
+    font-family: 'Titillium Web', sans-serif !important;
+    font-size: 16px;
+    line-height: 140%;
 }
 
 p {
-    font-size: 1.1em;
+    font-size: 110%;
+    line-height: 160%;
+    margin: 0 0 24px;
+}
+p code {
+    font-size: 85%;
+    opacity: 0.8;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -12,16 +22,33 @@ h1, h2, h3, h4, h5, h6 {
     padding-top: 12px;
     padding-bottom: 12px;
     text-transform: none;
-    font-weight: 700;
+}
+h1 {
+    font-size: 260%;
+}
+h2 {
+    font-size: 230%;
+}
+h3 {
+    font-size: 200%;
+}
+h4 {
+    font-size: 170%;
+}
+h5 {
+    font-size: 150%;
+}
+h6 {
+    font-size: 130%;
 }
 h3 {
     text-align: center;
 }
-h3, h4 {
-    font-weight: 500;
-}
-h5, h6 {
-    font-weight: 500;
+
+ul, li {
+    list-style-type: none;
+    font-size: 100%;
+    line-height: 200%;
 }
 
 [data-ui-component="ui/layout/actions_view"] div {
@@ -47,6 +74,18 @@ h5, h6 {
     padding: 16px;
 }
 
+
+
+.material-icons {
+    vertical-align: middle;
+}
+li i {
+    margin-right: 12px;
+}
+h4 i {
+    margin-left: 12px;
+    margin-right: 12px;
+}
 .md-18 {
     font-size: 18px;
 }
@@ -97,3 +136,30 @@ pre.terminal p {
     margin-bottom:60px;
     border-top: dotted 1px rgba(230,230,230,0.5);
 }
+
+
+.jsdocs small {
+    font-weight:bold;
+}
+
+.jsdocs h2 {
+    font-size: 200%;
+    color:teal;
+}
+.jsdocs h6 {
+    font-size: 140%;
+    text-align: left;
+    color:teal;
+    margin-top:32px;
+    margin-bottom:0;
+}
+.jsdocs strong {
+    font-size: 90%;
+    color:dimgray;
+    margin-left: 24px;
+}
+
+.jsdocs p {
+    margin-bottom:6px;
+}
+

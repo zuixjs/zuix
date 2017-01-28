@@ -1,7 +1,8 @@
 var gulp = require('./gulp')([
     'browserify',
     'compile',
-    'dist'
+    'dist',
+    'dox'
 ]);
 
 //gulp.task('build', ['browserify', 'compile', 'dist']);
