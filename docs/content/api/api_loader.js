@@ -1,5 +1,7 @@
 zuix.controller(function (cp) {
+
     cp.create = function () {
+
         var apiName = cp.view().attr('data-ui-api');
         cp.view().html('Loading '+apiName+' API...');
         zuix.$.ajax({
@@ -7,34 +9,24 @@ zuix.controller(function (cp) {
             success: function(json) {
                 cp.view().html('');
                 var dox = JSON.parse(json);
+                console.log(dox);
                 var html = '';
                 zuix.$.each(dox, function () {
-                    var apiMember = false;
-                    console.log(this.tags);
-                    zuix.$.each(this.tags, function () {
-                        if (this.type.toLowerCase() === 'memberof' && this.string == apiName) {
-                            apiMember = true;
-                            return false;
-                        }
-                    });
-                    apiMember = apiMember || (this.ctx != null && (this.ctx.cons === apiName));
+                    var apiMember = (this.ctx != null && (this.ctx.cons === apiName));
                     if (apiMember) {
+
                         var params; params = '';
                         zuix.$.each(this.tags, function () {
                             if (this.type === 'param') {
                                 params += this.name + ', ';
                             }
                         });
+
                         if (params.length > 0)
                             params = params.substring(0, params.length-2);
                         html += '<div class="title"><h5><i class="material-icons">expand_more</i><code>'+this.ctx.name+'( '+params+' )</code></h5></div>';
-
                         html += '<div class="container"><div class="details collapsed">';
-
                         html += '<p class="description"><span>'+this.description.full.replace(/<p>(.*)<\/p>/, '$1')+'</span></p>';
-                        //console.log(this.ctx.type + ' ' + this.ctx.cons + '.' + this.ctx.name);
-                        //console.log(this.description.full);
-
 
                         var currentType = '';
                         zuix.$.each(this.tags, function () {
@@ -65,13 +57,9 @@ zuix.controller(function (cp) {
                             html += this.description;
 
                             html += '</div>';
-                            //console.log('\t'+this.type+' '+JSON.stringify(this.types));
-                            //console.log('\t'+this.description);
-                            //console.log('\t');
                         });
 
                         html += '</div></div><!-- details -->';
-
                     }
                 });
                 cp.view()
@@ -88,11 +76,10 @@ zuix.controller(function (cp) {
             }
         });
 
-    }
+    };
 
     function expandItem(element) {
         var detail = zuix.$(element).next().children().eq(0);
-        console.log(detail.hasClass('collapsed'));
         if (detail.hasClass('collapsed')) {
             detail.animateCss('fadeInDown', { duration: '0.2s'}).removeClass('collapsed');
             zuix.$(element).find('i').html('expand_less')
@@ -104,18 +91,6 @@ zuix.controller(function (cp) {
             zuix.$(element).find('i').html('expand_more')
                 .animateCss('bounce', { duration: '.1s' });
         }
-
-    }
-
-    function stripHtml(html) {
-        return html.replace(/<(?:[^>=]|='[^']*'|="[^"]*"|=[^'"][^\s>]*)*>/g, '')
-            .split(/\n/)
-            .map(function(line) {
-                return line.replace(/(&nbsp;)/g, ' ').trim();
-            }).filter(function(line) {
-                return line != '' && line != '&nbsp;';
-            })
-            .join('\n');
     }
 
 });

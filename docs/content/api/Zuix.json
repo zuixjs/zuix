@@ -19,7 +19,7 @@
       {
         "type": "author",
         "string": "Generoso Martello <generoso@martello.com>",
-        "html": "<p>Generoso Martello <a href=\"&#109;&#97;&#105;&#108;&#116;&#111;&#x3a;&#x67;&#101;&#x6e;&#101;&#114;&#x6f;&#x73;&#111;&#64;&#109;&#97;&#x72;&#116;&#101;&#x6c;&#108;&#x6f;&#46;&#99;&#111;&#109;\">&#x67;&#101;&#x6e;&#101;&#114;&#x6f;&#x73;&#111;&#64;&#109;&#97;&#x72;&#116;&#101;&#x6c;&#108;&#x6f;&#46;&#99;&#111;&#109;</a></p>"
+        "html": "<p>Generoso Martello <a href=\"&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#x67;&#x65;&#110;&#x65;&#114;&#111;&#x73;&#111;&#x40;&#x6d;&#x61;&#114;&#x74;&#101;&#108;&#x6c;&#x6f;&#46;&#99;&#111;&#x6d;\">&#x67;&#x65;&#110;&#x65;&#114;&#111;&#x73;&#111;&#x40;&#x6d;&#x61;&#114;&#x74;&#101;&#108;&#x6c;&#x6f;&#46;&#99;&#111;&#x6d;</a></p>"
       }
     ],
     "description": {
@@ -34,8 +34,36 @@
     "ignore": false,
     "line": 18,
     "codeStart": 26,
-    "code": "\"use strict\";\n\nvar util =\n    require('../helpers/Util');\nvar TaskQueue =\n    require('../helpers/TaskQueue');\nvar z$ =\n    require('../helpers/ZxQuery');",
+    "code": "\"use strict\";\n\nvar util =\n    require('../helpers/Util');\nvar z$ =\n    require('../helpers/ZxQuery');\nvar TaskQueue =\n    require('../helpers/TaskQueue');\nvar ComponentContext =\n    require('./ComponentContext');\nvar ContextController =\n    require('./ContextController');",
     "ctx": false
+  },
+  {
+    "tags": [
+      {
+        "type": "const",
+        "string": "",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 39,
+    "codeStart": 42,
+    "code": "var ZUIX_FIELD_ATTRIBUTE = 'data-ui-field';",
+    "ctx": {
+      "type": "declaration",
+      "name": "ZUIX_FIELD_ATTRIBUTE",
+      "value": "'data-ui-field'",
+      "string": "ZUIX_FIELD_ATTRIBUTE"
+    }
   },
   {
     "tags": [
@@ -48,6 +76,20 @@
         "type": "constructor",
         "string": "",
         "html": ""
+      },
+      {
+        "type": "returns",
+        "string": "{Zuix}",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{Zuix}</p>"
       }
     ],
     "description": {
@@ -60,9 +102,9 @@
     "isClass": true,
     "isEvent": false,
     "ignore": false,
-    "line": 35,
-    "codeStart": 41,
-    "code": "function Zuix() {\n\n    var ComponentContext = require('./ComponentContext');\n    var ContextController = require('./ContextController');\n\n    var tasker = new TaskQueue(function(tq, eventPath, eventValue){\n        triggerHook(tq, eventPath, eventValue);\n    });",
+    "line": 44,
+    "codeStart": 51,
+    "code": "function Zuix() {\n    return this;\n}",
     "ctx": {
       "type": "constructor",
       "name": "Zuix",
@@ -72,9 +114,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -96,13 +138,13 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 50,
-    "codeStart": 54,
+    "line": 55,
+    "codeStart": 59,
     "code": "var _componentCache = [];",
     "ctx": {
       "type": "declaration",
@@ -114,9 +156,38 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 61,
+    "codeStart": 62,
+    "code": "var _contextSeqNum = 0;",
+    "ctx": {
+      "type": "declaration",
+      "name": "_contextSeqNum",
+      "value": "0",
+      "string": "_contextSeqNum"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -138,14 +209,14 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 56,
-    "codeStart": 60,
-    "code": "var _contextRoot = [];\n\n\n// TODO: implement Config object for zuix",
+    "line": 63,
+    "codeStart": 67,
+    "code": "var _contextRoot = [];",
     "ctx": {
       "type": "declaration",
       "name": "_contextRoot",
@@ -156,14 +227,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
-        "html": ""
-      },
-      {
-        "type": "const",
-        "string": "",
+        "visibility": "private",
         "html": ""
       }
     ],
@@ -172,85 +238,27 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 64,
-    "codeStart": 67,
-    "code": "var ZUIX_FIELD_ATTRIBUTE = 'data-ui-field';",
+    "line": 69,
+    "codeStart": 70,
+    "code": "var _hooksCallbacks = [];",
     "ctx": {
       "type": "declaration",
-      "name": "ZUIX_FIELD_ATTRIBUTE",
-      "value": "'data-ui-field'",
-      "string": "ZUIX_FIELD_ATTRIBUTE"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 70,
-    "codeStart": 71,
-    "code": "var _contextSeqNum = 0;",
-    "ctx": {
-      "type": "declaration",
-      "name": "_contextSeqNum",
-      "value": "0",
-      "string": "_contextSeqNum"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 73,
-    "codeStart": 74,
-    "code": "var _lazyQueued = []; // Lazy loading - queued elements",
-    "ctx": {
-      "type": "declaration",
-      "name": "_lazyQueued",
+      "name": "_hooksCallbacks",
       "value": "[]",
-      "string": "_lazyQueued"
+      "string": "_hooksCallbacks"
     }
   },
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       }
     ],
@@ -259,42 +267,13 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 75,
-    "codeStart": 76,
-    "code": "var _lazyLoaders = []; // \"data-ui-lazyload\" elements",
-    "ctx": {
-      "type": "declaration",
-      "name": "_lazyLoaders",
-      "value": "[]",
-      "string": "_lazyLoaders"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 78,
-    "codeStart": 79,
+    "line": 72,
+    "codeStart": 73,
     "code": "var _globalHandlers = {};",
     "ctx": {
       "type": "declaration",
@@ -306,10 +285,97 @@
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 75,
+    "codeStart": 76,
+    "code": "var _lazyQueued = []; // Lazy loading - queued elements",
+    "ctx": {
+      "type": "declaration",
+      "name": "_lazyQueued",
+      "value": "[]",
+      "string": "_lazyQueued"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 77,
+    "codeStart": 78,
+    "code": "var _lazyLoaders = []; // \"data-ui-lazyload\" elements",
+    "ctx": {
+      "type": "declaration",
+      "name": "_lazyLoaders",
+      "value": "[]",
+      "string": "_lazyLoaders"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "*",
+        "visibility": "private",
+        "html": "<p>*</p>"
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 80,
+    "codeStart": 81,
+    "code": "var tasker = new TaskQueue(function (tq, eventPath, eventValue) {\n    trigger(tq, eventPath, eventValue);\n});",
+    "ctx": {
+      "type": "declaration",
+      "name": "tasker",
+      "value": "new TaskQueue(function (tq, eventPath, eventValue) {",
+      "string": "tasker"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       },
       {
         "type": "param",
@@ -324,7 +390,7 @@
         "optional": false
       },
       {
-        "type": "returns",
+        "type": "return",
         "string": "{ContextControllerCallback}",
         "types": [
           "ContextControllerCallback"
@@ -339,18 +405,18 @@
       }
     ],
     "description": {
-      "full": "<p>TODO: describe</p>",
-      "summary": "<p>TODO: describe</p>",
+      "full": "<p>Initializes a controller <code>handler</code>.</p>",
+      "summary": "<p>Initializes a controller <code>handler</code>.</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 81,
-    "codeStart": 88,
-    "code": "function controller(handler) {\n    if (typeof handler['for'] !== 'function')\n        handler['for'] = function(componentId) {\n            _globalHandlers[componentId] = handler;\n            return handler;\n        };\n    return handler;\n}",
+    "line": 85,
+    "codeStart": 92,
+    "code": "function controller(handler) {\n    if (typeof handler['for'] !== 'function')\n        handler['for'] = function (componentId) {\n            _globalHandlers[componentId] = handler;\n            return handler;\n        };\n    return handler;\n}",
     "ctx": {
       "type": "function",
       "name": "controller",
@@ -360,10 +426,10 @@
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       },
       {
         "type": "param",
@@ -381,9 +447,9 @@
       },
       {
         "type": "param",
-        "string": "{!Node} [container] Starting DOM element for this search.",
+        "string": "{!Node} [container] Starting DOM element for this search (**default:** ```document```)",
         "name": "[container]",
-        "description": "<p>Starting DOM element for this search.</p>",
+        "description": "<p>Starting DOM element for this search (<strong>default:</strong> <code>document</code>)</p>",
         "types": [
           "Node"
         ],
@@ -394,7 +460,7 @@
         "variable": false
       },
       {
-        "type": "returns",
+        "type": "return",
         "string": "{ZxQuery}",
         "types": [
           "ZxQuery"
@@ -409,17 +475,17 @@
       }
     ],
     "description": {
-      "full": "<p>Returns Node with <code>ZUIX_FIELD_ATTRIBUTE</code> attribute matching <code>fieldName</code> .</p>",
-      "summary": "<p>Returns Node with <code>ZUIX_FIELD_ATTRIBUTE</code> attribute matching <code>fieldName</code> .</p>",
+      "full": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
+      "summary": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 97,
-    "codeStart": 105,
+    "line": 101,
+    "codeStart": 110,
     "code": "function field(fieldName, container) {\n    // TODO: implement caching ?\n    return z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '=\"' + fieldName + '\"]');\n}",
     "ctx": {
       "type": "function",
@@ -430,16 +496,16 @@
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       },
       {
         "type": "param",
-        "string": "[element] {Node}",
+        "string": "[element] {Node} Optional container to use as starting node for the search.",
         "name": "[element]",
-        "description": "<p>{Node}</p>",
+        "description": "<p>{Node} Optional container to use as starting node for the search.</p>",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -449,18 +515,18 @@
       }
     ],
     "description": {
-      "full": "<p>TODO: describe</p>",
-      "summary": "<p>TODO: describe</p>",
+      "full": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
+      "summary": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 110,
-    "codeStart": 116,
-    "code": "function componentize(element) {\n    // Throttle method\n    if (tasker.requestLock(componentize)) {\n        z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {\n            this.style.visibility = 'hidden';\n            // override lazy loading if 'lazyload' is set to 'false' for the current element\n            if (!lazyLoadEnabled() || this.getAttribute('data-ui-lazyload') == 'false') {\n                loadInline(this);\n                return true;\n            }\n            // defer element loading if lazy loading is enabled and the element is not in view\n            var lazyLoad = z$.getClosest(this, '[data-ui-lazyload=true]');\n            if (lazyLoad !== null) {\n                if (_lazyLoaders.indexOf(lazyLoad) == -1) {\n                    _lazyLoaders.push(lazyLoad);\n                    z$(lazyLoad).on('scroll', function () {\n                        componentize(lazyLoad);\n                    });\n                }\n                var position = z$.getPosition(this);\n                if (!position.visible) {\n                    if (_lazyQueued.indexOf(this) == -1) {\n                        _lazyQueued.push(this);\n                    }\n                    // Not in view: defer element loading and\n                    // process next inline element\n                    return true;\n                }\n            }\n            // proceed loading inline element\n            var queued = _lazyQueued.indexOf(this);\n            if (queued > -1)\n                _lazyQueued.splice(queued, 1);\n            loadInline(this);\n        });\n        tasker.releaseLock(componentize);\n    } else tasker.lockLater(componentize, function() {\n        componentize(element);\n    }, 200);\n}",
+    "line": 115,
+    "codeStart": 123,
+    "code": "function componentize(element) {\n    // Throttle method\n    if (tasker.requestLock(componentize)) {\n        z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {\n            this.style.visibility = 'hidden';\n            // override lazy loading if 'lazyload' is set to 'false' for the current element\n            if (!lazyLoad() || this.getAttribute('data-ui-lazyload') == 'false') {\n                loadInline(this);\n                return true;\n            }\n            // defer element loading if lazy loading is enabled and the element is not in view\n            var lazyContainer = z$.getClosest(this, '[data-ui-lazyload=true]');\n            if (lazyContainer !== null) {\n                if (_lazyLoaders.indexOf(lazyContainer) == -1) {\n                    _lazyLoaders.push(lazyContainer);\n                    z$(lazyContainer).on('scroll', function () {\n                        componentize(lazyContainer);\n                    });\n                }\n                var position = z$.getPosition(this);\n                if (!position.visible) {\n                    if (_lazyQueued.indexOf(this) == -1) {\n                        _lazyQueued.push(this);\n                    }\n                    // Not in view: defer element loading and\n                    // process next inline element\n                    return true;\n                }\n            }\n            // proceed loading inline element\n            var queued = _lazyQueued.indexOf(this);\n            if (queued > -1)\n                _lazyQueued.splice(queued, 1);\n            loadInline(this);\n        });\n        tasker.releaseLock(componentize);\n    } else tasker.lockLater(componentize, function () {\n        componentize(element);\n    }, 200);\n}",
     "ctx": {
       "type": "function",
       "name": "componentize",
@@ -486,8 +552,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 157,
-    "codeStart": 158,
+    "line": 164,
+    "codeStart": 165,
     "code": "function loadInline(element) {\n    var v = z$(element);\n    if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {\n        console.log(\"ZUIX\", \"WARN\", \"Skipped\", element);\n        return;\n    }\n    v.attr('data-ui-loaded', 'true');",
     "ctx": {
       "type": "function",
@@ -521,9 +587,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 165,
-    "codeStart": 166,
-    "code": "var options = v.attr('data-ui-options');\nif (!util.isNoU(options)) {\n    options = util.propertyFromPath(window, options);\n    // copy passed options\n    options = util.cloneObject(options) || {};\n} else options = {};\n\n// Automatic view/container selection\nif (util.isNoU(options.view) && !v.isEmpty()) {\n    options.view = element;\n    options.viewDeferred = true;\n} else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())\n    options.container = element;\n\nvar componentId = v.attr('data-ui-load');\nif (util.isNoU(componentId)) {\n    // Static include should not have any controller\n    componentId = v.attr('data-ui-include');\n    v.attr('data-ui-component', componentId);\n    // disable controller auto-loading\n    if (util.isNoU(options.controller))\n        options.controller = function(){}; // null\n}\n\n// inline attributes have precedence over ```options```\n\nvar model = v.attr('data-bind-model');\nif (!util.isNoU(model) && model.length > 0)\n    options.model = util.propertyFromPath(window, model);\n\n// TODO: Behavior are also definable in \"data-ui-behavior\" attribute\n// TODO: Events are also definable in \"data-ui-on\" attribute\n// TODO: perhaps \"data-ui-ready\" and \"data-ui-error\" too\n// util.propertyFromPath( ... )\n\nload(componentId, options);\n    }",
+    "line": 172,
+    "codeStart": 173,
+    "code": "var options = v.attr('data-ui-options');\nif (!util.isNoU(options)) {\n    options = util.propertyFromPath(window, options);\n    // copy passed options\n    options = util.cloneObject(options) || {};\n} else options = {};\n\n// Automatic view/container selection\nif (util.isNoU(options.view) && !v.isEmpty()) {\n    options.view = element;\n    options.viewDeferred = true;\n} else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())\n    options.container = element;\n\nvar componentId = v.attr('data-ui-load');\nif (util.isNoU(componentId)) {\n    // Static include should not have any controller\n    componentId = v.attr('data-ui-include');\n    v.attr('data-ui-component', componentId);\n    // disable controller auto-loading\n    if (util.isNoU(options.controller))\n        options.controller = function () {\n        }; // null\n}\n\n// inline attributes have precedence over ```options```\n\nvar model = v.attr('data-bind-model');\nif (!util.isNoU(model) && model.length > 0)\n    options.model = util.propertyFromPath(window, model);\n\n// TODO: Behavior are also definable in \"data-ui-behavior\" attribute\n// TODO: Events are also definable in \"data-ui-on\" attribute\n// TODO: perhaps \"data-ui-ready\" and \"data-ui-error\" too\n// util.propertyFromPath( ... )\n\nload(componentId, options);\n}",
     "ctx": {
       "type": "declaration",
       "name": "options",
@@ -534,10 +600,10 @@
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       },
       {
         "type": "param",
@@ -568,7 +634,7 @@
         "variable": false
       },
       {
-        "type": "returns",
+        "type": "return",
         "string": "{ComponentContext}",
         "types": [
           "ComponentContext"
@@ -587,13 +653,13 @@
       "summary": "<p>Loads a component with the given options.</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 204,
-    "codeStart": 212,
+    "line": 212,
+    "codeStart": 220,
     "code": "function load(componentId, options) {\n    // TODO: throw error on argument mismatch\n    // TODO: prevent load loops when including recursively a component",
     "ctx": {
       "type": "function",
@@ -627,21 +693,21 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 216,
-    "codeStart": 217,
-    "code": "var context = null;\nif (!util.isNoU(options)) {\n    // check if context has its unique id assigned\n    if (!util.isNoU(options.contextId)) {\n        // if it does, try to pick it from allocated contexts list\n        context = getContext(options.contextId);\n        if (context !== null) {\n            context.options(options);\n        } else {\n            // if no context is already allocated\n            // with that id, then add a new one\n            context = createContext(options);\n        }\n    } else {\n        if (options === false)\n            options = {};\n        // generate contextId (this is a bit buggy, but it's quick)\n        options.contextId = 'zuix-ctx-' + (++_contextSeqNum);\n        context = createContext(options);\n    }\n} else {\n    // empty context\n    options = {};\n    context = new ComponentContext(options, triggerHook);\n}\n\n// assign the given component (widget) to this context\nif (context.componentId != componentId) {\n    context.componentId = componentId;",
+    "line": 224,
+    "codeStart": 225,
+    "code": "var ctx = null;\nif (!util.isNoU(options)) {\n    // check if context has its unique id assigned\n    if (!util.isNoU(options.contextId)) {\n        // if it does, try to pick it from allocated contexts list\n        ctx = context(options.contextId);\n        if (ctx !== null) {\n            ctx.options(options);\n        } else {\n            // if no context is already allocated\n            // with that id, then add a new one\n            ctx = createContext(options);\n        }\n    } else {\n        if (options === false)\n            options = {};\n        // generate contextId (this is a bit buggy, but it's quick)\n        options.contextId = 'zuix-ctx-' + (++_contextSeqNum);\n        ctx = createContext(options);\n    }\n} else {\n    // empty context\n    options = {};\n    ctx = new ComponentContext(options, trigger);\n}\n\n// assign the given component (widget) to this context\nif (ctx.componentId != componentId) {\n    ctx.componentId = componentId;",
     "ctx": {
       "type": "declaration",
-      "name": "context",
+      "name": "ctx",
       "value": "null",
-      "string": "context"
+      "string": "ctx"
     }
   },
   {
     "tags": [],
     "description": {
-      "full": "<p>TODO: to be fixed<br />             if (!util.isNoU(context.view())) {<br />             // TODO: implement this code in a context.detach() method<br />             //context.controller().pause()<br />             context.view().detach();<br />             context.view(null);<br />             }</p>",
-      "summary": "<p>TODO: to be fixed<br />             if (!util.isNoU(context.view())) {<br />             // TODO: implement this code in a context.detach() method<br />             //context.controller().pause()<br />             context.view().detach();<br />             context.view(null);<br />             }</p>",
+      "full": "<p>TODO: to be fixed<br />         if (!util.isNoU(context.view())) {<br />         // TODO: implement this code in a context.detach() method<br />         //context.controller().pause()<br />         context.view().detach();<br />         context.view(null);<br />         }</p>",
+      "summary": "<p>TODO: to be fixed<br />         if (!util.isNoU(context.view())) {<br />         // TODO: implement this code in a context.detach() method<br />         //context.controller().pause()<br />         context.view().detach();<br />         context.view(null);<br />         }</p>",
       "body": ""
     },
     "isPrivate": false,
@@ -649,16 +715,16 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 246,
-    "codeStart": 254,
-    "code": "}\n\nif (util.isFunction(options.ready))\n    context.ready = options.ready;\nif (util.isFunction(options.error))\n    context.error = options.error;\n\nif (util.isNoU(options.view)) {\n\n    // pick it from cache if found\n    var cachedComponent = getCachedComponent(context.componentId);\n    if (cachedComponent !== null && util.isNoU(context.controller()))\n        context.controller(cachedComponent.controller);\n\n    if (cachedComponent !== null && cachedComponent.view != null)\n        context.view(cachedComponent.view);\n    else {",
+    "line": 254,
+    "codeStart": 262,
+    "code": "}\n\nif (util.isFunction(options.ready))\n    ctx.ready = options.ready;\nif (util.isFunction(options.error))\n    ctx.error = options.error;\n\nif (util.isNoU(options.view)) {\n\n    // pick it from cache if found\n    var cachedComponent = getCachedComponent(ctx.componentId);\n    if (cachedComponent !== null && util.isNoU(ctx.controller()))\n        ctx.controller(cachedComponent.controller);\n\n    if (cachedComponent !== null && cachedComponent.view != null)\n        ctx.view(cachedComponent.view);\n    else {",
     "ctx": false
   },
   {
     "tags": [],
     "description": {
-      "full": "<p>// TODO: replace z$() with z$(options.container)<br />                var inlineView = z$().find(&#39;[data-ui-view=&quot;&#39; + context.componentId + &#39;&quot;]&#39;);<br />                if (inlineView.length() &gt; 0)<br />                    context.view(inlineView.get(0).outerHTML);</p>",
-      "summary": "<p>// TODO: replace z$() with z$(options.container)<br />                var inlineView = z$().find(&#39;[data-ui-view=&quot;&#39; + context.componentId + &#39;&quot;]&#39;);<br />                if (inlineView.length() &gt; 0)<br />                    context.view(inlineView.get(0).outerHTML);</p>",
+      "full": "<p>// TODO: replace z$() with z$(options.container)<br />             var inlineView = z$().find(&#39;[data-ui-view=&quot;&#39; + context.componentId + &#39;&quot;]&#39;);<br />             if (inlineView.length() &gt; 0)<br />             context.view(inlineView.get(0).outerHTML);</p>",
+      "summary": "<p>// TODO: replace z$() with z$(options.container)<br />             var inlineView = z$().find(&#39;[data-ui-view=&quot;&#39; + context.componentId + &#39;&quot;]&#39;);<br />             if (inlineView.length() &gt; 0)<br />             context.view(inlineView.get(0).outerHTML);</p>",
       "body": ""
     },
     "isPrivate": false,
@@ -666,18 +732,18 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 271,
-    "codeStart": 277,
-    "code": "// if not able to inherit the view from the base cachedComponent\n// or from an inline element, then load the view from web\nif (util.isNoU(context.view())) {\n    // Load View\n    tasker.queue('html:' + context.componentId, function () {\n        var task = this;\n\n        context.loadHtml({\n            success: function () {\n                if (options.css !== false)\n                    context.loadCss({\n                        error: function(err) {\n                            console.log(err, context);\n                        },\n                        then: function () {\n                            loadController(context);\n                        }\n                    });\n                else {\n                    loadController(context);\n                }\n            },\n            error: function (err) {\n                console.log(err, context);\n                if (util.isFunction(options.error))\n                    (context.error).call(context, err);\n            },\n            then: function() {\n                task.end();\n            }\n        });\n\n    });\n    // defer controller loading\n    return context;\n}\n            }\n        } else {\n            context.view(options.view);\n        }\n        loadController(context);\n        return context;\n    }",
+    "line": 279,
+    "codeStart": 285,
+    "code": "// if not able to inherit the view from the base cachedComponent\n// or from an inline element, then load the view from web\nif (util.isNoU(ctx.view())) {\n    // Load View\n    tasker.queue('html:' + ctx.componentId, function () {\n        var task = this;\n\n        ctx.loadHtml({\n            success: function () {\n                if (options.css !== false)\n                    ctx.loadCss({\n                        error: function (err) {\n                            console.log(err, ctx);\n                        },\n                        then: function () {\n                            loadController(ctx);\n                        }\n                    });\n                else {\n                    loadController(ctx);\n                }\n            },\n            error: function (err) {\n                console.log(err, ctx);\n                if (util.isFunction(options.error))\n                    (ctx.error).call(ctx, err);\n            },\n            then: function () {\n                task.end();\n            }\n        });\n\n    });\n    // defer controller loading\n    return ctx;\n}\n        }\n    } else {\n        ctx.view(options.view);\n    }\n    loadController(ctx);\n    return ctx;\n}",
     "ctx": false
   },
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       },
       {
         "type": "param",
@@ -693,17 +759,17 @@
       }
     ],
     "description": {
-      "full": "",
-      "summary": "",
+      "full": "<p>Unload and dispose the component.</p>",
+      "summary": "<p>Unload and dispose the component.</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 321,
-    "codeStart": 326,
+    "line": 329,
+    "codeStart": 335,
     "code": "function unload(context) {\n    if (!util.isNoU(context) && !util.isNoU(context._c)) {\n        if (!util.isNoU(context._c.view()))\n            context._c.view().attr('data-ui-component', null);\n\n        //context.unregisterEvents();\n        // TODO: unregister events and local context behavior\n        // TODO: detach view from parent if context.container is not null\n\n        if (util.isFunction(context._c.destroy))\n            context._c.destroy();\n    }\n}",
     "ctx": {
       "type": "function",
@@ -714,9 +780,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       }
     ],
@@ -725,14 +791,14 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 340,
-    "codeStart": 341,
-    "code": "function createContext(options) {\n    var context = new ComponentContext(options, triggerHook);\n    _contextRoot.push(context);\n    return context;\n}",
+    "line": 349,
+    "codeStart": 350,
+    "code": "function createContext(options) {\n    var context = new ComponentContext(options, trigger);\n    _contextRoot.push(context);\n    return context;\n}",
     "ctx": {
       "type": "function",
       "name": "createContext",
@@ -742,10 +808,10 @@
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       },
       {
         "type": "param",
@@ -764,7 +830,7 @@
         "html": "<p>{Node|Object} contextId</p>"
       },
       {
-        "type": "returns",
+        "type": "return",
         "string": "{ComponentContext}",
         "types": [
           "ComponentContext"
@@ -779,44 +845,31 @@
       }
     ],
     "description": {
-      "full": "",
-      "summary": "",
+      "full": "<p>TODO: desc</p>",
+      "summary": "<p>TODO: desc</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 347,
-    "codeStart": 353,
-    "code": "function getContext(contextId) {\n    var context = null;\n    z$.each(_contextRoot, function (k, v) {\n        if ((contextId instanceof Node && v.view() === contextId)\n            || util.objectEquals(v.contextId, contextId)) {\n            context = v;\n            return false;\n        }\n    });\n    return context;\n}",
+    "line": 356,
+    "codeStart": 363,
+    "code": "function context(contextId) {\n    var context = null;\n    z$.each(_contextRoot, function (k, v) {\n        if ((contextId instanceof Node && v.view() === contextId)\n            || util.objectEquals(v.contextId, contextId)) {\n            context = v;\n            return false;\n        }\n    });\n    return context;\n}",
     "ctx": {
       "type": "function",
-      "name": "getContext",
-      "string": "getContext()"
+      "name": "context",
+      "string": "context()"
     }
   },
   {
     "tags": [
       {
-        "type": "memberOf",
-        "string": "Zuix",
-        "parent": "Zuix",
-        "html": "<p>Zuix</p>"
-      },
-      {
-        "type": "param",
-        "string": "contextId",
-        "name": "contextId",
-        "description": "",
-        "types": [],
-        "typesDescription": "",
-        "variable": false,
-        "nonNullable": false,
-        "nullable": false,
-        "optional": false,
-        "html": "<p>contextId</p>"
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
       }
     ],
     "description": {
@@ -824,14 +877,14 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 365,
-    "codeStart": 370,
-    "code": "function removeContext(contextId) {\n    // TODO: removeContext\n}\n\nfunction removeCachedComponent(componentId) {\n    // TODO: removeCachedComponent\n}",
+    "line": 375,
+    "codeStart": 376,
+    "code": "function removeContext(contextId) {\n    // TODO: removeContext\n}",
     "ctx": {
       "type": "function",
       "name": "removeContext",
@@ -841,9 +894,229 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
+        "html": ""
+      },
+      {
+        "type": "param",
+        "string": "path",
+        "name": "path",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>path</p>"
+      },
+      {
+        "type": "param",
+        "string": "handler",
+        "name": "handler",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>handler</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>TODO: desc</p>",
+      "summary": "<p>TODO: desc</p>",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 380,
+    "codeStart": 387,
+    "code": "function hook(path, handler) {\n    if (util.isNoU(handler))\n        return _hooksCallbacks[path];\n    _hooksCallbacks[path] = handler;\n}",
+    "ctx": {
+      "type": "function",
+      "name": "hook",
+      "string": "hook()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
+      },
+      {
+        "type": "param",
+        "string": "context",
+        "name": "context",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>context</p>"
+      },
+      {
+        "type": "param",
+        "string": "path",
+        "name": "path",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>path</p>"
+      },
+      {
+        "type": "param",
+        "string": "data",
+        "name": "data",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>data</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>TODO: desc</p>",
+      "summary": "<p>TODO: desc</p>",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 393,
+    "codeStart": 401,
+    "code": "function trigger(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, path, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n    if (path == 'view:process')\n        componentize(data);\n}",
+    "ctx": {
+      "type": "function",
+      "name": "trigger",
+      "string": "trigger()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
+      },
+      {
+        "type": "param",
+        "string": "{boolean} [enable]",
+        "name": "[enable]",
+        "description": "",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "html": "<p>{boolean} [enable]</p>"
+      },
+      {
+        "type": "return",
+        "string": "{boolean} *true* if lazy-loading is enabled, *false* otherwise.",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p><em>true</em> if lazy-loading is enabled, <em>false</em> otherwise.</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "summary": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 412,
+    "codeStart": 419,
+    "code": "function lazyLoad(enable) {\n    if (enable != null)\n        _disableLazyLoading = !enable;\n    return !_isCrawlerBotClient && !_disableLazyLoading;\n}",
+    "ctx": {
+      "type": "function",
+      "name": "lazyLoad",
+      "string": "lazyLoad()"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p><strong><strong><strong><strong><strong>*</strong></strong></strong></strong></strong> private members <strong><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></strong></p>",
+      "summary": "<p><strong><strong><strong><strong><strong>*</strong></strong></strong></strong></strong> private members <strong><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></strong></p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 426,
+    "codeStart": 427
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
+        "html": ""
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 429,
+    "codeStart": 430,
+    "code": "function removeCachedComponent(componentId) {\n    // TODO: removeCachedComponent\n}",
+    "ctx": {
+      "type": "function",
+      "name": "removeCachedComponent",
+      "string": "removeCachedComponent()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -881,13 +1154,13 @@
       "summary": "<p>*</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 378,
-    "codeStart": 383,
+    "line": 434,
+    "codeStart": 439,
     "code": "function getCachedComponent(componentId) {\n    var cached = null;\n    z$.each(_componentCache, function (k, v) {\n        if (util.objectEquals(v.componentId, componentId)) {\n            cached = v;\n            return false;\n        }\n    });\n    return cached;\n}",
     "ctx": {
       "type": "function",
@@ -898,9 +1171,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -924,13 +1197,13 @@
       "summary": "<p>*</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 394,
-    "codeStart": 398,
+    "line": 450,
+    "codeStart": 454,
     "code": "function loadController(context) {\n    if (typeof context.options().controller === 'undefined' && context.controller() === null) {\n        if (util.isFunction(_globalHandlers[context.componentId])) {\n            context.controller(_globalHandlers[context.componentId]);\n            createComponent(context);\n        } else\n            tasker.queue('js:' + context.componentId, function () {\n                var task = this;\n                z$.ajax({\n                    url: context.componentId + \".js?\" + new Date().getTime(),\n                    success: function (ctrlJs) {\n                        // TODO: improve js parsing!\n                        try {\n                            var fn = ctrlJs.indexOf('function');\n                            var il = ctrlJs.indexOf('.load');\n                            if (il > 1 && il < fn)\n                                ctrlJs = ctrlJs.substring(0, il - 4);\n                            var ih = ctrlJs.indexOf('.controller');\n                            if (ih > 1 && ih < fn)\n                                ctrlJs = ctrlJs.substring(ih + 11);\n                            var ec = ctrlJs.indexOf('//<--controller');\n                            if (ec > 0)\n                                ctrlJs = ctrlJs.substring(0, ec);\n                            context.controller(getController(ctrlJs));\n                        } catch (e) {\n                            console.log(e, ctrlJs, context);\n                            if (util.isFunction(context.error))\n                                (context.error).call(context, e);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, context);\n                        if (util.isFunction(context.error))\n                            (context.error).call(context, err);\n                    },\n                    then: function () {\n                        task.end();\n                        createComponent(context);\n                    }\n                });\n            });\n    } else {\n        createComponent(context);\n    }\n}",
     "ctx": {
       "type": "function",
@@ -941,9 +1214,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -964,13 +1237,13 @@
       "summary": "<p>*</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 444,
-    "codeStart": 448,
+    "line": 500,
+    "codeStart": 504,
     "code": "function createComponent(context) {\n    if (!util.isNoU(context.view())) {\n        if (!context.options().viewDeferred) {\n            var cached = getCachedComponent(context.componentId);\n            if (cached === null) {\n                var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);\n                var c = z$.wrapElement('div', html);\n                _componentCache.push({\n                    componentId: context.componentId,\n                    view: c.innerHTML,\n                    controller: context.controller()\n                });\n            }\n        }\n        initComponent(context);\n    } else {\n        // TODO: report error\n    }\n}",
     "ctx": {
       "type": "function",
@@ -981,9 +1254,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -1007,13 +1280,13 @@
       "summary": "<p>*</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 468,
-    "codeStart": 472,
+    "line": 524,
+    "codeStart": 528,
     "code": "function initComponent(context) {\n    if (util.isFunction(context.controller())) {",
     "ctx": {
       "type": "function",
@@ -1047,9 +1320,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 474,
-    "codeStart": 475,
-    "code": "var c = context._c = new ContextController(context);\n\nif (!util.isNoU(c.view())) {\n    c.view().attr('data-ui-component', c.componentId);\n    // if no model is supplied, try auto-create from view fields\n    if (util.isNoU(context.model()) && !util.isNoU(context.view()))\n        context.viewToModel();\n    c.trigger('view:apply');\n    if (context.options().viewDeferred) {\n        context.options().viewDeferred = false;\n        // save the original inline view\n        // before loading the view template\n        // it can be then restored with c.restoreView()\n        c.saveView();\n        if (context.options().css !== false)\n            context.loadCss();\n        if (context.options().html !== false)\n            context.loadHtml();\n    }\n\n    c.view().css('visibility', '');\n}\n\n// TODO: review/improve life-cycle\n\nif (util.isFunction(c.create)) c.create();\nc.trigger('view:create');\n\n// TODO: is this to be deprecated?\n//if (util.isFunction(c.resume)) c.resume();\n        }\n        if (util.isFunction(context.ready))\n(context.ready).call(context);\n    }",
+    "line": 530,
+    "codeStart": 531,
+    "code": "var c = context._c = new ContextController(context);\n\nif (!util.isNoU(c.view())) {\n    c.view().attr('data-ui-component', c.componentId);\n    // if no model is supplied, try auto-create from view fields\n    if (util.isNoU(context.model()) && !util.isNoU(context.view()))\n        context.viewToModel();\n    c.trigger('view:apply');\n    if (context.options().viewDeferred) {\n        context.options().viewDeferred = false;\n        // save the original inline view\n        // before loading the view template\n        // it can be then restored with c.restoreView()\n        c.saveView();\n        if (context.options().css !== false)\n            context.loadCss();\n        if (context.options().html !== false)\n            context.loadHtml();\n    }\n\n    c.view().css('visibility', '');\n}\n\n// TODO: review/improve life-cycle\n\nif (util.isFunction(c.create)) c.create();\nc.trigger('view:create');\n\n// TODO: is this to be deprecated?\n//if (util.isFunction(c.resume)) c.resume();\n    }\n    if (util.isFunction(context.ready))\n(context.ready).call(context);\n}",
     "ctx": {
       "type": "declaration",
       "name": "c",
@@ -1060,9 +1333,9 @@
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       },
       {
@@ -1097,22 +1370,22 @@
       "summary": "<p>*</p>",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 510,
-    "codeStart": 515,
-    "code": "// TODO: refactor this method name\nfunction getController(javascriptCode) {\n    var instance = function (ctx) {\n    };\n    if (typeof javascriptCode === 'string') {\n        try {\n            instance = (eval).call(this, javascriptCode);\n        } catch(e) {\n            // TODO: should trigger a global hook\n            // eg. 'controller:error'\n            console.log(this, e, javascriptCode);\n        }\n    }\n    return instance;\n}\n\n\n// TODO: following code to be sorted/re-arranged",
+    "line": 566,
+    "codeStart": 571,
+    "code": "// TODO: refactor this method name\nfunction getController(javascriptCode) {\n    var instance = function (ctx) {\n    };\n    if (typeof javascriptCode === 'string') {\n        try {\n            instance = (eval).call(this, javascriptCode);\n        } catch (e) {\n            // TODO: should trigger a global hook\n            // eg. 'controller:error'\n            console.log(this, e, javascriptCode);\n        }\n    }\n    return instance;\n}\n\n// Browser Agent / Bot detection",
     "ctx": false
   },
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       }
     ],
@@ -1121,26 +1394,20 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 534,
-    "codeStart": 535,
-    "code": "function triggerHook(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, path, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n    if (path == 'view:process')\n        componentize(data);\n\n}",
-    "ctx": {
-      "type": "function",
-      "name": "triggerHook",
-      "string": "triggerHook()"
-    }
+    "line": 588,
+    "codeStart": 589
   },
   {
     "tags": [
       {
-        "type": "protected",
+        "type": "private",
         "string": "",
-        "visibility": "protected",
+        "visibility": "private",
         "html": ""
       }
     ],
@@ -1149,121 +1416,14 @@
       "summary": "",
       "body": ""
     },
-    "isPrivate": false,
+    "isPrivate": true,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 547,
-    "codeStart": 548,
-    "code": "var _hooksCallbacks = [];",
-    "ctx": {
-      "type": "declaration",
-      "name": "_hooksCallbacks",
-      "value": "[]",
-      "string": "_hooksCallbacks"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 550,
-    "codeStart": 551,
-    "code": "function hooks(path, handler) {\n    if (util.isNoU(handler))\n        return _hooksCallbacks[path];\n    _hooksCallbacks[path] = handler;\n    return this;\n}",
-    "ctx": {
-      "type": "function",
-      "name": "hooks",
-      "string": "hooks()"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 558,
-    "codeStart": 559,
-    "code": "function lazyLoadEnabled(enable) {\n    if (enable != null)\n        _disableLazyLoading = !enable;\n    return !_isCrawlerBotClient && !_disableLazyLoading;\n}\n\n// Browser Agent / Bot detection",
-    "ctx": {
-      "type": "function",
-      "name": "lazyLoadEnabled",
-      "string": "lazyLoadEnabled()"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 566,
-    "codeStart": 567
-  },
-  {
-    "tags": [
-      {
-        "type": "protected",
-        "string": "",
-        "visibility": "protected",
-        "html": ""
-      }
-    ],
-    "description": {
-      "full": "",
-      "summary": "",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 566,
-    "codeStart": 567,
-    "code": "var _isCrawlerBotClient = false, _disableLazyLoading = false;\nif (navigator && navigator.userAgent)\n    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)\n        .test(navigator.userAgent);\nif (_isCrawlerBotClient)\n    console.log(navigator.userAgent, \"is a bot, ignoring 'data-ui-lazyload' option.\");\n\n// Public ```zuix``` interface",
+    "line": 589,
+    "codeStart": 590,
+    "code": "var _isCrawlerBotClient = false, _disableLazyLoading = false;\nif (navigator && navigator.userAgent)\n    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)\n        .test(navigator.userAgent);\nif (_isCrawlerBotClient)\n    console.log(navigator.userAgent, \"is a bot, ignoring 'data-ui-lazyload' option.\");",
     "ctx": {
       "type": "declaration",
       "name": "_isCrawlerBotClient",
@@ -1272,11 +1432,588 @@
     }
   },
   {
+    "tags": [],
+    "description": {
+      "full": "<p><strong><strong><strong><strong>*</strong></strong></strong></strong> proto <strong><strong><strong><strong><em>*</em></strong></strong></strong></strong></p>",
+      "summary": "<p><strong><strong><strong><strong>*</strong></strong></strong></strong> proto <strong><strong><strong><strong><em>*</em></strong></strong></strong></strong></p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 598,
+    "codeStart": 599
+  },
+  {
     "tags": [
       {
-        "type": "global",
+        "type": "param",
+        "string": "handler {ContextControllerCallback}",
+        "name": "handler",
+        "description": "<p>{ContextControllerCallback}</p>",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false
+      },
+      {
+        "type": "return",
+        "string": "{ContextControllerCallback}",
+        "types": [
+          "ContextControllerCallback"
+        ],
+        "typesDescription": "<a href=\"ContextControllerCallback.html\">ContextControllerCallback</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{ContextControllerCallback}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Initializes a controller <code>handler</code>.</p>",
+      "summary": "<p>Initializes a controller <code>handler</code>.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 601,
+    "codeStart": 607,
+    "code": "Zuix.prototype.controller = controller;",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "controller",
+      "value": "controller",
+      "string": "Zuix.prototype.controller"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{!string} fieldName The class to check for.",
+        "name": "fieldName",
+        "description": "<p>The class to check for.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "!<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": true,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{!Node} [container] Starting DOM element for this search (**default:** ```document```)",
+        "name": "[container]",
+        "description": "<p>Starting DOM element for this search (<strong>default:</strong> <code>document</code>)</p>",
+        "types": [
+          "Node"
+        ],
+        "typesDescription": "!<code>Node</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": true,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ZxQuery}",
+        "types": [
+          "ZxQuery"
+        ],
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{ZxQuery}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
+      "summary": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 608,
+    "codeStart": 616,
+    "code": "Zuix.prototype.field = field;",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "field",
+      "value": "field",
+      "string": "Zuix.prototype.field"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "[element] {Node} Optional container to use as starting node for the search.",
+        "name": "[element]",
+        "description": "<p>{Node} Optional container to use as starting node for the search.</p>",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false
+      },
+      {
+        "type": "return",
+        "string": "{Zuix}",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{Zuix}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
+      "summary": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 617,
+    "codeStart": 625,
+    "code": "Zuix.prototype.componentize = function (element) {\n    componentize(element);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "componentize",
+      "string": "Zuix.prototype.componentize()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{!string} componentId The id/name of the component we want to load.",
+        "name": "componentId",
+        "description": "<p>The id/name of the component we want to load.</p>",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "!<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": true,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{ContextOptions} [options] context options used to initialize the loaded component",
+        "name": "[options]",
+        "description": "<p>context options used to initialize the loaded component</p>",
+        "types": [
+          "ContextOptions"
+        ],
+        "typesDescription": "<a href=\"ContextOptions.html\">ContextOptions</a>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{ComponentContext}",
+        "types": [
+          "ComponentContext"
+        ],
+        "typesDescription": "<a href=\"ComponentContext.html\">ComponentContext</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{ComponentContext}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Loads a component with the given options.</p>",
+      "summary": "<p>Loads a component with the given options.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 629,
+    "codeStart": 636,
+    "code": "Zuix.prototype.load = load;",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "load",
+      "value": "load",
+      "string": "Zuix.prototype.load"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "context {ComponentContext}",
+        "name": "context",
+        "description": "<p>{ComponentContext}</p>",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false
+      },
+      {
+        "type": "return",
+        "string": "{Zuix}",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{Zuix}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Unload and dispose the component.</p>",
+      "summary": "<p>Unload and dispose the component.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 637,
+    "codeStart": 643,
+    "code": "Zuix.prototype.unload = function (context) {\n    unload(context);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "unload",
+      "string": "Zuix.prototype.unload()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{boolean} [enable]",
+        "name": "[enable]",
+        "description": "",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "html": "<p>{boolean} [enable]</p>"
+      },
+      {
+        "type": "return",
+        "string": "{boolean} *true* if lazy-loading is enabled, *false* otherwise.",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p><em>true</em> if lazy-loading is enabled, <em>false</em> otherwise.</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "summary": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 647,
+    "codeStart": 653,
+    "code": "Zuix.prototype.lazyLoad = lazyLoad;",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "lazyLoad",
+      "value": "lazyLoad",
+      "string": "Zuix.prototype.lazyLoad"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
         "string": "",
+        "visibility": "private",
         "html": ""
+      },
+      {
+        "type": "param",
+        "string": "{Node|Object} contextId",
+        "name": "contextId",
+        "description": "",
+        "types": [
+          "Node",
+          "Object"
+        ],
+        "typesDescription": "<code>Node</code>|<code>Object</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "html": "<p>{Node|Object} contextId</p>"
+      },
+      {
+        "type": "return",
+        "string": "{ComponentContext}",
+        "types": [
+          "ComponentContext"
+        ],
+        "typesDescription": "<a href=\"ComponentContext.html\">ComponentContext</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{ComponentContext}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>TODO: desc</p>",
+      "summary": "<p>TODO: desc</p>",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 654,
+    "codeStart": 661,
+    "code": "Zuix.prototype.context = context;",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "context",
+      "value": "context",
+      "string": "Zuix.prototype.context"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "path",
+        "name": "path",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>path</p>"
+      },
+      {
+        "type": "param",
+        "string": "handler",
+        "name": "handler",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>handler</p>"
+      },
+      {
+        "type": "return",
+        "string": "{Zuix}",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{Zuix}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>TODO: desc</p>",
+      "summary": "<p>TODO: desc</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 662,
+    "codeStart": 669,
+    "code": "Zuix.prototype.hook = function (path, handler) {\n    hook(path, handler);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "hook",
+      "string": "Zuix.prototype.hook()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "context",
+        "name": "context",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>context</p>"
+      },
+      {
+        "type": "param",
+        "string": "path",
+        "name": "path",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>path</p>"
+      },
+      {
+        "type": "param",
+        "string": "data",
+        "name": "data",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>data</p>"
+      },
+      {
+        "type": "return",
+        "string": "{Zuix}",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{Zuix}</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>TODO: desc</p>",
+      "summary": "<p>TODO: desc</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 673,
+    "codeStart": 681,
+    "code": "Zuix.prototype.trigger = function (context, path, data) {\n    trigger(context, path, data);\n    return this;\n};\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
+    "ctx": {
+      "type": "method",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "trigger",
+      "string": "Zuix.prototype.trigger()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "root",
+        "name": "root",
+        "description": "",
+        "types": [],
+        "typesDescription": "",
+        "variable": false,
+        "nonNullable": false,
+        "nullable": false,
+        "optional": false,
+        "html": "<p>root</p>"
+      },
+      {
+        "type": "return",
+        "string": "{Zuix}",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "",
+        "html": "<p>{Zuix}</p>"
       }
     ],
     "description": {
@@ -1289,122 +2026,14 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 576,
-    "codeStart": 577,
-    "code": "var zuix = {",
-    "ctx": {
-      "type": "declaration",
-      "name": "zuix",
-      "value": "{",
-      "string": "zuix"
-    }
-  },
-  {
-    "tags": [],
-    "description": {
-      "full": "<p>Component loading methods</p>",
-      "summary": "<p>Component loading methods</p>",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 579,
-    "codeStart": 580,
-    "code": "load: load,\nunload: unload,\ncontext: getContext,\ncontroller: controller,\ncomponentize: componentize,\nlazyLoad: lazyLoadEnabled,",
-    "ctx": {
-      "type": "property",
-      "name": "load",
-      "value": "load,",
-      "string": "load"
-    }
-  },
-  {
-    "tags": [],
-    "description": {
-      "full": "<p>Zuix hooks</p>",
-      "summary": "<p>Zuix hooks</p>",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 587,
-    "codeStart": 588,
-    "code": "hook: function (p, v) {\n    hooks(p, v);\n    return this;\n},\ntrigger: triggerHook,",
+    "line": 700,
+    "codeStart": 704,
+    "code": "module.exports = function (root) {\n    return new Zuix();\n};",
     "ctx": {
       "type": "method",
-      "name": "hook",
-      "string": "hook()"
-    }
-  },
-  {
-    "tags": [],
-    "description": {
-      "full": "<p>Utility methods</p>",
-      "summary": "<p>Utility methods</p>",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 594,
-    "codeStart": 595,
-    "code": "$: z$,\nfield: field,",
-    "ctx": {
-      "type": "property",
-      "name": "$",
-      "value": "z$,",
-      "string": "$"
-    }
-  },
-  {
-    "tags": [],
-    "description": {
-      "full": "<p>Expose classes proto</p>",
-      "summary": "<p>Expose classes proto</p>",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 598,
-    "codeStart": 599,
-    "code": "TaskQueue: TaskQueue,\nZxQuery: z$.ZxQuery,",
-    "ctx": {
-      "type": "property",
-      "name": "TaskQueue",
-      "value": "TaskQueue,",
-      "string": "TaskQueue"
-    }
-  },
-  {
-    "tags": [],
-    "description": {
-      "full": "<p>Dev utility methods</p>",
-      "summary": "<p>Dev utility methods</p>",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 602,
-    "codeStart": 603,
-    "code": "dumpCache: function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n},\ndumpContexts: function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n}\n\n    };\n\n    // TODO: add zuix.options to configure stuff like\n    // TODO: the css/html/js lookup base path (each individually own prop)\n\n    return zuix;\n}\n\nmodule.exports = Zuix;",
-    "ctx": {
-      "type": "method",
-      "name": "dumpCache",
-      "string": "dumpCache()"
+      "receiver": "module",
+      "name": "exports",
+      "string": "module.exports()"
     }
   }
 ]

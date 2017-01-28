@@ -91,7 +91,6 @@ function TaskQueue(listener) {
             listener(_t, 'load:end');
         }
     }
-
 }
 TaskQueue.prototype.queue = function(tid, fn) {
     return this.taskQueue(tid, fn);
