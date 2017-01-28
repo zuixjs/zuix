@@ -54,6 +54,7 @@ zuix.controller(function (cp) {
                             if (this.name != null)
                                 html += ' <code>'+ this.name +'</code>';
                             html += '<code class="mdl-color-text--grey">{'+types+'}</code>';
+                            //noinspection JSPotentiallyInvalidUsageOfThis
                             html += this.description;
 
                             html += '</div>';
@@ -79,18 +80,24 @@ zuix.controller(function (cp) {
     };
 
     function expandItem(element) {
-        var detail = zuix.$(element).next().children().eq(0);
-        if (detail.hasClass('collapsed')) {
+        element = zuix.$(element);
+        var detail = element.next().children().eq(0);
+        var collapsed = detail.hasClass('collapsed');
+        if (collapsed) {
             detail.animateCss('fadeInDown', { duration: '0.2s'}).removeClass('collapsed');
-            zuix.$(element).find('i').html('expand_less')
+            element.find('i').html('expand_less')
                 .animateCss('bounce', { duration: '.1s' });
         } else {
             detail.animateCss('fadeOutUp', { duration: '0.2s'}, function () {
                 detail.addClass('collapsed');
             });
-            zuix.$(element).find('i').html('expand_more')
+            element.find('i').html('expand_more')
                 .animateCss('bounce', { duration: '.1s' });
         }
+        /*cp.view().find('.details').each(function(i, item) {
+            if (item.get() !== detail.get())
+                item.addClass('collapsed');
+        });*/
     }
 
 });

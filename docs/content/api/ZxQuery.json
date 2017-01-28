@@ -19,7 +19,7 @@
       {
         "type": "author",
         "string": "Generoso Martello <generoso@martello.com>",
-        "html": "<p>Generoso Martello <a href=\"&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#103;&#x65;&#110;&#101;&#x72;&#111;&#x73;&#x6f;&#x40;&#x6d;&#97;&#114;&#x74;&#101;&#x6c;&#x6c;&#x6f;&#x2e;&#99;&#111;&#109;\">&#103;&#x65;&#110;&#101;&#x72;&#111;&#x73;&#x6f;&#x40;&#x6d;&#97;&#114;&#x74;&#101;&#x6c;&#x6c;&#x6f;&#x2e;&#99;&#111;&#109;</a></p>"
+        "html": "<p>Generoso Martello <a href=\"&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#103;&#x65;&#110;&#x65;&#114;&#111;&#115;&#x6f;&#64;&#109;&#x61;&#114;&#116;&#x65;&#108;&#108;&#111;&#x2e;&#99;&#x6f;&#x6d;\">&#103;&#x65;&#110;&#x65;&#114;&#111;&#115;&#x6f;&#64;&#109;&#x61;&#114;&#116;&#x65;&#108;&#108;&#111;&#x2e;&#99;&#x6f;&#x6d;</a></p>"
       }
     ],
     "description": {
@@ -1552,7 +1552,7 @@
     "ignore": false,
     "line": 381,
     "codeStart": 387,
-    "code": "var z$ = function (what) {\n    return new ZxQuery(what);\n};\nz$.find = function (filter) {\n    return z$().find(filter);\n};\nz$.each = function (items, iterationCallback) {\n    if (items != null)\n        for (var i = 0, len = items.length; i < len; i++)\n            if (iterationCallback.call(items[i], i, items[i]) === false)\n                break;\n    return this;\n};\nz$.hasClass = function(el, className) {\n    var classes = className.match(/\\S+/g) || [];\n    var success = false;\n    z$.each(classes, function (k, v) {\n        if (el.classList)\n            success = el.classList.contains(v);\n        else\n            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(el.className));\n        if (success) return false;\n    });\n    return success;\n};\nz$.ajax = function ajax(opt) {\n    var url;\n    if (!util.isNoU(opt) && !util.isNoU(opt.url))\n        url = opt.url;\n    else\n        url = opt;\n    var xhr = new XMLHttpRequest();\n    xhr.open('GET', url);\n    xhr.onload = function () {\n        if (xhr.status === 200) {\n            if (util.isFunction(opt.success)) opt.success(xhr.responseText);\n        }\n        else {\n            if (util.isFunction(opt.error)) opt.error(xhr);\n        }\n        if (util.isFunction(opt.then)) opt.then(xhr);\n    };\n    xhr.send();\n    return this;\n};\nz$.wrapElement = function (containerTag, element) {\n    //$(element).wrap($('<'+containerTag+'/>'));\n    //return element;",
+    "code": "var z$ = function (what) {\n    return new ZxQuery(what);\n};\nz$.find = function (filter) {\n    return z$().find(filter);\n};\nz$.each = function (items, iterationCallback) {\n    if (items != null)\n        for (var i = 0, len = items.length; i < len; i++) {\n            var item = items[i];\n            if (item instanceof Element)\n                item = z$(item);\n            if (iterationCallback.call(items[i], i, item) === false)\n                break;\n        }\n    return this;\n};\nz$.hasClass = function(el, className) {\n    var classes = className.match(/\\S+/g) || [];\n    var success = false;\n    z$.each(classes, function (k, v) {\n        if (el.classList)\n            success = el.classList.contains(v);\n        else\n            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(el.className));\n        if (success) return false;\n    });\n    return success;\n};\nz$.ajax = function ajax(opt) {\n    var url;\n    if (!util.isNoU(opt) && !util.isNoU(opt.url))\n        url = opt.url;\n    else\n        url = opt;\n    var xhr = new XMLHttpRequest();\n    xhr.open('GET', url);\n    xhr.onload = function () {\n        if (xhr.status === 200) {\n            if (util.isFunction(opt.success)) opt.success(xhr.responseText);\n        }\n        else {\n            if (util.isFunction(opt.error)) opt.error(xhr);\n        }\n        if (util.isFunction(opt.then)) opt.then(xhr);\n    };\n    xhr.send();\n    return this;\n};\nz$.wrapElement = function (containerTag, element) {\n    //$(element).wrap($('<'+containerTag+'/>'));\n    //return element;",
     "ctx": {
       "type": "function",
       "name": "z$",
@@ -1585,8 +1585,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 435,
-    "codeStart": 436,
+    "line": 439,
+    "codeStart": 440,
     "code": "var container = document.createElement(containerTag);\nif (typeof element === 'string')\n    container.innerHTML = element;\nelse\n// TODO: test this, it may not work\n    container.appendChild(element);\nreturn container;\n};\nz$.wrapCss = function (wrapperRule, css) {\nvar wrapReX = /([.,\\w])([^/{};]+)({)/g;\nvar r, result = null, wrappedCss = '';\nwhile (r = wrapReX.exec(css)) {\n    if (result != null)\n        wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);\n    result = r;\n}\nif (result != null)\n    wrappedCss += wrapperRule + ' ' + css.substring(result.index);\nif (wrappedCss != '') {\n    css = wrappedCss;\n}\nreturn css;\n};\nz$.appendCss = function (css, target) {\nvar style = null, head;\nif (typeof css === 'string') {\n    // output css\n    head = document.head || document.getElementsByTagName('head')[0];\n    style = document.createElement('style');\n    style.type = 'text/css';\n    if (style.styleSheet)\n        style.styleSheet.cssText = css;\n    else\n        style.appendChild(document.createTextNode(css));\n} else if (css instanceof Element) style = css;\n// remove previous style node\nif (!util.isNoU(target))\n    head.removeChild(target);\nif (!util.isNoU(style))\n    head.appendChild(style);\nreturn style;\n};\nz$.getClosest = function (elem, selector) {\n// Get closest match\nfor (; elem && elem !== document; elem = elem.parentNode) {\n    if (elem.matches(selector)) return elem;\n}\nreturn null;\n};\nz$.getPosition = function (el) {\nvar visible = z$.isInView(el);\nvar x = 0, y = 0;\nwhile (el) {\n    if (el.tagName == \"BODY\") {\n        // deal with browser quirks with body/window/document and page scroll\n        var scrollX = el.scrollLeft || document.documentElement.scrollLeft;\n        var scrollY = el.scrollTop || document.documentElement.scrollTop;\n        x += (el.offsetLeft - scrollX + el.clientLeft);\n        y += (el.offsetTop - scrollY + el.clientTop);\n    } else {\n        // for all other non-BODY elements\n        x += (el.offsetLeft - el.scrollLeft + el.clientLeft);\n        y += (el.offsetTop - el.scrollTop + el.clientTop);\n    }\n    el = el.offsetParent;\n}\nreturn {\n    x: x,\n    y: y,\n    visible: visible\n};\n};\nz$.isInView = function (el) {\nif (el.offsetParent === null)\n    return false;\nvar rect = el.getBoundingClientRect();\nreturn rect.bottom > 0 && rect.right > 0\n    && rect.left < (window.innerWidth || document.documentElement.clientWidth)",
     "ctx": {
       "type": "declaration",
@@ -1607,8 +1607,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 513,
-    "codeStart": 514,
+    "line": 517,
+    "codeStart": 518,
     "code": "&& rect.top < (window.innerHeight || document.documentElement.clientHeight);",
     "ctx": false
   },
@@ -1624,8 +1624,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 515,
-    "codeStart": 516,
+    "line": 519,
+    "codeStart": 520,
     "code": "};\nz$.ZxQuery = ZxQuery;\n\n// Element.matches() polyfill\nif (!Element.prototype.matches) {\n    Element.prototype.matches =\n        Element.prototype.matchesSelector ||\n        Element.prototype.mozMatchesSelector ||\n        Element.prototype.msMatchesSelector ||\n        Element.prototype.oMatchesSelector ||\n        Element.prototype.webkitMatchesSelector ||\n        function (s) {\n            var matches = (this.document || this.ownerDocument).querySelectorAll(s),\n                i = matches.length;\n            while (--i >= 0 && matches.item(i) !== this) {\n            }\n            return i > -1;\n        };\n}\n// window.CustomEvent polyfill for IE>=9\n(function () {\n    if ( typeof window.CustomEvent === \"function\" ) return false;\n    function CustomEvent ( event, params ) {\n        params = params || { bubbles: false, cancelable: false, detail: undefined };\n        var evt = document.createEvent( 'CustomEvent' );\n        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );\n        return evt;\n    }\n    CustomEvent.prototype = window.Event.prototype;\n    window.CustomEvent = CustomEvent;\n})();\n\nmodule.exports =  z$;",
     "ctx": false
   }

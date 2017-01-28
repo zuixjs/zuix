@@ -342,7 +342,7 @@ ComponentContext.prototype.view = function (view) {
         });
 
         // trigger `view:process` hook when the view is ready to be processed
-        this.trigger(this, 'view:process', this._view);
+        this.trigger(this, 'view:process', z$(this._view));
 
     } else {
         // load inline view

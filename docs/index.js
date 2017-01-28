@@ -134,9 +134,9 @@ zuix
 
 }).hook('view:process', function (h, w) {
     // Prism code syntax highlighter
-    zuix.$(w).find('code').each(function (i, block) {
-        zuix.$(block).addClass('language-javascript');
-        Prism.highlightElement(block);
+    w.find('code').each(function (i, block) {
+        block.addClass('language-javascript');
+        Prism.highlightElement(block.get());
     });
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
@@ -147,7 +147,6 @@ zuix
             componentHandler.upgradeElements(w);
         }, 500);
     }
-
 }).componentize(); // Componentize the page
 
 // Top menu `item:click` event handler

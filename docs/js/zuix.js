@@ -652,9 +652,13 @@ z$.find = function (filter) {
 };
 z$.each = function (items, iterationCallback) {
     if (items != null)
-        for (var i = 0, len = items.length; i < len; i++)
-            if (iterationCallback.call(items[i], i, items[i]) === false)
+        for (var i = 0, len = items.length; i < len; i++) {
+            var item = items[i];
+            if (item instanceof Element)
+                item = z$(item);
+            if (iterationCallback.call(items[i], i, item) === false)
                 break;
+        }
     return this;
 };
 z$.hasClass = function(el, className) {
@@ -1195,7 +1199,7 @@ ComponentContext.prototype.view = function (view) {
         });
 
         // trigger `view:process` hook when the view is ready to be processed
-        this.trigger(this, 'view:process', this._view);
+        this.trigger(this, 'view:process', z$(this._view));
 
     } else {
         // load inline view
@@ -1420,13 +1424,13 @@ function ContextController(context) {
     /** @type {function} */
     this.trigger = function (eventPath, eventData) {
         if (context._eventMap[eventPath] == null)
-            this.addEvent(context.view(), eventPath, null);
+            this.addEvent(this.view(), eventPath, null);
         // TODO: ...
         _t.view().trigger(eventPath, eventData);
     };
     /** @type {function} */
     this.on = function (eventPath, handler_fn) {
-        this.addEvent(context.view(), eventPath, handler_fn);
+        this.addEvent(this.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
     };
     /** @protected */
@@ -2164,13 +2168,6 @@ Zuix.prototype.unload = function (context) {
     return this;
 };
 /**
- * Enable/Disable lazy-loading, or get current value.
- *
- * @param {boolean} [enable]
- * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
- */
-Zuix.prototype.lazyLoad = lazyLoad;
-/**
  * TODO: desc
  *
  * @private
@@ -2201,6 +2198,13 @@ Zuix.prototype.trigger = function (context, path, data) {
     trigger(context, path, data);
     return this;
 };
+/**
+ * Enable/Disable lazy-loading, or get current value.
+ *
+ * @param {boolean} [enable]
+ * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
+ */
+Zuix.prototype.lazyLoad = lazyLoad;
 
 Zuix.prototype.$ = z$;
 Zuix.prototype.TaskQueue = TaskQueue;

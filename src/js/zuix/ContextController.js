@@ -127,13 +127,13 @@ function ContextController(context) {
     /** @type {function} */
     this.trigger = function (eventPath, eventData) {
         if (context._eventMap[eventPath] == null)
-            this.addEvent(context.view(), eventPath, null);
+            this.addEvent(this.view(), eventPath, null);
         // TODO: ...
         _t.view().trigger(eventPath, eventData);
     };
     /** @type {function} */
     this.on = function (eventPath, handler_fn) {
-        this.addEvent(context.view(), eventPath, handler_fn);
+        this.addEvent(this.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
     };
     /** @protected */

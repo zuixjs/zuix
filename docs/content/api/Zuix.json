@@ -19,7 +19,7 @@
       {
         "type": "author",
         "string": "Generoso Martello <generoso@martello.com>",
-        "html": "<p>Generoso Martello <a href=\"&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#x67;&#x65;&#110;&#x65;&#114;&#111;&#x73;&#111;&#x40;&#x6d;&#x61;&#114;&#x74;&#101;&#108;&#x6c;&#x6f;&#46;&#99;&#111;&#x6d;\">&#x67;&#x65;&#110;&#x65;&#114;&#111;&#x73;&#111;&#x40;&#x6d;&#x61;&#114;&#x74;&#101;&#108;&#x6c;&#x6f;&#46;&#99;&#111;&#x6d;</a></p>"
+        "html": "<p>Generoso Martello <a href=\"&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x67;&#x65;&#x6e;&#x65;&#114;&#111;&#x73;&#x6f;&#x40;&#x6d;&#x61;&#x72;&#116;&#101;&#108;&#x6c;&#111;&#46;&#x63;&#x6f;&#109;\">&#x67;&#x65;&#x6e;&#x65;&#114;&#111;&#x73;&#x6f;&#x40;&#x6d;&#x61;&#x72;&#116;&#101;&#108;&#x6c;&#111;&#46;&#x63;&#x6f;&#109;</a></p>"
       }
     ],
     "description": {
@@ -1734,59 +1734,6 @@
   {
     "tags": [
       {
-        "type": "param",
-        "string": "{boolean} [enable]",
-        "name": "[enable]",
-        "description": "",
-        "types": [
-          "boolean"
-        ],
-        "typesDescription": "<code>boolean</code>",
-        "optional": true,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false,
-        "html": "<p>{boolean} [enable]</p>"
-      },
-      {
-        "type": "return",
-        "string": "{boolean} *true* if lazy-loading is enabled, *false* otherwise.",
-        "types": [
-          "boolean"
-        ],
-        "typesDescription": "<code>boolean</code>",
-        "optional": false,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false,
-        "description": "<p><em>true</em> if lazy-loading is enabled, <em>false</em> otherwise.</p>"
-      }
-    ],
-    "description": {
-      "full": "<p>Enable/Disable lazy-loading, or get current value.</p>",
-      "summary": "<p>Enable/Disable lazy-loading, or get current value.</p>",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 647,
-    "codeStart": 653,
-    "code": "Zuix.prototype.lazyLoad = lazyLoad;",
-    "ctx": {
-      "type": "property",
-      "constructor": "Zuix",
-      "cons": "Zuix",
-      "name": "lazyLoad",
-      "value": "lazyLoad",
-      "string": "Zuix.prototype.lazyLoad"
-    }
-  },
-  {
-    "tags": [
-      {
         "type": "private",
         "string": "",
         "visibility": "private",
@@ -1833,8 +1780,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 654,
-    "codeStart": 661,
+    "line": 647,
+    "codeStart": 654,
     "code": "Zuix.prototype.context = context;",
     "ctx": {
       "type": "property",
@@ -1898,8 +1845,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 662,
-    "codeStart": 669,
+    "line": 655,
+    "codeStart": 662,
     "code": "Zuix.prototype.hook = function (path, handler) {\n    hook(path, handler);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1975,15 +1922,68 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 673,
-    "codeStart": 681,
-    "code": "Zuix.prototype.trigger = function (context, path, data) {\n    trigger(context, path, data);\n    return this;\n};\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
+    "line": 666,
+    "codeStart": 674,
+    "code": "Zuix.prototype.trigger = function (context, path, data) {\n    trigger(context, path, data);\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "Zuix",
       "cons": "Zuix",
       "name": "trigger",
       "string": "Zuix.prototype.trigger()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{boolean} [enable]",
+        "name": "[enable]",
+        "description": "",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "html": "<p>{boolean} [enable]</p>"
+      },
+      {
+        "type": "return",
+        "string": "{boolean} *true* if lazy-loading is enabled, *false* otherwise.",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "<p><em>true</em> if lazy-loading is enabled, <em>false</em> otherwise.</p>"
+      }
+    ],
+    "description": {
+      "full": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "summary": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 678,
+    "codeStart": 684,
+    "code": "Zuix.prototype.lazyLoad = lazyLoad;\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "lazyLoad",
+      "value": "lazyLoad",
+      "string": "Zuix.prototype.lazyLoad"
     }
   },
   {
