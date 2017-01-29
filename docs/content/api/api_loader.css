@@ -13,18 +13,19 @@ code {
     background-color: transparent;
 }
 small {
-    margin-left: 48px;
-    font-weight:bold;
+    margin-left: 8px;
+    margin-right: 8px;
     margin-top: 12px;
-    color: dimgrey;
+    font-weight:bold;
+    color: #697063;
 }
 h5 code.language-javascript {
-    color: #BDBDBD;
+    color: #bfbfbf;
     font-style: italic;
 }
 .title {
     padding: 0;
-    margin-top: 32px;
+    margin-top: 12px;
     margin-bottom: 0;
 }
 .title code {
@@ -37,11 +38,13 @@ h5 code.language-javascript {
     margin-bottom:16px;
 }
 .details {
-    padding: 16px 24px 32px;
+    padding: 0 24px 16px;
 }
 .api-member-details {
-    margin-left: 64px;
-    margin-bottom: 12px;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 .api-member-details .language-javascript {
     color: #424242;
@@ -50,7 +53,6 @@ h5 code.language-javascript {
 }
 .container {
     overflow:hidden;
-    background-color: #fafafa;
 }
 .collapsed {
     display: none;

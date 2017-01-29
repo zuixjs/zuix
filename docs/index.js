@@ -147,7 +147,7 @@ zuix
             componentHandler.upgradeElements(w.get());
         }, 500);
     }
-}).componentize(); // Componentize the page
+}); // Componentize the page
 
 // Top menu `item:click` event handler
 function menuItemClicked(e, i) {

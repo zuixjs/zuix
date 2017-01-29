@@ -32,7 +32,7 @@ zuix.controller(function (cp) {
                         console.log(pl.content);
                         html += '<div class="description">'+pl.content+'</div>';
 
-                        var currentType = '';
+                        var currentType = '', example = '';
                         zuix.$.each(this.tags, function () {
 
                             var typeName = this.type.toUpperCase();
@@ -40,7 +40,10 @@ zuix.controller(function (cp) {
                                 typeName = "RETURNS";
                             else if (typeName.indexOf('PARAM') >= 0)
                                 typeName = "PARAMETERS";
-                            else return true;
+                            else if (typeName.indexOf("EXAMPLE") == 0) {
+                                example += this.string;
+                                return true;
+                            } else return true;
 
                             if (currentType !== typeName) {
                                 currentType = typeName;
@@ -56,21 +59,31 @@ zuix.controller(function (cp) {
                             types = types.trim();
 
                             if (this.name != null)
-                                html += ' <code>'+ this.name +'</code>';
+                                html += ' <code>'+ this.name.replace('[','').replace(']','') +'</code>';
                             html += ' <code class="mdl-color-text--grey">{'+types+'}</code>';
 
                             if (this.optional)
-                                html += ' <em class="mdl-color-text--grey">optional</em>';
+                                html += ' <em class="mdl-color-text--grey">[optional]</em>';
 
                             //noinspection JSPotentiallyInvalidUsageOfThis
                             var pl = { content: this.description };
                             zuix.trigger(cp.context, 'html:parse', pl);
+                            if (pl.content.indexOf('<p>') == -1)
+                                pl.content = '<p>'+pl.content+'</p>';
                             html += pl.content;
 
                             html += '</div>';
                         });
 
-                        html += '</div></div><!-- details -->';
+                        if (example != '') {
+                            var pl = { content: example };
+                            zuix.trigger(cp.context, 'html:parse', pl);
+                            html += '<div class="example">'+pl.content+'</div>';
+                        }
+
+                        html += '</div>';
+
+                        html += '</div><!-- details -->';
                     }
                 });
                 cp.view()

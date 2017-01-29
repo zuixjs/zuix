@@ -86,8 +86,8 @@ var tasker = new TaskQueue(function (tq, eventPath, eventValue) {
  * Initializes a controller ```handler```.
  *
  * @private
- * @param handler {ContextControllerCallback}
- * @return {ContextControllerCallback}
+ * @param handler {ContextControllerHandler}
+ * @return {ContextControllerHandler}
  */
 function controller(handler) {
     if (typeof handler['for'] !== 'function')
@@ -104,7 +104,7 @@ function controller(handler) {
  *
  * @private
  * @param {!string} fieldName The class to check for.
- * @param {!Node} [container] Starting DOM element for this search (**default:** ```document```)
+ * @param {!Element} [container] Starting DOM element for this search (**default:** ```document```)
  * @return {ZxQuery}
  */
 function field(fieldName, container) {
@@ -118,7 +118,7 @@ function field(fieldName, container) {
  * directives and process them.
  *
  * @private
- * @param [element] {Node} Optional container to use as starting node for the search.
+ * @param [element] {Element} Optional container to use as starting node for the search.
  */
 function componentize(element) {
     // Throttle method
@@ -276,12 +276,6 @@ function load(componentId, options) {
         if (cachedComponent !== null && cachedComponent.view != null)
             ctx.view(cachedComponent.view);
         else {
-            /*
-             // TODO: replace z$() with z$(options.container)
-             var inlineView = z$().find('[data-ui-view="' + context.componentId + '"]');
-             if (inlineView.length() > 0)
-             context.view(inlineView.get(0).outerHTML);
-             */
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(ctx.view())) {
@@ -357,13 +351,13 @@ function createContext(options) {
  * TODO: desc
  *
  * @private
- * @param {Node|Object} contextId
+ * @param {Element} contextId
  * @return {ComponentContext}
  */
 function context(contextId) {
     var context = null;
     z$.each(_contextRoot, function (k, v) {
-        if ((contextId instanceof Node && v.view() === contextId)
+        if ((contextId instanceof Element && v.view() === contextId)
             || util.objectEquals(v.contextId, contextId)) {
             context = v;
             return false;
@@ -566,7 +560,7 @@ function initComponent(context) {
 /***
  * @private
  * @param javascriptCode string
- * @returns {ContextControllerCallback}
+ * @returns {ContextControllerHandler}
  */
 // TODO: refactor this method name
 function getController(javascriptCode) {
@@ -601,16 +595,42 @@ if (_isCrawlerBotClient)
 /**
  * Initializes a controller ```handler```.
  *
- * @param handler {ContextControllerCallback}
- * @return {ContextControllerCallback}
+ * @example
+ *
+<small>**Example - JavaScript**</small>
+```js
+// Controller of component 'path/to/component_name'
+var ctrl = zuix.controller(function(cp) {
+    cp.create = function() { ... };
+    cp.destroy = function() { ... }
+}).for('path/to/component_name');
+```
+ *
+ * @param {ContextControllerHandler} handler The controller handler function.
+ * @return {ContextControllerHandler} The initialized controller handler.
  */
 Zuix.prototype.controller = controller;
 /**
  * Searches and returns elements with `data-ui-field`
  * attribute matching the given `fieldName`.
  *
+ * @example
+ *
+<small>**Example - HTML**</small>
+```html
+<div data-ui-field="container-div">
+   <!-- container HTML -->
+</div>
+```
+
+<small>**Example - JavaScript**</small>
+```js
+var containerDiv = zuix.field('container-div');
+containerDiv.html('Hello World!');
+```
+ *
  * @param {!string} fieldName The class to check for.
- * @param {!Node} [container] Starting DOM element for this search (**default:** ```document```)
+ * @param {!Element} [container] Starting DOM element for this search (**default:** ```document```)
  * @return {ZxQuery}
  */
 Zuix.prototype.field = field;
@@ -618,8 +638,17 @@ Zuix.prototype.field = field;
  * Searches inside the given element ```element```
  * for all ```data-ui-include``` and ```data-ui-load```
  * directives and process them.
+ * This is to be called if adding dynamically content
+ * with elements that declare the above attributes.
  *
- * @param [element] {Node} Optional container to use as starting node for the search.
+ * @example
+ *
+<small>**Example - JavaScript**</small>
+```js
+zuix.componentize(document);
+```
+ *
+ * @param {Element} [element] Optional container to use as starting node for the search.
  * @return {Zuix}
  */
 Zuix.prototype.componentize = function (element) {
@@ -628,16 +657,56 @@ Zuix.prototype.componentize = function (element) {
 };
 /**
  * Loads a component with the given options.
+ * This is the programmatic equivalent of
+ * `data-ui-include` or `data-ui-load`.
+ * All available options are described in the
+ * `ContextOptions` class documentation.
  *
- * @param {!string} componentId The id/name of the component we want to load.
- * @param {ContextOptions} [options] context options used to initialize the loaded component
+ * @example
+ *
+<small>**Example - JavaScript**</small>
+```js
+var exampleController = zuix.controller(function(cp){
+    cp.create = function() {
+        cp.expose('test', testMethod);
+        cp.view().html('Helllo World!');
+    }
+    function testMethod() {
+        console.log('Test method exposing');
+        cp.view().html('A simple test.');
+    }
+});
+var componentOptions = {
+    container: zuix.field('container-div');
+    controller: exampleController,
+    ready: function () {
+        console.log('Loading complete.');
+        console.log('Component context instance', this);
+    },
+    error: function(error) {
+        console.log('Loading error!', error);
+    }
+};
+var ctx = zuix.load('path/to/component_name', componentOptions);
+ctx.test();
+```
+ *
+ * @param {!string} componentId The identifier name of the component to be loaded.
+ * @param {ContextOptions} [options] Options used to initialize the loaded component.
  * @return {ComponentContext}
  */
 Zuix.prototype.load = load;
 /**
  * Unload and dispose the component.
  *
- * @param context {ComponentContext}
+ * @example
+ *
+<small>**Example - JavaScript**</small>
+```js
+zuix.unload(ctx);
+```
+ *
+ * @param {ComponentContext} context The `ComponentContext` instance of the component to be unloaded.
  * @return {Zuix}
  */
 Zuix.prototype.unload = function (context) {
@@ -645,18 +714,26 @@ Zuix.prototype.unload = function (context) {
     return this;
 };
 /**
- * TODO: desc
+ * Get the `ComponentContext`, given
+ * the component's view or container element.
+ * .
+ * @example
+ *
+<small>**Example - JavaScript**</small>
+```js
+var ctx = zuix.context(containerDiv);
+```
  *
  * @private
- * @param {Node|Object} contextId
+ * @param {Element} contextId
  * @return {ComponentContext}
  */
 Zuix.prototype.context = context;
 /**
  * TODO: desc
  *
- * @param path
- * @param handler
+ * @param {string} path
+ * @param {function} handler
  * @return {Zuix}
  */
 Zuix.prototype.hook = function (path, handler) {
@@ -666,9 +743,9 @@ Zuix.prototype.hook = function (path, handler) {
 /**
  * TODO: desc
  *
- * @param context
- * @param path
- * @param data
+ * @param {Object} context
+ * @param {string} path
+ * @param {object} data
  * @return {Zuix}
  */
 Zuix.prototype.trigger = function (context, path, data) {
@@ -702,7 +779,11 @@ Zuix.prototype.dumpContexts = function () {
  * @return {Zuix}
  */
 module.exports = function (root) {
-    return new Zuix();
+    var zuix = new Zuix();
+    document.addEventListener("DOMContentLoaded", function(event) {
+        zuix.componentize();
+    });
+    return zuix;
 };
 
 

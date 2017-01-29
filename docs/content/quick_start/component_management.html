@@ -555,36 +555,6 @@ style="visibility:hidden;background: black">
 <p>.</p>
 <p></p>
 
-
-Example snippets...
-
-<small>
-    <strong>Controller passed in the component options</strong>
-    The controller is specified in the ```data-ui-options```
-    attribute.
-</small>
-<pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-load="site/components/actions_menu"
-         data-ui-options="componentOptions"></div>
-    <script>
-    var exampleController = zuix.controller(function(cp){
-        cp.create = function() {
-            cp.view().html('Helllo World!');
-        }
-    });
-    var componentOptions = {
-        controller: exampleController,
-        ready: function () {
-            console.log('Loading complete.');
-            console.log('Component object', this);
-        },
-        error: function(error) {
-            console.log('Loading error!', error);
-        }
-    };
-    </script>
-</code></pre>
-
 <!--
 ##### Example - Loading external hosted component
 

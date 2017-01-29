@@ -27,13 +27,13 @@
  *
  * @typedef {{
  *    contextId: Object|undefined The context id,
- *    container: Node|undefined The container element,
+ *    container: Element|undefined The container element,
  *    componentId: string|undefined The component identifier,
- *    model: ContextModel|undefined The data model,
- *    view: ContextView|undefined The view element,
+ *    model: JSON|undefined The data model,
+ *    view: Element|ZxQuery|undefined The view element,
  *    css: Element|string|undefined,
  *    html: boolean|undefined,
- *    controller: ContextControllerCallback|undefined The controller handler,
+ *    controller: ContextControllerHandler|undefined The controller handler,
  *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
  *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
  *    ready: ContextReadyCallback|undefined The ready callback, called once the component is succesfully loaded,

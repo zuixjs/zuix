@@ -29,7 +29,7 @@
  * @typedef {{
  *      componentId: string The id of the cached component,
  *      view: ContextView The view,
- *      controller: ContextControllerCallback The function of the controller controller.
+ *      controller: ContextControllerHandler The function of the controller controller.
  * }} ComponentCache
  *
  */

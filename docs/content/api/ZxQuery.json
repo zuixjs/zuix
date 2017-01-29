@@ -595,7 +595,7 @@
     "ignore": false,
     "line": 144,
     "codeStart": 156,
-    "code": "ZxQuery.prototype.each = function(iterationCallback) {\n    z$.each(this._selection, iterationCallback);\n    return this;\n};",
+    "code": "ZxQuery.prototype.each = function (iterationCallback) {\n    z$.each(this._selection, iterationCallback);\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "ZxQuery",

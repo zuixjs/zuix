@@ -62,7 +62,7 @@ function ComponentContext(options, eventCallback) {
     this._style = null;
     /**
      * @protected
-     * @type {ContextControllerCallback}
+     * @type {ContextControllerHandler}
      */
     this._controller = null;
 
@@ -296,7 +296,7 @@ ComponentContext.prototype.loadCss = function (options) {
 
 /***
  *
- * @param {Node|string|undefined} [view]
+ * @param {Element|string|undefined} [view]
  * @returns {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
@@ -414,8 +414,8 @@ ComponentContext.prototype.loadHtml = function(options) {
 
 /***
  *
- * @param {ContextControllerCallback|undefined} [controller]
- * @returns {ComponentContext|ContextControllerCallback}
+ * @param {ContextControllerHandler|undefined} [controller]
+ * @returns {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function (controller) {
     if (typeof controller === 'undefined') return this._controller;

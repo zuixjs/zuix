@@ -26,7 +26,7 @@
 /**
  * TODO: describe
  *
- * @callback ContextControllerCallback
+ * @callback ContextControllerHandler
  * @param {ContextController} ctx
  *
  */
