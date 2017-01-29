@@ -1,11 +1,11 @@
-zuix.controller(function (ctx) {
+zuix.controller(function (cp) {
     var toolbar, fab, actions;
     var open = true; // initial state
 
-    ctx.create = function () {
+    cp.create = function () {
 
         // toolbar view
-        toolbar = ctx.view();
+        toolbar = cp.view();
         // fab button
         fab = toolbar.children().eq(0);
         fab.on('click', function () {
@@ -15,20 +15,20 @@ zuix.controller(function (ctx) {
         actions = toolbar.children().eq(1)
             .css('overflow', 'hidden')
             .children();
-        actions.each(function (index) {
-            zuix.$(this).on('click', function () {
+        actions.each(function (index, item) {
+            item.on('click', function () {
                 toolbarToggle();
-                ctx.trigger('item:click', index);
+                cp.trigger('item:click', index);
             });
         });
 
         toolbarToggle();
     };
 
-    ctx.destroy = function () {
+    cp.destroy = function () {
 
-        actions.each(function () {
-            zuix.$(this).off('click');
+        actions.each(function (i, item) {
+            item.off('click');
         });
 
     };
@@ -37,8 +37,8 @@ zuix.controller(function (ctx) {
 
     function toolbarToggle() {
         open = !open;
-        actions.each(function (i) {
-            var button = zuix.$(this);
+        /** @type {ZxQuery} actions */
+        actions.each(function (i, button) {
             if (open)
                 button
                     .animateCss('fadeInLeftBig', {
@@ -51,10 +51,10 @@ zuix.controller(function (ctx) {
                         delay: (i / 8) + 's',
                         duration: '1.0s'
                     }, function () {
-                        zuix.$(this).css('visibility', 'hidden');
+                        button.css('visibility', 'hidden');
                     });
         }).reverse();
-        fab.css('-webkit-animation-duration', '0.6s').animateCss('rubberBand');
+        fab.animateCss('rubberBand', { 'duration': '0.6s' });
     }
 
 });

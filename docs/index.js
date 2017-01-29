@@ -144,7 +144,7 @@ zuix
     // Material Design Light  DOM upgrade
     if (componentHandler) {
         setTimeout(function () {
-            componentHandler.upgradeElements(w);
+            componentHandler.upgradeElements(w.get());
         }, 500);
     }
 }).componentize(); // Componentize the page

@@ -29,6 +29,20 @@
 var util = require('./Util.js');
 
 /**
+ *
+ * @callback IterationCallback
+ * @param {number} i Iteration count
+ */
+
+/**
+ *
+ * @callback ZxQueryIterationCallback
+ * @param {number} i Iteration count
+ * @param {ZxQuery} zxElement Current element
+ * @param {Element} [this]
+ */
+
+/**
  * ZxQuery, a very lite subset of jQuery-like functions
  * internally used in Zuix.
  *
@@ -136,7 +150,7 @@ ZxQuery.prototype.find = function (selector) {
  * a `{ZxQuery}` instance wrapping the current *DOM* element.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
- * @param {function} iterationCallback The callback *fn* to call at each iteration
+ * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.each = function (iterationCallback) {
@@ -394,6 +408,19 @@ var z$ = function (what) {
 z$.find = function (filter) {
     return z$().find(filter);
 };
+/**
+ * Iterate through all objects in the given `items` collection.
+ * The context object *this*, passed to the
+ * *iterationCallback*`(index, item)`, will be the
+ * object corresponding the current iteration and
+ * the `index` passed to the callback will be the iteration count.
+ *
+ * If the callback returns *false*, the iteration loop will interrupt.
+ *
+ * @param {Array<Object>} items Enumerable objects collection.
+ * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @return {z$} `this`.
+ */
 z$.each = function (items, iterationCallback) {
     if (items != null)
         for (var i = 0, len = items.length; i < len; i++) {

@@ -21,6 +21,7 @@ zuix.controller(function (cp) {
         //cp.loadCss();
         cp.loadHtml({
             then: function () {
+
                 // move image list inside the horiz. thumb list
                 var itemList = cp.field('list');
                 cp.view(items).each(function () {
@@ -59,7 +60,6 @@ zuix.controller(function (cp) {
             .removeClass('selected');
         var item = itemList.eq(p);
         item.addClass('selected').animateCss('pulse');
-        //cp.field('list').scrollLeft = zuix.$.getPosition(item.get(0)).x - cp.field('list').parentNode.clientWidth / 2;
         var img1 = cp.field('img1');
         var img2 = cp.field('img2');
         if (img1.display() == 'none') {

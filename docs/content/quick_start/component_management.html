@@ -174,7 +174,7 @@ example_card_options = {
 </code></pre>
 
 <small><strong>RESULT</strong></small>
-<div layout="rows center-stretch">
+<div layout="rows center-spread">
 
 <div data-ui-load="site/components/summary_card"
  data-ui-options="example_card_1_options"
@@ -313,9 +313,31 @@ DOM *Element* object, use  the *ZxQuery***.get()** method
 
 ###### ZxQuery DOM helper class
 
-*ZxQuery* is a *ZUIX* built-in class that implements a very
-lite subset of jQuery-like functionality. It can wrap elements
+*ZxQuery* is a built-in class of *ZUIX* that implements a very
+lite subset of jQuery-like functionality. So, it can wrap elements
 in a DOM and provide useful methods for manipulating it.
+
+Some fields/parameters in *ZUIX* classes are exposed as *ZxQuery*
+objects to facilitate common element's manipulation tasks.
+
+For example the `cp.view()` method of a controller handler,
+used to get the *View* element of a component,
+will return a *ZxQuery* object.
+
+To access the DOM Element behind a *ZxQuery* object the method
+`.get()` is used.
+
+```
+var el = cp.view().get();
+console.log( el.innerHTML )
+```
+So the `.get()` method can be used to interoperate with
+other libraries and frameworks used in a project.
+
+For a detailed description of available methods in a *ZxQuery*
+object, see the **API** section.
+
+
 
 <p></p>
 <p>.</p>
@@ -357,11 +379,11 @@ The following example is an "Action Menu" component.
 // 'site/components/actions_menu' controller
 zuix.controller(function(cp) {
 
-    cp.create = function() { ... }
+    cp.create = function() { /* ... */ };
 
-    cp.destroy = function() { ... }
+    cp.destroy = function() { /* ... */ }
 
-}, 'site/components/actions_menu');
+}).for('site/components/actions_menu');
 </script>
 </code></pre>
 
@@ -415,94 +437,46 @@ var example_action_menu_options = {
 </script>
 
 
-Example - MDL action menu
-
-<pre><code class="language-html">
-<div layout="row center-left">
-    <!-- FAB menu button -->
-    <div style="max-width: 56px;">
-        <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
-            <i class="material-icons">settings</i>
-        </a>
-    </div>
-    <!-- menu actions buttons -->
-    <div>
-        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
-            <i class="material-icons">edit</i>
-        </div>
-        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
-            <i class="material-icons">insert_comment</i>
-        </div>
-        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
-            <i class="material-icons">delete_forever</i>
-        </div>
-    </div>
-</div>
-</code></pre>
-
-
 The *controller* code will take care of collapsing/expanding
 the actions buttons when the user clicks the FAB button.
 It will also cause an ```item:click``` event when an
 action buttons is clicked.
 
-
-
-
-<small>
-    <strong>Controller passed in the component options</strong>
-    The controller is specified in the ```data-ui-options```
-    attribute.
-</small>
-<pre><code class="language-html keyword-start line-numbers">
-    <div data-ui-load="site/components/actions_menu"
-         data-ui-options="componentOptions"></div>
-    <script>
-    var exampleController = zuix.controller(function(cp){
-        cp.create = function() {
-            cp.view().html('Helllo World!');
-        }
-    });
-    var componentOptions = {
-        controller: exampleController,
-        ready: function () {
-            console.log('Loading complete.');
-            console.log('Component object', this);
-        },
-        error: function(error) {
-            console.log('Loading error!', error);
-        }
-    };
-    </script>
-</code></pre>
-
-<small><strong>EXAMPLE</strong> Controller implementation</small>
+<small><strong>EXAMPLE</strong> Controller implementation in file [site/components/actions_menu](https://genielabs.github.io/zuix/site/components/actions_menu.js)</small>
 
 <pre><code class="language-js">
 zuix.controller(function (cp) {
-    var actions_menu, fab, actions;
-    var open = false;
+
+    var toolbar, fab, actions;
+    var open = true; // initial state
 
     cp.create = function () {
 
-        // actions menu view
-        actions_menu = zuix.$(cp.view());
-
+        // toolbar view
+        toolbar = cp.view();
         // fab button
-        fab = actions_menu.children().eq(0);
+        fab = toolbar.children().eq(0);
         fab.on('click', function () {
-            toggleActionsMenu();
+            toolbarToggle();
+        });
+        // actions buttons
+        actions = toolbar.children().eq(1)
+            .css('overflow', 'hidden')
+            .children();
+        actions.each(function (index, item) {
+            item.on('click', function () {
+                toolbarToggle();
+                cp.trigger('item:click', index);
+            });
         });
 
-        // actions buttons
-        actions = actions_menu.children().eq(1)
-                    .css('overflow', 'hidden')
-                    .children();
-        actions.each(function (index) {
-            zuix.$(this).on('click', function () {
-                toggleActionsMenu();
-                cp.trigger('item:click', index);
-            }).css('visibility','hidden');
+        toolbarToggle();
+    };
+
+    cp.destroy = function () {
+
+        actions.each(function (i, item) {
+            item.off('click');
         });
 
     };
@@ -511,7 +485,8 @@ zuix.controller(function (cp) {
 </code></pre>
 
 
-<p>&nbsp;</p>
+Example picture slide-show component
+[site/components/slideshow](https://genielabs.github.io/zuix/site/components/slideshow.js).
 
 
 <div data-ui-field="test"
@@ -581,6 +556,34 @@ style="visibility:hidden;background: black">
 <p></p>
 
 
+Example snippets...
+
+<small>
+    <strong>Controller passed in the component options</strong>
+    The controller is specified in the ```data-ui-options```
+    attribute.
+</small>
+<pre><code class="language-html keyword-start line-numbers">
+    <div data-ui-load="site/components/actions_menu"
+         data-ui-options="componentOptions"></div>
+    <script>
+    var exampleController = zuix.controller(function(cp){
+        cp.create = function() {
+            cp.view().html('Helllo World!');
+        }
+    });
+    var componentOptions = {
+        controller: exampleController,
+        ready: function () {
+            console.log('Loading complete.');
+            console.log('Component object', this);
+        },
+        error: function(error) {
+            console.log('Loading error!', error);
+        }
+    };
+    </script>
+</code></pre>
 
 <!--
 ##### Example - Loading external hosted component
