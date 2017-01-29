@@ -9,6 +9,7 @@ p code {
     color: dimgrey;
 }
 code {
+    font-size: 110%;
     background-color: transparent;
 }
 small {
@@ -31,16 +32,12 @@ h5 code.language-javascript {
 }
 .description {
     font-family: monospace;
-    font-size: 100%;
     padding-left: 6px;
     margin-top: 16px;
     margin-bottom:16px;
 }
-.description span {
-}
 .details {
-    margin-bottom: 32px;
-    margin-left: 24px;
+    padding: 16px 24px 32px;
 }
 .api-member-details {
     margin-left: 64px;
@@ -53,6 +50,7 @@ h5 code.language-javascript {
 }
 .container {
     overflow:hidden;
+    background-color: #fafafa;
 }
 .collapsed {
     display: none;

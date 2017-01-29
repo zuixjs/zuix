@@ -128,10 +128,14 @@ ZxQuery.prototype.find = function (selector) {
     return new ZxQuery(this._selection[0].querySelectorAll(selector));
 };
 /**
- * Iterate through all *DOM* elements in the current selection.
- * The context object *this* of the iteration callback will be the
- * *DOM* element corresponding the current iteration. If the callback
- * returns *false*, the iteration loop will interrupt.
+ * Iterate through all *DOM* elements in the selection.
+ * The context object *this*, passed to the
+ * *iterationCallback*`(index, item)`, will be the
+ * *DOM* element corresponding the current iteration.
+ * `index` will be the iteration count, and `item`
+ * a `{ZxQuery}` instance wrapping the current *DOM* element.
+ *
+ * If the callback returns *false*, the iteration loop will interrupt.
  * @param {function} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} The *ZxQuery* object itself
  */

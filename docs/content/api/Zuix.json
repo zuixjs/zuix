@@ -2,9 +2,9 @@
   {
     "tags": [],
     "description": {
-      "full": "<p>Copyright 2015-2017 G-Labs. All Rights Reserved.<br />        <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p><p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);<br />you may not use this file except in compliance with the License.<br />You may obtain a copy of the License at</p><pre><code> http://www.apache.org/licenses/LICENSE-2.0\n</code></pre><p>Unless required by applicable law or agreed to in writing, software<br />distributed under the License is distributed on an &quot;AS IS&quot; BASIS,<br />WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br />See the License for the specific language governing permissions and<br />limitations under the License.</p>",
-      "summary": "<p>Copyright 2015-2017 G-Labs. All Rights Reserved.<br />        <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p>",
-      "body": "<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);<br />you may not use this file except in compliance with the License.<br />You may obtain a copy of the License at</p><pre><code> http://www.apache.org/licenses/LICENSE-2.0\n</code></pre><p>Unless required by applicable law or agreed to in writing, software<br />distributed under the License is distributed on an &quot;AS IS&quot; BASIS,<br />WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br />See the License for the specific language governing permissions and<br />limitations under the License.</p>"
+      "full": "Copyright 2015-2017 G-Labs. All Rights Reserved.\n        https://genielabs.github.io/zuix\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+      "summary": "Copyright 2015-2017 G-Labs. All Rights Reserved.\n        https://genielabs.github.io/zuix",
+      "body": "Licensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."
     },
     "isPrivate": false,
     "isConstructor": false,
@@ -18,13 +18,12 @@
     "tags": [
       {
         "type": "author",
-        "string": "Generoso Martello <generoso@martello.com>",
-        "html": "<p>Generoso Martello <a href=\"&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x67;&#x65;&#x6e;&#x65;&#114;&#111;&#x73;&#x6f;&#x40;&#x6d;&#x61;&#x72;&#116;&#101;&#108;&#x6c;&#111;&#46;&#x63;&#x6f;&#109;\">&#x67;&#x65;&#x6e;&#x65;&#114;&#111;&#x73;&#x6f;&#x40;&#x6d;&#x61;&#x72;&#116;&#101;&#108;&#x6c;&#111;&#46;&#x63;&#x6f;&#109;</a></p>"
+        "string": "Generoso Martello <generoso@martello.com>"
       }
     ],
     "description": {
-      "full": "<p>ZUIX, Javascript library for component-based development.<br />       <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p>",
-      "summary": "<p>ZUIX, Javascript library for component-based development.<br />       <a href=\"https://genielabs.github.io/zuix\">https://genielabs.github.io/zuix</a></p>",
+      "full": "ZUIX, Javascript library for component-based development.\n       https://genielabs.github.io/zuix",
+      "summary": "ZUIX, Javascript library for component-based development.\n       https://genielabs.github.io/zuix",
       "body": ""
     },
     "isPrivate": false,
@@ -41,8 +40,7 @@
     "tags": [
       {
         "type": "const",
-        "string": "",
-        "html": ""
+        "string": ""
       }
     ],
     "description": {
@@ -69,13 +67,11 @@
     "tags": [
       {
         "type": "class",
-        "string": "Zuix",
-        "html": "<p>Zuix</p>"
+        "string": "Zuix"
       },
       {
         "type": "constructor",
-        "string": "",
-        "html": ""
+        "string": ""
       },
       {
         "type": "returns",
@@ -88,13 +84,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{Zuix}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>ZUIX, Javascript library for component-based development.</p>",
-      "summary": "<p>ZUIX, Javascript library for component-based development.</p>",
+      "full": "ZUIX, Javascript library for component-based development.",
+      "summary": "ZUIX, Javascript library for component-based development.",
       "body": ""
     },
     "isPrivate": false,
@@ -116,8 +111,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "type",
@@ -129,8 +123,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": true,
-        "variable": false,
-        "html": "<p>{!Array<ComponentCache>}</p>"
+        "variable": false
       }
     ],
     "description": {
@@ -158,8 +151,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -187,8 +179,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "type",
@@ -200,8 +191,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": true,
-        "variable": false,
-        "html": "<p>{!Array<ComponentContext>}</p>"
+        "variable": false
       }
     ],
     "description": {
@@ -229,8 +219,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -258,8 +247,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -287,8 +275,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -316,8 +303,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -345,8 +331,7 @@
       {
         "type": "private",
         "string": "*",
-        "visibility": "private",
-        "html": "<p>*</p>"
+        "visibility": "private"
       }
     ],
     "description": {
@@ -374,14 +359,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "handler {ContextControllerCallback}",
         "name": "handler",
-        "description": "<p>{ContextControllerCallback}</p>",
+        "description": "{ContextControllerCallback}",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -400,13 +384,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ContextControllerCallback}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Initializes a controller <code>handler</code>.</p>",
-      "summary": "<p>Initializes a controller <code>handler</code>.</p>",
+      "full": "Initializes a controller ```handler```.",
+      "summary": "Initializes a controller ```handler```.",
       "body": ""
     },
     "isPrivate": true,
@@ -428,14 +411,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "{!string} fieldName The class to check for.",
         "name": "fieldName",
-        "description": "<p>The class to check for.</p>",
+        "description": "The class to check for.",
         "types": [
           "string"
         ],
@@ -449,7 +431,7 @@
         "type": "param",
         "string": "{!Node} [container] Starting DOM element for this search (**default:** ```document```)",
         "name": "[container]",
-        "description": "<p>Starting DOM element for this search (<strong>default:</strong> <code>document</code>)</p>",
+        "description": "Starting DOM element for this search (**default:** ```document```)",
         "types": [
           "Node"
         ],
@@ -470,13 +452,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ZxQuery}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
-      "summary": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
+      "full": "Searches and returns elements with `data-ui-field`\nattribute matching the given `fieldName`.",
+      "summary": "Searches and returns elements with `data-ui-field`\nattribute matching the given `fieldName`.",
       "body": ""
     },
     "isPrivate": true,
@@ -498,14 +479,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "[element] {Node} Optional container to use as starting node for the search.",
         "name": "[element]",
-        "description": "<p>{Node} Optional container to use as starting node for the search.</p>",
+        "description": "{Node} Optional container to use as starting node for the search.",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -515,8 +495,8 @@
       }
     ],
     "description": {
-      "full": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
-      "summary": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
+      "full": "Searches inside the given element ```element```\nfor all ```data-ui-include``` and ```data-ui-load```\ndirectives and process them.",
+      "summary": "Searches inside the given element ```element```\nfor all ```data-ui-include``` and ```data-ui-load```\ndirectives and process them.",
       "body": ""
     },
     "isPrivate": true,
@@ -538,8 +518,7 @@
       {
         "type": "protected",
         "string": "",
-        "visibility": "protected",
-        "html": ""
+        "visibility": "protected"
       }
     ],
     "description": {
@@ -573,8 +552,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{ContextOptions}</p>"
+        "variable": false
       }
     ],
     "description": {
@@ -602,14 +580,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "{!string} componentId The id/name of the component we want to load.",
         "name": "componentId",
-        "description": "<p>The id/name of the component we want to load.</p>",
+        "description": "The id/name of the component we want to load.",
         "types": [
           "string"
         ],
@@ -623,7 +600,7 @@
         "type": "param",
         "string": "{ContextOptions} [options] context options used to initialize the loaded component",
         "name": "[options]",
-        "description": "<p>context options used to initialize the loaded component</p>",
+        "description": "context options used to initialize the loaded component",
         "types": [
           "ContextOptions"
         ],
@@ -644,13 +621,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ComponentContext}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Loads a component with the given options.</p>",
-      "summary": "<p>Loads a component with the given options.</p>",
+      "full": "Loads a component with the given options.",
+      "summary": "Loads a component with the given options.",
       "body": ""
     },
     "isPrivate": true,
@@ -679,8 +655,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{ComponentContext}</p>"
+        "variable": false
       }
     ],
     "description": {
@@ -706,8 +681,8 @@
   {
     "tags": [],
     "description": {
-      "full": "<p>TODO: to be fixed<br />         if (!util.isNoU(context.view())) {<br />         // TODO: implement this code in a context.detach() method<br />         //context.controller().pause()<br />         context.view().detach();<br />         context.view(null);<br />         }</p>",
-      "summary": "<p>TODO: to be fixed<br />         if (!util.isNoU(context.view())) {<br />         // TODO: implement this code in a context.detach() method<br />         //context.controller().pause()<br />         context.view().detach();<br />         context.view(null);<br />         }</p>",
+      "full": "TODO: to be fixed\n         if (!util.isNoU(context.view())) {\n         // TODO: implement this code in a context.detach() method\n         //context.controller().pause()\n         context.view().detach();\n         context.view(null);\n         }",
+      "summary": "TODO: to be fixed\n         if (!util.isNoU(context.view())) {\n         // TODO: implement this code in a context.detach() method\n         //context.controller().pause()\n         context.view().detach();\n         context.view(null);\n         }",
       "body": ""
     },
     "isPrivate": false,
@@ -723,8 +698,8 @@
   {
     "tags": [],
     "description": {
-      "full": "<p>// TODO: replace z$() with z$(options.container)<br />             var inlineView = z$().find(&#39;[data-ui-view=&quot;&#39; + context.componentId + &#39;&quot;]&#39;);<br />             if (inlineView.length() &gt; 0)<br />             context.view(inlineView.get(0).outerHTML);</p>",
-      "summary": "<p>// TODO: replace z$() with z$(options.container)<br />             var inlineView = z$().find(&#39;[data-ui-view=&quot;&#39; + context.componentId + &#39;&quot;]&#39;);<br />             if (inlineView.length() &gt; 0)<br />             context.view(inlineView.get(0).outerHTML);</p>",
+      "full": "// TODO: replace z$() with z$(options.container)\n             var inlineView = z$().find('[data-ui-view=\"' + context.componentId + '\"]');\n             if (inlineView.length() > 0)\n             context.view(inlineView.get(0).outerHTML);",
+      "summary": "// TODO: replace z$() with z$(options.container)\n             var inlineView = z$().find('[data-ui-view=\"' + context.componentId + '\"]');\n             if (inlineView.length() > 0)\n             context.view(inlineView.get(0).outerHTML);",
       "body": ""
     },
     "isPrivate": false,
@@ -742,14 +717,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "context {ComponentContext}",
         "name": "context",
-        "description": "<p>{ComponentContext}</p>",
+        "description": "{ComponentContext}",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -759,8 +733,8 @@
       }
     ],
     "description": {
-      "full": "<p>Unload and dispose the component.</p>",
-      "summary": "<p>Unload and dispose the component.</p>",
+      "full": "Unload and dispose the component.",
+      "summary": "Unload and dispose the component.",
       "body": ""
     },
     "isPrivate": true,
@@ -782,8 +756,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -810,8 +783,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -826,8 +798,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{Node|Object} contextId</p>"
+        "variable": false
       },
       {
         "type": "return",
@@ -840,13 +811,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ComponentContext}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>TODO: desc</p>",
-      "summary": "<p>TODO: desc</p>",
+      "full": "TODO: desc",
+      "summary": "TODO: desc",
       "body": ""
     },
     "isPrivate": true,
@@ -868,8 +838,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -896,8 +865,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -909,8 +877,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>path</p>"
+        "optional": false
       },
       {
         "type": "param",
@@ -922,13 +889,12 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>handler</p>"
+        "optional": false
       }
     ],
     "description": {
-      "full": "<p>TODO: desc</p>",
-      "summary": "<p>TODO: desc</p>",
+      "full": "TODO: desc",
+      "summary": "TODO: desc",
       "body": ""
     },
     "isPrivate": true,
@@ -950,8 +916,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -963,8 +928,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>context</p>"
+        "optional": false
       },
       {
         "type": "param",
@@ -976,8 +940,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>path</p>"
+        "optional": false
       },
       {
         "type": "param",
@@ -989,13 +952,12 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>data</p>"
+        "optional": false
       }
     ],
     "description": {
-      "full": "<p>TODO: desc</p>",
-      "summary": "<p>TODO: desc</p>",
+      "full": "TODO: desc",
+      "summary": "TODO: desc",
       "body": ""
     },
     "isPrivate": true,
@@ -1017,8 +979,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -1032,8 +993,7 @@
         "optional": true,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{boolean} [enable]</p>"
+        "variable": false
       },
       {
         "type": "return",
@@ -1046,12 +1006,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "<p><em>true</em> if lazy-loading is enabled, <em>false</em> otherwise.</p>"
+        "description": "*true* if lazy-loading is enabled, *false* otherwise."
       }
     ],
     "description": {
-      "full": "<p>Enable/Disable lazy-loading, or get current value.</p>",
-      "summary": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "full": "Enable/Disable lazy-loading, or get current value.",
+      "summary": "Enable/Disable lazy-loading, or get current value.",
       "body": ""
     },
     "isPrivate": true,
@@ -1071,8 +1031,8 @@
   {
     "tags": [],
     "description": {
-      "full": "<p><strong><strong><strong><strong><strong>*</strong></strong></strong></strong></strong> private members <strong><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></strong></p>",
-      "summary": "<p><strong><strong><strong><strong><strong>*</strong></strong></strong></strong></strong> private members <strong><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></strong></p>",
+      "full": "********************* private members ************************",
+      "summary": "********************* private members ************************",
       "body": ""
     },
     "isPrivate": false,
@@ -1088,8 +1048,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -1116,8 +1075,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -1131,8 +1089,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{Object} componentId</p>"
+        "variable": false
       },
       {
         "type": "returns",
@@ -1145,13 +1102,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ComponentCache}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>*</p>",
-      "summary": "<p>*</p>",
+      "full": "*",
+      "summary": "*",
       "body": ""
     },
     "isPrivate": true,
@@ -1173,8 +1129,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -1188,13 +1143,12 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{ComponentContext} context</p>"
+        "variable": false
       }
     ],
     "description": {
-      "full": "<p>*</p>",
-      "summary": "<p>*</p>",
+      "full": "*",
+      "summary": "*",
       "body": ""
     },
     "isPrivate": true,
@@ -1216,14 +1170,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "context {ComponentContext}",
         "name": "context",
-        "description": "<p>{ComponentContext}</p>",
+        "description": "{ComponentContext}",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -1233,8 +1186,8 @@
       }
     ],
     "description": {
-      "full": "<p>*</p>",
-      "summary": "<p>*</p>",
+      "full": "*",
+      "summary": "*",
       "body": ""
     },
     "isPrivate": true,
@@ -1256,8 +1209,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -1271,13 +1223,12 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{ComponentContext} context</p>"
+        "variable": false
       }
     ],
     "description": {
-      "full": "<p>*</p>",
-      "summary": "<p>*</p>",
+      "full": "*",
+      "summary": "*",
       "body": ""
     },
     "isPrivate": true,
@@ -1306,8 +1257,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{ContextController}</p>"
+        "variable": false
       }
     ],
     "description": {
@@ -1335,14 +1285,13 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
         "string": "javascriptCode string",
         "name": "javascriptCode",
-        "description": "<p>string</p>",
+        "description": "string",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -1361,13 +1310,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ContextControllerCallback}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>*</p>",
-      "summary": "<p>*</p>",
+      "full": "*",
+      "summary": "*",
       "body": ""
     },
     "isPrivate": true,
@@ -1385,8 +1333,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -1407,8 +1354,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       }
     ],
     "description": {
@@ -1434,8 +1380,8 @@
   {
     "tags": [],
     "description": {
-      "full": "<p><strong><strong><strong><strong>*</strong></strong></strong></strong> proto <strong><strong><strong><strong><em>*</em></strong></strong></strong></strong></p>",
-      "summary": "<p><strong><strong><strong><strong>*</strong></strong></strong></strong> proto <strong><strong><strong><strong><em>*</em></strong></strong></strong></strong></p>",
+      "full": "***************** proto *******************",
+      "summary": "***************** proto *******************",
       "body": ""
     },
     "isPrivate": false,
@@ -1452,7 +1398,7 @@
         "type": "param",
         "string": "handler {ContextControllerCallback}",
         "name": "handler",
-        "description": "<p>{ContextControllerCallback}</p>",
+        "description": "{ContextControllerCallback}",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -1471,13 +1417,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ContextControllerCallback}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Initializes a controller <code>handler</code>.</p>",
-      "summary": "<p>Initializes a controller <code>handler</code>.</p>",
+      "full": "Initializes a controller ```handler```.",
+      "summary": "Initializes a controller ```handler```.",
       "body": ""
     },
     "isPrivate": false,
@@ -1503,7 +1448,7 @@
         "type": "param",
         "string": "{!string} fieldName The class to check for.",
         "name": "fieldName",
-        "description": "<p>The class to check for.</p>",
+        "description": "The class to check for.",
         "types": [
           "string"
         ],
@@ -1517,7 +1462,7 @@
         "type": "param",
         "string": "{!Node} [container] Starting DOM element for this search (**default:** ```document```)",
         "name": "[container]",
-        "description": "<p>Starting DOM element for this search (<strong>default:</strong> <code>document</code>)</p>",
+        "description": "Starting DOM element for this search (**default:** ```document```)",
         "types": [
           "Node"
         ],
@@ -1538,13 +1483,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ZxQuery}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
-      "summary": "<p>Searches and returns elements with <code>data-ui-field</code><br />attribute matching the given <code>fieldName</code>.</p>",
+      "full": "Searches and returns elements with `data-ui-field`\nattribute matching the given `fieldName`.",
+      "summary": "Searches and returns elements with `data-ui-field`\nattribute matching the given `fieldName`.",
       "body": ""
     },
     "isPrivate": false,
@@ -1570,7 +1514,7 @@
         "type": "param",
         "string": "[element] {Node} Optional container to use as starting node for the search.",
         "name": "[element]",
-        "description": "<p>{Node} Optional container to use as starting node for the search.</p>",
+        "description": "{Node} Optional container to use as starting node for the search.",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -1589,13 +1533,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{Zuix}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
-      "summary": "<p>Searches inside the given element <code>element</code><br />for all <code>data-ui-include</code> and <code>data-ui-load</code><br />directives and process them.</p>",
+      "full": "Searches inside the given element ```element```\nfor all ```data-ui-include``` and ```data-ui-load```\ndirectives and process them.",
+      "summary": "Searches inside the given element ```element```\nfor all ```data-ui-include``` and ```data-ui-load```\ndirectives and process them.",
       "body": ""
     },
     "isPrivate": false,
@@ -1620,7 +1563,7 @@
         "type": "param",
         "string": "{!string} componentId The id/name of the component we want to load.",
         "name": "componentId",
-        "description": "<p>The id/name of the component we want to load.</p>",
+        "description": "The id/name of the component we want to load.",
         "types": [
           "string"
         ],
@@ -1634,7 +1577,7 @@
         "type": "param",
         "string": "{ContextOptions} [options] context options used to initialize the loaded component",
         "name": "[options]",
-        "description": "<p>context options used to initialize the loaded component</p>",
+        "description": "context options used to initialize the loaded component",
         "types": [
           "ContextOptions"
         ],
@@ -1655,13 +1598,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ComponentContext}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Loads a component with the given options.</p>",
-      "summary": "<p>Loads a component with the given options.</p>",
+      "full": "Loads a component with the given options.",
+      "summary": "Loads a component with the given options.",
       "body": ""
     },
     "isPrivate": false,
@@ -1687,7 +1629,7 @@
         "type": "param",
         "string": "context {ComponentContext}",
         "name": "context",
-        "description": "<p>{ComponentContext}</p>",
+        "description": "{ComponentContext}",
         "types": [],
         "typesDescription": "",
         "variable": false,
@@ -1706,13 +1648,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{Zuix}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>Unload and dispose the component.</p>",
-      "summary": "<p>Unload and dispose the component.</p>",
+      "full": "Unload and dispose the component.",
+      "summary": "Unload and dispose the component.",
       "body": ""
     },
     "isPrivate": false,
@@ -1736,8 +1677,7 @@
       {
         "type": "private",
         "string": "",
-        "visibility": "private",
-        "html": ""
+        "visibility": "private"
       },
       {
         "type": "param",
@@ -1752,8 +1692,7 @@
         "optional": false,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{Node|Object} contextId</p>"
+        "variable": false
       },
       {
         "type": "return",
@@ -1766,13 +1705,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{ComponentContext}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>TODO: desc</p>",
-      "summary": "<p>TODO: desc</p>",
+      "full": "TODO: desc",
+      "summary": "TODO: desc",
       "body": ""
     },
     "isPrivate": true,
@@ -1804,8 +1742,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>path</p>"
+        "optional": false
       },
       {
         "type": "param",
@@ -1817,8 +1754,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>handler</p>"
+        "optional": false
       },
       {
         "type": "return",
@@ -1831,13 +1767,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{Zuix}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>TODO: desc</p>",
-      "summary": "<p>TODO: desc</p>",
+      "full": "TODO: desc",
+      "summary": "TODO: desc",
       "body": ""
     },
     "isPrivate": false,
@@ -1868,8 +1803,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>context</p>"
+        "optional": false
       },
       {
         "type": "param",
@@ -1881,8 +1815,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>path</p>"
+        "optional": false
       },
       {
         "type": "param",
@@ -1894,8 +1827,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>data</p>"
+        "optional": false
       },
       {
         "type": "return",
@@ -1908,13 +1840,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{Zuix}</p>"
+        "description": ""
       }
     ],
     "description": {
-      "full": "<p>TODO: desc</p>",
-      "summary": "<p>TODO: desc</p>",
+      "full": "TODO: desc",
+      "summary": "TODO: desc",
       "body": ""
     },
     "isPrivate": false,
@@ -1947,8 +1878,7 @@
         "optional": true,
         "nullable": false,
         "nonNullable": false,
-        "variable": false,
-        "html": "<p>{boolean} [enable]</p>"
+        "variable": false
       },
       {
         "type": "return",
@@ -1961,12 +1891,12 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "<p><em>true</em> if lazy-loading is enabled, <em>false</em> otherwise.</p>"
+        "description": "*true* if lazy-loading is enabled, *false* otherwise."
       }
     ],
     "description": {
-      "full": "<p>Enable/Disable lazy-loading, or get current value.</p>",
-      "summary": "<p>Enable/Disable lazy-loading, or get current value.</p>",
+      "full": "Enable/Disable lazy-loading, or get current value.",
+      "summary": "Enable/Disable lazy-loading, or get current value.",
       "body": ""
     },
     "isPrivate": false,
@@ -1998,8 +1928,7 @@
         "variable": false,
         "nonNullable": false,
         "nullable": false,
-        "optional": false,
-        "html": "<p>root</p>"
+        "optional": false
       },
       {
         "type": "return",
@@ -2012,8 +1941,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "",
-        "html": "<p>{Zuix}</p>"
+        "description": ""
       }
     ],
     "description": {

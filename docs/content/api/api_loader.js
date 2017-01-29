@@ -26,7 +26,11 @@ zuix.controller(function (cp) {
                             params = params.substring(0, params.length-2);
                         html += '<div class="title"><h5><i class="material-icons">expand_more</i><code>'+this.ctx.name+'( '+params+' )</code></h5></div>';
                         html += '<div class="container"><div class="details collapsed">';
-                        html += '<p class="description"><span>'+this.description.full.replace(/<p>(.*)<\/p>/, '$1')+'</span></p>';
+
+                        var pl = { content: this.description.full };
+                        zuix.trigger(cp.context, 'html:parse', pl);
+                        console.log(pl.content);
+                        html += '<div class="description">'+pl.content+'</div>';
 
                         var currentType = '';
                         zuix.$.each(this.tags, function () {
@@ -53,9 +57,15 @@ zuix.controller(function (cp) {
 
                             if (this.name != null)
                                 html += ' <code>'+ this.name +'</code>';
-                            html += '<code class="mdl-color-text--grey">{'+types+'}</code>';
+                            html += ' <code class="mdl-color-text--grey">{'+types+'}</code>';
+
+                            if (this.optional)
+                                html += ' <em class="mdl-color-text--grey">optional</em>';
+
                             //noinspection JSPotentiallyInvalidUsageOfThis
-                            html += this.description;
+                            var pl = { content: this.description };
+                            zuix.trigger(cp.context, 'html:parse', pl);
+                            html += pl.content;
 
                             html += '</div>';
                         });
