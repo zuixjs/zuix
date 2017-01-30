@@ -123,15 +123,15 @@ function field(fieldName, container) {
 function componentize(element) {
     // Throttle method
     if (tasker.requestLock(componentize)) {
-        z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function () {
-            this.style.visibility = 'hidden';
+        z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function (i, el) {
+            this.visibility('hidden');
             // override lazy loading if 'lazyload' is set to 'false' for the current element
-            if (!lazyLoad() || this.getAttribute('data-ui-lazyload') == 'false') {
-                loadInline(this);
+            if (!lazyLoad() || this.attr('data-ui-lazyload') == 'false') {
+                loadInline(el);
                 return true;
             }
             // defer element loading if lazy loading is enabled and the element is not in view
-            var lazyContainer = z$.getClosest(this, '[data-ui-lazyload=true]');
+            var lazyContainer = z$.getClosest(el, '[data-ui-lazyload=true]');
             if (lazyContainer !== null) {
                 if (_lazyLoaders.indexOf(lazyContainer) == -1) {
                     _lazyLoaders.push(lazyContainer);
@@ -139,10 +139,10 @@ function componentize(element) {
                         componentize(lazyContainer);
                     });
                 }
-                var position = z$.getPosition(this);
+                var position = z$.getPosition(el);
                 if (!position.visible) {
-                    if (_lazyQueued.indexOf(this) == -1) {
-                        _lazyQueued.push(this);
+                    if (_lazyQueued.indexOf(el) == -1) {
+                        _lazyQueued.push(el);
                     }
                     // Not in view: defer element loading and
                     // process next inline element
@@ -150,10 +150,10 @@ function componentize(element) {
                 }
             }
             // proceed loading inline element
-            var queued = _lazyQueued.indexOf(this);
+            var queued = _lazyQueued.indexOf(el);
             if (queued > -1)
                 _lazyQueued.splice(queued, 1);
-            loadInline(this);
+            loadInline(el);
         });
         tasker.releaseLock(componentize);
     } else tasker.lockLater(componentize, function () {
@@ -716,7 +716,7 @@ Zuix.prototype.unload = function (context) {
 /**
  * Get the `ComponentContext`, given
  * the component's view or container element.
- * .
+ *
  * @example
  *
 <small>**Example - JavaScript**</small>

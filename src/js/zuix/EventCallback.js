@@ -24,8 +24,10 @@
  */
 
 /**
- *
- * @callback EventCallback
- * @param {string} event path
- * @param {Object} data
+ * @callback
+ * @param {string} event Event name.
+ * @param {Object} data Event data.
  */
+var EventCallback = function (event, data) {};
+/** @type {ZxQuery} */
+EventCallback.prototype.this;

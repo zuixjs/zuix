@@ -3,7 +3,7 @@ zuix.controller(function (cp) {
     cp.create = function () {
 
         cp.view().children().each(function (index) {
-            cp.view(this).on('click', function () {
+            this.on('click', function () {
                 setSelected(index);
             });
         });
@@ -13,9 +13,9 @@ zuix.controller(function (cp) {
 
     cp.destroy = function () {
 
-        cp.$().children().each(function () {
-            cp.view(this).off('click');
-            cp.view(this).removeClass('is-active');
+        cp.view().children().each(function () {
+            this.off('click');
+            this.removeClass('is-active');
         });
         selectedItem = -1;
 
@@ -28,7 +28,7 @@ zuix.controller(function (cp) {
     function setSelected(index) {
         var actions = cp.view().children();
         actions.each(function () {
-            cp.view(this).removeClass('is-active');
+            this.removeClass('is-active');
         });
         if (index != selectedItem)
             actions.eq(index).addClass('is-active');

@@ -31,7 +31,7 @@
  *    componentId: string|undefined The component identifier,
  *    model: JSON|undefined The data model,
  *    view: Element|ZxQuery|undefined The view element,
- *    css: Element|string|undefined,
+ *    css: Element|string|boolean|undefined,
  *    html: boolean|undefined,
  *    controller: ContextControllerHandler|undefined The controller handler,
  *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,

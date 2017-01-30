@@ -84,15 +84,15 @@ function ContextController(context) {
     /** @type {function} */
     this.saveView = function () {
         this.restoreView();
-        this.view().children().each(function () {
-            _t._childNodes.push(this);
+        this.view().children().each(function (i, el) {
+            _t._childNodes.push(el);
         });
     };
     this.restoreView = function() {
         if (this._childNodes.length > 0) {
             _t.view().html('');
-            z$.each(_t._childNodes, function () {
-                _t.view().append(this);
+            z$.each(_t._childNodes, function (i, el) {
+                _t.view().append(el);
             });
             this._childNodes.length = 0;
         }
@@ -115,15 +115,7 @@ function ContextController(context) {
     /** @type {function} */
     this.create = null;
     /** @type {function} */
-    this.resume = null;
-    /** @type {function} */
-    this.pause = null;
-    /** @type {function} */
     this.destroy = null;
-    /** @type {function} */
-    this.refresh = null;
-    /** @type {function} */
-    this.event = null; // UI event stream handler (eventPath,eventValue)
 
     /** @type {function} */
     this.trigger = function (eventPath, eventData) {
@@ -140,22 +132,19 @@ function ContextController(context) {
     /** @protected */
     this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
         if (target != null) {
-            var t = z$(target);
-            t.off(eventPath, this.eventRouter);
+            target.off(eventPath, this.eventRouter);
             eventMap[eventPath] = handler_fn;
-            t.on(eventPath, this.eventRouter);
+            target.on(eventPath, this.eventRouter);
         } else {
             // TODO: should report missing target
         }
     };
     /** @protected */
     this.eventRouter = function (e) {
-        //if (typeof _t.behavior() === 'function')
-        //    _t.behavior().call(_t.view(), a, b);
         if (typeof context._behaviorMap[e.type] === 'function')
-            context._behaviorMap[e.type].call(context.view(), e, e.detail);
+            context._behaviorMap[e.type].call(_t.view(), e, e.detail);
         if (typeof context._eventMap[e.type] === 'function')
-            context._eventMap[e.type].call(context.view(), e, e.detail);
+            context._eventMap[e.type].call(_t.view(), e, e.detail);
         // TODO: else-> should report anomaly
     };
 
@@ -165,7 +154,7 @@ function ContextController(context) {
         for (var ep in options.on) {
             handler = options.on[ep];
             // TODO: should log.warn if k already exists
-            _t.addEvent(context.view(), ep, handler);
+            _t.addEvent(_t.view(), ep, handler);
         }
     }
     // create behavior map from context options
@@ -173,7 +162,7 @@ function ContextController(context) {
         for (var bp in options.behavior) {
             handler = options.behavior[bp];
             // TODO: should log.warn if k already exists
-            _t.addBehavior(context.view(), bp, handler);
+            _t.addBehavior(_t.view(), bp, handler);
         }
     }
 

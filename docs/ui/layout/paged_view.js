@@ -4,15 +4,14 @@ zuix.controller(function (cp) {
         cp.expose('setPage', function (i) {
             setPage(i);
         });
-        cp.view().children().each(function () {
-            var c = this;
-            c.style['position'] = 'absolute';
-            c.style['top'] = '0';
-            c.style['left'] = '0';
-            c.style['bottom'] = '0';
-            c.style['right'] = '0';
-            c.style['overflow'] = 'auto';
-            cp.view(c).hide();
+        cp.view().children().each(function (i, el) {
+            el.style['position'] = 'absolute';
+            el.style['top'] = '0';
+            el.style['left'] = '0';
+            el.style['bottom'] = '0';
+            el.style['right'] = '0';
+            el.style['overflow'] = 'auto';
+            this.hide();
         });
         setPage(0);
     };

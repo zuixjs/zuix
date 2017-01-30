@@ -6,15 +6,13 @@ zuix.controller(function (cp) {
         // read inline image list
         var items = [];
         var index = 0;
-        cp.view().children().each(function(e,i) {
-            if (this instanceof Element) {
-                // add image and attach click listener
-                this.index = index++;
-                items.push(this);
-                cp.view(this).on('click', function(){
-                    setSlide(this.index);
-                });
-            }
+        cp.view().children().each(function(i, el) {
+            // add image and attach click listener
+            el.index = index++;
+            items.push(el);
+            this.on('click', function(){
+                setSlide(el.index);
+            });
         });
 
         // load css and html for this component
@@ -24,8 +22,8 @@ zuix.controller(function (cp) {
 
                 // move image list inside the horiz. thumb list
                 var itemList = cp.field('list');
-                cp.view(items).each(function () {
-                    itemList.append(this);
+                cp.view(items).each(function (i, el) {
+                    itemList.append(el);
                 });
                 setSlide(0);
                 setTimeout(function () {

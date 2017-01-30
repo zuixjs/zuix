@@ -38,9 +38,53 @@ var util = require('./Util.js');
  *
  * @callback ZxQueryIterationCallback
  * @param {number} i Iteration count
- * @param {ZxQuery} zxElement Current element
- * @param {Element} [this]
+ * @param {ZxQuery} item Current element
  */
+
+
+/** @private */
+var _zuix_events_mapping = [];
+function routeEvent(e) {
+    triggerEventHandlers(this, e.type, e);
+
+}
+function addEventHandler(el, path, handler) {
+    var found = false;
+    z$.each(_zuix_events_mapping, function () {
+        if (this.element === el && this.path === path && this.handler == handler) {
+            console.log('handler already registered', el, path, handler);
+            found = true;
+            return false;
+        }
+    });
+    if (!found) {
+        _zuix_events_mapping.push({ element: el, path: path, handler: handler });
+        el.addEventListener(path, routeEvent, false);
+    }
+}
+function removeEventHandler(el, path, handler) {
+    var left = 1, index = -1;
+    z$.each(_zuix_events_mapping, function (i) {
+        if (this.element === el && this.path === path && this.handler == handler) {
+            left--;
+            index = i;
+        }
+    });
+    if (index !== -1)
+        _zuix_events_mapping.splice(index, 1);
+    // unregister event handler since it was the last one
+    if (left == 0)
+        el.removeEventListener(path, routeEvent);
+}
+function triggerEventHandlers(el, path, evt) {
+    var element = z$(el);
+    z$.each(_zuix_events_mapping, function () {
+        if (this.element === el && this.path === path) {
+            this.handler.call(element, evt);
+        }
+    });
+}
+
 
 /**
  * ZxQuery, a very lite subset of jQuery-like functions
@@ -71,11 +115,13 @@ function ZxQuery(element) {
     else if (typeof element === 'string')
         this._selection = document.documentElement.querySelectorAll(element);
     else if (element !== null) { //if (typeof element === 'string') {
-        console.log(typeof element);
+        console.log('ZxQuery cannot wrap object of this type.', (typeof element), element);
         throw(element);
     }
     return this;
 }
+
+
 /**
  * Number of elements in current DOM selection.
  * @return {Number} Number of DOM elements in the current selection.
@@ -85,7 +131,7 @@ ZxQuery.prototype.length = function () {
 };
 /**
  * Get the closest parent matching the selector filter.
- * @param {string} filter A valid DOM query selector filter
+ * @param {string} [filter] A valid DOM query selector filter (**default:** *first parent*).
  * @return {ZxQuery} A new *ZxQuery* object with the *parent* selection.
  */
 ZxQuery.prototype.parent = function (filter) {
@@ -95,7 +141,7 @@ ZxQuery.prototype.parent = function (filter) {
 };
 /**
  * Get the children matching the given selector filter.
- * @param {string} filter A valid DOM query selector filter
+ * @param {string} [filter] A valid DOM query selector filter (**default:** *all children*).
  * @return {ZxQuery}  A new *ZxQuery* object with the *children* selection.
  */
 ZxQuery.prototype.children = function (filter) {
@@ -115,9 +161,9 @@ ZxQuery.prototype.reverse = function () {
 };
 /**
  * Get the DOM element at given position in the current selection.
- * If no index is provided, the default element will be returned
- * (the one at position 0).
- * @param {number} i Position of element
+ * If no index is provided, the default element will be returned.
+ *
+ * @param {number} [i] Position of element (**default:** 0)
  * @return {Node|Element} The *DOM* element
  */
 ZxQuery.prototype.get = function (i) {
@@ -147,7 +193,8 @@ ZxQuery.prototype.find = function (selector) {
  * *iterationCallback*`(index, item)`, will be the
  * *DOM* element corresponding the current iteration.
  * `index` will be the iteration count, and `item`
- * a `{ZxQuery}` instance wrapping the current *DOM* element.
+ * the current Element. The context `this` will be a `{ZxQuery}`
+ * instance wrapping the current `item`.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
  * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
@@ -168,7 +215,7 @@ ZxQuery.prototype.attr = function (attr, val) {
         return this._selection[0].getAttribute(attr);
     else
         this.each(function (k, v) {
-            this.setAttribute(attr, val);
+            this.get().setAttribute(attr, val);
         });
     return this;
 };
@@ -186,8 +233,8 @@ ZxQuery.prototype.trigger = function (eventPath, eventData) {
         event = document.createEvent('CustomEvent');
         event.initCustomEvent(eventPath, true, true, eventData);
     }
-    this.each(function (k, v) {
-        this.dispatchEvent(event);
+    this.each(function (k, el) {
+        el.dispatchEvent(event);
     });
     return this;
 };
@@ -215,10 +262,9 @@ ZxQuery.prototype.one = function (eventPath, eventHandler) {
  */
 ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
-    this.each(function (k, v) {
-        var _t = this;
-        z$.each(events, function (k, v) {
-            _t.addEventListener(v, eventHandler, false);
+    this.each(function (k, el) {
+        z$.each(events, function (k, ev) {
+            addEventHandler(el, ev, eventHandler);
         });
     });
     return this;
@@ -231,10 +277,9 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
  */
 ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
-    this.each(function (k, v) {
-        var _t = this;
-        z$.each(events, function (k, v) {
-            _t.removeEventListener(v, eventHandler);
+    this.each(function (k, el) {
+        z$.each(events, function (k, ev) {
+            removeEventHandler(el, ev, eventHandler);
         });
     });
     return this;
@@ -256,8 +301,8 @@ ZxQuery.prototype.css = function (attr, val) {
     if (util.isNoU(val))
         return this._selection[0].style[attr];
     else
-        this.each(function (k, v) {
-            this.style[attr] = val;
+        this.each(function (k, el) {
+            el.style[attr] = val;
         });
     return this;
 };
@@ -268,13 +313,12 @@ ZxQuery.prototype.css = function (attr, val) {
  */
 ZxQuery.prototype.addClass = function (className) {
     var classes = className.match(/\S+/g) || [];
-    z$.each(this._selection, function (k, v) {
-        if (this.classList) {
-            var _t = this;
-            z$.each(classes, function (k, v) {
-                _t.classList.add(v);
+    z$.each(this._selection, function (k, el) {
+        if (el.classList) {
+            z$.each(classes, function (k, cl) {
+                el.classList.add(cl);
             });
-        } else this.className += ' ' + className;
+        } else el.className += ' ' + className;
     });
     return this;
 };
@@ -293,13 +337,12 @@ ZxQuery.prototype.hasClass = function (className) {
  */
 ZxQuery.prototype.removeClass = function (className) {
     var classes = className.match(/\S+/g) || [];
-    z$.each(this._selection, function (k, v) {
-        if (this.classList) {
-            var _t = this;
-            z$.each(classes, function (k, v) {
-                _t.classList.remove(v);
+    z$.each(this._selection, function (k, el) {
+        if (el.classList) {
+            z$.each(classes, function (k, cl) {
+                el.classList.remove(cl);
             });
-        } else this.className = this.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        } else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     });
     return this;
 };
@@ -325,8 +368,8 @@ ZxQuery.prototype.next = function () {
 ZxQuery.prototype.html = function (htmlText) {
     if (util.isNoU(htmlText))
         return this._selection[0].innerHTML;
-    this.each(function (k, v) {
-        this.innerHTML = htmlText;
+    this.each(function (k, el) {
+        el.innerHTML = htmlText;
     });
     return this;
 };
@@ -362,8 +405,8 @@ ZxQuery.prototype.prepend = function (el) {
 ZxQuery.prototype.display = function (mode) {
     if (util.isNoU(mode))
         return this._selection[0].style.display;
-    z$.each(this._selection, function (k, v) {
-        this.style.display = mode;
+    z$.each(this._selection, function (k, el) {
+        el.style.display = mode;
     });
     return this;
 };
@@ -375,8 +418,8 @@ ZxQuery.prototype.display = function (mode) {
 ZxQuery.prototype.visibility = function (mode) {
     if (util.isNoU(mode))
         return this._selection[0].style.visibility;
-    z$.each(this._selection, function (k, v) {
-        this.style.visibility = mode;
+    z$.each(this._selection, function (k, el) {
+        el.style.visibility = mode;
     });
     return this;
 };
@@ -427,7 +470,7 @@ z$.each = function (items, iterationCallback) {
             var item = items[i];
             if (item instanceof Element)
                 item = z$(item);
-            if (iterationCallback.call(items[i], i, item) === false)
+            if (iterationCallback.call(item, i, items[i]) === false)
                 break;
         }
     return this;
@@ -435,11 +478,11 @@ z$.each = function (items, iterationCallback) {
 z$.hasClass = function(el, className) {
     var classes = className.match(/\S+/g) || [];
     var success = false;
-    z$.each(classes, function (k, v) {
+    z$.each(classes, function (k, cl) {
         if (el.classList)
-            success = el.classList.contains(v);
+            success = el.classList.contains(cl);
         else
-            success = (new RegExp('(^| )' + v + '( |$)', 'gi').test(el.className));
+            success = (new RegExp('(^| )' + cl + '( |$)', 'gi').test(el.className));
         if (success) return false;
     });
     return success;

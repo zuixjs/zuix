@@ -57,7 +57,7 @@ var main = {
         behavior: {
             // animate the button when clicked
             'item:click': function (e, i) {
-                zuix.$(this).children().eq(i).animateCss('tada');
+                this.children().eq(i).animateCss('tada');
             }
         },
         // component ready callback
@@ -135,8 +135,8 @@ zuix
 }).hook('view:process', function (h, w) {
     // Prism code syntax highlighter
     w.find('code').each(function (i, block) {
-        block.addClass('language-javascript');
-        Prism.highlightElement(block.get());
+        this.addClass('language-javascript');
+        Prism.highlightElement(block);
     });
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
@@ -162,7 +162,7 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     if (effectOut == null) effectOut = 'bounceOut';
     // Animate page changing
     var options = { duration: '.5s' };
-    var pages = zuix.$(this).children();
+    var pages = this.children();
     if (i.page > i.old) {
         if (dirIn == null) dirIn = 'Right';
         if (dirOut == null) dirOut = 'Left';
@@ -185,7 +185,7 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
 }
 
 // animateCss extension method for ZxQuery
-zuix.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
+zuix.$.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
     var callback, options;
     if (typeof param2 === 'function') {
         options = param1;
@@ -205,12 +205,12 @@ zuix.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
         this.trigger('animationend');
     var _t = this;
     this.addClass('animated ' + animationName).one(animationEnd, function () {
-        zuix.$(this).removeClass('animated ' + animationName);
+        this.removeClass('animated ' + animationName);
         for(var key in options)
             for (var p in prefixes)
-                zuix.$(_t).css(prefixes[p] + '-animation-' + key, '');
+                _t.css(prefixes[p] + '-animation-' + key, '');
         if (typeof callback === 'function')
-            callback.call(_t.get(0), animationName);
+            callback.call(_t, animationName);
     });
     return this;
 };

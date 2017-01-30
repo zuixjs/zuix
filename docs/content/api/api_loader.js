@@ -9,7 +9,6 @@ zuix.controller(function (cp) {
             success: function(json) {
                 cp.view().html('');
                 var dox = JSON.parse(json);
-                console.log(dox);
                 var html = '';
                 zuix.$.each(dox, function () {
                     var apiMember = (this.ctx != null && (this.ctx.cons === apiName));
@@ -29,7 +28,6 @@ zuix.controller(function (cp) {
 
                         var pl = { content: this.description.full };
                         zuix.trigger(cp.context, 'html:parse', pl);
-                        console.log(pl.content);
                         html += '<div class="description">'+pl.content+'</div>';
 
                         var currentType = '', example = '';
@@ -103,7 +101,6 @@ zuix.controller(function (cp) {
     };
 
     function expandItem(element) {
-        element = zuix.$(element);
         var detail = element.next().children().eq(0);
         var collapsed = detail.hasClass('collapsed');
         if (collapsed) {
@@ -118,8 +115,8 @@ zuix.controller(function (cp) {
                 .animateCss('bounce', { duration: '.1s' });
         }
         /*cp.view().find('.details').each(function(i, item) {
-            if (item.get() !== detail.get())
-                item.addClass('collapsed');
+            if (item !== detail.get())
+                this.addClass('collapsed');
         });*/
     }
 

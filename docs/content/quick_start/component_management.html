@@ -197,36 +197,34 @@ example_card_1_options = {
         'view:create': animation_reveal,
         'item:read': function () {
             // TODO:... open the popup with content
-            var card = zuix.$(this).children().eq(0)
+            var card = this.children().eq(0)
                 .addClass('mdl-shadow--8dp');
-            zuix.$(this)
-                .animateCss('pulse', { duration: '0.2s' }, function () {
+            this.animateCss('pulse', { duration: '0.2s' }, function () {
                     card.removeClass('mdl-shadow--8dp')
                 });
-            /*var i = 1, blocks = zuix.$(this.firstElementChild).children();
+            /*var i = 1, blocks = this.children().eq(0).children();
             blocks.each(function () {
-                zuix.$(this).animateCss('pulse', { delay: ((i/15))+'s', duration: '0.15ds' });
+                this.animateCss('pulse', { delay: ((i/15))+'s', duration: '0.15ds' });
                 i++;
             });*/
         },
         'item:share': function () {
-            zuix.$(this).animateCss('flipOutY', function () {
-                //zuix.$(this).visibility('hidden');
+            this.animateCss('flipOutY', function () {
+                //this.visibility('hidden');
                 animation_reveal.call(this);
             });
         }
     }
 };
 function animation_reveal () {
-    var card = zuix.$(this).children().eq(0)
+    var card = this.children().eq(0)
         .addClass('mdl-shadow--6dp');
-    zuix.$(this).animateCss('fadeInDown', { delay: '0.5s', duration: '0.3s' }, function () {
+    this.animateCss('fadeInDown', { delay: '0.5s', duration: '0.3s' }, function () {
         card.removeClass('mdl-shadow--6dp');
     });
-    var i = 1, blocks = zuix.$(this.firstElementChild).children();
-    blocks.each(function () {
-        zuix.$(this).animateCss('bounceInDown', { delay: (0.5+(i/20))+'s', duration: (0.3+(i/10))+'s' });
-        i++;
+    var blocks = this.children().eq(0).children();
+    blocks.each(function (i, item) {
+        this.animateCss('bounceInDown', { delay: (0.5+((i+1)/20))+'s', duration: (0.3+((i+1)/10))+'s' });
     });
 }
 </script>

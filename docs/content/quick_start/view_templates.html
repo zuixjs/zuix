@@ -93,7 +93,7 @@ on these elements with the name of the model field that we want to bind to.
 When providing a simple data model like the one described in the previous example,
 the model's field is automatically mapped to a certain element's property
 depending on the type of the binding element.
-For instance, if the element is an ```image```, then the mapped property
+For instance, if the element is an ```img```, then the mapped property
 will be ```.src```, while for a ```div``` or a ```p``` it will be
 the ```.innerHTML``` property.
 
@@ -115,6 +115,7 @@ a minimal markup declaring same fields as the template,
 whose values will be replaced in the template
 after its loaded.
 
+<small><strong>EXAMPLE - </strong> Inclusion of a view template with embedded data model.</small>
 <pre data-line="2,3"><code class="language-html">
 <div data-ui-include="inline/common/contact_chip">
     <p data-ui-field="name">Mr. Brown</p>
@@ -181,7 +182,7 @@ and the network is slow).
 <p>&nbsp;</p>
 
 Another way of using basic binding is by employing
-the ```data-bind-model``` attribute
+the ```data-bind-model``` attribute as shown below:
 
 <pre data-line="4,7,11,15"><code class="language-html">
 <div layout="row center-spread">
@@ -200,7 +201,7 @@ foo_bar_contact = {
 };
 a_random_contact = {
     image: 'site/images/avatar_01.png',
-    name: function(element, field) { element.innerHTML = a_random_name(); }
+    name: function(element, field) { element.html(a_random_name()); }
 };
 </script>
 </code></pre>
@@ -221,17 +222,16 @@ var chip_items = {
 };
 // example model view adapter
 var chip_adapter = function(element, field) {
-    var id = this.getAttribute('data-id');
+    var id = this.attr('data-id');
     var value = chip_items[id][field];
     switch (field) {
         case 'name':
-            element.innerHTML = value;
+            element.html(value);
             break;
         case 'image':
-            element.src = value;
+            element.attr('src', value);
             break;
     }
-    console.log(this, id, element, field, chip_items[id][field]);
 };
 </script>
 </div>
@@ -250,7 +250,7 @@ associated to a view is updated.
         // adapter code ...
     }
 
-where ```element``` is the view element that needs to be updated,
+where ```element``` (`ZxQuery`) is the view element that needs to be updated,
 ```field``` is the name of the bound field in the model and the
 context object **this**, is the view itself.
 
@@ -273,20 +273,20 @@ chip_items = {
 // example adapter
 chip_adapter = function(element, field) {
     // the context 'this', is the View itself
-    var id = this.getAttribute('data-id');
+    var id = this.attr('data-id');
     // get the value of 'field' in the data model
     var value = chip_items[id][field];
     // use the value to update the bound 'element'
     switch (field) {
         case 'name':
-            element.innerHTML = value;
+            element.html(value);
             break;
         case 'image':
             // show place-holder if no image is provided
             if (value == '')
-                element.src = 'site/images/chip_placeholder.png';
+                element.attr('src', 'site/images/chip_placeholder.png');
             else
-                element.src = value;
+                element.attr('src', value);
             break;
     }
 };
@@ -316,15 +316,15 @@ For example a view could animate if clicked.
 <script>
 chip_view_behavior = {
     'mouseover': function () {
-        zuix.$(this).css('cursor', 'pointer');
+        this.css('cursor', 'pointer');
     },
     'mouseout': function () {
-        zuix.$(this).css('cursor', 'default')
+        this.css('cursor', 'default')
             .find('img')
             .animateCss('swing');
     },
     'click': function() {
-        zuix.$(this).animateCss('pulse')
+        this.animateCss('pulse')
             .find('img')
             .animateCss('bounce');
     }
@@ -354,15 +354,15 @@ For example by clicking a button, a link will open.
 <script>
 chip_view_behavior = {
     'mouseover': function () {
-        zuix.$(this).css('cursor', 'pointer');
+        this.css('cursor', 'pointer');
     },
     'mouseout': function () {
-        zuix.$(this).css('cursor', 'default')
+        this.css('cursor', 'default')
             .find('img')
             .animateCss('swing');
     },
     'click': function() {
-        zuix.$(this).animateCss('pulse')
+        this.animateCss('pulse')
             .find('img')
             .animateCss('bounce');
     }
@@ -387,26 +387,31 @@ chip_view_options = {
 </div>
 <script>
 // items list
+/** @type {EventMapping} */
 var chip_view_behavior = {
-    'view:create': function () {
-        zuix.$(this)
-            .find('img')
+
+    'view:create': /** @type {EventCallback} */ function () {
+        this.find('img')
             .animateCss('bounce', { delay: '1s' });
     },
     'mouseover': function () {
-        zuix.$(this).css('cursor', 'pointer');
+        this.css('cursor', 'pointer');
     },
     'mouseout': function () {
-        zuix.$(this).css('cursor', 'default')
+        this.css('cursor', 'default')
             .find('img')
             .animateCss('swing');
     },
+    'test': function () {
+
+    },
     'click': function() {
-        zuix.$(this).animateCss('pulse')
+        this.animateCss('pulse')
             .find('img')
             .animateCss('bounce');
     }
 };
+/** @type {ContextOptions} */
 var chip_view_options = {
     css: false,
     behavior: chip_view_behavior,

@@ -16,7 +16,7 @@ zuix.controller(function (cp) {
             .css('overflow', 'hidden')
             .children();
         actions.each(function (index, item) {
-            item.on('click', function () {
+            this.on('click', function () {
                 toolbarToggle();
                 cp.trigger('item:click', index);
             });
@@ -28,7 +28,7 @@ zuix.controller(function (cp) {
     cp.destroy = function () {
 
         actions.each(function (i, item) {
-            item.off('click');
+            this.off('click');
         });
 
     };
@@ -40,18 +40,16 @@ zuix.controller(function (cp) {
         /** @type {ZxQuery} actions */
         actions.each(function (i, button) {
             if (open)
-                button
-                    .animateCss('fadeInLeftBig', {
+                this.animateCss('fadeInLeftBig', {
                         delay: (i / 10) + 's',
                         duration: '0.35s'
                     }).css('visibility', 'visible');
             else
-                button
-                    .animateCss('fadeOutLeftBig', {
+                this.animateCss('fadeOutLeftBig', {
                         delay: (i / 8) + 's',
                         duration: '1.0s'
                     }, function () {
-                        button.css('visibility', 'hidden');
+                        this.css('visibility', 'hidden');
                     });
         }).reverse();
         fab.animateCss('rubberBand', { 'duration': '0.6s' });

@@ -1,4 +1,4 @@
-### ZxQuery
+### Class `ZxQuery`
 
 
 *ZxQuery* is a *ZUIX* built-in class that implements a very
@@ -7,11 +7,17 @@ in a DOM and provide useful methods for manipulating it.
 
 #### Constructor
 
-<p>
+The constructor takes one optional argument that can be a DOM element,
+a node list or a valid DOM query selector string expression.
+If no parameter is given, the ZxQuery will wrap the root *document* element.
 
-    <code>var zx = new ZxQuery([selector])</code>
+<pre><code>var zxElement = new ZxQuery(element);</code></pre>
 
-</p>
+or
+
+<pre><code>var zxElement = zuix.$(element);</code></pre>
+
+which is the recommended way of creating `ZxQuery` objects.
 
 #### Methods
 
@@ -26,3 +32,5 @@ in a DOM and provide useful methods for manipulating it.
 </div>
 
 </div>
+
+<p>&nbsp;</p>

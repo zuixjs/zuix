@@ -153,22 +153,21 @@ ComponentContext.prototype.viewToModel = function() {
     var _t = this;
     this._model = {};
     // create data model from inline view fields
-    z$(this._view).find('[data-ui-field]').each(function () {
-        var field = z$(this);
-        if (field.parent('pre,code').length() > 0)
+    z$(this._view).find('[data-ui-field]').each(function(i, el) {
+        if (this.parent('pre,code').length() > 0)
             return true;
-        var name = field.attr('data-ui-field');
+        var name = this.attr('data-ui-field');
         var value = '';
-        switch(this.tagName.toLowerCase()) {
+        switch(el.tagName.toLowerCase()) {
             // TODO: complete binding cases
             case 'img':
-                value = this.src;
+                value = el.src;
                 break;
             case 'input':
-                value = this.value;
+                value = el.value;
                 break;
             default:
-                value = this.innerHTML;
+                value = el.innerHTML;
         }
         // dotted field path
         if (name.indexOf('.')>0) {
@@ -191,31 +190,30 @@ ComponentContext.prototype.viewToModel = function() {
 ComponentContext.prototype.modelToView = function () {
     if (this._view != null && this._model != null) {
         var _t = this;
-        z$(this._view).find('[data-ui-field]').each(function () {
-            var field = z$(this);
-            if (field.parent('pre,code').length() > 0)
+        z$(this._view).find('[data-ui-field]').each(function(i, el) {
+            if (this.parent('pre,code').length() > 0)
                 return true;
-            var boundField = field.attr('data-bind-to');
+            var boundField = this.attr('data-bind-to');
             if (boundField == null)
-                boundField = field.attr('data-ui-field');
+                boundField = this.attr('data-ui-field');
             if (typeof _t._model === 'function')
-                (_t._model).call(_t._view, this, boundField);
+                (_t._model).call(z$(_t._view), this, boundField);
             else {
                 var boundData = util.propertyFromPath(_t._model, boundField);
                 if (typeof boundData === 'function') {
-                    (boundData).call(_t._view, this, boundField);
+                    (boundData).call(z$(_t._view), this, boundField);
                 } else if (boundData != null) {
                     // try to guess target property
-                    switch (this.tagName.toLowerCase()) {
+                    switch (el.tagName.toLowerCase()) {
                         // TODO: complete binding cases
                         case 'img':
-                            this.src = boundData;
+                            el.src = boundData;
                             break;
                         case 'input':
-                            this.value = boundData;
+                            el.value = boundData;
                             break;
                         default:
-                            this.innerHTML = boundData;
+                            el.innerHTML = boundData;
                     }
                 }
             }
@@ -320,10 +318,10 @@ ComponentContext.prototype.view = function (view) {
             else this._view = viewDiv;
         }
 
-        z$(this._view).find('script').each(function () {
-            if (this.getAttribute('zuix-loaded') !== 'true') {
-                this.setAttribute('zuix-loaded', 'true');
-                (eval).call(window, this.innerHTML);
+        z$(this._view).find('script').each(function (i, el) {
+            if (this.attr('zuix-loaded') !== 'true') {
+                this.attr('zuix-loaded', 'true');
+                (eval).call(window, el.innerHTML);
                 /*
                  var clonedScript = document.createElement('script');
                  clonedScript.setAttribute('zuix-loaded', 'true');

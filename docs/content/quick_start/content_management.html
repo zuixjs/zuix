@@ -4,7 +4,7 @@ With *Content Management* we are referring here to the capability of
 dynamically loading into a page some content that is placed in
 other files.
 
-This way, it is possible to structure a web site or application into modules
+With such feature, it is possible to structure a web site or application into modules
 that can be conveniently organized in the directory tree.
 
 For example, the following page template
@@ -29,8 +29,8 @@ where the ```index.html``` is the main page that will include the other files.
 <a id="Getting_Started--Content_Loading"></a>
 ##### Loading content
 
-To include a content, just add a ```div``` (or any other tag supposed to be a container element)
-with the attribute ```data-ui-include``` set to the path of the content that
+To include a content, we just add a ```div``` (or any other tag supposed to be a container element)
+with the attribute ```data-ui-include``` with its value set to the path of the content that
 you want to be loaded.
 
 <small><strong>EXAMPLE PAGE - </strong> **HTML** file ```index.html```</small>
@@ -52,7 +52,7 @@ you want to be loaded.
 </html>
 </code></pre>
 
-The ```data-ui-include``` attribute used at lines 9-11-13, will instruct *ZUIX*
+The ```data-ui-include``` attribute shown at lines 9-11-13, will instruct *ZUIX*
 to load the specified content into each ```div``` element.
 
 Notice that the value of the ```data-ui-include``` attribute is the URL of the file to include
@@ -64,7 +64,7 @@ the content ```site/common/links``` is included into it.
 
 <small><strong>EXAMPLE</strong> - **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)</small>
 <pre data-line="1"><code class="language-html">
-    <!-- site/common/links --->
+    <!-- content site/common/links --->
     <div layout="row center-spread">
         <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
         <a href="https://github.com/genielabs">@genielabs</a>
@@ -82,8 +82,9 @@ Element including the above content
 <small><strong>PROCESSED OUTPUT</strong> - resulting ```div``` after content is loaded into it</small>
 <pre data-line="1,4"><code class="language-html">
     <!-- include common links -->
-    <div data-ui-include="site/common/links" data-ui-loaded="true"
-         data-ui-component="site/common/links">
+    <div data-ui-include="site/common/links"
+         data-ui-component="site/common/links"
+         data-ui-loaded="true">
         <!-- site/common/links --->
         <div layout="row center-spread">
             <a href="https://github.com/genielabs/zuix">ZUIX on GitHub</a>
@@ -177,7 +178,7 @@ a {
 }
 </code></pre>
 
-Element including the above content
+Container including the above:
 
 <pre><code class="language-html">
     <!-- include common links -->

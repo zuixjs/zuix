@@ -25,6 +25,6 @@
 
 /**
  *
- * @typedef {!{string, function}} EventMapping
- *
+ * @typedef {!{string}, {EventCallback}} EventMapping
+ * *
  */
