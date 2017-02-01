@@ -12,6 +12,7 @@ zuix.controller(function (cp) {
             items.push(el);
             this.on('click', function(){
                 setSlide(el.index);
+                cp.trigger('slide:change', el.index);
             });
         });
 
@@ -22,7 +23,7 @@ zuix.controller(function (cp) {
 
                 // move image list inside the horiz. thumb list
                 var itemList = cp.field('list');
-                cp.view(items).each(function (i, el) {
+                zuix.$(items).each(function (i, el) {
                     itemList.append(el);
                 });
                 setSlide(0);
@@ -34,9 +35,9 @@ zuix.controller(function (cp) {
         });
 
         // exposed methods
-        //cp.expose('setSlide', function (i) {
-        //    setSlide(i);
-        //});
+        cp.expose('setSlide', function (i) {
+            setSlide(i);
+        });
     };
 
     cp.destroy = function () {

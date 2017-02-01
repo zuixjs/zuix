@@ -29,7 +29,6 @@
 var z$ =
     require('../helpers/ZxQuery');
 
-
 /**
  * TODO: complete JSDoc
  *
@@ -40,44 +39,21 @@ var z$ =
 function ContextController(context) {
     var _t = this;
 
-    /** @protected */
-    this.context = context;
-
-    // TODO: should improve/deprecate this.componentId?
-    this.componentId = context.componentId;
-
     this._view = null;
-    /**
-     * TODO: desc
-     *
-     * @param what {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
-     * @return {ZxQuery}
-     */
-    this.view = function (what) {
-        if (context.view() != null || this._view !== context.view())
-            return this._view = (what == null ? z$(context.view())
-                : typeof what === 'string' ? z$(context.view()).find(what)
-                    : z$(what));
-        else if (this._view !== null)
-            return this._view;
-        else
-            throw({
-                message: 'Not attacched to a view yet.',
-                source: this
-            });
-    };
-    /** @type {object} */
-    this.model = function (model) {
-        return context.model(model)
-    };
+
+    this.context = context;
     /** @type {function} */
-    this.expose = function (methodName, handler) {
-        context[methodName] = handler;
-    };
-    /** @type {function} */
-    this.behavior = function () {
+/*    this.behavior = function () {
         return context.behavior;
-    };
+    };*/
+
+    /** @protected */
+    this._fieldCache = [];
+
+    /** @type {function} */
+    this.create = null;
+    /** @type {function} */
+    this.destroy = null;
 
     /** @protected */
     this._childNodes = [];
@@ -98,36 +74,10 @@ function ContextController(context) {
         }
     };
 
-    /** @type {function} */
-    this.loadHtml = function(options) {
-        this.saveView();
-        return context.loadHtml(options);
-    };
-
-    /** @type {function} */
-    this.loadCss = function(options) {
-        return context.loadCss(options);
-    };
-
-    /** @protected */
-    this._fieldCache = [];
-
-    /** @type {function} */
-    this.create = null;
-    /** @type {function} */
-    this.destroy = null;
-
-    /** @type {function} */
-    this.trigger = function (eventPath, eventData) {
-        if (context._eventMap[eventPath] == null)
-            this.addEvent(this.view(), eventPath, null);
-        // TODO: ...
-        _t.view().trigger(eventPath, eventData);
-    };
-    /** @type {function} */
     this.on = function (eventPath, handler_fn) {
         this.addEvent(this.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
+        return this;
     };
     /** @protected */
     this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
@@ -182,34 +132,257 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
     this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
     return this;
 };
-/***
- * Search and cache this view elements.
+
+/**
+ * Gets elements in the component's view with `data-ui-field`
+ * matching the given `fieldName`.
  *
- * @param {!string} field Name of the `data-ui-field` to search
- * @returns {ZxQuery}
+ * @example
+ *
+<small>**Example - View's HTML**</small>
+```html
+<h1 data-ui-field="title">...</h1>
+<p data-ui-field="description">...</p>
+```
+
+<small>**Example - JavaScript**</small>
+```js
+cp.field('title')
+  .html('Hello World!');
+var desc = cp.field('description');
+desc.html('The spectacle before us was indeed sublime.');
+```
+ *
+ *
+ * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
+ * @returns {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
-ContextController.prototype.field = function (field) {
+ContextController.prototype.field = function (fieldName) {
     var _t = this, el = null;
-    if (typeof this._fieldCache[field] === 'undefined') {
-        el = this.view().find('[data-ui-field=' + field + ']');
+    if (typeof this._fieldCache[fieldName] === 'undefined') {
+        el = this.view().find('[data-ui-field=' + fieldName + ']');
         if (el != null) {
+            // TODO: add this override to API docs
             // ZxQuery base methods override
-            el.on = function (eventPath, eventHandler) {
+            el.on = function (eventPath, eventHandler, eventData, isHook) {
                 if (typeof eventHandler === 'string') {
                     var eh = eventHandler;
-                    eventHandler = function () { _t.trigger(eh); }
+                    eventHandler = function () { _t.trigger(eh, eventData, isHook); }
                 }
                 z$.ZxQuery.prototype.on.call(el, eventPath, eventHandler);
             };
-            this._fieldCache[field] = el;
+            this._fieldCache[fieldName] = el;
         }
     } else {
-        el = this._fieldCache[field];
+        el = this._fieldCache[fieldName];
     }
     return el;
 };
 ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;
 };
+/**
+ * Gets the component's view or the view elements matching
+ * the given `filter` in which case acts as a shorthand for
+ * `cp.view().find(filter)`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // get all `checkbox` elements with `.checked` class.
+ * var choices = cp.view('input[type="checkbox"].checked');
+ * choices.removeClass('.checked');
+ * // hide the component's view
+ * cp.view().hide();
+ * </code></pre>
+ *
+ * @param {(string|undefined)} [filter]
+ * @return {ZxQuery}
+ */
+ContextController.prototype.view = function (filter) {
+    if (this.context.view() != null || this._view !== this.context.view())
+        this._view = z$(this.context.view());
+    if (filter != null)
+        return this._view.find(filter);
+    else if (this._view !== null)
+        return this._view;
+    else
+        throw({
+            message: 'Not attacched to a view yet.',
+            source: this
+        });
+};
+/**
+ * Gets/Sets the component's data model.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * var m = {
+ *      title: 'Thoughts',
+ *      message: 'She stared through the window at the stars.'
+ *  };
+ * cp.model(m);
+ * cp.model().title = 'Changes';
+ * console.log(cp.model().title);
+ * </code></pre>
+ *
+ * @param {object|undefined} [model] The model object.
+ * @return {ContextController|object}
+ */
+ContextController.prototype.model = function (model) {
+    if (model == null)
+        return this.context.model();
+    else this.context.model(model);
+    return this;
+};
+/**
+ * Gets the component options.
+ *
+ * @return {object} The component options.
+ */
+ContextController.prototype.options = function () {
+    return this.context.options();
+};
+/**
+ * Triggers the component event `eventPath` with the given
+ * `eventData` object. To listen a component event use the
+ * `{ComponentContext}.on(eventPath, handler)` method or
+ * in case `isHook` is set to true, use the
+ * `zuix.hook(eventPath, handler)` method.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+// somewhere inside the slide-show component controller
+cp.trigger('slide:change', slideIndex);
+
+// somewhere in a page hosting the slide-show component
+// set component's event listeners
+zuix.context('my-slide-show')
+  .on('slide:change', function(slideIndex) { ... })
+  .on(...);
+ * </code></pre>
+ *
+ * @param {string} eventPath The event path.
+ * @param {object} eventData The event data.
+ * @param {boolean} [isHook] Trigger as global hook event.
+ * @return {ContextController}
+ */
+ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
+    if (this.context._eventMap[eventPath] == null && isHook !== true)
+        this.addEvent(this.view(), eventPath, null);
+    // TODO: ...
+    if (isHook === true)
+        this.context.trigger(this.context, eventPath, eventData);
+    else
+        this.view().trigger(eventPath, eventData);
+    return this;
+};
+/**
+ *  Expose in the component context a property or method
+ *  defined in the controller.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre data-line="5"><code class="language-js">
+ * // somewhere in the `create` method of the {ContextController}
+ * zuix.controller(function(cp){
+ *   cp.create = function() {
+ *     // ....
+ *     cp.expose('setSlide', slide);
+ *   }
+ *   // ...
+ *   function slide(slideIndex) { ... }
+ *   // ...
+ * });
+ * // ...
+ * // calling the exposed method from the instance of
+ * // the component.
+ * var ctx = zuix.context('my-slide-show');
+ * ctx.setSlide(2);
+ * </code></pre>
+ *
+ *
+ * @param {string} methodName Name of the exposed function.
+ * @param {function} handler Reference to the controller member to expose.
+ * @return {ContextController} The `{ContextController}` itself.
+ */
+ContextController.prototype.expose = function (methodName, handler) {
+    this.context[methodName] = handler;
+    return this;
+};
+/**
+ * Load the `.css` file and replace the component's view style.
+ * If no `options.path` is specified, it will try to load
+ * the file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.css' by default
+ * cp.loadCss();
+ * // or loads the view's css with options
+ * cp.loadCss({
+ *     path: 'url/of/style/file.css',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @param {object} [options] The options object.
+ * @return {ContextController} The ```{ContextController}``` object itself.
+ */
+ContextController.prototype.loadCss = function(options) {
+    this.context.loadCss(options);
+    return this;
+};
+/**
+ * Load the `.html` file and replace the component's view markup.
+ * If no `options.path` is specified, it will try to load the
+ * file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.html' by default
+ * cp.loadHtml();
+ * // or loads the view's html with options
+ * cp.loadHtml({
+ *     path: 'url/of/view/file.html',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @param {object} [options] The options object.
+ * @return {ContextController} The ```{ContextController}``` object itself.
+ */
+ContextController.prototype.loadHtml = function(options) {
+    this.saveView();
+    this.context.loadHtml(options);
+    return this;
+};
+/**
+ * Register as default controller for the given component type.
+ *
+ * @example
+<small>**Example - JavaScript**</small>
+<pre data-line="6"><code class="language-js">
+// Controller of component 'path/to/component_name'
+var ctrl = zuix.controller(function(cp) {
+    // `cp` is the {ContextController}
+    cp.create = function() { ... };
+    cp.destroy = function() { ... }
+}).for('path/to/component_name');
+</pre></code>
+ *
+ * @param {!string} componentId Component identifier.
+ * @return {ContextController} The `{ContextController}` itself.
+ */
+ContextController.prototype.for = function (componentId) { return this; };
+
 
 module.exports = ContextController;

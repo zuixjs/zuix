@@ -10,9 +10,9 @@ module.exports = function() {
 //              useTypesForOptimization: true,
                 compilation_level: 'SIMPLE',
                 language_in: 'ECMASCRIPT5_STRICT',
-                define: [
-                    "goog.DEBUG=false"
-                ],
+//                define: [
+//                    "goog.DEBUG=false"
+//                ],
                 create_source_map: 'build/js/zuix.min.js.map',
                 source_map_location_mapping: 'build/js/|./',
                 output_wrapper: "%output%\n//# sourceMappingURL=zuix.min.js.map"

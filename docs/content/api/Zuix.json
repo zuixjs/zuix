@@ -415,9 +415,9 @@
       },
       {
         "type": "param",
-        "string": "{!string} fieldName The class to check for.",
+        "string": "{!string} fieldName Value to match in the `data-ui-field` attribute.",
         "name": "fieldName",
-        "description": "The class to check for.",
+        "description": "Value to match in the `data-ui-field` attribute.",
         "types": [
           "string"
         ],
@@ -429,9 +429,9 @@
       },
       {
         "type": "param",
-        "string": "{!Element} [container] Starting DOM element for this search (**default:** ```document```)",
+        "string": "{!Element} [container] Starting DOM element for this search (**default:** *document*)",
         "name": "[container]",
-        "description": "Starting DOM element for this search (**default:** ```document```)",
+        "description": "Starting DOM element for this search (**default:** *document*)",
         "types": [
           "Element"
         ],
@@ -456,8 +456,8 @@
       }
     ],
     "description": {
-      "full": "Searches and returns elements with `data-ui-field`\nattribute matching the given `fieldName`.",
-      "summary": "Searches and returns elements with `data-ui-field`\nattribute matching the given `fieldName`.",
+      "full": "Gets elements with `data-ui-field`\nattribute matching the given `fieldName`.",
+      "summary": "Gets elements with `data-ui-field`\nattribute matching the given `fieldName`.",
       "body": ""
     },
     "isPrivate": true,
@@ -567,7 +567,7 @@
     "ignore": false,
     "line": 172,
     "codeStart": 173,
-    "code": "var options = v.attr('data-ui-options');\nif (!util.isNoU(options)) {\n    options = util.propertyFromPath(window, options);\n    // copy passed options\n    options = util.cloneObject(options) || {};\n} else options = {};\n\n// Automatic view/container selection\nif (util.isNoU(options.view) && !v.isEmpty()) {\n    options.view = element;\n    options.viewDeferred = true;\n} else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())\n    options.container = element;\n\nvar componentId = v.attr('data-ui-load');\nif (util.isNoU(componentId)) {\n    // Static include should not have any controller\n    componentId = v.attr('data-ui-include');\n    v.attr('data-ui-component', componentId);\n    // disable controller auto-loading\n    if (util.isNoU(options.controller))\n        options.controller = function () {\n        }; // null\n}\n\n// inline attributes have precedence over ```options```\n\nvar model = v.attr('data-bind-model');\nif (!util.isNoU(model) && model.length > 0)\n    options.model = util.propertyFromPath(window, model);\n\n// TODO: Behavior are also definable in \"data-ui-behavior\" attribute\n// TODO: Events are also definable in \"data-ui-on\" attribute\n// TODO: perhaps \"data-ui-ready\" and \"data-ui-error\" too\n// util.propertyFromPath( ... )\n\nload(componentId, options);\n}",
+    "code": "var options = v.attr('data-ui-options');\nif (!util.isNoU(options)) {\n    options = util.propertyFromPath(window, options);\n    // copy passed options\n    options = util.cloneObject(options) || {};\n} else options = {};\n\n// Automatic view/container selection\nif (util.isNoU(options.view) && !v.isEmpty()) {\n    options.view = element;\n    options.viewDeferred = true;\n} else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())\n    options.container = element;\n\nvar componentId = v.attr('data-ui-load');\nif (util.isNoU(componentId)) {\n    // Static include should not have any controller\n    componentId = v.attr('data-ui-include');\n    v.attr('data-ui-component', componentId);\n    // disable controller auto-loading\n    if (util.isNoU(options.controller))\n        options.controller = function () {\n        }; // null\n}\n\n// inline attributes have precedence over ```options```\n\nvar model = v.attr('data-bind-model');\nif (!util.isNoU(model) && model.length > 0)\n    options.model = util.propertyFromPath(window, model);\n\nvar contextId = v.attr('data-ui-context');\nif (!util.isNoU(contextId))\n    options.contextId = contextId;\n\n// TODO: Behavior are also definable in \"data-ui-behavior\" attribute\n// TODO: Events are also definable in \"data-ui-on\" attribute\n// TODO: perhaps \"data-ui-ready\" and \"data-ui-error\" too\n// util.propertyFromPath( ... )\n\nload(componentId, options);\n}",
     "ctx": {
       "type": "declaration",
       "name": "options",
@@ -634,8 +634,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 212,
-    "codeStart": 220,
+    "line": 216,
+    "codeStart": 224,
     "code": "function load(componentId, options) {\n    // TODO: throw error on argument mismatch\n    // TODO: prevent load loops when including recursively a component",
     "ctx": {
       "type": "function",
@@ -668,8 +668,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 224,
-    "codeStart": 225,
+    "line": 228,
+    "codeStart": 229,
     "code": "var ctx = null;\nif (!util.isNoU(options)) {\n    // check if context has its unique id assigned\n    if (!util.isNoU(options.contextId)) {\n        // if it does, try to pick it from allocated contexts list\n        ctx = context(options.contextId);\n        if (ctx !== null) {\n            ctx.options(options);\n        } else {\n            // if no context is already allocated\n            // with that id, then add a new one\n            ctx = createContext(options);\n        }\n    } else {\n        if (options === false)\n            options = {};\n        // generate contextId (this is a bit buggy, but it's quick)\n        options.contextId = 'zuix-ctx-' + (++_contextSeqNum);\n        ctx = createContext(options);\n    }\n} else {\n    // empty context\n    options = {};\n    ctx = new ComponentContext(options, trigger);\n}\n\n// assign the given component (widget) to this context\nif (ctx.componentId != componentId) {\n    ctx.componentId = componentId;",
     "ctx": {
       "type": "declaration",
@@ -690,8 +690,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 254,
-    "codeStart": 262,
+    "line": 258,
+    "codeStart": 266,
     "code": "}\n\nif (util.isFunction(options.ready))\n    ctx.ready = options.ready;\nif (util.isFunction(options.error))\n    ctx.error = options.error;\n\nif (util.isNoU(options.view)) {\n\n    // pick it from cache if found\n    var cachedComponent = getCachedComponent(ctx.componentId);\n    if (cachedComponent !== null && util.isNoU(ctx.controller()))\n        ctx.controller(cachedComponent.controller);\n\n    if (cachedComponent !== null && cachedComponent.view != null)\n        ctx.view(cachedComponent.view);\n    else {\n        // if not able to inherit the view from the base cachedComponent\n        // or from an inline element, then load the view from web\n        if (util.isNoU(ctx.view())) {\n            // Load View\n            tasker.queue('html:' + ctx.componentId, function () {\n                var task = this;\n\n                ctx.loadHtml({\n                    success: function () {\n                        if (options.css !== false)\n                            ctx.loadCss({\n                                error: function (err) {\n                                    console.log(err, ctx);\n                                },\n                                then: function () {\n                                    loadController(ctx);\n                                }\n                            });\n                        else {\n                            loadController(ctx);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, ctx);\n                        if (util.isFunction(options.error))\n                            (ctx.error).call(ctx, err);\n                    },\n                    then: function () {\n                        task.end();\n                    }\n                });\n\n            });\n            // defer controller loading\n            return ctx;\n        }\n    }\n} else {\n    ctx.view(options.view);\n}\nloadController(ctx);\nreturn ctx;\n}",
     "ctx": false
   },
@@ -725,8 +725,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 323,
-    "codeStart": 329,
+    "line": 327,
+    "codeStart": 333,
     "code": "function unload(context) {\n    if (!util.isNoU(context) && !util.isNoU(context._c)) {\n        if (!util.isNoU(context._c.view()))\n            context._c.view().attr('data-ui-component', null);\n\n        //context.unregisterEvents();\n        // TODO: unregister events and local context behavior\n        // TODO: detach view from parent if context.container is not null\n\n        if (util.isFunction(context._c.destroy))\n            context._c.destroy();\n    }\n}",
     "ctx": {
       "type": "function",
@@ -752,8 +752,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 343,
-    "codeStart": 344,
+    "line": 347,
+    "codeStart": 348,
     "code": "function createContext(options) {\n    var context = new ComponentContext(options, trigger);\n    _contextRoot.push(context);\n    return context;\n}",
     "ctx": {
       "type": "function",
@@ -770,13 +770,15 @@
       },
       {
         "type": "param",
-        "string": "{Element} contextId",
+        "string": "{Element|ZxQuery|object} contextId",
         "name": "contextId",
         "description": "",
         "types": [
-          "Element"
+          "Element",
+          "ZxQuery",
+          "object"
         ],
-        "typesDescription": "<code>Element</code>",
+        "typesDescription": "<code>Element</code>|<a href=\"ZxQuery.html\">ZxQuery</a>|<code>object</code>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
@@ -806,9 +808,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 350,
-    "codeStart": 357,
-    "code": "function context(contextId) {\n    var context = null;\n    z$.each(_contextRoot, function (k, v) {\n        if ((contextId instanceof Element && v.view() === contextId)\n            || util.objectEquals(v.contextId, contextId)) {\n            context = v;\n            return false;\n        }\n    });\n    return context;\n}",
+    "line": 354,
+    "codeStart": 361,
+    "code": "function context(contextId) {\n    var context = null;\n    if (contextId instanceof z$.ZxQuery)\n        contextId = contextId.get();\n    z$.each(_contextRoot, function (k, v) {\n        if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId))\n            || util.objectEquals(v.contextId, contextId)) {\n            context = v;\n            return false;\n        }\n    });\n    return context;\n}",
     "ctx": {
       "type": "function",
       "name": "context",
@@ -833,8 +835,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 369,
-    "codeStart": 370,
+    "line": 375,
+    "codeStart": 376,
     "code": "function removeContext(contextId) {\n    // TODO: removeContext\n}",
     "ctx": {
       "type": "function",
@@ -884,8 +886,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 374,
-    "codeStart": 381,
+    "line": 380,
+    "codeStart": 387,
     "code": "function hook(path, handler) {\n    if (util.isNoU(handler))\n        return _hooksCallbacks[path];\n    _hooksCallbacks[path] = handler;\n}",
     "ctx": {
       "type": "function",
@@ -947,9 +949,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 387,
-    "codeStart": 395,
-    "code": "function trigger(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, path, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n    if (path == 'view:process')\n        componentize(data);\n}",
+    "line": 393,
+    "codeStart": 401,
+    "code": "function trigger(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n    if (path == 'view:process')\n        componentize(data);\n}",
     "ctx": {
       "type": "function",
       "name": "trigger",
@@ -1001,8 +1003,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 406,
-    "codeStart": 413,
+    "line": 412,
+    "codeStart": 419,
     "code": "function lazyLoad(enable) {\n    if (enable != null)\n        _disableLazyLoading = !enable;\n    return !_isCrawlerBotClient && !_disableLazyLoading;\n}",
     "ctx": {
       "type": "function",
@@ -1022,8 +1024,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 420,
-    "codeStart": 421
+    "line": 426,
+    "codeStart": 427
   },
   {
     "tags": [
@@ -1043,8 +1045,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 423,
-    "codeStart": 424,
+    "line": 429,
+    "codeStart": 430,
     "code": "function removeCachedComponent(componentId) {\n    // TODO: removeCachedComponent\n}",
     "ctx": {
       "type": "function",
@@ -1097,8 +1099,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 428,
-    "codeStart": 433,
+    "line": 434,
+    "codeStart": 439,
     "code": "function getCachedComponent(componentId) {\n    var cached = null;\n    z$.each(_componentCache, function (k, v) {\n        if (util.objectEquals(v.componentId, componentId)) {\n            cached = v;\n            return false;\n        }\n    });\n    return cached;\n}",
     "ctx": {
       "type": "function",
@@ -1138,8 +1140,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 444,
-    "codeStart": 448,
+    "line": 450,
+    "codeStart": 454,
     "code": "function loadController(context) {\n    if (typeof context.options().controller === 'undefined' && context.controller() === null) {\n        if (util.isFunction(_globalHandlers[context.componentId])) {\n            context.controller(_globalHandlers[context.componentId]);\n            createComponent(context);\n        } else\n            tasker.queue('js:' + context.componentId, function () {\n                var task = this;\n                z$.ajax({\n                    url: context.componentId + \".js?\" + new Date().getTime(),\n                    success: function (ctrlJs) {\n                        // TODO: improve js parsing!\n                        try {\n                            var fn = ctrlJs.indexOf('function');\n                            var il = ctrlJs.indexOf('.load');\n                            if (il > 1 && il < fn)\n                                ctrlJs = ctrlJs.substring(0, il - 4);\n                            var ih = ctrlJs.indexOf('.controller');\n                            if (ih > 1 && ih < fn)\n                                ctrlJs = ctrlJs.substring(ih + 11);\n                            var ec = ctrlJs.indexOf('//<--controller');\n                            if (ec > 0)\n                                ctrlJs = ctrlJs.substring(0, ec);\n                            context.controller(getController(ctrlJs));\n                        } catch (e) {\n                            console.log(e, ctrlJs, context);\n                            if (util.isFunction(context.error))\n                                (context.error).call(context, e);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, context);\n                        if (util.isFunction(context.error))\n                            (context.error).call(context, err);\n                    },\n                    then: function () {\n                        task.end();\n                        createComponent(context);\n                    }\n                });\n            });\n    } else {\n        createComponent(context);\n    }\n}",
     "ctx": {
       "type": "function",
@@ -1177,8 +1179,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 494,
-    "codeStart": 498,
+    "line": 500,
+    "codeStart": 504,
     "code": "function createComponent(context) {\n    if (!util.isNoU(context.view())) {\n        if (!context.options().viewDeferred) {\n            var cached = getCachedComponent(context.componentId);\n            if (cached === null) {\n                var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);\n                var c = z$.wrapElement('div', html);\n                _componentCache.push({\n                    componentId: context.componentId,\n                    view: c.innerHTML,\n                    controller: context.controller()\n                });\n            }\n        }\n        initComponent(context);\n    } else {\n        // TODO: report error\n    }\n}",
     "ctx": {
       "type": "function",
@@ -1218,8 +1220,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 518,
-    "codeStart": 522,
+    "line": 524,
+    "codeStart": 528,
     "code": "function initComponent(context) {\n    if (util.isFunction(context.controller())) {",
     "ctx": {
       "type": "function",
@@ -1252,9 +1254,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 524,
-    "codeStart": 525,
-    "code": "var c = context._c = new ContextController(context);\n\nif (!util.isNoU(c.view())) {\n    c.view().attr('data-ui-component', c.componentId);\n    // if no model is supplied, try auto-create from view fields\n    if (util.isNoU(context.model()) && !util.isNoU(context.view()))\n        context.viewToModel();\n    c.trigger('view:apply');\n    if (context.options().viewDeferred) {\n        context.options().viewDeferred = false;\n        // save the original inline view\n        // before loading the view template\n        // it can be then restored with c.restoreView()\n        c.saveView();\n        if (context.options().css !== false)\n            context.loadCss();\n        if (context.options().html !== false)\n            context.loadHtml();\n    }\n\n    c.view().css('visibility', '');\n}\n\n// TODO: review/improve life-cycle\n\nif (util.isFunction(c.create)) c.create();\nc.trigger('view:create');\n\n// TODO: is this to be deprecated?\n//if (util.isFunction(c.resume)) c.resume();\n    }\n    if (util.isFunction(context.ready))\n(context.ready).call(context);\n}",
+    "line": 530,
+    "codeStart": 531,
+    "code": "var c = context._c = new ContextController(context);\nif (!util.isNoU(c.view())) {\n    c.view().attr('data-ui-component', context.componentId);\n    // if no model is supplied, try auto-create from view fields\n    if (util.isNoU(context.model()) && !util.isNoU(context.view()))\n        context.viewToModel();\n    c.trigger('view:apply');\n    if (context.options().viewDeferred) {\n        context.options().viewDeferred = false;\n        // save the original inline view\n        // before loading the view template\n        // it can be then restored with c.restoreView()\n        c.saveView();\n        if (context.options().css !== false)\n            context.loadCss();\n        if (context.options().html !== false)\n            context.loadHtml();\n    }\n    c.view().css('visibility', '');\n}\nif (util.isFunction(c.create)) c.create();\nc.trigger('view:create');\n    }\n    if (util.isFunction(context.ready))\n(context.ready).call(context);\n}",
     "ctx": {
       "type": "declaration",
       "name": "c",
@@ -1305,8 +1307,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 560,
-    "codeStart": 565,
+    "line": 558,
+    "codeStart": 563,
     "code": "// TODO: refactor this method name\nfunction getController(javascriptCode) {\n    var instance = function (ctx) {\n    };\n    if (typeof javascriptCode === 'string') {\n        try {\n            instance = (eval).call(this, javascriptCode);\n        } catch (e) {\n            // TODO: should trigger a global hook\n            // eg. 'controller:error'\n            console.log(this, e, javascriptCode);\n        }\n    }\n    return instance;\n}\n\n// Browser Agent / Bot detection",
     "ctx": false
   },
@@ -1328,8 +1330,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 582,
-    "codeStart": 583
+    "line": 580,
+    "codeStart": 581
   },
   {
     "tags": [
@@ -1349,8 +1351,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 583,
-    "codeStart": 584,
+    "line": 581,
+    "codeStart": 582,
     "code": "var _isCrawlerBotClient = false, _disableLazyLoading = false;\nif (navigator && navigator.userAgent)\n    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)\n        .test(navigator.userAgent);\nif (_isCrawlerBotClient)\n    console.log(navigator.userAgent, \"is a bot, ignoring 'data-ui-lazyload' option.\");",
     "ctx": {
       "type": "declaration",
@@ -1371,20 +1373,20 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 592,
-    "codeStart": 593
+    "line": 590,
+    "codeStart": 591
   },
   {
     "tags": [
       {
         "type": "example",
-        "string": "\n<small>**Example - JavaScript**</small>\n```js\n// Controller of component 'path/to/component_name'\nvar ctrl = zuix.controller(function(cp) {\n    cp.create = function() { ... };\n    cp.destroy = function() { ... }\n}).for('path/to/component_name');\n```"
+        "string": "\n<small>**Example - JavaScript**</small>\n<pre data-line=\"2\"><code class=\"language-js\">\n// Controller of component 'path/to/component_name'\nvar ctrl = zuix.controller(function(cp) {\n    // `cp` is the {ContextController}\n    cp.create = function() { ... };\n    cp.destroy = function() { ... }\n}).for('path/to/component_name');\n</pre></code>"
       },
       {
         "type": "param",
-        "string": "{ContextControllerHandler} handler The controller handler function.",
+        "string": "{ContextControllerHandler} handler The controller handler\nfunction ```function(context_controller){ ... } ```,\nwhere `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)\nobject that is passed to the handler once the component\nis created.",
         "name": "handler",
-        "description": "The controller handler function.",
+        "description": "The controller handler function ```function(context_controller){ ... } ```,\nwhere `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)\nobject that is passed to the handler once the component\nis created.",
         "types": [
           "ContextControllerHandler"
         ],
@@ -1418,8 +1420,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 595,
-    "codeStart": 612,
+    "line": 593,
+    "codeStart": 615,
     "code": "Zuix.prototype.controller = controller;",
     "ctx": {
       "type": "property",
@@ -1452,9 +1454,9 @@
       },
       {
         "type": "param",
-        "string": "{!Element} [container] Starting DOM element for this search (**default:** ```document```)",
+        "string": "{!Element} [container] Starting DOM element for this search (**default:** *document*)",
         "name": "[container]",
-        "description": "Starting DOM element for this search (**default:** ```document```)",
+        "description": "Starting DOM element for this search (**default:** *document*)",
         "types": [
           "Element"
         ],
@@ -1466,7 +1468,7 @@
       },
       {
         "type": "return",
-        "string": "{ZxQuery}",
+        "string": "{ZxQuery} The ``{ZxQuery}```-wrapped elements with matching ```data-ui-field``` attribute.",
         "types": [
           "ZxQuery"
         ],
@@ -1475,7 +1477,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The ``{ZxQuery}```-wrapped elements with matching ```data-ui-field``` attribute."
       }
     ],
     "description": {
@@ -1488,8 +1490,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 613,
-    "codeStart": 636,
+    "line": 616,
+    "codeStart": 639,
     "code": "Zuix.prototype.field = field;",
     "ctx": {
       "type": "property",
@@ -1508,9 +1510,9 @@
       },
       {
         "type": "param",
-        "string": "{Element} [element] Optional container to use as starting node for the search.",
+        "string": "{Element} [element] Container to use as starting node for the search (**default:** *document*).",
         "name": "[element]",
-        "description": "Optional container to use as starting node for the search.",
+        "description": "Container to use as starting node for the search (**default:** *document*).",
         "types": [
           "Element"
         ],
@@ -1522,7 +1524,7 @@
       },
       {
         "type": "return",
-        "string": "{Zuix}",
+        "string": "{Zuix} The ```{Zuix}``` object itself.",
         "types": [
           "Zuix"
         ],
@@ -1531,7 +1533,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The ```{Zuix}``` object itself."
       }
     ],
     "description": {
@@ -1544,8 +1546,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 637,
-    "codeStart": 654,
+    "line": 640,
+    "codeStart": 657,
     "code": "Zuix.prototype.componentize = function (element) {\n    componentize(element);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1591,7 +1593,7 @@
       },
       {
         "type": "return",
-        "string": "{ComponentContext}",
+        "string": "{ComponentContext} The component instance context.",
         "types": [
           "ComponentContext"
         ],
@@ -1600,7 +1602,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The component instance context."
       }
     ],
     "description": {
@@ -1613,8 +1615,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 658,
-    "codeStart": 698,
+    "line": 661,
+    "codeStart": 701,
     "code": "Zuix.prototype.load = load;",
     "ctx": {
       "type": "property",
@@ -1647,7 +1649,7 @@
       },
       {
         "type": "return",
-        "string": "{Zuix}",
+        "string": "{Zuix} The ```{Zuix}``` object itself.",
         "types": [
           "Zuix"
         ],
@@ -1656,7 +1658,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The ```{Zuix}``` object itself."
       }
     ],
     "description": {
@@ -1669,8 +1671,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 699,
-    "codeStart": 712,
+    "line": 702,
+    "codeStart": 715,
     "code": "Zuix.prototype.unload = function (context) {\n    unload(context);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1684,22 +1686,19 @@
     "tags": [
       {
         "type": "example",
-        "string": "\n<small>**Example - JavaScript**</small>\n```js\nvar ctx = zuix.context(containerDiv);\n```"
-      },
-      {
-        "type": "private",
-        "string": "",
-        "visibility": "private"
+        "string": "<small>**Example - HTML**</small>\n```html\n<div data-ui-load=\"site/components/slideshow\"\n     data-ui-context=\"my-slide-show\">...</div>\n```\n<small>**Example - JavaScript**</small>\n```js\nvar slideShowDiv = zuix.$.find('[data-ui-context=\"my-slide-show\"]');\nvar ctx = zuix.context(slideShowDiv);\n// or\nvar ctx = zuix.context('my-slide-show');\n// call component's exposed methods\nctx.setSlide(1);\n```"
       },
       {
         "type": "param",
-        "string": "{Element} contextId",
+        "string": "{Element|ZxQuery|object} contextId The `contextId` object\n(usually a string) or the component's container/view element.",
         "name": "contextId",
-        "description": "",
+        "description": "The `contextId` object (usually a string) or the component's container/view element.",
         "types": [
-          "Element"
+          "Element",
+          "ZxQuery",
+          "object"
         ],
-        "typesDescription": "<code>Element</code>",
+        "typesDescription": "<code>Element</code>|<a href=\"ZxQuery.html\">ZxQuery</a>|<code>object</code>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
@@ -1707,7 +1706,7 @@
       },
       {
         "type": "return",
-        "string": "{ComponentContext}",
+        "string": "{ComponentContext} The matching component context.",
         "types": [
           "ComponentContext"
         ],
@@ -1716,21 +1715,21 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The matching component context."
       }
     ],
     "description": {
-      "full": "Get the `ComponentContext`, given\nthe component's view or container element.",
-      "summary": "Get the `ComponentContext`, given\nthe component's view or container element.",
+      "full": "Get the `ComponentContext`, given its `contextId`\nor component's container/view element.",
+      "summary": "Get the `ComponentContext`, given its `contextId`\nor component's container/view element.",
       "body": ""
     },
-    "isPrivate": true,
+    "isPrivate": false,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 716,
-    "codeStart": 731,
+    "line": 719,
+    "codeStart": 743,
     "code": "Zuix.prototype.context = context;",
     "ctx": {
       "type": "property",
@@ -1745,9 +1744,9 @@
     "tags": [
       {
         "type": "param",
-        "string": "{string} path",
-        "name": "path",
-        "description": "",
+        "string": "{string} eventPath The event path.",
+        "name": "eventPath",
+        "description": "The event path.",
         "types": [
           "string"
         ],
@@ -1759,9 +1758,9 @@
       },
       {
         "type": "param",
-        "string": "{function} handler",
-        "name": "handler",
-        "description": "",
+        "string": "{function} eventHandler The handler function.",
+        "name": "eventHandler",
+        "description": "The handler function.",
         "types": [
           "function"
         ],
@@ -1773,7 +1772,7 @@
       },
       {
         "type": "return",
-        "string": "{Zuix}",
+        "string": "{Zuix} The ```{Zuix}``` object itself.",
         "types": [
           "Zuix"
         ],
@@ -1782,22 +1781,22 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The ```{Zuix}``` object itself."
       }
     ],
     "description": {
-      "full": "TODO: desc",
-      "summary": "TODO: desc",
-      "body": ""
+      "full": "Set handlers for global events hooks.\n\n Standard *ZUIX* hooks list:\n - <i class=\"material-icons\">flash_on</i> load:begin\n - <i class=\"material-icons\">flash_on</i> load:step\n - <i class=\"material-icons\">flash_on</i> load:next\n - <i class=\"material-icons\">flash_on</i> load:end\n - <i class=\"material-icons\">flash_on</i> html:parse\n - <i class=\"material-icons\">flash_on</i> css:parse\n - <i class=\"material-icons\">flash_on</i> view:process\n\n<small>**Example - JavaScript**</small>\n```js\nzuix\n  .hook('load:begin', function(){\n\n    loaderMessage.show();\n\n}).hook('load:end', function(){\n\n    loaderMessage.hide();\n\n}).hook('html:parse', function (data) {\n\n    // ShowDown - Markdown compiler\n    if (this.options().markdown === true && typeof showdown !== 'undefined')\n        data.content = new showdown.Converter().makeHtml(data.content);\n\n}).hook('css:parse', function (data) {\n\n    // process css, eg. run a CSS pre-processor\n\n}).hook('view:process', function (view) {\n\n    // Prism code syntax highlighter\n    view.find('code').each(function (i, block) {\n        this.addClass('language-javascript');\n        Prism.highlightElement(block);\n    });\n\n    // Force opening of all non-local links in a new window\n    zuix.$('a[href*=\"://\"]').attr('target','_blank');\n\n    // Material Design Light  DOM upgrade\n    if (componentHandler) {\n        setTimeout(function () {\n            componentHandler.upgradeElements(view.get());\n        }, 500);\n    }\n\n});\n```",
+      "summary": "Set handlers for global events hooks.",
+      "body": " Standard *ZUIX* hooks list:\n - <i class=\"material-icons\">flash_on</i> load:begin\n - <i class=\"material-icons\">flash_on</i> load:step\n - <i class=\"material-icons\">flash_on</i> load:next\n - <i class=\"material-icons\">flash_on</i> load:end\n - <i class=\"material-icons\">flash_on</i> html:parse\n - <i class=\"material-icons\">flash_on</i> css:parse\n - <i class=\"material-icons\">flash_on</i> view:process\n\n<small>**Example - JavaScript**</small>\n```js\nzuix\n  .hook('load:begin', function(){\n\n    loaderMessage.show();\n\n}).hook('load:end', function(){\n\n    loaderMessage.hide();\n\n}).hook('html:parse', function (data) {\n\n    // ShowDown - Markdown compiler\n    if (this.options().markdown === true && typeof showdown !== 'undefined')\n        data.content = new showdown.Converter().makeHtml(data.content);\n\n}).hook('css:parse', function (data) {\n\n    // process css, eg. run a CSS pre-processor\n\n}).hook('view:process', function (view) {\n\n    // Prism code syntax highlighter\n    view.find('code').each(function (i, block) {\n        this.addClass('language-javascript');\n        Prism.highlightElement(block);\n    });\n\n    // Force opening of all non-local links in a new window\n    zuix.$('a[href*=\"://\"]').attr('target','_blank');\n\n    // Material Design Light  DOM upgrade\n    if (componentHandler) {\n        setTimeout(function () {\n            componentHandler.upgradeElements(view.get());\n        }, 500);\n    }\n\n});\n```"
     },
     "isPrivate": false,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 732,
-    "codeStart": 739,
-    "code": "Zuix.prototype.hook = function (path, handler) {\n    hook(path, handler);\n    return this;\n};",
+    "line": 744,
+    "codeStart": 802,
+    "code": "Zuix.prototype.hook = function (eventPath, eventHandler) {\n    hook(eventPath, eventHandler);\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "Zuix",
@@ -1852,7 +1851,7 @@
       },
       {
         "type": "return",
-        "string": "{Zuix}",
+        "string": "{Zuix} The ```{Zuix}``` object itself.",
         "types": [
           "Zuix"
         ],
@@ -1861,7 +1860,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": ""
+        "description": "The ```{Zuix}``` object itself."
       }
     ],
     "description": {
@@ -1874,8 +1873,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 743,
-    "codeStart": 751,
+    "line": 806,
+    "codeStart": 814,
     "code": "Zuix.prototype.trigger = function (context, path, data) {\n    trigger(context, path, data);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1925,8 +1924,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 755,
-    "codeStart": 761,
+    "line": 818,
+    "codeStart": 824,
     "code": "Zuix.prototype.lazyLoad = lazyLoad;\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
     "ctx": {
       "type": "property",
@@ -1975,8 +1974,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 777,
-    "codeStart": 781,
+    "line": 840,
+    "codeStart": 844,
     "code": "module.exports = function (root) {\n    var zuix = new Zuix();\n    document.addEventListener(\"DOMContentLoaded\", function(event) {\n        zuix.componentize();\n    });\n    return zuix;\n};",
     "ctx": {
       "type": "method",

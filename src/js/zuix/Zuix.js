@@ -99,12 +99,12 @@ function controller(handler) {
 }
 
 /**
- * Searches and returns elements with `data-ui-field`
+ * Gets elements with `data-ui-field`
  * attribute matching the given `fieldName`.
  *
  * @private
- * @param {!string} fieldName The class to check for.
- * @param {!Element} [container] Starting DOM element for this search (**default:** ```document```)
+ * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
+ * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
  * @return {ZxQuery}
  */
 function field(fieldName, container) {
@@ -200,6 +200,10 @@ function loadInline(element) {
     var model = v.attr('data-bind-model');
     if (!util.isNoU(model) && model.length > 0)
         options.model = util.propertyFromPath(window, model);
+
+    var contextId = v.attr('data-ui-context');
+    if (!util.isNoU(contextId))
+        options.contextId = contextId;
 
     // TODO: Behavior are also definable in "data-ui-behavior" attribute
     // TODO: Events are also definable in "data-ui-on" attribute
@@ -351,13 +355,15 @@ function createContext(options) {
  * TODO: desc
  *
  * @private
- * @param {Element} contextId
+ * @param {Element|ZxQuery|object} contextId
  * @return {ComponentContext}
  */
 function context(contextId) {
     var context = null;
+    if (contextId instanceof z$.ZxQuery)
+        contextId = contextId.get();
     z$.each(_contextRoot, function (k, v) {
-        if ((contextId instanceof Element && v.view() === contextId)
+        if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId))
             || util.objectEquals(v.contextId, contextId)) {
             context = v;
             return false;
@@ -396,7 +402,7 @@ function trigger(context, path, data) {
 
     // TODO: call all registered callback
     if (util.isFunction(_hooksCallbacks[path]))
-        _hooksCallbacks[path].call(context, path, data);
+        _hooksCallbacks[path].call(context, data);
 
     // ZUIX Componentizer is the last executed hook (built-in)
     if (path == 'view:process')
@@ -523,9 +529,8 @@ function initComponent(context) {
     if (util.isFunction(context.controller())) {
         /** @type {ContextController} */
         var c = context._c = new ContextController(context);
-
         if (!util.isNoU(c.view())) {
-            c.view().attr('data-ui-component', c.componentId);
+            c.view().attr('data-ui-component', context.componentId);
             // if no model is supplied, try auto-create from view fields
             if (util.isNoU(context.model()) && !util.isNoU(context.view()))
                 context.viewToModel();
@@ -541,17 +546,10 @@ function initComponent(context) {
                 if (context.options().html !== false)
                     context.loadHtml();
             }
-
             c.view().css('visibility', '');
         }
-
-        // TODO: review/improve life-cycle
-
         if (util.isFunction(c.create)) c.create();
         c.trigger('view:create');
-
-        // TODO: is this to be deprecated?
-        //if (util.isFunction(c.resume)) c.resume();
     }
     if (util.isFunction(context.ready))
         (context.ready).call(context);
@@ -598,15 +596,20 @@ if (_isCrawlerBotClient)
  * @example
  *
 <small>**Example - JavaScript**</small>
-```js
+<pre data-line="2"><code class="language-js">
 // Controller of component 'path/to/component_name'
 var ctrl = zuix.controller(function(cp) {
+    // `cp` is the {ContextController}
     cp.create = function() { ... };
     cp.destroy = function() { ... }
 }).for('path/to/component_name');
-```
+</pre></code>
  *
- * @param {ContextControllerHandler} handler The controller handler function.
+ * @param {ContextControllerHandler} handler The controller handler
+ * function ```function(context_controller){ ... } ```,
+ * where `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)
+ * object that is passed to the handler once the component
+ * is created.
  * @return {ContextControllerHandler} The initialized controller handler.
  */
 Zuix.prototype.controller = controller;
@@ -630,8 +633,8 @@ containerDiv.html('Hello World!');
 ```
  *
  * @param {!string} fieldName The class to check for.
- * @param {!Element} [container] Starting DOM element for this search (**default:** ```document```)
- * @return {ZxQuery}
+ * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
+ * @return {ZxQuery} The ``{ZxQuery}```-wrapped elements with matching ```data-ui-field``` attribute.
  */
 Zuix.prototype.field = field;
 /**
@@ -648,8 +651,8 @@ Zuix.prototype.field = field;
 zuix.componentize(document);
 ```
  *
- * @param {Element} [element] Optional container to use as starting node for the search.
- * @return {Zuix}
+ * @param {Element} [element] Container to use as starting node for the search (**default:** *document*).
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.componentize = function (element) {
     componentize(element);
@@ -693,7 +696,7 @@ ctx.test();
  *
  * @param {!string} componentId The identifier name of the component to be loaded.
  * @param {ContextOptions} [options] Options used to initialize the loaded component.
- * @return {ComponentContext}
+ * @return {ComponentContext} The component instance context.
  */
 Zuix.prototype.load = load;
 /**
@@ -707,37 +710,98 @@ zuix.unload(ctx);
 ```
  *
  * @param {ComponentContext} context The `ComponentContext` instance of the component to be unloaded.
- * @return {Zuix}
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.unload = function (context) {
     unload(context);
     return this;
 };
 /**
- * Get the `ComponentContext`, given
- * the component's view or container element.
+ * Get the `ComponentContext`, given its `contextId`
+ * or component's container/view element.
  *
  * @example
- *
+<small>**Example - HTML**</small>
+```html
+<div data-ui-load="site/components/slideshow"
+     data-ui-context="my-slide-show">...</div>
+```
 <small>**Example - JavaScript**</small>
 ```js
-var ctx = zuix.context(containerDiv);
+var slideShowDiv = zuix.$.find('[data-ui-context="my-slide-show"]');
+var ctx = zuix.context(slideShowDiv);
+// or
+var ctx = zuix.context('my-slide-show');
+// call component's exposed methods
+ctx.setSlide(1);
 ```
  *
- * @private
- * @param {Element} contextId
- * @return {ComponentContext}
+ * @param {Element|ZxQuery|object} contextId The `contextId` object
+ * (usually a string) or the component's container/view element.
+ * @return {ComponentContext} The matching component context.
  */
 Zuix.prototype.context = context;
 /**
- * TODO: desc
+ * Set handlers for global events hooks.
  *
- * @param {string} path
- * @param {function} handler
- * @return {Zuix}
+ Standard *ZUIX* hooks list:
+ - <i class="material-icons">flash_on</i> load:begin
+ - <i class="material-icons">flash_on</i> load:step
+ - <i class="material-icons">flash_on</i> load:next
+ - <i class="material-icons">flash_on</i> load:end
+ - <i class="material-icons">flash_on</i> html:parse
+ - <i class="material-icons">flash_on</i> css:parse
+ - <i class="material-icons">flash_on</i> view:process
+ *
+<small>**Example - JavaScript**</small>
+```js
+zuix
+  .hook('load:begin', function(){
+
+    loaderMessage.show();
+
+}).hook('load:end', function(){
+
+    loaderMessage.hide();
+
+}).hook('html:parse', function (data) {
+
+    // ShowDown - Markdown compiler
+    if (this.options().markdown === true && typeof showdown !== 'undefined')
+        data.content = new showdown.Converter()
+            .makeHtml(data.content);
+
+}).hook('css:parse', function (data) {
+
+    // process css, eg. run a CSS pre-processor
+
+}).hook('view:process', function (view) {
+
+    // Prism code syntax highlighter
+    view.find('code').each(function (i, block) {
+        this.addClass('language-javascript');
+        Prism.highlightElement(block);
+    });
+
+    // Force opening of all non-local links in a new window
+    zuix.$('a[href*="://"]').attr('target','_blank');
+
+    // Material Design Light  DOM upgrade
+    if (componentHandler) {
+        setTimeout(function () {
+            componentHandler.upgradeElements(view.get());
+        }, 500);
+    }
+
+});
+```
+ *
+ * @param {string} eventPath The event path.
+ * @param {function} eventHandler The handler function.
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
-Zuix.prototype.hook = function (path, handler) {
-    hook(path, handler);
+Zuix.prototype.hook = function (eventPath, eventHandler) {
+    hook(eventPath, eventHandler);
     return this;
 };
 /**
@@ -746,7 +810,7 @@ Zuix.prototype.hook = function (path, handler) {
  * @param {Object} context
  * @param {string} path
  * @param {object} data
- * @return {Zuix}
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.trigger = function (context, path, data) {
     trigger(context, path, data);

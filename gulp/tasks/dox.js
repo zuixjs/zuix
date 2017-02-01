@@ -5,6 +5,12 @@ module.exports = function () {
     gulp.src('./src/js/zuix/Zuix.js')
         .pipe(dox({ raw: true }))
         .pipe(gulp.dest('./docs/content/api'));
+    gulp.src('./src/js/zuix/ComponentContext.js')
+        .pipe(dox({ raw: true }))
+        .pipe(gulp.dest('./docs/content/api'));
+    gulp.src('./src/js/zuix/ContextController.js')
+        .pipe(dox({ raw: true }))
+        .pipe(gulp.dest('./docs/content/api'));
     gulp.src('./src/js/helpers/ZxQuery.js')
         .pipe(dox({ raw: true }))
         .pipe(gulp.dest('./docs/content/api'));

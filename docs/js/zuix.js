@@ -608,14 +608,14 @@ ZxQuery.prototype.removeClass = function (className) {
 };
 /**
  * Moves to the previous sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object
+ * @return {ZxQuery} A new *ZxQuery* object with the previous sibling element.
  */
 ZxQuery.prototype.prev = function () {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
 /**
  * Moves to the next sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object
+ * @return {ZxQuery} A new *ZxQuery* object with the next sibling element.
  */
 ZxQuery.prototype.next = function () {
     return new ZxQuery(this._selection[0].nextElementSibling);
@@ -623,7 +623,7 @@ ZxQuery.prototype.next = function () {
 /**
  * Gets or sets the HTML markup.
  * @param {string|undefined} [htmlText] HTML markup text.
- * @return {ZxQuery}
+ * @return {ZxQuery|string}
  */
 ZxQuery.prototype.html = function (htmlText) {
     if (util.isNoU(htmlText))
@@ -658,7 +658,7 @@ ZxQuery.prototype.prepend = function (el) {
     return this;
 };
 /**
- * Gets or sets the css display property.
+ * Gets or sets the css `display` property.
  * @param {string|undefined} [mode] The display value.
  * @return {string|ZxQuery} The *display* css value when no *mode* specified, otherwise the *ZxQuery* object itself
  */
@@ -671,7 +671,7 @@ ZxQuery.prototype.display = function (mode) {
     return this;
 };
 /**
- * Gets or sets the css visibility property.
+ * Gets or sets the css `visibility` property.
  * @param {string|undefined} [mode] The visibility value.
  * @return {string|ZxQuery} The *visibility* css value when no *mode* specified, otherwise the *ZxQuery* object itself
  */
@@ -684,14 +684,14 @@ ZxQuery.prototype.visibility = function (mode) {
     return this;
 };
 /**
- * Sets the css display property to ''.
+ * Sets the css `display` property to ''.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.show = function () {
     return this.display('');
 };
 /**
- * Sets the css display property to 'none'.
+ * Sets the css `display` property to 'none'.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.hide = function () {
@@ -783,8 +783,22 @@ z$.wrapCss = function (wrapperRule, css) {
     var wrapReX = /([.,\w])([^/{};]+)({)/g;
     var r, result = null, wrappedCss = '';
     while (r = wrapReX.exec(css)) {
-        if (result != null)
-            wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);
+        if (result != null) {
+            var rule = css.substring(result.index, r.index);
+            var splitReX = /(.*)[^s]\{([^\}]+)[\}]/g; // [^{]
+            var ruleParts = splitReX.exec(rule);
+            if (ruleParts != null && ruleParts.length > 1) {
+                var classes = ruleParts[1].split(',');
+                z$.each(classes, function (k, v) {
+                    wrappedCss += '\n' + wrapperRule + '\n' + v;
+                    if (k < classes.length - 1)
+                        wrappedCss += ', ';
+                });
+                wrappedCss += ' {' + ruleParts[2] + '}\n';
+            } else {
+                console.log('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);
+            }
+        }
         result = r;
     }
     if (result != null)
@@ -1021,211 +1035,30 @@ function ComponentContext(options, eventCallback) {
 
     return this;
 }
-
-ComponentContext.prototype.options = function (options) {
-    if (options == null)
-        return this._options;
-    this._options = options;
-    if (options.componentId != null)
-        this.componentId = options.componentId;
-    this.container(options.container);
-    this.view(options.view);
-    if (typeof options.css !== 'undefined')
-        this.style(options.css);
-    this.controller(options.controller);
-    this.model(options.model);
-    return this;
-};
-
 /**
- * TODO: describe
- * @event ComponentContext#ready
- * @param {ComponentContext} context The component context instance.
- */
-ComponentContext.prototype.ready = function (context) {
-};
-
-/**
- * TODO: describe
- * @event ComponentContext#error
- * @param {ComponentContext} context The component context instance.
- * @param {Object} error The error object
- */
-ComponentContext.prototype.error = function (context, error) {
-};
-
-
-/**
- * TODO: describe
- * @param a
- * @param b
- */
-ComponentContext.prototype.on = function (a, b) {
-    // TODO: throw error if _c (controller instance) is not yet ready
-    return this._c.on(a, b);
-};
-
-/***
+ * Gets/Sets the component's container element.
+ * Returns the current component element if no
+ * argument is passed, the {ComponentContext} itself
+ * otherwise.
  *
- * @param {ContextModel|undefined} [model]
- * @returns {ComponentContext|Object}
- */
-ComponentContext.prototype.model = function (model) {
-    if (typeof model === 'undefined') return this._model;
-    else this._model = model; // model can be set to null
-    this.modelToView();
-    return this;
-};
-/**
- *
- * @return {ComponentContext}
- */
-ComponentContext.prototype.viewToModel = function() {
-    var _t = this;
-    this._model = {};
-    // create data model from inline view fields
-    z$(this._view).find('[data-ui-field]').each(function(i, el) {
-        if (this.parent('pre,code').length() > 0)
-            return true;
-        var name = this.attr('data-ui-field');
-        var value = '';
-        switch(el.tagName.toLowerCase()) {
-            // TODO: complete binding cases
-            case 'img':
-                value = el.src;
-                break;
-            case 'input':
-                value = el.value;
-                break;
-            default:
-                value = el.innerHTML;
-        }
-        // dotted field path
-        if (name.indexOf('.')>0) {
-            var path = name.split('.');
-            var cur = _t._model;
-            for (var p = 0; p < path.length - 1; p++) {
-                if (typeof cur[path[p]] === 'undefined')
-                    cur[path[p]] = {};
-                cur = cur[path[p]];
-            }
-            cur[path[path.length - 1]] = value;
-        } else _t._model[name] = value;
-    });
-    return this;
-};
-/**
- *
- * @return {ComponentContext}
- */
-ComponentContext.prototype.modelToView = function () {
-    if (this._view != null && this._model != null) {
-        var _t = this;
-        z$(this._view).find('[data-ui-field]').each(function(i, el) {
-            if (this.parent('pre,code').length() > 0)
-                return true;
-            var boundField = this.attr('data-bind-to');
-            if (boundField == null)
-                boundField = this.attr('data-ui-field');
-            if (typeof _t._model === 'function')
-                (_t._model).call(z$(_t._view), this, boundField);
-            else {
-                var boundData = util.propertyFromPath(_t._model, boundField);
-                if (typeof boundData === 'function') {
-                    (boundData).call(z$(_t._view), this, boundField);
-                } else if (boundData != null) {
-                    // try to guess target property
-                    switch (el.tagName.toLowerCase()) {
-                        // TODO: complete binding cases
-                        case 'img':
-                            el.src = boundData;
-                            break;
-                        case 'input':
-                            el.value = boundData;
-                            break;
-                        default:
-                            el.innerHTML = boundData;
-                    }
-                }
-            }
-        });
-        // TODO: deprecate this
-        //if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
-        //    this._c.refresh();
-    }
-    return this;
-};
-
-/***
- *
- * @param {string|Element|undefined} [css]
+ * @param {Element} [container] The container element.
  * @returns {ComponentContext|Element}
  */
-ComponentContext.prototype.style = function (css) {
-    if (typeof css === 'undefined') return this._style;
-    if (css == null || css instanceof Element) {
-
-        this._css = (css instanceof Element) ? css.innerText : css;
-        this._style = z$.appendCss(css, this._style);
-
-    } else if (typeof css === 'string') {
-
-        // store original unparsed css (might be useful for debugging)
-        this._css = css;
-
-        // nest the CSS inside [data-ui-component='<componentId>']
-        // so that the style is only applied to this component type
-        css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
-
-        // trigger `css:parse` hook before assigning content to the view
-        var hookData = { content: css };
-        this.trigger(this, 'css:parse', hookData);
-        css = hookData.content;
-
-        // output css
-        this._style = z$.appendCss(css, this._style);
-
-    }
-    // TODO: should throw error if ```css``` is not a valid type
+ComponentContext.prototype.container = function (container) {
+    // TODO: should automatically re-attach view to the new parent?
+    if (container == null) return this._container;
+    else this._container = container;
     return this;
 };
+
 /**
+ * Gets/Sets the component's view element.
+ * If an *HTML* string is passed, the the view element
+ * will be a new `div` wrapping the given markup.
+ * Returns the current view element if no
+ * argument is passed, the {ComponentContext} itself otherwise.
  *
- * @param callback
- * @returns {ComponentContext}
- */
-ComponentContext.prototype.loadCss = function (options) {
-    var context = this;
-
-    var cssPath = context.componentId + ".css?" + new Date().getTime();
-    if (util.isNoU(options)) options = {};
-    if (!util.isNoU(options.path))
-        cssPath = options.path;
-
-    z$.ajax({
-        url: cssPath,
-        success: function (viewCss) {
-            context.style(viewCss);
-            if (util.isFunction(options.success))
-                (options.success).call(context);
-        },
-        error: function (err) {
-            console.log(err, context);
-            if (util.isFunction(options.error))
-                (options.error).call(context, err);
-        },
-        then: function () {
-            if (util.isFunction(options.then))
-                (options.then).call(context);
-        }
-    });
-
-    return this;
-};
-
-/***
- *
- * @param {Element|string|undefined} [view]
+ * @param {Element|string|undefined} [view] The view *HTML* string or element.
  * @returns {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
@@ -1295,14 +1128,216 @@ ComponentContext.prototype.view = function (view) {
 
     return this;
 };
+
+/**
+ * Gets/Sets the component's view style.
+ * The `css` argument can be a string containing all
+ * styles definitions or a reference to a style
+ * element. When a string is passed the css
+ * is linked to the `componentId` attribute so that
+ * its styles will be only applied to the component
+ * container.
+ * If no argument is given, then the current style
+ * element is returned.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.style("p { font-size: 120%; } .hidden { display: 'none'; }");
+ * </code></pre>
+ *
+ * @param {string|Element|undefined} [css] The CSS string or element.
+ * @returns {ComponentContext|Element}
+ */
+ComponentContext.prototype.style = function (css) {
+    if (typeof css === 'undefined') return this._style;
+    if (css == null || css instanceof Element) {
+
+        this._css = (css instanceof Element) ? css.innerText : css;
+        this._style = z$.appendCss(css, this._style);
+
+    } else if (typeof css === 'string') {
+
+        // store original unparsed css (might be useful for debugging)
+        this._css = css;
+
+        // nest the CSS inside [data-ui-component='<componentId>']
+        // so that the style is only applied to this component type
+        css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
+
+        // trigger `css:parse` hook before assigning content to the view
+        var hookData = { content: css };
+        this.trigger(this, 'css:parse', hookData);
+        css = hookData.content;
+
+        // output css
+        this._style = z$.appendCss(css, this._style);
+
+    }
+    // TODO: should throw error if ```css``` is not a valid type
+    return this;
+};
+/**
+ * Gets/Sets the component's data model.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.model({
+ *      title: 'Thoughts',
+ *      message: 'She stared through the window at the stars.'
+ *  });
+ * </code></pre>
+ *
+ * @param {object|undefined} [model] The model object.
+ * @returns {ComponentContext|object}
+ */
+ComponentContext.prototype.model = function (model) {
+    if (typeof model === 'undefined') return this._model;
+    else this._model = model; // model can be set to null
+    this.modelToView();
+    return this;
+};
+/**
+ * Gets/Sets the controller handler function.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.controller(function(cp) {
+ *      cp.create = function() {
+ *           cp.view().html('Hello World!');
+ *      };
+ *      // ...
+ *  });
+ * </code></pre>
+ *
+ * @param {ContextControllerHandler|undefined} [controller] The controller handler function.
+ * @returns {ComponentContext|ContextControllerHandler}
+ */
+ComponentContext.prototype.controller = function (controller) {
+    if (typeof controller === 'undefined') return this._controller;
+    // TODO: should dispose previous context controller first
+    else this._controller = controller; // can be null
+    return this;
+};
+
+/**
+ * Gets/Sets the component options.
+ *
+ * @param {{ContextOptions}|undefined} options The JSON options object.
+ * @return {ComponentContext|object}
+ */
+ComponentContext.prototype.options = function (options) {
+    if (options == null)
+        return this._options;
+    this._options = options;
+    if (options.componentId != null)
+        this.componentId = options.componentId;
+    this.container(options.container);
+    this.view(options.view);
+    if (typeof options.css !== 'undefined')
+        this.style(options.css);
+    this.controller(options.controller);
+    this.model(options.model);
+    return this;
+};
+
+/**
+ * Listen for a component event.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.on('item:share', function(evt, data) { ... });
+ * </code></pre>
+ *
+ * @param {string} eventPath The event path.
+ * @param {EventCallback} eventHandler The event handler function.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+ComponentContext.prototype.on = function (eventPath, eventHandler) {
+    // TODO: throw error if _c (controller instance) is not yet ready
+    this._c.on(eventPath, eventHandler);
+    return this;
+};
+/**
+ * Load the `.css` file and replace the component's view style.
+ * If no `options.path` is specified, it will try to load
+ * the file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.css' by default
+ * ctx.loadCss();
+ * // or loads the view's css with options
+ * ctx.loadCss({
+ *     path: 'url/of/style/file.css',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @private
+ * @param {object} [options] The options object.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+ComponentContext.prototype.loadCss = function (options) {
+    var context = this;
+    var cssPath = context.componentId + ".css?" + new Date().getTime();
+    if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.path))
+        cssPath = options.path;
+    z$.ajax({
+        url: cssPath,
+        success: function (viewCss) {
+            context.style(viewCss);
+            if (util.isFunction(options.success))
+                (options.success).call(context);
+        },
+        error: function (err) {
+            console.log(err, context);
+            if (util.isFunction(options.error))
+                (options.error).call(context, err);
+        },
+        then: function () {
+            if (util.isFunction(options.then))
+                (options.then).call(context);
+        }
+    });
+    return this;
+};
+/**
+ * Load the `.html` file and replace the component's view markup.
+ * If no `options.path` is specified, it will try to load the
+ * file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.html' by default
+ * ctx.loadHtml();
+ * // or loads the view's html with options
+ * ctx.loadHtml({
+ *     path: 'url/of/view/file.html',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @private
+ * @param {object} [options] The options object.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
 ComponentContext.prototype.loadHtml = function(options) {
     var context = this;
-
     var htmlPath = context.componentId;
     if (util.isNoU(options)) options = {};
     if (!util.isNoU(options.path))
         htmlPath = options.path;
-
     // TODO: check if view caching is working in this case too
     var inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
     if (inlineView.length() > 0) {
@@ -1337,33 +1372,88 @@ ComponentContext.prototype.loadHtml = function(options) {
             }
         });
     }
-
     return this;
 };
-
-/***
+/**
+ * Create the data model starting from ```data-ui-field```
+ * elements declared in the component's view.
  *
- * @param {ContextControllerHandler|undefined} [controller]
- * @returns {ComponentContext|ContextControllerHandler}
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.controller = function (controller) {
-    if (typeof controller === 'undefined') return this._controller;
-    // TODO: should dispose previous context controller first
-    else this._controller = controller; // can be null
+ComponentContext.prototype.viewToModel = function() {
+    var _t = this;
+    this._model = {};
+    // create data model from inline view fields
+    z$(this._view).find('[data-ui-field]').each(function(i, el) {
+        if (this.parent('pre,code').length() > 0)
+            return true;
+        var name = this.attr('data-ui-field');
+        var value = '';
+        switch(el.tagName.toLowerCase()) {
+            // TODO: complete binding cases
+            case 'img':
+                value = el.src;
+                break;
+            case 'input':
+                value = el.value;
+                break;
+            default:
+                value = el.innerHTML;
+        }
+        // dotted field path
+        if (name.indexOf('.')>0) {
+            var path = name.split('.');
+            var cur = _t._model;
+            for (var p = 0; p < path.length - 1; p++) {
+                if (typeof cur[path[p]] === 'undefined')
+                    cur[path[p]] = {};
+                cur = cur[path[p]];
+            }
+            cur[path[path.length - 1]] = value;
+        } else _t._model[name] = value;
+    });
     return this;
 };
-/***
+/**
+ * Copy values from the data model to the ```data-ui-field``
+ * elements declared in the component's view.
  *
- * @param {ViewContainer} [container]
- * @returns {ComponentContext|Node}
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.container = function (container) {
-    // TODO: should automatically re-attach view to the new parent?
-    if (container == null) return this._container;
-    else this._container = container;
+ComponentContext.prototype.modelToView = function () {
+    if (this._view != null && this._model != null) {
+        var _t = this;
+        z$(this._view).find('[data-ui-field]').each(function(i, el) {
+            if (this.parent('pre,code').length() > 0)
+                return true;
+            var boundField = this.attr('data-bind-to');
+            if (boundField == null)
+                boundField = this.attr('data-ui-field');
+            if (typeof _t._model === 'function')
+                (_t._model).call(z$(_t._view), this, boundField);
+            else {
+                var boundData = util.propertyFromPath(_t._model, boundField);
+                if (typeof boundData === 'function') {
+                    (boundData).call(z$(_t._view), this, boundField);
+                } else if (boundData != null) {
+                    // try to guess target property
+                    switch (el.tagName.toLowerCase()) {
+                        // TODO: complete binding cases
+                        case 'img':
+                            el.src = boundData;
+                            break;
+                        case 'input':
+                            el.value = boundData;
+                            break;
+                        default:
+                            el.innerHTML = boundData;
+                    }
+                }
+            }
+        });
+    }
     return this;
 };
-
 
 module.exports = ComponentContext;
 },{"../helpers/Util":2,"../helpers/ZxQuery":3}],6:[function(_dereq_,module,exports){
@@ -1398,7 +1488,6 @@ module.exports = ComponentContext;
 var z$ =
     _dereq_('../helpers/ZxQuery');
 
-
 /**
  * TODO: complete JSDoc
  *
@@ -1409,44 +1498,21 @@ var z$ =
 function ContextController(context) {
     var _t = this;
 
-    /** @protected */
-    this.context = context;
-
-    // TODO: should improve/deprecate this.componentId?
-    this.componentId = context.componentId;
-
     this._view = null;
-    /**
-     * TODO: desc
-     *
-     * @param what {(Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined)}
-     * @return {ZxQuery}
-     */
-    this.view = function (what) {
-        if (context.view() != null || this._view !== context.view())
-            return this._view = (what == null ? z$(context.view())
-                : typeof what === 'string' ? z$(context.view()).find(what)
-                    : z$(what));
-        else if (this._view !== null)
-            return this._view;
-        else
-            throw({
-                message: 'Not attacched to a view yet.',
-                source: this
-            });
-    };
-    /** @type {object} */
-    this.model = function (model) {
-        return context.model(model)
-    };
+
+    this.context = context;
     /** @type {function} */
-    this.expose = function (methodName, handler) {
-        context[methodName] = handler;
-    };
-    /** @type {function} */
-    this.behavior = function () {
+/*    this.behavior = function () {
         return context.behavior;
-    };
+    };*/
+
+    /** @protected */
+    this._fieldCache = [];
+
+    /** @type {function} */
+    this.create = null;
+    /** @type {function} */
+    this.destroy = null;
 
     /** @protected */
     this._childNodes = [];
@@ -1467,36 +1533,10 @@ function ContextController(context) {
         }
     };
 
-    /** @type {function} */
-    this.loadHtml = function(options) {
-        this.saveView();
-        return context.loadHtml(options);
-    };
-
-    /** @type {function} */
-    this.loadCss = function(options) {
-        return context.loadCss(options);
-    };
-
-    /** @protected */
-    this._fieldCache = [];
-
-    /** @type {function} */
-    this.create = null;
-    /** @type {function} */
-    this.destroy = null;
-
-    /** @type {function} */
-    this.trigger = function (eventPath, eventData) {
-        if (context._eventMap[eventPath] == null)
-            this.addEvent(this.view(), eventPath, null);
-        // TODO: ...
-        _t.view().trigger(eventPath, eventData);
-    };
-    /** @type {function} */
     this.on = function (eventPath, handler_fn) {
         this.addEvent(this.view(), eventPath, handler_fn);
         // TODO: implement automatic event unbinding (off) in super().destroy()
+        return this;
     };
     /** @protected */
     this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
@@ -1551,35 +1591,258 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
     this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
     return this;
 };
-/***
- * Search and cache this view elements.
+
+/**
+ * Gets elements in the component's view with `data-ui-field`
+ * matching the given `fieldName`.
  *
- * @param {!string} field Name of the `data-ui-field` to search
- * @returns {ZxQuery}
+ * @example
+ *
+<small>**Example - View's HTML**</small>
+```html
+<h1 data-ui-field="title">...</h1>
+<p data-ui-field="description">...</p>
+```
+
+<small>**Example - JavaScript**</small>
+```js
+cp.field('title')
+  .html('Hello World!');
+var desc = cp.field('description');
+desc.html('The spectacle before us was indeed sublime.');
+```
+ *
+ *
+ * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
+ * @returns {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
-ContextController.prototype.field = function (field) {
+ContextController.prototype.field = function (fieldName) {
     var _t = this, el = null;
-    if (typeof this._fieldCache[field] === 'undefined') {
-        el = this.view().find('[data-ui-field=' + field + ']');
+    if (typeof this._fieldCache[fieldName] === 'undefined') {
+        el = this.view().find('[data-ui-field=' + fieldName + ']');
         if (el != null) {
+            // TODO: add this override to API docs
             // ZxQuery base methods override
-            el.on = function (eventPath, eventHandler) {
+            el.on = function (eventPath, eventHandler, eventData, isHook) {
                 if (typeof eventHandler === 'string') {
                     var eh = eventHandler;
-                    eventHandler = function () { _t.trigger(eh); }
+                    eventHandler = function () { _t.trigger(eh, eventData, isHook); }
                 }
                 z$.ZxQuery.prototype.on.call(el, eventPath, eventHandler);
             };
-            this._fieldCache[field] = el;
+            this._fieldCache[fieldName] = el;
         }
     } else {
-        el = this._fieldCache[field];
+        el = this._fieldCache[fieldName];
     }
     return el;
 };
 ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;
 };
+/**
+ * Gets the component's view or the view elements matching
+ * the given `filter` in which case acts as a shorthand for
+ * `cp.view().find(filter)`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // get all `checkbox` elements with `.checked` class.
+ * var choices = cp.view('input[type="checkbox"].checked');
+ * choices.removeClass('.checked');
+ * // hide the component's view
+ * cp.view().hide();
+ * </code></pre>
+ *
+ * @param {(string|undefined)} [filter]
+ * @return {ZxQuery}
+ */
+ContextController.prototype.view = function (filter) {
+    if (this.context.view() != null || this._view !== this.context.view())
+        this._view = z$(this.context.view());
+    if (filter != null)
+        return this._view.find(filter);
+    else if (this._view !== null)
+        return this._view;
+    else
+        throw({
+            message: 'Not attacched to a view yet.',
+            source: this
+        });
+};
+/**
+ * Gets/Sets the component's data model.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * var m = {
+ *      title: 'Thoughts',
+ *      message: 'She stared through the window at the stars.'
+ *  };
+ * cp.model(m);
+ * cp.model().title = 'Changes';
+ * console.log(cp.model().title);
+ * </code></pre>
+ *
+ * @param {object|undefined} [model] The model object.
+ * @return {ContextController|object}
+ */
+ContextController.prototype.model = function (model) {
+    if (model == null)
+        return this.context.model();
+    else this.context.model(model);
+    return this;
+};
+/**
+ * Gets the component options.
+ *
+ * @return {object} The component options.
+ */
+ContextController.prototype.options = function () {
+    return this.context.options();
+};
+/**
+ * Triggers the component event `eventPath` with the given
+ * `eventData` object. To listen a component event use the
+ * `{ComponentContext}.on(eventPath, handler)` method or
+ * in case `isHook` is set to true, use the
+ * `zuix.hook(eventPath, handler)` method.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+// somewhere inside the slide-show component controller
+cp.trigger('slide:change', slideIndex);
+
+// somewhere in a page hosting the slide-show component
+// set component's event listeners
+zuix.context('my-slide-show')
+  .on('slide:change', function(slideIndex) { ... })
+  .on(...);
+ * </code></pre>
+ *
+ * @param {string} eventPath The event path.
+ * @param {object} eventData The event data.
+ * @param {boolean} [isHook] Trigger as global hook event.
+ * @return {ContextController}
+ */
+ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
+    if (this.context._eventMap[eventPath] == null && isHook !== true)
+        this.addEvent(this.view(), eventPath, null);
+    // TODO: ...
+    if (isHook === true)
+        this.context.trigger(this.context, eventPath, eventData);
+    else
+        this.view().trigger(eventPath, eventData);
+    return this;
+};
+/**
+ *  Expose in the component context a property or method
+ *  defined in the controller.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre data-line="5"><code class="language-js">
+ * // somewhere in the `create` method of the {ContextController}
+ * zuix.controller(function(cp){
+ *   cp.create = function() {
+ *     // ....
+ *     cp.expose('setSlide', slide);
+ *   }
+ *   // ...
+ *   function slide(slideIndex) { ... }
+ *   // ...
+ * });
+ * // ...
+ * // calling the exposed method from the instance of
+ * // the component.
+ * var ctx = zuix.context('my-slide-show');
+ * ctx.setSlide(2);
+ * </code></pre>
+ *
+ *
+ * @param {string} methodName Name of the exposed function.
+ * @param {function} handler Reference to the controller member to expose.
+ * @return {ContextController} The `{ContextController}` itself.
+ */
+ContextController.prototype.expose = function (methodName, handler) {
+    this.context[methodName] = handler;
+    return this;
+};
+/**
+ * Load the `.css` file and replace the component's view style.
+ * If no `options.path` is specified, it will try to load
+ * the file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.css' by default
+ * cp.loadCss();
+ * // or loads the view's css with options
+ * cp.loadCss({
+ *     path: 'url/of/style/file.css',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @param {object} [options] The options object.
+ * @return {ContextController} The ```{ContextController}``` object itself.
+ */
+ContextController.prototype.loadCss = function(options) {
+    this.context.loadCss(options);
+    return this;
+};
+/**
+ * Load the `.html` file and replace the component's view markup.
+ * If no `options.path` is specified, it will try to load the
+ * file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.html' by default
+ * cp.loadHtml();
+ * // or loads the view's html with options
+ * cp.loadHtml({
+ *     path: 'url/of/view/file.html',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @param {object} [options] The options object.
+ * @return {ContextController} The ```{ContextController}``` object itself.
+ */
+ContextController.prototype.loadHtml = function(options) {
+    this.saveView();
+    this.context.loadHtml(options);
+    return this;
+};
+/**
+ * Register as default controller for the given component type.
+ *
+ * @example
+<small>**Example - JavaScript**</small>
+<pre data-line="6"><code class="language-js">
+// Controller of component 'path/to/component_name'
+var ctrl = zuix.controller(function(cp) {
+    // `cp` is the {ContextController}
+    cp.create = function() { ... };
+    cp.destroy = function() { ... }
+}).for('path/to/component_name');
+</pre></code>
+ *
+ * @param {!string} componentId Component identifier.
+ * @return {ContextController} The `{ContextController}` itself.
+ */
+ContextController.prototype.for = function (componentId) { return this; };
+
 
 module.exports = ContextController;
 },{"../helpers/ZxQuery":3}],7:[function(_dereq_,module,exports){
@@ -1684,12 +1947,12 @@ function controller(handler) {
 }
 
 /**
- * Searches and returns elements with `data-ui-field`
+ * Gets elements with `data-ui-field`
  * attribute matching the given `fieldName`.
  *
  * @private
- * @param {!string} fieldName The class to check for.
- * @param {!Element} [container] Starting DOM element for this search (**default:** ```document```)
+ * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
+ * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
  * @return {ZxQuery}
  */
 function field(fieldName, container) {
@@ -1785,6 +2048,10 @@ function loadInline(element) {
     var model = v.attr('data-bind-model');
     if (!util.isNoU(model) && model.length > 0)
         options.model = util.propertyFromPath(window, model);
+
+    var contextId = v.attr('data-ui-context');
+    if (!util.isNoU(contextId))
+        options.contextId = contextId;
 
     // TODO: Behavior are also definable in "data-ui-behavior" attribute
     // TODO: Events are also definable in "data-ui-on" attribute
@@ -1936,13 +2203,15 @@ function createContext(options) {
  * TODO: desc
  *
  * @private
- * @param {Element} contextId
+ * @param {Element|ZxQuery|object} contextId
  * @return {ComponentContext}
  */
 function context(contextId) {
     var context = null;
+    if (contextId instanceof z$.ZxQuery)
+        contextId = contextId.get();
     z$.each(_contextRoot, function (k, v) {
-        if ((contextId instanceof Element && v.view() === contextId)
+        if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId))
             || util.objectEquals(v.contextId, contextId)) {
             context = v;
             return false;
@@ -1981,7 +2250,7 @@ function trigger(context, path, data) {
 
     // TODO: call all registered callback
     if (util.isFunction(_hooksCallbacks[path]))
-        _hooksCallbacks[path].call(context, path, data);
+        _hooksCallbacks[path].call(context, data);
 
     // ZUIX Componentizer is the last executed hook (built-in)
     if (path == 'view:process')
@@ -2108,9 +2377,8 @@ function initComponent(context) {
     if (util.isFunction(context.controller())) {
         /** @type {ContextController} */
         var c = context._c = new ContextController(context);
-
         if (!util.isNoU(c.view())) {
-            c.view().attr('data-ui-component', c.componentId);
+            c.view().attr('data-ui-component', context.componentId);
             // if no model is supplied, try auto-create from view fields
             if (util.isNoU(context.model()) && !util.isNoU(context.view()))
                 context.viewToModel();
@@ -2126,17 +2394,10 @@ function initComponent(context) {
                 if (context.options().html !== false)
                     context.loadHtml();
             }
-
             c.view().css('visibility', '');
         }
-
-        // TODO: review/improve life-cycle
-
         if (util.isFunction(c.create)) c.create();
         c.trigger('view:create');
-
-        // TODO: is this to be deprecated?
-        //if (util.isFunction(c.resume)) c.resume();
     }
     if (util.isFunction(context.ready))
         (context.ready).call(context);
@@ -2183,15 +2444,20 @@ if (_isCrawlerBotClient)
  * @example
  *
 <small>**Example - JavaScript**</small>
-```js
+<pre data-line="2"><code class="language-js">
 // Controller of component 'path/to/component_name'
 var ctrl = zuix.controller(function(cp) {
+    // `cp` is the {ContextController}
     cp.create = function() { ... };
     cp.destroy = function() { ... }
 }).for('path/to/component_name');
-```
+</pre></code>
  *
- * @param {ContextControllerHandler} handler The controller handler function.
+ * @param {ContextControllerHandler} handler The controller handler
+ * function ```function(context_controller){ ... } ```,
+ * where `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)
+ * object that is passed to the handler once the component
+ * is created.
  * @return {ContextControllerHandler} The initialized controller handler.
  */
 Zuix.prototype.controller = controller;
@@ -2215,8 +2481,8 @@ containerDiv.html('Hello World!');
 ```
  *
  * @param {!string} fieldName The class to check for.
- * @param {!Element} [container] Starting DOM element for this search (**default:** ```document```)
- * @return {ZxQuery}
+ * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
+ * @return {ZxQuery} The ``{ZxQuery}```-wrapped elements with matching ```data-ui-field``` attribute.
  */
 Zuix.prototype.field = field;
 /**
@@ -2233,8 +2499,8 @@ Zuix.prototype.field = field;
 zuix.componentize(document);
 ```
  *
- * @param {Element} [element] Optional container to use as starting node for the search.
- * @return {Zuix}
+ * @param {Element} [element] Container to use as starting node for the search (**default:** *document*).
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.componentize = function (element) {
     componentize(element);
@@ -2278,7 +2544,7 @@ ctx.test();
  *
  * @param {!string} componentId The identifier name of the component to be loaded.
  * @param {ContextOptions} [options] Options used to initialize the loaded component.
- * @return {ComponentContext}
+ * @return {ComponentContext} The component instance context.
  */
 Zuix.prototype.load = load;
 /**
@@ -2292,37 +2558,90 @@ zuix.unload(ctx);
 ```
  *
  * @param {ComponentContext} context The `ComponentContext` instance of the component to be unloaded.
- * @return {Zuix}
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.unload = function (context) {
     unload(context);
     return this;
 };
 /**
- * Get the `ComponentContext`, given
- * the component's view or container element.
+ * Get the `ComponentContext`, given its `contextId`
+ * or component's container/view element.
  *
  * @example
- *
+<small>**Example - HTML**</small>
+```html
+<div data-ui-load="site/components/slideshow"
+     data-ui-context="my-slide-show">...</div>
+```
 <small>**Example - JavaScript**</small>
 ```js
-var ctx = zuix.context(containerDiv);
+var slideShowDiv = zuix.$.find('[data-ui-context="my-slide-show"]');
+var ctx = zuix.context(slideShowDiv);
+// or
+var ctx = zuix.context('my-slide-show');
+// call component's exposed methods
+ctx.setSlide(1);
 ```
  *
- * @private
- * @param {Element} contextId
- * @return {ComponentContext}
+ * @param {Element|ZxQuery|object} contextId The `contextId` object
+ * (usually a string) or the component's container/view element.
+ * @return {ComponentContext} The matching component context.
  */
 Zuix.prototype.context = context;
 /**
- * TODO: desc
+ * Set handlers for global events hooks.
  *
- * @param {string} path
- * @param {function} handler
- * @return {Zuix}
+ Standard *ZUIX* hooks list:
+ - <i class="material-icons">flash_on</i> load:begin
+ - <i class="material-icons">flash_on</i> load:step
+ - <i class="material-icons">flash_on</i> load:next
+ - <i class="material-icons">flash_on</i> load:end
+ - <i class="material-icons">flash_on</i> html:parse
+ - <i class="material-icons">flash_on</i> css:parse
+ - <i class="material-icons">flash_on</i> view:process
+ *
+<small>**Example - JavaScript**</small>
+```js
+zuix
+  .hook('load:begin', function(eventPath, eventData){
+    loaderMessage.show();
+
+}).hook('load:end', function(eventPath, eventData){
+    loaderMessage.hide();
+
+}).hook('html:parse', function (eventPath, eventData) {
+    // ShowDown - Markdown compiler
+    if (this.options().markdown === true && typeof showdown !== 'undefined')
+        eventData.content = new showdown.Converter().makeHtml(eventData.content);
+
+}).hook('css:parse', function (eventPath, eventData) {
+    // run a CSS pre-processor
+
+}).hook('view:process', function (eventPath, eventData) {
+    // Prism code syntax highlighter
+    eventData.find('code').each(function (i, block) {
+        this.addClass('language-javascript');
+        Prism.highlightElement(block);
+    });
+    // Force opening of all non-local links in a new window
+    zuix.$('a[href*="://"]').attr('target','_blank');
+
+    // Material Design Light  DOM upgrade
+    if (componentHandler) {
+        setTimeout(function () {
+            componentHandler.upgradeElements(eventData.get());
+        }, 500);
+    }
+});
+```
+ *
+ * @param {string} eventPath The event path.
+ * @param {function} eventHandler The handler function.
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
-Zuix.prototype.hook = function (path, handler) {
-    hook(path, handler);
+Zuix.prototype.hook = function (eventPath, eventHandler) {
+    hook(eventPath, eventHandler);
     return this;
 };
 /**
@@ -2331,7 +2650,7 @@ Zuix.prototype.hook = function (path, handler) {
  * @param {Object} context
  * @param {string} path
  * @param {object} data
- * @return {Zuix}
+ * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.trigger = function (context, path, data) {
     trigger(context, path, data);

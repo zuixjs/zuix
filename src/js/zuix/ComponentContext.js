@@ -90,211 +90,30 @@ function ComponentContext(options, eventCallback) {
 
     return this;
 }
-
-ComponentContext.prototype.options = function (options) {
-    if (options == null)
-        return this._options;
-    this._options = options;
-    if (options.componentId != null)
-        this.componentId = options.componentId;
-    this.container(options.container);
-    this.view(options.view);
-    if (typeof options.css !== 'undefined')
-        this.style(options.css);
-    this.controller(options.controller);
-    this.model(options.model);
-    return this;
-};
-
 /**
- * TODO: describe
- * @event ComponentContext#ready
- * @param {ComponentContext} context The component context instance.
- */
-ComponentContext.prototype.ready = function (context) {
-};
-
-/**
- * TODO: describe
- * @event ComponentContext#error
- * @param {ComponentContext} context The component context instance.
- * @param {Object} error The error object
- */
-ComponentContext.prototype.error = function (context, error) {
-};
-
-
-/**
- * TODO: describe
- * @param a
- * @param b
- */
-ComponentContext.prototype.on = function (a, b) {
-    // TODO: throw error if _c (controller instance) is not yet ready
-    return this._c.on(a, b);
-};
-
-/***
+ * Gets/Sets the component's container element.
+ * Returns the current component element if no
+ * argument is passed, the {ComponentContext} itself
+ * otherwise.
  *
- * @param {ContextModel|undefined} [model]
- * @returns {ComponentContext|Object}
- */
-ComponentContext.prototype.model = function (model) {
-    if (typeof model === 'undefined') return this._model;
-    else this._model = model; // model can be set to null
-    this.modelToView();
-    return this;
-};
-/**
- *
- * @return {ComponentContext}
- */
-ComponentContext.prototype.viewToModel = function() {
-    var _t = this;
-    this._model = {};
-    // create data model from inline view fields
-    z$(this._view).find('[data-ui-field]').each(function(i, el) {
-        if (this.parent('pre,code').length() > 0)
-            return true;
-        var name = this.attr('data-ui-field');
-        var value = '';
-        switch(el.tagName.toLowerCase()) {
-            // TODO: complete binding cases
-            case 'img':
-                value = el.src;
-                break;
-            case 'input':
-                value = el.value;
-                break;
-            default:
-                value = el.innerHTML;
-        }
-        // dotted field path
-        if (name.indexOf('.')>0) {
-            var path = name.split('.');
-            var cur = _t._model;
-            for (var p = 0; p < path.length - 1; p++) {
-                if (typeof cur[path[p]] === 'undefined')
-                    cur[path[p]] = {};
-                cur = cur[path[p]];
-            }
-            cur[path[path.length - 1]] = value;
-        } else _t._model[name] = value;
-    });
-    return this;
-};
-/**
- *
- * @return {ComponentContext}
- */
-ComponentContext.prototype.modelToView = function () {
-    if (this._view != null && this._model != null) {
-        var _t = this;
-        z$(this._view).find('[data-ui-field]').each(function(i, el) {
-            if (this.parent('pre,code').length() > 0)
-                return true;
-            var boundField = this.attr('data-bind-to');
-            if (boundField == null)
-                boundField = this.attr('data-ui-field');
-            if (typeof _t._model === 'function')
-                (_t._model).call(z$(_t._view), this, boundField);
-            else {
-                var boundData = util.propertyFromPath(_t._model, boundField);
-                if (typeof boundData === 'function') {
-                    (boundData).call(z$(_t._view), this, boundField);
-                } else if (boundData != null) {
-                    // try to guess target property
-                    switch (el.tagName.toLowerCase()) {
-                        // TODO: complete binding cases
-                        case 'img':
-                            el.src = boundData;
-                            break;
-                        case 'input':
-                            el.value = boundData;
-                            break;
-                        default:
-                            el.innerHTML = boundData;
-                    }
-                }
-            }
-        });
-        // TODO: deprecate this
-        //if (!util.isNoU(this._c) && util.isFunction(this._c.refresh))
-        //    this._c.refresh();
-    }
-    return this;
-};
-
-/***
- *
- * @param {string|Element|undefined} [css]
+ * @param {Element} [container] The container element.
  * @returns {ComponentContext|Element}
  */
-ComponentContext.prototype.style = function (css) {
-    if (typeof css === 'undefined') return this._style;
-    if (css == null || css instanceof Element) {
-
-        this._css = (css instanceof Element) ? css.innerText : css;
-        this._style = z$.appendCss(css, this._style);
-
-    } else if (typeof css === 'string') {
-
-        // store original unparsed css (might be useful for debugging)
-        this._css = css;
-
-        // nest the CSS inside [data-ui-component='<componentId>']
-        // so that the style is only applied to this component type
-        css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
-
-        // trigger `css:parse` hook before assigning content to the view
-        var hookData = { content: css };
-        this.trigger(this, 'css:parse', hookData);
-        css = hookData.content;
-
-        // output css
-        this._style = z$.appendCss(css, this._style);
-
-    }
-    // TODO: should throw error if ```css``` is not a valid type
+ComponentContext.prototype.container = function (container) {
+    // TODO: should automatically re-attach view to the new parent?
+    if (container == null) return this._container;
+    else this._container = container;
     return this;
 };
+
 /**
+ * Gets/Sets the component's view element.
+ * If an *HTML* string is passed, the the view element
+ * will be a new `div` wrapping the given markup.
+ * Returns the current view element if no
+ * argument is passed, the {ComponentContext} itself otherwise.
  *
- * @param callback
- * @returns {ComponentContext}
- */
-ComponentContext.prototype.loadCss = function (options) {
-    var context = this;
-
-    var cssPath = context.componentId + ".css?" + new Date().getTime();
-    if (util.isNoU(options)) options = {};
-    if (!util.isNoU(options.path))
-        cssPath = options.path;
-
-    z$.ajax({
-        url: cssPath,
-        success: function (viewCss) {
-            context.style(viewCss);
-            if (util.isFunction(options.success))
-                (options.success).call(context);
-        },
-        error: function (err) {
-            console.log(err, context);
-            if (util.isFunction(options.error))
-                (options.error).call(context, err);
-        },
-        then: function () {
-            if (util.isFunction(options.then))
-                (options.then).call(context);
-        }
-    });
-
-    return this;
-};
-
-/***
- *
- * @param {Element|string|undefined} [view]
+ * @param {Element|string|undefined} [view] The view *HTML* string or element.
  * @returns {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
@@ -364,14 +183,216 @@ ComponentContext.prototype.view = function (view) {
 
     return this;
 };
+
+/**
+ * Gets/Sets the component's view style.
+ * The `css` argument can be a string containing all
+ * styles definitions or a reference to a style
+ * element. When a string is passed the css
+ * is linked to the `componentId` attribute so that
+ * its styles will be only applied to the component
+ * container.
+ * If no argument is given, then the current style
+ * element is returned.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.style("p { font-size: 120%; } .hidden { display: 'none'; }");
+ * </code></pre>
+ *
+ * @param {string|Element|undefined} [css] The CSS string or element.
+ * @returns {ComponentContext|Element}
+ */
+ComponentContext.prototype.style = function (css) {
+    if (typeof css === 'undefined') return this._style;
+    if (css == null || css instanceof Element) {
+
+        this._css = (css instanceof Element) ? css.innerText : css;
+        this._style = z$.appendCss(css, this._style);
+
+    } else if (typeof css === 'string') {
+
+        // store original unparsed css (might be useful for debugging)
+        this._css = css;
+
+        // nest the CSS inside [data-ui-component='<componentId>']
+        // so that the style is only applied to this component type
+        css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
+
+        // trigger `css:parse` hook before assigning content to the view
+        var hookData = { content: css };
+        this.trigger(this, 'css:parse', hookData);
+        css = hookData.content;
+
+        // output css
+        this._style = z$.appendCss(css, this._style);
+
+    }
+    // TODO: should throw error if ```css``` is not a valid type
+    return this;
+};
+/**
+ * Gets/Sets the component's data model.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.model({
+ *      title: 'Thoughts',
+ *      message: 'She stared through the window at the stars.'
+ *  });
+ * </code></pre>
+ *
+ * @param {object|undefined} [model] The model object.
+ * @returns {ComponentContext|object}
+ */
+ComponentContext.prototype.model = function (model) {
+    if (typeof model === 'undefined') return this._model;
+    else this._model = model; // model can be set to null
+    this.modelToView();
+    return this;
+};
+/**
+ * Gets/Sets the controller handler function.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.controller(function(cp) {
+ *      cp.create = function() {
+ *           cp.view().html('Hello World!');
+ *      };
+ *      // ...
+ *  });
+ * </code></pre>
+ *
+ * @param {ContextControllerHandler|undefined} [controller] The controller handler function.
+ * @returns {ComponentContext|ContextControllerHandler}
+ */
+ComponentContext.prototype.controller = function (controller) {
+    if (typeof controller === 'undefined') return this._controller;
+    // TODO: should dispose previous context controller first
+    else this._controller = controller; // can be null
+    return this;
+};
+
+/**
+ * Gets/Sets the component options.
+ *
+ * @param {{ContextOptions}|undefined} options The JSON options object.
+ * @return {ComponentContext|object}
+ */
+ComponentContext.prototype.options = function (options) {
+    if (options == null)
+        return this._options;
+    this._options = options;
+    if (options.componentId != null)
+        this.componentId = options.componentId;
+    this.container(options.container);
+    this.view(options.view);
+    if (typeof options.css !== 'undefined')
+        this.style(options.css);
+    this.controller(options.controller);
+    this.model(options.model);
+    return this;
+};
+
+/**
+ * Listen for a component event.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * ctx.on('item:share', function(evt, data) { ... });
+ * </code></pre>
+ *
+ * @param {string} eventPath The event path.
+ * @param {EventCallback} eventHandler The event handler function.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+ComponentContext.prototype.on = function (eventPath, eventHandler) {
+    // TODO: throw error if _c (controller instance) is not yet ready
+    this._c.on(eventPath, eventHandler);
+    return this;
+};
+/**
+ * Load the `.css` file and replace the component's view style.
+ * If no `options.path` is specified, it will try to load
+ * the file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.css' by default
+ * ctx.loadCss();
+ * // or loads the view's css with options
+ * ctx.loadCss({
+ *     path: 'url/of/style/file.css',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @private
+ * @param {object} [options] The options object.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+ComponentContext.prototype.loadCss = function (options) {
+    var context = this;
+    var cssPath = context.componentId + ".css?" + new Date().getTime();
+    if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.path))
+        cssPath = options.path;
+    z$.ajax({
+        url: cssPath,
+        success: function (viewCss) {
+            context.style(viewCss);
+            if (util.isFunction(options.success))
+                (options.success).call(context);
+        },
+        error: function (err) {
+            console.log(err, context);
+            if (util.isFunction(options.error))
+                (options.error).call(context, err);
+        },
+        then: function () {
+            if (util.isFunction(options.then))
+                (options.then).call(context);
+        }
+    });
+    return this;
+};
+/**
+ * Load the `.html` file and replace the component's view markup.
+ * If no `options.path` is specified, it will try to load the
+ * file with the same base-name as the `componentId`.
+ *
+ * @example
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // loads 'path/to/component_name.html' by default
+ * ctx.loadHtml();
+ * // or loads the view's html with options
+ * ctx.loadHtml({
+ *     path: 'url/of/view/file.html',
+ *     success: function() { ... },
+ *     error: function(err) { ... },
+ *     then: function() { ... }
+ * });
+ * </code></pre>
+ *
+ * @private
+ * @param {object} [options] The options object.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
 ComponentContext.prototype.loadHtml = function(options) {
     var context = this;
-
     var htmlPath = context.componentId;
     if (util.isNoU(options)) options = {};
     if (!util.isNoU(options.path))
         htmlPath = options.path;
-
     // TODO: check if view caching is working in this case too
     var inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
     if (inlineView.length() > 0) {
@@ -406,32 +427,87 @@ ComponentContext.prototype.loadHtml = function(options) {
             }
         });
     }
-
     return this;
 };
-
-/***
+/**
+ * Create the data model starting from ```data-ui-field```
+ * elements declared in the component's view.
  *
- * @param {ContextControllerHandler|undefined} [controller]
- * @returns {ComponentContext|ContextControllerHandler}
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.controller = function (controller) {
-    if (typeof controller === 'undefined') return this._controller;
-    // TODO: should dispose previous context controller first
-    else this._controller = controller; // can be null
+ComponentContext.prototype.viewToModel = function() {
+    var _t = this;
+    this._model = {};
+    // create data model from inline view fields
+    z$(this._view).find('[data-ui-field]').each(function(i, el) {
+        if (this.parent('pre,code').length() > 0)
+            return true;
+        var name = this.attr('data-ui-field');
+        var value = '';
+        switch(el.tagName.toLowerCase()) {
+            // TODO: complete binding cases
+            case 'img':
+                value = el.src;
+                break;
+            case 'input':
+                value = el.value;
+                break;
+            default:
+                value = el.innerHTML;
+        }
+        // dotted field path
+        if (name.indexOf('.')>0) {
+            var path = name.split('.');
+            var cur = _t._model;
+            for (var p = 0; p < path.length - 1; p++) {
+                if (typeof cur[path[p]] === 'undefined')
+                    cur[path[p]] = {};
+                cur = cur[path[p]];
+            }
+            cur[path[path.length - 1]] = value;
+        } else _t._model[name] = value;
+    });
     return this;
 };
-/***
+/**
+ * Copy values from the data model to the ```data-ui-field``
+ * elements declared in the component's view.
  *
- * @param {ViewContainer} [container]
- * @returns {ComponentContext|Node}
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.container = function (container) {
-    // TODO: should automatically re-attach view to the new parent?
-    if (container == null) return this._container;
-    else this._container = container;
+ComponentContext.prototype.modelToView = function () {
+    if (this._view != null && this._model != null) {
+        var _t = this;
+        z$(this._view).find('[data-ui-field]').each(function(i, el) {
+            if (this.parent('pre,code').length() > 0)
+                return true;
+            var boundField = this.attr('data-bind-to');
+            if (boundField == null)
+                boundField = this.attr('data-ui-field');
+            if (typeof _t._model === 'function')
+                (_t._model).call(z$(_t._view), this, boundField);
+            else {
+                var boundData = util.propertyFromPath(_t._model, boundField);
+                if (typeof boundData === 'function') {
+                    (boundData).call(z$(_t._view), this, boundField);
+                } else if (boundData != null) {
+                    // try to guess target property
+                    switch (el.tagName.toLowerCase()) {
+                        // TODO: complete binding cases
+                        case 'img':
+                            el.src = boundData;
+                            break;
+                        case 'input':
+                            el.value = boundData;
+                            break;
+                        default:
+                            el.innerHTML = boundData;
+                    }
+                }
+            }
+        });
+    }
     return this;
 };
-
 
 module.exports = ComponentContext;

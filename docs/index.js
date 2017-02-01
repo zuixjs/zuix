@@ -96,21 +96,21 @@ var loaderMessage = zuix.field('loaderMessage');
 var mainPage = zuix.field('main').hide();
 //zuix.lazyLoad(false);
 zuix
-.hook('load:begin', function(a,b){
+.hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
     loaderMessage.show();
 
-}).hook('load:step', function(a,b){
+}).hook('load:step', function(data){
 
-}).hook('load:next', function(a,b){
+}).hook('load:next', function(data){
     if (splashScreen)
         zuix.field('loader-progress')
-            .html(b.task).prev()
+            .html(data.task).prev()
             .animateCss('bounce');
-    loaderMessage.html(b.task)
+    loaderMessage.html(data.task)
         .animateCss('bounce');
 
-}).hook('load:end', function(a,b){
+}).hook('load:end', function(data){
     if (splashScreen) {
         // this is only executed once, on app startup
         var s = splashScreen; splashScreen = false;
@@ -124,17 +124,18 @@ zuix
     }
     loaderMessage.hide();
 
-}).hook('html:parse', function (h, w) {
+}).hook('html:parse', function (data) {
     // ShowDown - Markdown compiler
     if (this.options().markdown === true && typeof showdown !== 'undefined')
-        w.content = new showdown.Converter().makeHtml(w.content);
+        data.content = new showdown.Converter()
+            .makeHtml(data.content);
 
-}).hook('css:parse', function (h, w) {
-    console.log("css:parse", w);
+}).hook('css:parse', function (data) {
+    console.log(data);
 
-}).hook('view:process', function (h, w) {
+}).hook('view:process', function (data) {
     // Prism code syntax highlighter
-    w.find('code').each(function (i, block) {
+    data.find('code').each(function (i, block) {
         this.addClass('language-javascript');
         Prism.highlightElement(block);
     });
@@ -144,10 +145,10 @@ zuix
     // Material Design Light  DOM upgrade
     if (componentHandler) {
         setTimeout(function () {
-            componentHandler.upgradeElements(w.get());
+            componentHandler.upgradeElements(data.get());
         }, 500);
     }
-}); // Componentize the page
+});
 
 // Top menu `item:click` event handler
 function menuItemClicked(e, i) {

@@ -1204,7 +1204,7 @@
     "tags": [
       {
         "type": "return",
-        "string": "{ZxQuery} A new *ZxQuery* object",
+        "string": "{ZxQuery} A new *ZxQuery* object with the previous sibling element.",
         "types": [
           "ZxQuery"
         ],
@@ -1213,7 +1213,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "A new *ZxQuery* object"
+        "description": "A new *ZxQuery* object with the previous sibling element."
       }
     ],
     "description": {
@@ -1241,7 +1241,7 @@
     "tags": [
       {
         "type": "return",
-        "string": "{ZxQuery} A new *ZxQuery* object",
+        "string": "{ZxQuery} A new *ZxQuery* object with the next sibling element.",
         "types": [
           "ZxQuery"
         ],
@@ -1250,7 +1250,7 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false,
-        "description": "A new *ZxQuery* object"
+        "description": "A new *ZxQuery* object with the next sibling element."
       }
     ],
     "description": {
@@ -1292,11 +1292,12 @@
       },
       {
         "type": "return",
-        "string": "{ZxQuery}",
+        "string": "{ZxQuery|string}",
         "types": [
-          "ZxQuery"
+          "ZxQuery",
+          "string"
         ],
-        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>|<code>string</code>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
@@ -1469,8 +1470,8 @@
       }
     ],
     "description": {
-      "full": "Gets or sets the css display property.",
-      "summary": "Gets or sets the css display property.",
+      "full": "Gets or sets the css `display` property.",
+      "summary": "Gets or sets the css `display` property.",
       "body": ""
     },
     "isPrivate": false,
@@ -1521,8 +1522,8 @@
       }
     ],
     "description": {
-      "full": "Gets or sets the css visibility property.",
-      "summary": "Gets or sets the css visibility property.",
+      "full": "Gets or sets the css `visibility` property.",
+      "summary": "Gets or sets the css `visibility` property.",
       "body": ""
     },
     "isPrivate": false,
@@ -1558,8 +1559,8 @@
       }
     ],
     "description": {
-      "full": "Sets the css display property to ''.",
-      "summary": "Sets the css display property to ''.",
+      "full": "Sets the css `display` property to ''.",
+      "summary": "Sets the css `display` property to ''.",
       "body": ""
     },
     "isPrivate": false,
@@ -1595,8 +1596,8 @@
       }
     ],
     "description": {
-      "full": "Sets the css display property to 'none'.",
-      "summary": "Sets the css display property to 'none'.",
+      "full": "Sets the css `display` property to 'none'.",
+      "summary": "Sets the css `display` property to 'none'.",
       "body": ""
     },
     "isPrivate": false,
@@ -1753,7 +1754,7 @@
     "ignore": false,
     "line": 513,
     "codeStart": 514,
-    "code": "var container = document.createElement(containerTag);\nif (typeof element === 'string')\n    container.innerHTML = element;\nelse\n// TODO: test this, it may not work\n    container.appendChild(element);\nreturn container;\n};\nz$.wrapCss = function (wrapperRule, css) {\nvar wrapReX = /([.,\\w])([^/{};]+)({)/g;\nvar r, result = null, wrappedCss = '';\nwhile (r = wrapReX.exec(css)) {\n    if (result != null)\n        wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);\n    result = r;\n}\nif (result != null)\n    wrappedCss += wrapperRule + ' ' + css.substring(result.index);\nif (wrappedCss != '') {\n    css = wrappedCss;\n}\nreturn css;\n};\nz$.appendCss = function (css, target) {\nvar style = null, head;\nif (typeof css === 'string') {\n    // output css\n    head = document.head || document.getElementsByTagName('head')[0];\n    style = document.createElement('style');\n    style.type = 'text/css';\n    if (style.styleSheet)\n        style.styleSheet.cssText = css;\n    else\n        style.appendChild(document.createTextNode(css));\n} else if (css instanceof Element) style = css;\n// remove previous style node\nif (!util.isNoU(target))\n    head.removeChild(target);\nif (!util.isNoU(style))\n    head.appendChild(style);\nreturn style;\n};\nz$.getClosest = function (elem, selector) {\n// Get closest match\nfor (; elem && elem !== document; elem = elem.parentNode) {\n    if (elem.matches(selector)) return elem;\n}\nreturn null;\n};\nz$.getPosition = function (el) {\nvar visible = z$.isInView(el);\nvar x = 0, y = 0;\nwhile (el) {\n    if (el.tagName == \"BODY\") {\n        // deal with browser quirks with body/window/document and page scroll\n        var scrollX = el.scrollLeft || document.documentElement.scrollLeft;\n        var scrollY = el.scrollTop || document.documentElement.scrollTop;\n        x += (el.offsetLeft - scrollX + el.clientLeft);\n        y += (el.offsetTop - scrollY + el.clientTop);\n    } else {\n        // for all other non-BODY elements\n        x += (el.offsetLeft - el.scrollLeft + el.clientLeft);\n        y += (el.offsetTop - el.scrollTop + el.clientTop);\n    }\n    el = el.offsetParent;\n}\nreturn {\n    x: x,\n    y: y,\n    visible: visible\n};\n};\nz$.isInView = function (el) {\nif (el.offsetParent === null)\n    return false;\nvar rect = el.getBoundingClientRect();\nreturn rect.bottom > 0 && rect.right > 0\n    && rect.left < (window.innerWidth || document.documentElement.clientWidth)",
+    "code": "var container = document.createElement(containerTag);\nif (typeof element === 'string')\n    container.innerHTML = element;\nelse\n// TODO: test this, it may not work\n    container.appendChild(element);\nreturn container;\n};\nz$.wrapCss = function (wrapperRule, css) {\nvar wrapReX = /([.,\\w])([^/{};]+)({)/g;\nvar r, result = null, wrappedCss = '';\nwhile (r = wrapReX.exec(css)) {\n    if (result != null) {\n        var rule = css.substring(result.index, r.index);\n        var splitReX = /(.*)[^s]\\{([^\\}]+)[\\}]/g; // [^{]\n        var ruleParts = splitReX.exec(rule);\n        if (ruleParts != null && ruleParts.length > 1) {\n            var classes = ruleParts[1].split(',');\n            z$.each(classes, function (k, v) {\n                wrappedCss += '\\n' + wrapperRule + '\\n' + v;\n                if (k < classes.length - 1)\n                    wrappedCss += ', ';\n            });\n            wrappedCss += ' {' + ruleParts[2] + '}\\n';\n        } else {\n            console.log('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);\n        }\n    }\n    result = r;\n}\nif (result != null)\n    wrappedCss += wrapperRule + ' ' + css.substring(result.index);\nif (wrappedCss != '') {\n    css = wrappedCss;\n}\nreturn css;\n};\nz$.appendCss = function (css, target) {\nvar style = null, head;\nif (typeof css === 'string') {\n    // output css\n    head = document.head || document.getElementsByTagName('head')[0];\n    style = document.createElement('style');\n    style.type = 'text/css';\n    if (style.styleSheet)\n        style.styleSheet.cssText = css;\n    else\n        style.appendChild(document.createTextNode(css));\n} else if (css instanceof Element) style = css;\n// remove previous style node\nif (!util.isNoU(target))\n    head.removeChild(target);\nif (!util.isNoU(style))\n    head.appendChild(style);\nreturn style;\n};\nz$.getClosest = function (elem, selector) {\n// Get closest match\nfor (; elem && elem !== document; elem = elem.parentNode) {\n    if (elem.matches(selector)) return elem;\n}\nreturn null;\n};\nz$.getPosition = function (el) {\nvar visible = z$.isInView(el);\nvar x = 0, y = 0;\nwhile (el) {\n    if (el.tagName == \"BODY\") {\n        // deal with browser quirks with body/window/document and page scroll\n        var scrollX = el.scrollLeft || document.documentElement.scrollLeft;\n        var scrollY = el.scrollTop || document.documentElement.scrollTop;\n        x += (el.offsetLeft - scrollX + el.clientLeft);\n        y += (el.offsetTop - scrollY + el.clientTop);\n    } else {\n        // for all other non-BODY elements\n        x += (el.offsetLeft - el.scrollLeft + el.clientLeft);\n        y += (el.offsetTop - el.scrollTop + el.clientTop);\n    }\n    el = el.offsetParent;\n}\nreturn {\n    x: x,\n    y: y,\n    visible: visible\n};\n};\nz$.isInView = function (el) {\nif (el.offsetParent === null)\n    return false;\nvar rect = el.getBoundingClientRect();\nreturn rect.bottom > 0 && rect.right > 0\n    && rect.left < (window.innerWidth || document.documentElement.clientWidth)",
     "ctx": {
       "type": "declaration",
       "name": "container",
@@ -1773,8 +1774,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 591,
-    "codeStart": 592,
+    "line": 605,
+    "codeStart": 606,
     "code": "&& rect.top < (window.innerHeight || document.documentElement.clientHeight);",
     "ctx": false
   },
@@ -1790,8 +1791,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 593,
-    "codeStart": 594,
+    "line": 607,
+    "codeStart": 608,
     "code": "};\nz$.ZxQuery = ZxQuery;\n\n// Element.matches() polyfill\nif (!Element.prototype.matches) {\n    Element.prototype.matches =\n        Element.prototype.matchesSelector ||\n        Element.prototype.mozMatchesSelector ||\n        Element.prototype.msMatchesSelector ||\n        Element.prototype.oMatchesSelector ||\n        Element.prototype.webkitMatchesSelector ||\n        function (s) {\n            var matches = (this.document || this.ownerDocument).querySelectorAll(s),\n                i = matches.length;\n            while (--i >= 0 && matches.item(i) !== this) {\n            }\n            return i > -1;\n        };\n}\n// window.CustomEvent polyfill for IE>=9\n(function () {\n    if ( typeof window.CustomEvent === \"function\" ) return false;\n    function CustomEvent ( event, params ) {\n        params = params || { bubbles: false, cancelable: false, detail: undefined };\n        var evt = document.createEvent( 'CustomEvent' );\n        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );\n        return evt;\n    }\n    CustomEvent.prototype = window.Event.prototype;\n    window.CustomEvent = CustomEvent;\n})();\n\nmodule.exports =  z$;",
     "ctx": false
   }

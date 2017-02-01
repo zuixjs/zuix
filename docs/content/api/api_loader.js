@@ -4,6 +4,8 @@ zuix.controller(function (cp) {
 
         var apiName = cp.view().attr('data-ui-api');
         cp.view().html('Loading '+apiName+' API...');
+
+        // download the jsDoc data file and HTML-format it.
         zuix.$.ajax({
             url: 'content/api/'+apiName+'.json?'+Date.now(),
             success: function(json) {
@@ -11,7 +13,7 @@ zuix.controller(function (cp) {
                 var dox = JSON.parse(json);
                 var html = '';
                 zuix.$.each(dox, function () {
-                    var apiMember = (this.ctx != null && (this.ctx.cons === apiName));
+                    var apiMember = (!this.isPrivate && this.ctx != null && (this.ctx.cons === apiName));
                     if (apiMember) {
 
                         var params; params = '';
@@ -23,11 +25,11 @@ zuix.controller(function (cp) {
 
                         if (params.length > 0)
                             params = params.substring(0, params.length-2);
-                        html += '<div class="title"><h5><i class="material-icons">expand_more</i><code>'+this.ctx.name+'( '+params+' )</code></h5></div>';
+                        html += '<div class="title"><h5><i class="material-icons">expand_more</i><code>'+this.ctx.name+'('+params+')</code></h5></div>';
                         html += '<div class="container"><div class="details collapsed">';
 
                         var pl = { content: this.description.full };
-                        zuix.trigger(cp.context, 'html:parse', pl);
+                        cp.trigger('html:parse', pl, true);
                         html += '<div class="description">'+pl.content+'</div>';
 
                         var currentType = '', example = '';
@@ -56,16 +58,16 @@ zuix.controller(function (cp) {
                             });
                             types = types.trim();
 
-                            if (this.name != null)
-                                html += ' <code>'+ this.name.replace('[','').replace(']','') +'</code>';
-                            html += ' <code class="mdl-color-text--grey">{'+types+'}</code>';
-
                             if (this.optional)
-                                html += ' <em class="mdl-color-text--grey">[optional]</em>';
+                                html += ' <strong class="mdl-color-text--grey-500">optional</strong>';
+
+                            html += ' <em class="mdl-color-text--grey-700">{'+types+'}</em>';
 
                             //noinspection JSPotentiallyInvalidUsageOfThis
-                            var pl = { content: this.description };
-                            zuix.trigger(cp.context, 'html:parse', pl);
+                            pl = { content: this.description };
+                            if (this.name != null)
+                                pl.content = '<code>'+ this.name.replace('[','').replace(']','') +'</code>: '+pl.content;
+                            cp.trigger('html:parse', pl, true);
                             if (pl.content.indexOf('<p>') == -1)
                                 pl.content = '<p>'+pl.content+'</p>';
                             html += pl.content;
@@ -75,7 +77,7 @@ zuix.controller(function (cp) {
 
                         if (example != '') {
                             var pl = { content: example };
-                            zuix.trigger(cp.context, 'html:parse', pl);
+                            cp.trigger('html:parse', pl, true);
                             html += '<div class="example">'+pl.content+'</div>';
                         }
 
@@ -91,7 +93,7 @@ zuix.controller(function (cp) {
                     .on('click', function () {
                         expandItem(this);
                     });
-                zuix.trigger(cp.context, 'view:process', cp.view());
+                cp.trigger('view:process', cp.view(), true);
             },
             error: function() {
                 cp.view().html('Error loading '+apiName+' API!');
@@ -114,6 +116,7 @@ zuix.controller(function (cp) {
             element.find('i').html('expand_more')
                 .animateCss('bounce', { duration: '.1s' });
         }
+        // alternate expand/collapse
         /*cp.view().find('.details').each(function(i, item) {
             if (item !== detail.get())
                 this.addClass('collapsed');

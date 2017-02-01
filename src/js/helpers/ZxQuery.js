@@ -348,14 +348,14 @@ ZxQuery.prototype.removeClass = function (className) {
 };
 /**
  * Moves to the previous sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object
+ * @return {ZxQuery} A new *ZxQuery* object with the previous sibling element.
  */
 ZxQuery.prototype.prev = function () {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
 /**
  * Moves to the next sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object
+ * @return {ZxQuery} A new *ZxQuery* object with the next sibling element.
  */
 ZxQuery.prototype.next = function () {
     return new ZxQuery(this._selection[0].nextElementSibling);
@@ -363,7 +363,7 @@ ZxQuery.prototype.next = function () {
 /**
  * Gets or sets the HTML markup.
  * @param {string|undefined} [htmlText] HTML markup text.
- * @return {ZxQuery}
+ * @return {ZxQuery|string}
  */
 ZxQuery.prototype.html = function (htmlText) {
     if (util.isNoU(htmlText))
@@ -398,7 +398,7 @@ ZxQuery.prototype.prepend = function (el) {
     return this;
 };
 /**
- * Gets or sets the css display property.
+ * Gets or sets the css `display` property.
  * @param {string|undefined} [mode] The display value.
  * @return {string|ZxQuery} The *display* css value when no *mode* specified, otherwise the *ZxQuery* object itself
  */
@@ -411,7 +411,7 @@ ZxQuery.prototype.display = function (mode) {
     return this;
 };
 /**
- * Gets or sets the css visibility property.
+ * Gets or sets the css `visibility` property.
  * @param {string|undefined} [mode] The visibility value.
  * @return {string|ZxQuery} The *visibility* css value when no *mode* specified, otherwise the *ZxQuery* object itself
  */
@@ -424,14 +424,14 @@ ZxQuery.prototype.visibility = function (mode) {
     return this;
 };
 /**
- * Sets the css display property to ''.
+ * Sets the css `display` property to ''.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.show = function () {
     return this.display('');
 };
 /**
- * Sets the css display property to 'none'.
+ * Sets the css `display` property to 'none'.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.hide = function () {
@@ -523,8 +523,22 @@ z$.wrapCss = function (wrapperRule, css) {
     var wrapReX = /([.,\w])([^/{};]+)({)/g;
     var r, result = null, wrappedCss = '';
     while (r = wrapReX.exec(css)) {
-        if (result != null)
-            wrappedCss += wrapperRule + ' ' + css.substring(result.index, r.index);
+        if (result != null) {
+            var rule = css.substring(result.index, r.index);
+            var splitReX = /(.*)[^s]\{([^\}]+)[\}]/g; // [^{]
+            var ruleParts = splitReX.exec(rule);
+            if (ruleParts != null && ruleParts.length > 1) {
+                var classes = ruleParts[1].split(',');
+                z$.each(classes, function (k, v) {
+                    wrappedCss += '\n' + wrapperRule + '\n' + v;
+                    if (k < classes.length - 1)
+                        wrappedCss += ', ';
+                });
+                wrappedCss += ' {' + ruleParts[2] + '}\n';
+            } else {
+                console.log('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);
+            }
+        }
         result = r;
     }
     if (result != null)
