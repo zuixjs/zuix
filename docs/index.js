@@ -98,16 +98,16 @@ var mainPage = zuix.field('main').hide();
 zuix
 .hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
-    loaderMessage.show();
-
-}).hook('load:step', function(data){
+    loaderMessage.html(data.task)
+        .animateCss('bounce')
+        .show();
 
 }).hook('load:next', function(data){
     if (splashScreen)
         zuix.field('loader-progress')
             .html(data.task).prev()
             .animateCss('bounce');
-    loaderMessage.html(data.task)
+    loaderMessage.html(data.task+' complete.')
         .animateCss('bounce');
 
 }).hook('load:end', function(data){
@@ -141,13 +141,9 @@ zuix
     });
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
-    // TODO: move MDL to 'view:ready' hook and remove setTimeout
-    // Material Design Light  DOM upgrade
-    if (componentHandler) {
-        setTimeout(function () {
-            componentHandler.upgradeElements(data.get());
-        }, 500);
-    }
+    // Material Design Light integration - DOM upgrade
+    if (componentHandler)
+        componentHandler.upgradeElements(data.get());
 });
 
 // Top menu `item:click` event handler

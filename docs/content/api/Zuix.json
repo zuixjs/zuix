@@ -1744,6 +1744,85 @@
     "tags": [
       {
         "type": "param",
+        "string": "{Object} context Context (`this`) for the event handler",
+        "name": "context",
+        "description": "Context (`this`) for the event handler",
+        "types": [
+          "Object"
+        ],
+        "typesDescription": "<code>Object</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{string} eventPath The path of the event to fire.",
+        "name": "eventPath",
+        "description": "The path of the event to fire.",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{object} [eventData] The data object of the event.",
+        "name": "[eventData]",
+        "description": "The data object of the event.",
+        "types": [
+          "object"
+        ],
+        "typesDescription": "<code>object</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{Zuix} The ```{Zuix}``` object itself.",
+        "types": [
+          "Zuix"
+        ],
+        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "The ```{Zuix}``` object itself."
+      }
+    ],
+    "description": {
+      "full": "Triggers the event `eventPath`.",
+      "summary": "Triggers the event `eventPath`.",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 744,
+    "codeStart": 752,
+    "code": "Zuix.prototype.trigger = function (context, eventPath, eventData) {\n    trigger(context, eventPath, eventData);\n    return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "trigger",
+      "string": "Zuix.prototype.trigger()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
         "string": "{string} eventPath The event path.",
         "name": "eventPath",
         "description": "The event path.",
@@ -1785,17 +1864,17 @@
       }
     ],
     "description": {
-      "full": "Set handlers for global events hooks.\n\n Standard *ZUIX* hooks list:\n - <i class=\"material-icons\">flash_on</i> load:begin\n - <i class=\"material-icons\">flash_on</i> load:step\n - <i class=\"material-icons\">flash_on</i> load:next\n - <i class=\"material-icons\">flash_on</i> load:end\n - <i class=\"material-icons\">flash_on</i> html:parse\n - <i class=\"material-icons\">flash_on</i> css:parse\n - <i class=\"material-icons\">flash_on</i> view:process\n\n<small>**Example - JavaScript**</small>\n```js\nzuix\n  .hook('load:begin', function(){\n\n    loaderMessage.show();\n\n}).hook('load:end', function(){\n\n    loaderMessage.hide();\n\n}).hook('html:parse', function (data) {\n\n    // ShowDown - Markdown compiler\n    if (this.options().markdown === true && typeof showdown !== 'undefined')\n        data.content = new showdown.Converter().makeHtml(data.content);\n\n}).hook('css:parse', function (data) {\n\n    // process css, eg. run a CSS pre-processor\n\n}).hook('view:process', function (view) {\n\n    // Prism code syntax highlighter\n    view.find('code').each(function (i, block) {\n        this.addClass('language-javascript');\n        Prism.highlightElement(block);\n    });\n\n    // Force opening of all non-local links in a new window\n    zuix.$('a[href*=\"://\"]').attr('target','_blank');\n\n    // Material Design Light  DOM upgrade\n    if (componentHandler) {\n        setTimeout(function () {\n            componentHandler.upgradeElements(view.get());\n        }, 500);\n    }\n\n});\n```",
+      "full": "Set handlers for global events hooks.\n\n<small>**Example - JavaScript**</small>\n```js\n// The context `this` in the event handlers will be\n// the {ComponentContext} object that sourced the event.\n// The `data` parameter passed to the handlers, is of\n// variant type, depending on the type of the occurring event.\nzuix\n  .hook('load:begin', function(data){\n    loaderMessage.html('Loading \"'+data.task+'\" ...');\n    loaderMessage.show();\n\n}).hook('load:next', function(data){\n    loaderMessage.html('\"'+data.task+'\" done, loading next..');\n\n}).hook('load:end', function(){\n    loaderMessage.hide();\n\n}).hook('html:parse', function (data) {\n    // ShowDown - MarkDown syntax compiler\n    if (this.options().markdown === true && typeof showdown !== 'undefined')\n        data.content = new showdown.Converter()\n            .makeHtml(data.content);\n\n}).hook('css:parse', function (data) {\n    // process css, eg. run a CSS pre-processor\n    // eg. Sass, Less, ...\n\n}).hook('view:process', function (view) {\n    // The view DOM is now fully loaded and ready\n\n    // Prism code syntax highlighter\n    view.find('code').each(function (i, block) {\n        this.addClass('language-javascript');\n        Prism.highlightElement(block);\n    });\n\n    // Force opening of all non-local links in a new window\n    zuix.$('a[href*=\"://\"]').attr('target','_blank');\n\n    // Material Design Light auto-detection\n    // Call DOM upgrade on newly added view elements\n    if (componentHandler)\n        componentHandler.upgradeElements(view.get());\n\n});\n```",
       "summary": "Set handlers for global events hooks.",
-      "body": " Standard *ZUIX* hooks list:\n - <i class=\"material-icons\">flash_on</i> load:begin\n - <i class=\"material-icons\">flash_on</i> load:step\n - <i class=\"material-icons\">flash_on</i> load:next\n - <i class=\"material-icons\">flash_on</i> load:end\n - <i class=\"material-icons\">flash_on</i> html:parse\n - <i class=\"material-icons\">flash_on</i> css:parse\n - <i class=\"material-icons\">flash_on</i> view:process\n\n<small>**Example - JavaScript**</small>\n```js\nzuix\n  .hook('load:begin', function(){\n\n    loaderMessage.show();\n\n}).hook('load:end', function(){\n\n    loaderMessage.hide();\n\n}).hook('html:parse', function (data) {\n\n    // ShowDown - Markdown compiler\n    if (this.options().markdown === true && typeof showdown !== 'undefined')\n        data.content = new showdown.Converter().makeHtml(data.content);\n\n}).hook('css:parse', function (data) {\n\n    // process css, eg. run a CSS pre-processor\n\n}).hook('view:process', function (view) {\n\n    // Prism code syntax highlighter\n    view.find('code').each(function (i, block) {\n        this.addClass('language-javascript');\n        Prism.highlightElement(block);\n    });\n\n    // Force opening of all non-local links in a new window\n    zuix.$('a[href*=\"://\"]').attr('target','_blank');\n\n    // Material Design Light  DOM upgrade\n    if (componentHandler) {\n        setTimeout(function () {\n            componentHandler.upgradeElements(view.get());\n        }, 500);\n    }\n\n});\n```"
+      "body": "<small>**Example - JavaScript**</small>\n```js\n// The context `this` in the event handlers will be\n// the {ComponentContext} object that sourced the event.\n// The `data` parameter passed to the handlers, is of\n// variant type, depending on the type of the occurring event.\nzuix\n  .hook('load:begin', function(data){\n    loaderMessage.html('Loading \"'+data.task+'\" ...');\n    loaderMessage.show();\n\n}).hook('load:next', function(data){\n    loaderMessage.html('\"'+data.task+'\" done, loading next..');\n\n}).hook('load:end', function(){\n    loaderMessage.hide();\n\n}).hook('html:parse', function (data) {\n    // ShowDown - MarkDown syntax compiler\n    if (this.options().markdown === true && typeof showdown !== 'undefined')\n        data.content = new showdown.Converter()\n            .makeHtml(data.content);\n\n}).hook('css:parse', function (data) {\n    // process css, eg. run a CSS pre-processor\n    // eg. Sass, Less, ...\n\n}).hook('view:process', function (view) {\n    // The view DOM is now fully loaded and ready\n\n    // Prism code syntax highlighter\n    view.find('code').each(function (i, block) {\n        this.addClass('language-javascript');\n        Prism.highlightElement(block);\n    });\n\n    // Force opening of all non-local links in a new window\n    zuix.$('a[href*=\"://\"]').attr('target','_blank');\n\n    // Material Design Light auto-detection\n    // Call DOM upgrade on newly added view elements\n    if (componentHandler)\n        componentHandler.upgradeElements(view.get());\n\n});\n```"
     },
     "isPrivate": false,
     "isConstructor": false,
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 744,
-    "codeStart": 802,
+    "line": 756,
+    "codeStart": 810,
     "code": "Zuix.prototype.hook = function (eventPath, eventHandler) {\n    hook(eventPath, eventHandler);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1809,88 +1888,9 @@
     "tags": [
       {
         "type": "param",
-        "string": "{Object} context",
-        "name": "context",
-        "description": "",
-        "types": [
-          "Object"
-        ],
-        "typesDescription": "<code>Object</code>",
-        "optional": false,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "param",
-        "string": "{string} path",
-        "name": "path",
-        "description": "",
-        "types": [
-          "string"
-        ],
-        "typesDescription": "<code>string</code>",
-        "optional": false,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "param",
-        "string": "{object} data",
-        "name": "data",
-        "description": "",
-        "types": [
-          "object"
-        ],
-        "typesDescription": "<code>object</code>",
-        "optional": false,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "return",
-        "string": "{Zuix} The ```{Zuix}``` object itself.",
-        "types": [
-          "Zuix"
-        ],
-        "typesDescription": "<a href=\"Zuix.html\">Zuix</a>",
-        "optional": false,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false,
-        "description": "The ```{Zuix}``` object itself."
-      }
-    ],
-    "description": {
-      "full": "TODO: desc",
-      "summary": "TODO: desc",
-      "body": ""
-    },
-    "isPrivate": false,
-    "isConstructor": false,
-    "isClass": false,
-    "isEvent": false,
-    "ignore": false,
-    "line": 806,
-    "codeStart": 814,
-    "code": "Zuix.prototype.trigger = function (context, path, data) {\n    trigger(context, path, data);\n    return this;\n};",
-    "ctx": {
-      "type": "method",
-      "constructor": "Zuix",
-      "cons": "Zuix",
-      "name": "trigger",
-      "string": "Zuix.prototype.trigger()"
-    }
-  },
-  {
-    "tags": [
-      {
-        "type": "param",
-        "string": "{boolean} [enable]",
+        "string": "{boolean} [enable] Set lazy-load option.",
         "name": "[enable]",
-        "description": "",
+        "description": "Set lazy-load option.",
         "types": [
           "boolean"
         ],
@@ -1915,8 +1915,8 @@
       }
     ],
     "description": {
-      "full": "Enable/Disable lazy-loading, or get current value.",
-      "summary": "Enable/Disable lazy-loading, or get current value.",
+      "full": "Enable/Disable lazy-loading, or get current setting.",
+      "summary": "Enable/Disable lazy-loading, or get current setting.",
       "body": ""
     },
     "isPrivate": false,
@@ -1924,8 +1924,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 818,
-    "codeStart": 824,
+    "line": 814,
+    "codeStart": 820,
     "code": "Zuix.prototype.lazyLoad = lazyLoad;\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
     "ctx": {
       "type": "property",
@@ -1974,8 +1974,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 840,
-    "codeStart": 844,
+    "line": 836,
+    "codeStart": 840,
     "code": "module.exports = function (root) {\n    var zuix = new Zuix();\n    document.addEventListener(\"DOMContentLoaded\", function(event) {\n        zuix.componentize();\n    });\n    return zuix;\n};",
     "ctx": {
       "type": "method",

@@ -67,9 +67,9 @@ function TaskQueue(listener) {
             else if (_t._taskList[i].status == 1) {
                 next = -2;
                 _t.check();
-                listener(_t, 'load:step', {
-                    task: _t._taskList[i].tid
-                });
+                //listener(_t, 'load:step', {
+                //    task: _t._taskList[i].tid
+                //});
                 return;
             }
             else if (_t._taskList[i].status == 2) {
@@ -2590,49 +2590,64 @@ ctx.setSlide(1);
  */
 Zuix.prototype.context = context;
 /**
- * Set handlers for global events hooks.
+ * Triggers the event `eventPath`.
  *
- Standard *ZUIX* hooks list:
- - <i class="material-icons">flash_on</i> load:begin
- - <i class="material-icons">flash_on</i> load:step
- - <i class="material-icons">flash_on</i> load:next
- - <i class="material-icons">flash_on</i> load:end
- - <i class="material-icons">flash_on</i> html:parse
- - <i class="material-icons">flash_on</i> css:parse
- - <i class="material-icons">flash_on</i> view:process
+ * @param {Object} context Context (`this`) for the event handler
+ * @param {string} eventPath The path of the event to fire.
+ * @param {object} [eventData] The data object of the event.
+ * @return {Zuix} The ```{Zuix}``` object itself.
+ */
+Zuix.prototype.trigger = function (context, eventPath, eventData) {
+    trigger(context, eventPath, eventData);
+    return this;
+};
+/**
+ * Set handlers for global events hooks.
  *
 <small>**Example - JavaScript**</small>
 ```js
+// The context `this` in the event handlers will be
+// the {ComponentContext} object that sourced the event.
+// The `data` parameter passed to the handlers, is of
+// variant type, depending on the type of the occurring event.
 zuix
-  .hook('load:begin', function(eventPath, eventData){
+  .hook('load:begin', function(data){
+    loaderMessage.html('Loading "'+data.task+'" ...');
     loaderMessage.show();
 
-}).hook('load:end', function(eventPath, eventData){
+}).hook('load:next', function(data){
+    loaderMessage.html('"'+data.task+'" done, loading next..');
+
+}).hook('load:end', function(){
     loaderMessage.hide();
 
-}).hook('html:parse', function (eventPath, eventData) {
-    // ShowDown - Markdown compiler
+}).hook('html:parse', function (data) {
+    // ShowDown - MarkDown syntax compiler
     if (this.options().markdown === true && typeof showdown !== 'undefined')
-        eventData.content = new showdown.Converter().makeHtml(eventData.content);
+        data.content = new showdown.Converter()
+            .makeHtml(data.content);
 
-}).hook('css:parse', function (eventPath, eventData) {
-    // run a CSS pre-processor
+}).hook('css:parse', function (data) {
+    // process css, eg. run a CSS pre-processor
+    // eg. Sass, Less, ...
 
-}).hook('view:process', function (eventPath, eventData) {
+}).hook('view:process', function (view) {
+    // The view DOM is now fully loaded and ready
+
     // Prism code syntax highlighter
-    eventData.find('code').each(function (i, block) {
+    view.find('code').each(function (i, block) {
         this.addClass('language-javascript');
         Prism.highlightElement(block);
     });
+
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
 
-    // Material Design Light  DOM upgrade
-    if (componentHandler) {
-        setTimeout(function () {
-            componentHandler.upgradeElements(eventData.get());
-        }, 500);
-    }
+    // Material Design Light auto-detection
+    // Call DOM upgrade on newly added view elements
+    if (componentHandler)
+        componentHandler.upgradeElements(view.get());
+
 });
 ```
  *
@@ -2645,21 +2660,9 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * TODO: desc
+ * Enable/Disable lazy-loading, or get current setting.
  *
- * @param {Object} context
- * @param {string} path
- * @param {object} data
- * @return {Zuix} The ```{Zuix}``` object itself.
- */
-Zuix.prototype.trigger = function (context, path, data) {
-    trigger(context, path, data);
-    return this;
-};
-/**
- * Enable/Disable lazy-loading, or get current value.
- *
- * @param {boolean} [enable]
+ * @param {boolean} [enable] Set lazy-load option.
  * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
 Zuix.prototype.lazyLoad = lazyLoad;

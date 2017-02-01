@@ -66,9 +66,9 @@ function TaskQueue(listener) {
             else if (_t._taskList[i].status == 1) {
                 next = -2;
                 _t.check();
-                listener(_t, 'load:step', {
-                    task: _t._taskList[i].tid
-                });
+                //listener(_t, 'load:step', {
+                //    task: _t._taskList[i].tid
+                //});
                 return;
             }
             else if (_t._taskList[i].status == 2) {
