@@ -28,14 +28,13 @@
  * @typedef {object} ContextOptions
  * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
  * @property {Element|undefined} container The container element,
- * @property {string|undefined} componentId The component identifier.
  * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
  * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
- * @property {Element|string|boolean|undefined} css The view style.
- * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
  * @property {ContextControllerHandler|undefined} controller The controller handler.
  * @property {Array.<EventMapping>|EventCallback|undefined} on The events handling map.
  * @property {Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.
+ * @property {Element|string|boolean|undefined} css The view style.
+ * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
  * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
  * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
  */

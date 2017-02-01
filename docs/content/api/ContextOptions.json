@@ -78,34 +78,6 @@
       },
       {
         "type": "property",
-        "string": "{string|undefined} componentId The component identifier.",
-        "name": "componentId",
-        "description": "The component identifier.",
-        "types": [
-          "string"
-        ],
-        "typesDescription": "<code>string</code>|<code>undefined</code>",
-        "optional": true,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "property",
-        "string": "{JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.",
-        "name": "model",
-        "description": "The data model. HTML attribute equivalent: `data-bind-model`.",
-        "types": [
-          "JSON"
-        ],
-        "typesDescription": "<a href=\"JSON.html\">JSON</a>|<code>undefined</code>",
-        "optional": true,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "property",
         "string": "{Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.",
         "name": "view",
         "description": "The view element. HTML attribute equivalent: `data-ui-view`.",
@@ -120,29 +92,13 @@
       },
       {
         "type": "property",
-        "string": "{Element|string|boolean|undefined} css The view style.",
-        "name": "css",
-        "description": "The view style.",
+        "string": "{JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.",
+        "name": "model",
+        "description": "The data model. HTML attribute equivalent: `data-bind-model`.",
         "types": [
-          "Element",
-          "string",
-          "boolean"
+          "JSON"
         ],
-        "typesDescription": "<code>Element</code>|<code>string</code>|<code>boolean</code>|<code>undefined</code>",
-        "optional": true,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "property",
-        "string": "{boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).",
-        "name": "html",
-        "description": "Enable or disable HTML auto-loading (**default:** true).",
-        "types": [
-          "boolean"
-        ],
-        "typesDescription": "<code>boolean</code>|<code>undefined</code>",
+        "typesDescription": "<a href=\"JSON.html\">JSON</a>|<code>undefined</code>",
         "optional": true,
         "nullable": false,
         "nonNullable": false,
@@ -194,6 +150,36 @@
       },
       {
         "type": "property",
+        "string": "{Element|string|boolean|undefined} css The view style.",
+        "name": "css",
+        "description": "The view style.",
+        "types": [
+          "Element",
+          "string",
+          "boolean"
+        ],
+        "typesDescription": "<code>Element</code>|<code>string</code>|<code>boolean</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).",
+        "name": "html",
+        "description": "Enable or disable HTML auto-loading (**default:** true).",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
         "string": "{ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.",
         "name": "ready",
         "description": "The ready callback, called once the component is succesfully loaded.",
@@ -232,6 +218,6 @@
     "isEvent": false,
     "ignore": false,
     "line": 26,
-    "codeStart": 42
+    "codeStart": 41
   }
 ]
