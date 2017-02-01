@@ -24,20 +24,18 @@
  */
 
 /**
- *
- * @typedef {{
- *    contextId: Object|undefined The context id,
- *    container: Element|undefined The container element,
- *    componentId: string|undefined The component identifier,
- *    model: JSON|undefined The data model,
- *    view: Element|ZxQuery|undefined The view element,
- *    css: Element|string|boolean|undefined,
- *    html: boolean|undefined,
- *    controller: ContextControllerHandler|undefined The controller handler,
- *    on: Array.<EventMapping>|EventCallback|undefined The events handling map,
- *    behavior: Array.<EventMapping>|EventCallback|undefined The behaviors handling map,
- *    ready: ContextReadyCallback|undefined The ready callback, called once the component is succesfully loaded,
- *    error: ContextErrorCallback|undefined The error callback, called when error occurs
- * }} ContextOptions
- *
+ * Component Context options object.
+ * @typedef {object} ContextOptions
+ * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
+ * @property {Element|undefined} container The container element,
+ * @property {string|undefined} componentId The component identifier.
+ * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
+ * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
+ * @property {Element|string|boolean|undefined} css The view style.
+ * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
+ * @property {ContextControllerHandler|undefined} controller The controller handler.
+ * @property {Array.<EventMapping>|EventCallback|undefined} on The events handling map.
+ * @property {Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.
+ * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
+ * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
  */

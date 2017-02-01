@@ -704,15 +704,13 @@
     "tags": [
       {
         "type": "param",
-        "string": "{{ContextOptions}|undefined} options The JSON options object.",
+        "string": "{ContextOptions|undefined} options The JSON options object.",
         "name": "options",
         "description": "The JSON options object.",
         "types": [
-          {
-            "ContextOptions": []
-          }
+          "ContextOptions"
         ],
-        "typesDescription": "{ ContextOptions: <code>*</code> }|<code>undefined</code>",
+        "typesDescription": "<a href=\"ContextOptions.html\">ContextOptions</a>|<code>undefined</code>",
         "optional": true,
         "nullable": false,
         "nonNullable": false,

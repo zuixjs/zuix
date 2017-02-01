@@ -27,6 +27,6 @@
  * TODO: describe
  *
  * @callback ContextControllerHandler
- * @param {ContextController} ctx
- *
+ * @param {ContextController} cp The context controller instance.
+ * @this {ContextController}
  */

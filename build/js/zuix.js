@@ -290,15 +290,18 @@ var util = _dereq_('./Util.js');
 
 /**
  *
- * @callback IterationCallback
+ * @callback ZxQuery~iterationCallback
  * @param {number} i Iteration count
+ * @param {object} item Current element
+ * @this {object}
  */
 
 /**
  *
- * @callback ZxQueryIterationCallback
- * @param {number} i Iteration count
- * @param {ZxQuery} item Current element
+ * @callback ZxQuery~instanceIterationCallback
+ * @param {number} count Iteration count
+ * @param {Element} item Current element
+ * @this {ZxQuery}
  */
 
 
@@ -457,7 +460,7 @@ ZxQuery.prototype.find = function (selector) {
  * instance wrapping the current `item`.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
- * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {ZxQuery~instanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.each = function (iterationCallback) {
@@ -721,7 +724,7 @@ z$.find = function (filter) {
  * If the callback returns *false*, the iteration loop will interrupt.
  *
  * @param {Array<Object>} items Enumerable objects collection.
- * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {ZxQuery~iterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {z$} `this`.
  */
 z$.each = function (items, iterationCallback) {
@@ -1225,7 +1228,7 @@ ComponentContext.prototype.controller = function (controller) {
 /**
  * Gets/Sets the component options.
  *
- * @param {{ContextOptions}|undefined} options The JSON options object.
+ * @param {ContextOptions|undefined} options The JSON options object.
  * @return {ComponentContext|object}
  */
 ComponentContext.prototype.options = function (options) {
@@ -1902,7 +1905,7 @@ function Zuix() {
 
 /**
  * @private
- * @type {!Array<ComponentCache>}
+ * @type {!Array.<ComponentCache>}
  */
 var _componentCache = [];
 
@@ -2066,7 +2069,7 @@ function loadInline(element) {
  *
  * @private
  * @param {!string} componentId The id/name of the component we want to load.
- * @param {ContextOptions} [options] context options used to initialize the loaded component
+ * @param {ContextOptions|undefined} [options] context options used to initialize the loaded component
  * @return {ComponentContext}
  */
 function load(componentId, options) {
@@ -2282,9 +2285,10 @@ function removeCachedComponent(componentId) {
 /***
  * @private
  * @param {Object} componentId
- * @returns {ComponentCache}
+ * @return {ComponentCache}
  */
 function getCachedComponent(componentId) {
+    /** @type {ComponentCache} */
     var cached = null;
     z$.each(_componentCache, function (k, v) {
         if (util.objectEquals(v.componentId, componentId)) {
@@ -2511,7 +2515,7 @@ Zuix.prototype.componentize = function (element) {
  * This is the programmatic equivalent of
  * `data-ui-include` or `data-ui-load`.
  * All available options are described in the
- * `ContextOptions` class documentation.
+ * `ContextOptions` object HTML attribute equivalent: `data-ui-context`. documentation.
  *
  * @example
  *

@@ -26,6 +26,5 @@
 /**
  *
  * @callback ContextReadyCallback
- * @param {ComponentContext} context
- *
+ * @this {ComponentContext}
  */

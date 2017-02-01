@@ -41,7 +41,7 @@ zuix.controller(function (cp) {
     };
 
     cp.destroy = function () {
-        cp.view().children().each(function () {
+        cp.view().children().each(function (k,v) {
             // TODO: should restore original container styles
         });
         currentItem = -1;

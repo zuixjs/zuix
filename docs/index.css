@@ -68,6 +68,7 @@ ul, li {
     padding-left: 32px;
     padding-right: 32px;
     margin: 6px;
+    min-height:100%;
 }
 
 .content-padding {

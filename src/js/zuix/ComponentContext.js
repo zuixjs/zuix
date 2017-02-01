@@ -280,7 +280,7 @@ ComponentContext.prototype.controller = function (controller) {
 /**
  * Gets/Sets the component options.
  *
- * @param {{ContextOptions}|undefined} options The JSON options object.
+ * @param {ContextOptions|undefined} options The JSON options object.
  * @return {ComponentContext|object}
  */
 ComponentContext.prototype.options = function (options) {

@@ -26,7 +26,6 @@
 /**
  *
  * @callback ContextErrorCallback
- * @param {ComponentContext} context
  * @param {Object} error
- *
+ * @this {ComponentContext}
  */

@@ -54,7 +54,7 @@ function Zuix() {
 
 /**
  * @private
- * @type {!Array<ComponentCache>}
+ * @type {!Array.<ComponentCache>}
  */
 var _componentCache = [];
 
@@ -218,7 +218,7 @@ function loadInline(element) {
  *
  * @private
  * @param {!string} componentId The id/name of the component we want to load.
- * @param {ContextOptions} [options] context options used to initialize the loaded component
+ * @param {ContextOptions|undefined} [options] context options used to initialize the loaded component
  * @return {ComponentContext}
  */
 function load(componentId, options) {
@@ -434,9 +434,10 @@ function removeCachedComponent(componentId) {
 /***
  * @private
  * @param {Object} componentId
- * @returns {ComponentCache}
+ * @return {ComponentCache}
  */
 function getCachedComponent(componentId) {
+    /** @type {ComponentCache} */
     var cached = null;
     z$.each(_componentCache, function (k, v) {
         if (util.objectEquals(v.componentId, componentId)) {
@@ -663,7 +664,7 @@ Zuix.prototype.componentize = function (element) {
  * This is the programmatic equivalent of
  * `data-ui-include` or `data-ui-load`.
  * All available options are described in the
- * `ContextOptions` class documentation.
+ * `ContextOptions` object HTML attribute equivalent: `data-ui-context`. documentation.
  *
  * @example
  *

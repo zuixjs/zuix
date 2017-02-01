@@ -40,7 +40,7 @@
     "tags": [
       {
         "type": "callback",
-        "string": "IterationCallback"
+        "string": "ZxQuery~iterationCallback"
       },
       {
         "type": "param",
@@ -55,6 +55,24 @@
         "nullable": false,
         "nonNullable": false,
         "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{object} item Current element",
+        "name": "item",
+        "description": "Current element",
+        "types": [
+          "object"
+        ],
+        "typesDescription": "<code>object</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "this",
+        "string": "{object}"
       }
     ],
     "description": {
@@ -68,18 +86,18 @@
     "isEvent": false,
     "ignore": false,
     "line": 31,
-    "codeStart": 36
+    "codeStart": 38
   },
   {
     "tags": [
       {
         "type": "callback",
-        "string": "ZxQueryIterationCallback"
+        "string": "ZxQuery~instanceIterationCallback"
       },
       {
         "type": "param",
-        "string": "{number} i Iteration count",
-        "name": "i",
+        "string": "{number} count Iteration count",
+        "name": "count",
         "description": "Iteration count",
         "types": [
           "number"
@@ -92,17 +110,21 @@
       },
       {
         "type": "param",
-        "string": "{ZxQuery} item Current element",
+        "string": "{Element} item Current element",
         "name": "item",
         "description": "Current element",
         "types": [
-          "ZxQuery"
+          "Element"
         ],
-        "typesDescription": "<a href=\"ZxQuery.html\">ZxQuery</a>",
+        "typesDescription": "<code>Element</code>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
         "variable": false
+      },
+      {
+        "type": "this",
+        "string": "{ZxQuery}"
       }
     ],
     "description": {
@@ -115,8 +137,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 37,
-    "codeStart": 43
+    "line": 39,
+    "codeStart": 46
   },
   {
     "tags": [
@@ -136,8 +158,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 45,
-    "codeStart": 46,
+    "line": 48,
+    "codeStart": 49,
     "code": "var _zuix_events_mapping = [];\nfunction routeEvent(e) {\n    triggerEventHandlers(this, e.type, e);\n\n}\nfunction addEventHandler(el, path, handler) {\n    var found = false;\n    z$.each(_zuix_events_mapping, function () {\n        if (this.element === el && this.path === path && this.handler == handler) {\n            console.log('handler already registered', el, path, handler);\n            found = true;\n            return false;\n        }\n    });\n    if (!found) {\n        _zuix_events_mapping.push({ element: el, path: path, handler: handler });\n        el.addEventListener(path, routeEvent, false);\n    }\n}\nfunction removeEventHandler(el, path, handler) {\n    var left = 1, index = -1;\n    z$.each(_zuix_events_mapping, function (i) {\n        if (this.element === el && this.path === path && this.handler == handler) {\n            left--;\n            index = i;\n        }\n    });\n    if (index !== -1)\n        _zuix_events_mapping.splice(index, 1);\n    // unregister event handler since it was the last one\n    if (left == 0)\n        el.removeEventListener(path, routeEvent);\n}\nfunction triggerEventHandlers(el, path, evt) {\n    var element = z$(el);\n    z$.each(_zuix_events_mapping, function () {\n        if (this.element === el && this.path === path) {\n            this.handler.call(element, evt);\n        }\n    });\n}",
     "ctx": {
       "type": "declaration",
@@ -199,8 +221,8 @@
     "isClass": true,
     "isEvent": false,
     "ignore": false,
-    "line": 89,
-    "codeStart": 102,
+    "line": 92,
+    "codeStart": 105,
     "code": "function ZxQuery(element) {",
     "ctx": {
       "type": "constructor",
@@ -226,8 +248,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 103,
-    "codeStart": 104,
+    "line": 106,
+    "codeStart": 107,
     "code": "this._selection = [];\n\nif (typeof element === 'undefined')\n    element = document.documentElement;\n\nif (element instanceof ZxQuery)\n    return element;\nelse if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))\n    this._selection = element;\nelse if (element instanceof HTMLElement || element instanceof Node)\n    this._selection = [element];\nelse if (typeof element === 'string')\n    this._selection = document.documentElement.querySelectorAll(element);\nelse if (element !== null) { //if (typeof element === 'string') {\n    console.log('ZxQuery cannot wrap object of this type.', (typeof element), element);\n    throw(element);\n}\nreturn this;\n}",
     "ctx": {
       "type": "property",
@@ -263,8 +285,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 125,
-    "codeStart": 129,
+    "line": 128,
+    "codeStart": 132,
     "code": "ZxQuery.prototype.length = function () {\n    return this._selection.length;\n};",
     "ctx": {
       "type": "method",
@@ -314,8 +336,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 132,
-    "codeStart": 137,
+    "line": 135,
+    "codeStart": 140,
     "code": "ZxQuery.prototype.parent = function (filter) {\n    if (!util.isNoU(filter))\n        return new ZxQuery(z$.getClosest(this._selection[0], filter));\n    return new ZxQuery(this._selection[0].parentNode);\n};",
     "ctx": {
       "type": "method",
@@ -365,8 +387,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 142,
-    "codeStart": 147,
+    "line": 145,
+    "codeStart": 150,
     "code": "ZxQuery.prototype.children = function (filter) {\n    // TODO: implement filtering\n    if (!util.isNoU(filter))\n        return new ZxQuery(this._selection[0].querySelectorAll(filter));\n    return new ZxQuery(this._selection[0].children);\n};",
     "ctx": {
       "type": "method",
@@ -402,8 +424,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 153,
-    "codeStart": 157,
+    "line": 156,
+    "codeStart": 160,
     "code": "ZxQuery.prototype.reverse = function () {\n    var elements = (Array.prototype.slice).call(this._selection, 0);\n    this._selection = elements.reverse();\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -454,8 +476,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 162,
-    "codeStart": 169,
+    "line": 165,
+    "codeStart": 172,
     "code": "ZxQuery.prototype.get = function (i) {\n    if (util.isNoU(i)) i = 0;\n    return this._selection[i];\n};",
     "ctx": {
       "type": "method",
@@ -505,8 +527,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 173,
-    "codeStart": 179,
+    "line": 176,
+    "codeStart": 182,
     "code": "ZxQuery.prototype.eq = function (i) {\n    return new ZxQuery(this._selection[i]);\n};",
     "ctx": {
       "type": "method",
@@ -556,8 +578,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 182,
-    "codeStart": 187,
+    "line": 185,
+    "codeStart": 190,
     "code": "ZxQuery.prototype.find = function (selector) {\n    return new ZxQuery(this._selection[0].querySelectorAll(selector));\n};",
     "ctx": {
       "type": "method",
@@ -571,13 +593,11 @@
     "tags": [
       {
         "type": "param",
-        "string": "{ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration",
+        "string": "{ZxQuery~instanceIterationCallback} iterationCallback The callback *fn* to call at each iteration",
         "name": "iterationCallback",
         "description": "The callback *fn* to call at each iteration",
-        "types": [
-          "ZxQueryIterationCallback"
-        ],
-        "typesDescription": "<a href=\"ZxQueryIterationCallback.html\">ZxQueryIterationCallback</a>",
+        "types": [],
+        "typesDescription": "<code>?</code>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
@@ -607,8 +627,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 190,
-    "codeStart": 203,
+    "line": 193,
+    "codeStart": 206,
     "code": "ZxQuery.prototype.each = function (iterationCallback) {\n    z$.each(this._selection, iterationCallback);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -673,8 +693,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 207,
-    "codeStart": 213,
+    "line": 210,
+    "codeStart": 216,
     "code": "ZxQuery.prototype.attr = function (attr, val) {\n    if (util.isNoU(val))\n        return this._selection[0].getAttribute(attr);\n    else\n        this.each(function (k, v) {\n            this.get().setAttribute(attr, val);\n        });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -738,8 +758,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 222,
-    "codeStart": 228,
+    "line": 225,
+    "codeStart": 231,
     "code": "ZxQuery.prototype.trigger = function (eventPath, eventData) {\n    var event;\n    if (window.CustomEvent) {\n        event = new CustomEvent(eventPath, {detail: eventData});\n    } else {\n        event = document.createEvent('CustomEvent');\n        event.initCustomEvent(eventPath, true, true, eventData);\n    }\n    this.each(function (k, el) {\n        el.dispatchEvent(event);\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -803,8 +823,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 241,
-    "codeStart": 247,
+    "line": 244,
+    "codeStart": 250,
     "code": "ZxQuery.prototype.one = function (eventPath, eventHandler) {\n    var fired = false;\n    this.on(eventPath, function (a, b) {\n        if (fired) return;\n        fired = true;\n        z$(this).off(eventPath, eventHandler);\n        (eventHandler).call(this, a, b);\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -868,8 +888,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 257,
-    "codeStart": 263,
+    "line": 260,
+    "codeStart": 266,
     "code": "ZxQuery.prototype.on = function (eventPath, eventHandler) {\n    var events = eventPath.match(/\\S+/g) || [];\n    this.each(function (k, el) {\n        z$.each(events, function (k, ev) {\n            addEventHandler(el, ev, eventHandler);\n        });\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -933,8 +953,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 272,
-    "codeStart": 278,
+    "line": 275,
+    "codeStart": 281,
     "code": "ZxQuery.prototype.off = function (eventPath, eventHandler) {\n    var events = eventPath.match(/\\S+/g) || [];\n    this.each(function (k, el) {\n        z$.each(events, function (k, ev) {\n            removeEventHandler(el, ev, eventHandler);\n        });\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -970,8 +990,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 287,
-    "codeStart": 291,
+    "line": 290,
+    "codeStart": 294,
     "code": "ZxQuery.prototype.isEmpty = function () {\n    return (this._selection[0].innerHTML.replace(/\\s/g, '').length === 0);\n};",
     "ctx": {
       "type": "method",
@@ -1036,8 +1056,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 294,
-    "codeStart": 300,
+    "line": 297,
+    "codeStart": 303,
     "code": "ZxQuery.prototype.css = function (attr, val) {\n    if (util.isNoU(val))\n        return this._selection[0].style[attr];\n    else\n        this.each(function (k, el) {\n            el.style[attr] = val;\n        });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1087,8 +1107,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 309,
-    "codeStart": 314,
+    "line": 312,
+    "codeStart": 317,
     "code": "ZxQuery.prototype.addClass = function (className) {\n    var classes = className.match(/\\S+/g) || [];\n    z$.each(this._selection, function (k, el) {\n        if (el.classList) {\n            z$.each(classes, function (k, cl) {\n                el.classList.add(cl);\n            });\n        } else el.className += ' ' + className;\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1138,8 +1158,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 325,
-    "codeStart": 330,
+    "line": 328,
+    "codeStart": 333,
     "code": "ZxQuery.prototype.hasClass = function (className) {\n    return z$.hasClass(this._selection[0], className);\n};",
     "ctx": {
       "type": "method",
@@ -1189,8 +1209,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 333,
-    "codeStart": 338,
+    "line": 336,
+    "codeStart": 341,
     "code": "ZxQuery.prototype.removeClass = function (className) {\n    var classes = className.match(/\\S+/g) || [];\n    z$.each(this._selection, function (k, el) {\n        if (el.classList) {\n            z$.each(classes, function (k, cl) {\n                el.classList.remove(cl);\n            });\n        } else el.className = el.className.replace(new RegExp('(^|\\\\b)' + className.split(' ').join('|') + '(\\\\b|$)', 'gi'), ' ');\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1226,8 +1246,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 349,
-    "codeStart": 353,
+    "line": 352,
+    "codeStart": 356,
     "code": "ZxQuery.prototype.prev = function () {\n    return new ZxQuery(this._selection[0].previousElementSibling);\n};",
     "ctx": {
       "type": "method",
@@ -1263,8 +1283,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 356,
-    "codeStart": 360,
+    "line": 359,
+    "codeStart": 363,
     "code": "ZxQuery.prototype.next = function () {\n    return new ZxQuery(this._selection[0].nextElementSibling);\n};",
     "ctx": {
       "type": "method",
@@ -1315,8 +1335,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 363,
-    "codeStart": 368,
+    "line": 366,
+    "codeStart": 371,
     "code": "ZxQuery.prototype.html = function (htmlText) {\n    if (util.isNoU(htmlText))\n        return this._selection[0].innerHTML;\n    this.each(function (k, el) {\n        el.innerHTML = htmlText;\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1371,8 +1391,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 376,
-    "codeStart": 381,
+    "line": 379,
+    "codeStart": 384,
     "code": "ZxQuery.prototype.append = function (el) {\n    if (typeof el === 'string')\n        this._selection[0].innerHTML += el;\n    else\n        this._selection[0].appendChild(el);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1427,8 +1447,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 388,
-    "codeStart": 393,
+    "line": 391,
+    "codeStart": 396,
     "code": "ZxQuery.prototype.prepend = function (el) {\n    if (typeof el === 'string')\n        this._selection[0].innerHTML = el + this._selection[0].innerHTML;\n    else\n        this._selection[0].insertBefore(el, this._selection[0].innerHTML.firstElementChild);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1479,8 +1499,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 400,
-    "codeStart": 405,
+    "line": 403,
+    "codeStart": 408,
     "code": "ZxQuery.prototype.display = function (mode) {\n    if (util.isNoU(mode))\n        return this._selection[0].style.display;\n    z$.each(this._selection, function (k, el) {\n        el.style.display = mode;\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1531,8 +1551,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 413,
-    "codeStart": 418,
+    "line": 416,
+    "codeStart": 421,
     "code": "ZxQuery.prototype.visibility = function (mode) {\n    if (util.isNoU(mode))\n        return this._selection[0].style.visibility;\n    z$.each(this._selection, function (k, el) {\n        el.style.visibility = mode;\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1568,8 +1588,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 426,
-    "codeStart": 430,
+    "line": 429,
+    "codeStart": 433,
     "code": "ZxQuery.prototype.show = function () {\n    return this.display('');\n};",
     "ctx": {
       "type": "method",
@@ -1605,8 +1625,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 433,
-    "codeStart": 437,
+    "line": 436,
+    "codeStart": 440,
     "code": "ZxQuery.prototype.hide = function () {\n    return this.display('none');\n};",
     "ctx": {
       "type": "method",
@@ -1654,8 +1674,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 442,
-    "codeStart": 448,
+    "line": 445,
+    "codeStart": 451,
     "code": "var z$ = function (what) {\n    return new ZxQuery(what);\n};\nz$.find = function (filter) {\n    return z$().find(filter);\n};",
     "ctx": {
       "type": "function",
@@ -1681,13 +1701,11 @@
       },
       {
         "type": "param",
-        "string": "{ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration",
+        "string": "{ZxQuery~iterationCallback} iterationCallback The callback *fn* to call at each iteration",
         "name": "iterationCallback",
         "description": "The callback *fn* to call at each iteration",
-        "types": [
-          "ZxQueryIterationCallback"
-        ],
-        "typesDescription": "<a href=\"ZxQueryIterationCallback.html\">ZxQueryIterationCallback</a>",
+        "types": [],
+        "typesDescription": "<code>?</code>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
@@ -1717,8 +1735,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 454,
-    "codeStart": 467,
+    "line": 457,
+    "codeStart": 470,
     "code": "z$.each = function (items, iterationCallback) {\n    if (items != null)\n        for (var i = 0, len = items.length; i < len; i++) {\n            var item = items[i];\n            if (item instanceof Element)\n                item = z$(item);\n            if (iterationCallback.call(item, i, items[i]) === false)\n                break;\n        }\n    return this;\n};\nz$.hasClass = function(el, className) {\n    var classes = className.match(/\\S+/g) || [];\n    var success = false;\n    z$.each(classes, function (k, cl) {\n        if (el.classList)\n            success = el.classList.contains(cl);\n        else\n            success = (new RegExp('(^| )' + cl + '( |$)', 'gi').test(el.className));\n        if (success) return false;\n    });\n    return success;\n};\nz$.ajax = function ajax(opt) {\n    var url;\n    if (!util.isNoU(opt) && !util.isNoU(opt.url))\n        url = opt.url;\n    else\n        url = opt;\n    var xhr = new XMLHttpRequest();\n    xhr.open('GET', url);\n    xhr.onload = function () {\n        if (xhr.status === 200) {\n            if (util.isFunction(opt.success)) opt.success(xhr.responseText);\n        }\n        else {\n            if (util.isFunction(opt.error)) opt.error(xhr);\n        }\n        if (util.isFunction(opt.then)) opt.then(xhr);\n    };\n    xhr.send();\n    return this;\n};\nz$.wrapElement = function (containerTag, element) {\n    //$(element).wrap($('<'+containerTag+'/>'));\n    //return element;",
     "ctx": {
       "type": "method",
@@ -1752,8 +1770,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 513,
-    "codeStart": 514,
+    "line": 516,
+    "codeStart": 517,
     "code": "var container = document.createElement(containerTag);\nif (typeof element === 'string')\n    container.innerHTML = element;\nelse\n// TODO: test this, it may not work\n    container.appendChild(element);\nreturn container;\n};\nz$.wrapCss = function (wrapperRule, css) {\nvar wrapReX = /([.,\\w])([^/{};]+)({)/g;\nvar r, result = null, wrappedCss = '';\nwhile (r = wrapReX.exec(css)) {\n    if (result != null) {\n        var rule = css.substring(result.index, r.index);\n        var splitReX = /(.*)[^s]\\{([^\\}]+)[\\}]/g; // [^{]\n        var ruleParts = splitReX.exec(rule);\n        if (ruleParts != null && ruleParts.length > 1) {\n            var classes = ruleParts[1].split(',');\n            z$.each(classes, function (k, v) {\n                wrappedCss += '\\n' + wrapperRule + '\\n' + v;\n                if (k < classes.length - 1)\n                    wrappedCss += ', ';\n            });\n            wrappedCss += ' {' + ruleParts[2] + '}\\n';\n        } else {\n            console.log('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);\n        }\n    }\n    result = r;\n}\nif (result != null)\n    wrappedCss += wrapperRule + ' ' + css.substring(result.index);\nif (wrappedCss != '') {\n    css = wrappedCss;\n}\nreturn css;\n};\nz$.appendCss = function (css, target) {\nvar style = null, head;\nif (typeof css === 'string') {\n    // output css\n    head = document.head || document.getElementsByTagName('head')[0];\n    style = document.createElement('style');\n    style.type = 'text/css';\n    if (style.styleSheet)\n        style.styleSheet.cssText = css;\n    else\n        style.appendChild(document.createTextNode(css));\n} else if (css instanceof Element) style = css;\n// remove previous style node\nif (!util.isNoU(target))\n    head.removeChild(target);\nif (!util.isNoU(style))\n    head.appendChild(style);\nreturn style;\n};\nz$.getClosest = function (elem, selector) {\n// Get closest match\nfor (; elem && elem !== document; elem = elem.parentNode) {\n    if (elem.matches(selector)) return elem;\n}\nreturn null;\n};\nz$.getPosition = function (el) {\nvar visible = z$.isInView(el);\nvar x = 0, y = 0;\nwhile (el) {\n    if (el.tagName == \"BODY\") {\n        // deal with browser quirks with body/window/document and page scroll\n        var scrollX = el.scrollLeft || document.documentElement.scrollLeft;\n        var scrollY = el.scrollTop || document.documentElement.scrollTop;\n        x += (el.offsetLeft - scrollX + el.clientLeft);\n        y += (el.offsetTop - scrollY + el.clientTop);\n    } else {\n        // for all other non-BODY elements\n        x += (el.offsetLeft - el.scrollLeft + el.clientLeft);\n        y += (el.offsetTop - el.scrollTop + el.clientTop);\n    }\n    el = el.offsetParent;\n}\nreturn {\n    x: x,\n    y: y,\n    visible: visible\n};\n};\nz$.isInView = function (el) {\nif (el.offsetParent === null)\n    return false;\nvar rect = el.getBoundingClientRect();\nreturn rect.bottom > 0 && rect.right > 0\n    && rect.left < (window.innerWidth || document.documentElement.clientWidth)",
     "ctx": {
       "type": "declaration",
@@ -1774,8 +1792,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 605,
-    "codeStart": 606,
+    "line": 608,
+    "codeStart": 609,
     "code": "&& rect.top < (window.innerHeight || document.documentElement.clientHeight);",
     "ctx": false
   },
@@ -1791,8 +1809,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 607,
-    "codeStart": 608,
+    "line": 610,
+    "codeStart": 611,
     "code": "};\nz$.ZxQuery = ZxQuery;\n\n// Element.matches() polyfill\nif (!Element.prototype.matches) {\n    Element.prototype.matches =\n        Element.prototype.matchesSelector ||\n        Element.prototype.mozMatchesSelector ||\n        Element.prototype.msMatchesSelector ||\n        Element.prototype.oMatchesSelector ||\n        Element.prototype.webkitMatchesSelector ||\n        function (s) {\n            var matches = (this.document || this.ownerDocument).querySelectorAll(s),\n                i = matches.length;\n            while (--i >= 0 && matches.item(i) !== this) {\n            }\n            return i > -1;\n        };\n}\n// window.CustomEvent polyfill for IE>=9\n(function () {\n    if ( typeof window.CustomEvent === \"function\" ) return false;\n    function CustomEvent ( event, params ) {\n        params = params || { bubbles: false, cancelable: false, detail: undefined };\n        var evt = document.createEvent( 'CustomEvent' );\n        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );\n        return evt;\n    }\n    CustomEvent.prototype = window.Event.prototype;\n    window.CustomEvent = CustomEvent;\n})();\n\nmodule.exports =  z$;",
     "ctx": false
   }

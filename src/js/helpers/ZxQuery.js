@@ -30,15 +30,18 @@ var util = require('./Util.js');
 
 /**
  *
- * @callback IterationCallback
+ * @callback ZxQuery~iterationCallback
  * @param {number} i Iteration count
+ * @param {object} item Current element
+ * @this {object}
  */
 
 /**
  *
- * @callback ZxQueryIterationCallback
- * @param {number} i Iteration count
- * @param {ZxQuery} item Current element
+ * @callback ZxQuery~instanceIterationCallback
+ * @param {number} count Iteration count
+ * @param {Element} item Current element
+ * @this {ZxQuery}
  */
 
 
@@ -197,7 +200,7 @@ ZxQuery.prototype.find = function (selector) {
  * instance wrapping the current `item`.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
- * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {ZxQuery~instanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.each = function (iterationCallback) {
@@ -461,7 +464,7 @@ z$.find = function (filter) {
  * If the callback returns *false*, the iteration loop will interrupt.
  *
  * @param {Array<Object>} items Enumerable objects collection.
- * @param {ZxQueryIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {ZxQuery~iterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {z$} `this`.
  */
 z$.each = function (items, iterationCallback) {

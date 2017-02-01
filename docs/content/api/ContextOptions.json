@@ -1,0 +1,237 @@
+[
+  {
+    "tags": [],
+    "description": {
+      "full": "Copyright 2015-2017 G-Labs. All Rights Reserved.\n        https://genielabs.github.io/zuix\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+      "summary": "Copyright 2015-2017 G-Labs. All Rights Reserved.\n        https://genielabs.github.io/zuix",
+      "body": "Licensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 1,
+    "codeStart": 17
+  },
+  {
+    "tags": [
+      {
+        "type": "author",
+        "string": "Generoso Martello <generoso@martello.com>"
+      }
+    ],
+    "description": {
+      "full": "ZUIX, Javascript library for component-based development.\n       https://genielabs.github.io/zuix",
+      "summary": "ZUIX, Javascript library for component-based development.\n       https://genielabs.github.io/zuix",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 18,
+    "codeStart": 25
+  },
+  {
+    "tags": [
+      {
+        "type": "typedef",
+        "string": "{object} ContextOptions",
+        "types": [
+          "object"
+        ],
+        "typesDescription": "<code>object</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.",
+        "name": "contextId",
+        "description": "The context id. HTML attribute equivalent: `data-ui-context`.",
+        "types": [
+          "Object"
+        ],
+        "typesDescription": "<code>Object</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Element|undefined} container The container element,",
+        "name": "container",
+        "description": "The container element,",
+        "types": [
+          "Element"
+        ],
+        "typesDescription": "<code>Element</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{string|undefined} componentId The component identifier.",
+        "name": "componentId",
+        "description": "The component identifier.",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.",
+        "name": "model",
+        "description": "The data model. HTML attribute equivalent: `data-bind-model`.",
+        "types": [
+          "JSON"
+        ],
+        "typesDescription": "<a href=\"JSON.html\">JSON</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.",
+        "name": "view",
+        "description": "The view element. HTML attribute equivalent: `data-ui-view`.",
+        "types": [
+          "Element"
+        ],
+        "typesDescription": "<code>Element</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Element|string|boolean|undefined} css The view style.",
+        "name": "css",
+        "description": "The view style.",
+        "types": [
+          "Element",
+          "string",
+          "boolean"
+        ],
+        "typesDescription": "<code>Element</code>|<code>string</code>|<code>boolean</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).",
+        "name": "html",
+        "description": "Enable or disable HTML auto-loading (**default:** true).",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{ContextControllerHandler|undefined} controller The controller handler.",
+        "name": "controller",
+        "description": "The controller handler.",
+        "types": [
+          "ContextControllerHandler"
+        ],
+        "typesDescription": "<a href=\"ContextControllerHandler.html\">ContextControllerHandler</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Array.<EventMapping>|EventCallback|undefined} on The events handling map.",
+        "name": "on",
+        "description": "The events handling map.",
+        "types": [
+          "Array.<EventMapping>",
+          "EventCallback"
+        ],
+        "typesDescription": "<code>Array</code>.&lt;<a href=\"EventMapping.html\">EventMapping</a>&gt;|<a href=\"EventCallback.html\">EventCallback</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.",
+        "name": "behavior",
+        "description": "The behaviors handling map.",
+        "types": [
+          "Array.<EventMapping>",
+          "EventCallback"
+        ],
+        "typesDescription": "<code>Array</code>.&lt;<a href=\"EventMapping.html\">EventMapping</a>&gt;|<a href=\"EventCallback.html\">EventCallback</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.",
+        "name": "ready",
+        "description": "The ready callback, called once the component is succesfully loaded.",
+        "types": [
+          "ContextReadyCallback"
+        ],
+        "typesDescription": "<a href=\"ContextReadyCallback.html\">ContextReadyCallback</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{ContextErrorCallback|undefined} error The error callback, called when error occurs.",
+        "name": "error",
+        "description": "The error callback, called when error occurs.",
+        "types": [
+          "ContextErrorCallback"
+        ],
+        "typesDescription": "<a href=\"ContextErrorCallback.html\">ContextErrorCallback</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      }
+    ],
+    "description": {
+      "full": "Component Context options object.",
+      "summary": "Component Context options object.",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 26,
+    "codeStart": 42
+  }
+]

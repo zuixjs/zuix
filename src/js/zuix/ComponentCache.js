@@ -24,12 +24,9 @@
  */
 
 /**
- * Component Cache object.
- *
- * @typedef {{
- *      componentId: string The id of the cached component,
- *      view: ContextView The view,
- *      controller: ContextControllerHandler The function of the controller controller.
- * }} ComponentCache
- *
+ * Greeting person config
+ * @typedef {object} ComponentCache
+ * @property {string} componentId The id of the cached component.
+ * @property {Element} view The view element.
+ * @property {ContextControllerHandler} controller The controller handler function.
  */
