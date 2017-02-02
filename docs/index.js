@@ -25,6 +25,7 @@
 
 // Reference to the horizontal page scroller component
 var pagedView = null;
+var actionsView = null;
 
 // Main page setup
 var main = {
@@ -39,6 +40,11 @@ var main = {
             mdl: true,
             prism: true,
             css: false
+        },
+        content_no_md: {
+            markdown: false,
+            mdl: true,
+            prism: true
         },
         component_no_css: {
             css: false
@@ -62,6 +68,7 @@ var main = {
         },
         // component ready callback
         ready: function () {
+            actionsView = this;
             console.log("ZUIX", "INFO", "Top menu ready.", this);
         }
     },
@@ -118,7 +125,9 @@ zuix
             s.hide();
         });
         // fade in main page
-        mainPage.animateCss('fadeIn', function(){
+        mainPage.animateCss('fadeIn',
+            { duration: '2s' },
+        function(){
             s.hide();
         }).show();
     }
@@ -135,14 +144,16 @@ zuix
 
 }).hook('view:process', function (data) {
     // Prism code syntax highlighter
-    data.find('code').each(function (i, block) {
-        this.addClass('language-javascript');
-        Prism.highlightElement(block);
-    });
+    if (this.options().prism) {
+        data.find('code').each(function (i, block) {
+            this.addClass('language-javascript');
+            Prism.highlightElement(block);
+        });
+    }
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
     // Material Design Light integration - DOM upgrade
-    if (componentHandler)
+    if (this.options().mdl && componentHandler)
         componentHandler.upgradeElements(data.get());
 });
 
@@ -153,31 +164,41 @@ function menuItemClicked(e, i) {
     console.log("item::click@ActionsView", i);
 }
 
+zuix.$.find('.site-header').hide();
+zuix.$.find('.site-footer').hide();
+
 // PagedView `page:change` behavior handler
 function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
-    if (effectIn == null) effectIn = 'bounceIn';
-    if (effectOut == null) effectOut = 'bounceOut';
+    if (i.page === 0) {
+        zuix.$.find('.site-header').animateCss('fadeOut', function () {
+            this.hide();
+        });
+        //zuix.$.find('.site-footer').visibility('hidden');
+    } else if (i.old === 0) {
+        zuix.$.find('.site-header').show().animateCss('fadeIn');
+        //zuix.$.find('.site-footer').visibility('');
+    }
+    if (effectIn == null) effectIn = 'fadeIn';
+    if (effectOut == null) effectOut = 'fadeOut';
     // Animate page changing
-    var options = { duration: '.5s' };
+    var options = { duration: '1.5s' };
     var pages = this.children();
     if (i.page > i.old) {
-        if (dirIn == null) dirIn = 'Right';
-        if (dirOut == null) dirOut = 'Left';
+        if (dirIn == null) dirIn = ''; //'Right';
+        if (dirOut == null) dirOut = ''; //'Left';
         pages.eq(i.page).animateCss(effectIn+dirIn, options)
-            .css('overflow', 'hidden').show();
+            .show();
         pages.eq(i.old).animateCss(effectOut+dirOut, options, function () {
-            pages.eq(i.page).css('overflow', 'auto');
-            pages.eq(i.old).css('overflow', 'auto').hide();
-        }).css('overflow', 'hidden').show();
+            pages.eq(i.old).hide();
+        }).show();
     } else {
-        if (dirIn == null) dirIn = 'Left';
-        if (dirOut == null) dirOut = 'Right';
+        if (dirIn == null) dirIn = ''; //'Left';
+        if (dirOut == null) dirOut = ''; //'Right';
         pages.eq(i.page).animateCss(effectIn+dirIn, options)
-            .css('overflow', 'hidden').show();
+            .show();
         pages.eq(i.old).animateCss(effectOut+dirOut, options, function () {
-            pages.eq(i.page).css('overflow', 'auto');
-            pages.eq(i.old).css('overflow', 'auto').hide();
-        }).css('overflow', 'hidden').show();
+            pages.eq(i.old).hide();
+        }).show();
     }
 }
 
@@ -193,7 +214,7 @@ zuix.$.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) 
         else options = param1;
     }
     // TODO: should run all the following code for each element in the ZxQuery selection
-    var prefixes = [ '-webkit', '-moz', '-ms' ];
+    var prefixes = [ '-webkit', '-moz', '-o', '-ms' ];
     for(var key in options)
         for (var p in prefixes)
             this.css(prefixes[p] + '-animation-' + key, options[key]);

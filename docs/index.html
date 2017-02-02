@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.yellow-pink.min.css"/>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Dosis:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,400" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,200i,300,300i,600,600i&amp;subset=latin-ext" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
@@ -52,7 +52,7 @@
     <link href="css/flex-layout-attribute.min.css" rel="stylesheet">
 
     <!-- Animte.Css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="js/animate-3.5.2.min.css">
 
     <!-- ZUIX-HOOK add-on: Prism, code syntax highlighting -->
     <link rel="stylesheet" href="js/prism/prism.css">
@@ -75,14 +75,18 @@
 <!-- Main page layout (MDL) -->
 <div data-ui-field="main" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
-    <header class="mdl-layout__header">
+    <div class="wallpaper">
+        <div class="backdrop a-nimated p-ulse i-nfinite"></div>
+    </div>
+
+    <header class="site-header mdl-layout__header">
         <div class="mdl-layout__header-row">
 
             <!-- zuix "ui/layout/actions_view" layout -->
             <div data-ui-load="ui/layout/actions_view" data-ui-options="main.topMenu" layout="row center-center">
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
                     <i class="material-icons md-18">home</i>
-                    <small>Home</small>
+                    <small></small>
                 </div>
                 <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
                     <i class="material-icons md-18">school</i>
@@ -106,23 +110,10 @@
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
 
-                    <div self="size-larger top-center" class="section-content mdl-shadow--8dp">
-
-                        <div align="center">
-                        <h3 layout="row center-center" style="margin:0">
-                            <i class="material-icons md-24">dashboard</i><span class="md-32">Z</span><span class="md-24">UIX</span>
-                        </h3>
-
-                        <cite>the easy shift to component-based development</cite>
-                        </div>
-
-                        <p>&nbsp;</p>
-
-                        <!-- include content from local resource -->
-                        <div data-ui-include="content/about"
-                             data-ui-options="main.options.content_no_css"></div>
-
-                    </div>
+                    <!-- include content from local resource -->
+                    <div data-ui-include="content/about"
+                         data-ui-options="main.options.content_no_md"
+                         layout="columns center-center"></div>
 
                 </div>
             </section>
@@ -163,19 +154,16 @@
     <div class="mdl-color--grey-200">
         <div data-ui-field="loaderMessage"></div>
     </div>
-    <footer class="site-footer mdl-color--yellow" layout="row center-center">
-        <i class="material-icons">dashboard</i> <strong>ZUIX</strong> &nbsp;&nbsp; &copy; &nbsp; G-Labs 2016-2017
-    </footer>
 </div>
 
 
-<!-- Loader Overlay -->
+<!-- Loader Overlay, this shall always be inline -->
 <div data-ui-field="splashScreen" layout="column stretch-stretch"
-     style="background-color:rgba(255,255,220,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100;">
+     style="background-color:rgba(255,255,255,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100;">
     <div layout="column bottom-center">
         <div class="animated infinite pulse">
             <h5 layout="row center-center">
-                <i class="material-icons md-24">dashboard</i>
+                <i class="material-icons md-24">extension</i>
                 <span class="md-32">Z</span><span class="md-24">UIX</span>
             </h5>
         </div>

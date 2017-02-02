@@ -1,0 +1,95 @@
+div {
+    line-height: 180%;
+    font-size: 110%;
+    font-weight: 200;
+}
+.logo {
+    margin:0;
+    padding:0;
+    color:yellow;
+    font-size: 200%;
+    font-weight: 800;
+}
+.logo .material-icons {
+    font-size:100%;
+}
+.logo-text {
+    color:yellow;
+    font-weight: 800;
+    margin-right: 6px;
+}
+.zuix-color--block-1 {
+    overflow: hidden;
+    background-color: rgba(16, 16, 53, 0.85);
+    color:white;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    font-size: 140%;
+    text-align: justify;
+}
+.zuix-color--block-2 {
+    background-color: rgba(35,135,235,0.85);
+    font-size: 100%;
+    margin-top: 16px;
+}
+.zuix-color--block-3 {
+    background-color: rgba(16, 16, 53, 0.85);
+    font-size: 130%;
+    line-height:160%;
+}
+.zuix-color--block-links {
+    margin-top: 16px;
+}
+.mdl-card {
+    padding: 16px;
+}
+.mdl-card__title {
+    color:yellow;
+    padding: 0;
+    text-wrap: avoid;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.mdl-card__title .material-icons {
+    color: white;
+}
+.mdl-card__title-text {
+    width: 100%;
+    text-align: center;
+    font-weight: 400;
+    font-size: 140%;
+}
+.mdl-card__supporting-text {
+    font-family: 'Dosis', sans-serif;
+    color:white;
+    padding: 0;
+    font-weight: 400;
+    font-size: 100%;
+    line-height: 180%;
+}
+.material-icons {
+    margin-left: 8px;
+    margin-right: 8px;
+    font-size: 110%;
+    vertical-align: middle;
+}
+.main-links {
+    background: white;
+    color: black;
+}
+.main-links div {
+    padding: 24px;
+}
+.main-links a {
+    color:black;
+    text-decoration: none;
+}
+
+cite {
+    font-size: 60%;
+    text-wrap: avoid;
+    white-space: nowrap;
+}
+.intro {
+    margin-top: 48px;
+}

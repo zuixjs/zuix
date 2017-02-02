@@ -9,6 +9,8 @@ zuix.controller(function (cp) {
         });
         setSelected(0)
 
+        cp.expose('setSelected', setSelected);
+
     };
 
     cp.destroy = function () {
