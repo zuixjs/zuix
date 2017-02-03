@@ -1,0 +1,25 @@
+.opaqueBlocK {
+    overflow: hidden;
+    background-color: rgba(16, 16, 53, 0.9);
+    color:white;
+    padding: 24px 24px;
+    font-size: 110%;
+}
+.logo {
+    margin:0;
+    padding:0;
+    color:yellow;
+    font-size: 200%;
+    font-weight: bold;
+}
+.logo .material-icons {
+    font-size:100%;
+}
+.logo-text {
+    color:yellow;
+    font-weight: 800;
+}
+p {
+    font-size: 100%;
+    padding-bottom: 12px;
+}

@@ -1,0 +1,41 @@
+.opaqueBlocK {
+    background-color: rgba(27, 106, 185, 0.9);
+    font-size: 90%;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+p {
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+.mdl-card {
+    padding: 16px;
+}
+.mdl-card__title {
+    color:yellow;
+    padding: 0;
+    text-wrap: avoid;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-bottom: 24px;
+}
+.mdl-card__title .material-icons {
+    color: white;
+}
+.mdl-card__title-text {
+    width: 100%;
+    font-weight: bold;
+    font-size: 140%;
+}
+.mdl-card__supporting-text {
+    font-family: 'Dosis', sans-serif;
+    color:white;
+    padding: 0;
+    padding-left: 48px;
+    padding-right: 32px;
+    font-weight: 400;
+    width: 100%;
+    font-size: 100%;
+    line-height: 180%;
+}

@@ -1,15 +1,18 @@
 h5 {
     padding:0;
     margin: 0 0 0 4px;
+    font-size:130%;
 }
 p {
     margin-bottom:12px;
 }
 p code {
     color: dimgrey;
+    font-size: 95%;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 code {
-    font-size: 110%;
     background-color: transparent;
 }
 small {
@@ -17,7 +20,6 @@ small {
     margin-right: 8px;
     margin-top: 12px;
     font-weight:bold;
-    color: #697063;
 }
 h5 code.language-javascript {
     color: #bfbfbf;
@@ -32,13 +34,12 @@ h5 code.language-javascript {
     font-weight: bolder;
 }
 .description {
-    font-family: monospace;
     padding-left: 6px;
     margin-top: 16px;
     margin-bottom:16px;
 }
 .description p {
-    line-height: 200%;
+    line-height: 160%;
 }
 .details {
     padding: 0 24px 16px;

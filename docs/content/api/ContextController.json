@@ -619,8 +619,8 @@
       }
     ],
     "description": {
-      "full": "Triggers the component event `eventPath` with the given\n`eventData` object. To listen a component event use the\n`{ComponentContext}.on(eventPath, handler)` method or\nin case `isHook` is set to true, use the\n`zuix.hook(eventPath, handler)` method.",
-      "summary": "Triggers the component event `eventPath` with the given\n`eventData` object. To listen a component event use the\n`{ComponentContext}.on(eventPath, handler)` method or\nin case `isHook` is set to true, use the\n`zuix.hook(eventPath, handler)` method.",
+      "full": "Triggers the component event `eventPath` with the given\n`eventData` object. To listen to a component event use the\n`{ComponentContext}.on(eventPath, handler)` method or\nin case `isHook` is set to true, use the\n`zuix.hook(eventPath, handler)` method.",
+      "summary": "Triggers the component event `eventPath` with the given\n`eventData` object. To listen to a component event use the\n`{ComponentContext}.on(eventPath, handler)` method or\nin case `isHook` is set to true, use the\n`zuix.hook(eventPath, handler)` method.",
       "body": ""
     },
     "isPrivate": false,

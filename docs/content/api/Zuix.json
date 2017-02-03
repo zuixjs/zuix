@@ -1641,8 +1641,8 @@
       }
     ],
     "description": {
-      "full": "Loads a component with the given options.\nThis is the programmatic equivalent of\n`data-ui-include` or `data-ui-load`.\nAll available options are described in the\n`ContextOptions` object HTML attribute equivalent: `data-ui-context`. documentation.",
-      "summary": "Loads a component with the given options.\nThis is the programmatic equivalent of\n`data-ui-include` or `data-ui-load`.\nAll available options are described in the\n`ContextOptions` object HTML attribute equivalent: `data-ui-context`. documentation.",
+      "full": "Loads a component with the given options.\nThis is the programmatic equivalent of\n`data-ui-include` or `data-ui-load`.\nAll available options are described in the\n`ContextOptions` object documentation.\nHTML attribute equivalent: `data-ui-context`.",
+      "summary": "Loads a component with the given options.\nThis is the programmatic equivalent of\n`data-ui-include` or `data-ui-load`.\nAll available options are described in the\n`ContextOptions` object documentation.\nHTML attribute equivalent: `data-ui-context`.",
       "body": ""
     },
     "isPrivate": false,
@@ -1651,7 +1651,7 @@
     "isEvent": false,
     "ignore": false,
     "line": 662,
-    "codeStart": 702,
+    "codeStart": 703,
     "code": "Zuix.prototype.load = load;",
     "ctx": {
       "type": "property",
@@ -1706,8 +1706,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 703,
-    "codeStart": 716,
+    "line": 704,
+    "codeStart": 717,
     "code": "Zuix.prototype.unload = function (context) {\n    unload(context);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1763,8 +1763,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 720,
-    "codeStart": 744,
+    "line": 721,
+    "codeStart": 745,
     "code": "Zuix.prototype.context = context;",
     "ctx": {
       "type": "property",
@@ -1843,8 +1843,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 745,
-    "codeStart": 753,
+    "line": 746,
+    "codeStart": 754,
     "code": "Zuix.prototype.trigger = function (context, eventPath, eventData) {\n    trigger(context, eventPath, eventData);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1908,8 +1908,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 757,
-    "codeStart": 811,
+    "line": 758,
+    "codeStart": 812,
     "code": "Zuix.prototype.hook = function (eventPath, eventHandler) {\n    hook(eventPath, eventHandler);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1959,8 +1959,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 815,
-    "codeStart": 821,
+    "line": 816,
+    "codeStart": 822,
     "code": "Zuix.prototype.lazyLoad = lazyLoad;\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
     "ctx": {
       "type": "property",
@@ -2009,8 +2009,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 837,
-    "codeStart": 841,
+    "line": 838,
+    "codeStart": 842,
     "code": "module.exports = function (root) {\n    var zuix = new Zuix();\n    document.addEventListener(\"DOMContentLoaded\", function(event) {\n        zuix.componentize();\n    });\n    return zuix;\n};",
     "ctx": {
       "type": "method",

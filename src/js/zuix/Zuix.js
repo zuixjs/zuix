@@ -664,7 +664,8 @@ Zuix.prototype.componentize = function (element) {
  * This is the programmatic equivalent of
  * `data-ui-include` or `data-ui-load`.
  * All available options are described in the
- * `ContextOptions` object HTML attribute equivalent: `data-ui-context`. documentation.
+ * `ContextOptions` object documentation.
+ * HTML attribute equivalent: `data-ui-context`.
  *
  * @example
  *

@@ -130,6 +130,10 @@ zuix
         function(){
             s.hide();
         }).show();
+        if (coverBlock == null) {
+            coverBlock = zuix.$.find('[data-ui-component="content/home/cover"]');
+            featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
+        }
     }
     loaderMessage.animateCss('bounceOutRight', { delay: '1s' }, function () {
         this.hide();
@@ -171,14 +175,13 @@ var zxHeader = zuix.$.find('.site-header').hide();
 zxHeader.hidden = true; var headerTriggerY = 100;
 var zxFooter = zuix.$.find('.site-footer').hide();
 var featuresBlock = null;
+var coverBlock = null;
 
 zuix.$.find('section').eq(0).on('scroll', function (data) {
    checkMenuVisibility();
 });
 
 function checkMenuVisibility() {
-    if (featuresBlock == null)
-        featuresBlock = zuix.$.find('.zuix-color--block-2');
     var checkPosition = featuresBlock.position();
     //console.log(checkPosition, zxHeader.display());
     if (checkPosition.y < headerTriggerY && zxHeader.hidden && !zxHeader.hasClass('animated')) {
@@ -205,22 +208,22 @@ function menuItemClicked(e, i) {
 // PagedView `page:change` behavior handler
 function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     if (i.page === 0) {
-        zuix.$.find('.site-header').animateCss('fadeOut', function () {
+        zxHeader.animateCss('fadeOut', function () {
             this.hide();
         });
-        zuix.$.find('.zuix-color--block-1')
+        coverBlock
             .animateCss('bounceInDown');
-        zuix.$.find('.zuix-color--block-2')
+        featuresBlock
             .animateCss('bounceInUp', function () {
                 zxHeader.hidden = true;
                 checkMenuVisibility();
             });
         //zuix.$.find('.site-footer').visibility('hidden');
     } else if (i.old === 0) {
-        zuix.$.find('.site-header').show().animateCss('fadeIn');
-        zuix.$.find('.zuix-color--block-1')
+        zxHeader.show().animateCss('fadeIn');
+        coverBlock
             .animateCss('slideOutUp');
-        zuix.$.find('.zuix-color--block-2')
+        featuresBlock
             .animateCss('slideOutDown');
         //zuix.$.find('.site-footer').visibility('');
     }

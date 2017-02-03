@@ -246,7 +246,7 @@ ContextController.prototype.options = function () {
 };
 /**
  * Triggers the component event `eventPath` with the given
- * `eventData` object. To listen a component event use the
+ * `eventData` object. To listen to a component event use the
  * `{ComponentContext}.on(eventPath, handler)` method or
  * in case `isHook` is set to true, use the
  * `zuix.hook(eventPath, handler)` method.
