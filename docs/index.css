@@ -155,8 +155,7 @@ pre.terminal p {
 [data-ui-field="loaderMessage"] {
     padding: 4px;
     text-align: center;
-    opacity: 0.65;
-    font-size: 10px;
+    font-size: 80%;
 }
 
 .content-loader {

@@ -105,8 +105,8 @@ var mainPage = zuix.field('main').hide();
 zuix
 .hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
-    loaderMessage.html(data.task)
-        .animateCss('bounce')
+    loaderMessage.html('Loading "<em>'+data.task+'</em>" ...')
+        .animateCss('bounceInRight')
         .show();
 
 }).hook('load:next', function(data){
@@ -114,8 +114,8 @@ zuix
         zuix.field('loader-progress')
             .html(data.task).prev()
             .animateCss('bounce');
-    loaderMessage.html(data.task+' complete.')
-        .animateCss('bounce');
+    loaderMessage.html('Loading "<em>'+data.task+'</em>" complete.')
+        .animateCss('bounceInRight');
 
 }).hook('load:end', function(data){
     if (splashScreen) {
@@ -131,7 +131,9 @@ zuix
             s.hide();
         }).show();
     }
-    loaderMessage.hide();
+    loaderMessage.animateCss('bounceOutRight', { delay: '2s' }, function () {
+        this.hide();
+    });
 
     // disable lazy load and loads all the other
     // stuff in background
