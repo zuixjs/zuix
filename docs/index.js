@@ -126,12 +126,12 @@ zuix
         });
         // fade in main page
         mainPage.animateCss('fadeIn',
-            { duration: '2s' },
+            { duration: '1.2s' },
         function(){
             s.hide();
         }).show();
     }
-    loaderMessage.animateCss('bounceOutRight', { delay: '2s' }, function () {
+    loaderMessage.animateCss('bounceOutRight', { delay: '1s' }, function () {
         this.hide();
     });
 
@@ -166,15 +166,41 @@ zuix
         componentHandler.upgradeElements(data.get());
 });
 
+
+var zxHeader = zuix.$.find('.site-header').hide();
+zxHeader.hidden = true; var headerTriggerY = 100;
+var zxFooter = zuix.$.find('.site-footer').hide();
+var featuresBlock = null;
+
+zuix.$.find('section').eq(0).on('scroll', function (data) {
+   checkMenuVisibility();
+});
+
+function checkMenuVisibility() {
+    if (featuresBlock == null)
+        featuresBlock = zuix.$.find('.zuix-color--block-2');
+    var checkPosition = featuresBlock.position();
+    //console.log(checkPosition, zxHeader.display());
+    if (checkPosition.y < headerTriggerY && zxHeader.hidden && !zxHeader.hasClass('animated')) {
+        zxHeader.show()
+            .animateCss('fadeInDown', { duration: '.5s' }, function () {
+                this.show();
+                zxHeader.hidden = false;
+            });
+    } else if (checkPosition.y >= headerTriggerY && !zxHeader.hidden && !zxHeader.hasClass('animated')) {
+        zxHeader.show().animateCss('fadeOutUp', { duration: '.5s' }, function () {
+            this.hide();
+            zxHeader.hidden = true;
+        });
+    }
+}
+
 // Top menu `item:click` event handler
 function menuItemClicked(e, i) {
     if (pagedView)
         pagedView.setPage(i);
     console.log("item::click@ActionsView", i);
 }
-
-zuix.$.find('.site-header').hide();
-zuix.$.find('.site-footer').hide();
 
 // PagedView `page:change` behavior handler
 function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
@@ -185,7 +211,10 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         zuix.$.find('.zuix-color--block-1')
             .animateCss('bounceInDown');
         zuix.$.find('.zuix-color--block-2')
-            .animateCss('bounceInUp');
+            .animateCss('bounceInUp', function () {
+                zxHeader.hidden = true;
+                checkMenuVisibility();
+            });
         //zuix.$.find('.site-footer').visibility('hidden');
     } else if (i.old === 0) {
         zuix.$.find('.site-header').show().animateCss('fadeIn');
@@ -198,7 +227,7 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     if (effectIn == null) effectIn = 'fadeIn';
     if (effectOut == null) effectOut = 'fadeOut';
     // Animate page changing
-    var options = { duration: '1.5s' };
+    var options = { duration: '1.0s' };
     var pages = this.children();
     if (i.page > i.old) {
         if (dirIn == null) dirIn = ''; //'Right';

@@ -69,7 +69,7 @@ zuix.controller(function (cp) {
                                 if (linkedApi.indexOf(this.toString()) >= 0)
                                     types += '<a href="#ZUIX_API--'+this+'">'+this.replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</a>';
                                 else
-                                    types += this.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+                                    types += this.toString().replace(/</g,"&lt;").replace(/>/g,"&gt;");
                                 if (i < t.length-1)
                                     types +=' | ';
                             });

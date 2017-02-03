@@ -78,20 +78,6 @@
       },
       {
         "type": "property",
-        "string": "{Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.",
-        "name": "view",
-        "description": "The view element. HTML attribute equivalent: `data-ui-view`.",
-        "types": [
-          "Element"
-        ],
-        "typesDescription": "<code>Element</code>|<code>undefined</code>",
-        "optional": true,
-        "nullable": false,
-        "nonNullable": false,
-        "variable": false
-      },
-      {
-        "type": "property",
         "string": "{JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.",
         "name": "model",
         "description": "The data model. HTML attribute equivalent: `data-bind-model`.",
@@ -99,6 +85,20 @@
           "JSON"
         ],
         "typesDescription": "<a href=\"JSON.html\">JSON</a>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.",
+        "name": "view",
+        "description": "The view element. HTML attribute equivalent: `data-ui-view`.",
+        "types": [
+          "Element"
+        ],
+        "typesDescription": "<code>Element</code>|<code>undefined</code>",
         "optional": true,
         "nullable": false,
         "nonNullable": false,

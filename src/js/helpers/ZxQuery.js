@@ -295,6 +295,15 @@ ZxQuery.prototype.isEmpty = function () {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 /**
+ * Gets the element position.
+ *
+ * @return {{x, y, visible}}
+ */
+ZxQuery.prototype.position = function () {
+    return z$.getPosition(this._selection[0])
+};
+
+/**
  * Sets or gets the given css property.
  * @param {string} attr The CSS property name
  * @param {string|undefined} [val] The attribute value.
