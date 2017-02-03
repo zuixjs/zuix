@@ -1,7 +1,10 @@
 div {
     line-height: 180%;
-    font-size: 110%;
+    font-size: 106%;
     font-weight: 200;
+}
+p {
+    margin-bottom: 16px;
 }
 .logo {
     margin:0;
@@ -21,9 +24,8 @@ div {
     overflow: hidden;
     background-color: rgba(16, 16, 53, 0.85);
     color:white;
-    padding-top: 48px;
-    padding-bottom: 48px;
-    font-size: 120%;
+    padding: 24px 24px;
+    font-size: 110%;
     text-align: justify;
 }
 .zuix-color--block-2 {
@@ -32,6 +34,9 @@ div {
     margin-top: 16px;
     margin-bottom: 16px;
     overflow: hidden;
+}
+.zuix-color--block-2 p {
+    margin-bottom: 32px;
 }
 .zuix-color--block-3 {
     background-color: rgba(16, 16, 53, 0.85);
@@ -102,5 +107,5 @@ cite {
     white-space: nowrap;
 }
 .intro {
-    margin-top: 48px;
+    margin-top: 24px;
 }
