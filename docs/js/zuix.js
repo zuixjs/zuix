@@ -1985,13 +1985,16 @@ function componentize(element) {
     if (tasker.requestLock(componentize)) {
         z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function (i, el) {
             this.visibility('hidden');
+            // defer element loading if lazy loading is enabled and the element is not in view
+            var lazyContainer = el.lazyContainer || z$.getClosest(el, '[data-ui-lazyload=true],[data-ui-lazyload=force]');
+            el.lazyContainer = lazyContainer;
             // override lazy loading if 'lazyload' is set to 'false' for the current element
-            if (!lazyLoad() || this.attr('data-ui-lazyload') == 'false') {
+            if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
+                &&
+                (!lazyLoad() || this.attr('data-ui-lazyload') == 'false')) {
                 loadInline(el);
                 return true;
             }
-            // defer element loading if lazy loading is enabled and the element is not in view
-            var lazyContainer = z$.getClosest(el, '[data-ui-lazyload=true]');
             if (lazyContainer !== null) {
                 if (_lazyLoaders.indexOf(lazyContainer) == -1) {
                     _lazyLoaders.push(lazyContainer);
@@ -2464,7 +2467,7 @@ var ctrl = zuix.controller(function(cp) {
     cp.create = function() { ... };
     cp.destroy = function() { ... }
 }).for('path/to/component_name');
-</pre></code>
+</code></pre>
  *
  * @param {ContextControllerHandler} handler The controller handler
  * function ```function(context_controller){ ... } ```,
@@ -2495,7 +2498,7 @@ containerDiv.html('Hello World!');
  *
  * @param {!string} fieldName The class to check for.
  * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
- * @return {ZxQuery} The ``{ZxQuery}```-wrapped elements with matching ```data-ui-field``` attribute.
+ * @return {ZxQuery} The `{ZxQuery}`-wrapped elements with matching ```data-ui-field``` attribute.
  */
 Zuix.prototype.field = field;
 /**
@@ -2524,7 +2527,8 @@ Zuix.prototype.componentize = function (element) {
  * This is the programmatic equivalent of
  * `data-ui-include` or `data-ui-load`.
  * All available options are described in the
- * `ContextOptions` object HTML attribute equivalent: `data-ui-context`. documentation.
+ * `ContextOptions` object documentation.
+ * HTML attribute equivalent: `data-ui-context`.
  *
  * @example
  *

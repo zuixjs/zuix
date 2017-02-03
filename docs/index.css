@@ -37,9 +37,11 @@ h2 {
 }
 h3 {
     font-size: 200%;
+    font-weight:700;
 }
 h4 {
     font-size: 170%;
+    font-weight:500;
 }
 h5 {
     font-size: 150%;
@@ -156,9 +158,17 @@ pre.terminal p {
     font-size:9px;
 }
 [data-ui-field="loaderMessage"] {
-    padding: 4px;
-    text-align: center;
+    position: fixed;
+    z-index: 100;
+    bottom: 32px;
+    right: 32px;
+    width: auto;
+    height: auto;
+    display: block;
+    padding: 8px;
+    opacity: 0.5;
     font-size: 80%;
+    text-align: right;
 }
 
 .content-loader {
