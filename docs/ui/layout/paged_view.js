@@ -11,6 +11,7 @@ zuix.controller(function (cp) {
             el.style['bottom'] = '0';
             el.style['right'] = '0';
             el.style['overflow'] = 'auto';
+            el.style['overflow-x'] = 'hidden';
             this.hide();
         });
         setPage(0);

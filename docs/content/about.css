@@ -16,7 +16,6 @@ div {
 .logo-text {
     color:yellow;
     font-weight: 800;
-    margin-right: 6px;
 }
 .zuix-color--block-1 {
     overflow: hidden;
@@ -31,14 +30,20 @@ div {
     background-color: rgba(35,135,235,0.85);
     font-size: 100%;
     margin-top: 16px;
+    overflow: hidden;
 }
 .zuix-color--block-3 {
     background-color: rgba(16, 16, 53, 0.85);
     font-size: 130%;
     line-height:160%;
+    overflow: hidden;
 }
 .zuix-color--block-links {
     margin-top: 16px;
+    -webkit-animation-delay: .39s;
+    -moz-animation-delay: .39s;
+    -o-animation-delay: .39s;
+    -ms-animation-delay: .39s;
 }
 .mdl-card {
     padding: 16px;
@@ -78,11 +83,13 @@ div {
     color: black;
 }
 .main-links div {
-    padding: 24px;
+    padding: 12px;
 }
 .main-links a {
     color:black;
     text-decoration: none;
+    font-size: 80%;
+    padding: 12px;
 }
 
 cite {

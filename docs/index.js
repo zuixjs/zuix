@@ -173,9 +173,17 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         zuix.$.find('.site-header').animateCss('fadeOut', function () {
             this.hide();
         });
+        zuix.$.find('.zuix-color--block-1')
+            .animateCss('bounceInDown');
+        zuix.$.find('.zuix-color--block-2')
+            .animateCss('bounceInUp');
         //zuix.$.find('.site-footer').visibility('hidden');
     } else if (i.old === 0) {
         zuix.$.find('.site-header').show().animateCss('fadeIn');
+        zuix.$.find('.zuix-color--block-1')
+            .animateCss('slideOutUp');
+        zuix.$.find('.zuix-color--block-2')
+            .animateCss('slideOutDown');
         //zuix.$.find('.site-footer').visibility('');
     }
     if (effectIn == null) effectIn = 'fadeIn';
