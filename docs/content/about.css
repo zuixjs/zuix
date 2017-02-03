@@ -8,7 +8,7 @@ div {
     padding:0;
     color:yellow;
     font-size: 200%;
-    font-weight: 800;
+    font-weight: bold;
 }
 .logo .material-icons {
     font-size:100%;
@@ -23,13 +23,14 @@ div {
     color:white;
     padding-top: 48px;
     padding-bottom: 48px;
-    font-size: 140%;
+    font-size: 120%;
     text-align: justify;
 }
 .zuix-color--block-2 {
-    background-color: rgba(35,135,235,0.85);
+    background-color: rgba(27, 106, 185, 0.85);
     font-size: 100%;
     margin-top: 16px;
+    margin-bottom: 16px;
     overflow: hidden;
 }
 .zuix-color--block-3 {
@@ -40,10 +41,12 @@ div {
 }
 .zuix-color--block-links {
     margin-top: 16px;
-    -webkit-animation-delay: .39s;
-    -moz-animation-delay: .39s;
-    -o-animation-delay: .39s;
-    -ms-animation-delay: .39s;
+}
+.zuix-color--block-links .animated {
+    -webkit-animation-delay: 0.45s;
+    -moz-animation-delay: 0.45s;
+    -o-animation-delay: 0.45s;
+    -ms-animation-delay: 0.45s;
 }
 .mdl-card {
     padding: 16px;
@@ -54,14 +57,14 @@ div {
     text-wrap: avoid;
     white-space: nowrap;
     vertical-align: middle;
+    margin-bottom: 24px;
 }
 .mdl-card__title .material-icons {
     color: white;
 }
 .mdl-card__title-text {
     width: 100%;
-    text-align: center;
-    font-weight: 400;
+    font-weight: bold;
     font-size: 140%;
 }
 .mdl-card__supporting-text {
@@ -69,6 +72,7 @@ div {
     color:white;
     padding: 0;
     font-weight: 400;
+    width: 100%;
     font-size: 100%;
     line-height: 180%;
 }
