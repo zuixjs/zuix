@@ -555,12 +555,15 @@ ZxQuery.prototype.isEmpty = function () {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 /**
- * Gets the element position.
+ * Gets coordinates and visibility status of the element.
  *
  * @return {{x, y, visible}}
  */
 ZxQuery.prototype.position = function () {
-    return z$.getPosition(this._selection[0])
+    if (this._selection[0] != null)
+        return z$.getPosition(this._selection[0])
+    else // TODO: check this out; should prevent this from happening
+        return { x: -1, y: -1, visible: false };
 };
 
 /**
@@ -2140,9 +2143,19 @@ function load(componentId, options) {
         if (cachedComponent !== null && util.isNoU(ctx.controller()))
             ctx.controller(cachedComponent.controller);
 
-        if (cachedComponent !== null && cachedComponent.view != null)
+        if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
-        else {
+            // TODO: implement CSS caching as well
+            if (options.css !== false)
+                ctx.loadCss({
+                    error: function (err) {
+                        console.log(err, ctx);
+                    },
+                    then: function () {
+                        loadController(ctx);
+                    }
+                });
+        } else {
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(ctx.view())) {
@@ -2156,22 +2169,22 @@ function load(componentId, options) {
                                 ctx.loadCss({
                                     error: function (err) {
                                         console.log(err, ctx);
+                                        task.end();
                                     },
                                     then: function () {
                                         loadController(ctx);
+                                        task.end();
                                     }
                                 });
                             else {
                                 loadController(ctx);
+                                task.end();
                             }
                         },
                         error: function (err) {
                             console.log(err, ctx);
                             if (util.isFunction(options.error))
                                 (ctx.error).call(ctx, err);
-                        },
-                        then: function () {
-                            task.end();
                         }
                     });
 
@@ -2470,8 +2483,8 @@ var ctrl = zuix.controller(function(cp) {
 </code></pre>
  *
  * @param {ContextControllerHandler} handler The controller handler
- * function ```function(context_controller){ ... } ```,
- * where `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)
+ * function ```function(cp){ ... } ```,
+ * where `cp` is the [`{ContextController}`](#ZUIX_API--ContextController)
  * object that is passed to the handler once the component
  * is created.
  * @return {ContextControllerHandler} The initialized controller handler.
@@ -2528,7 +2541,6 @@ Zuix.prototype.componentize = function (element) {
  * `data-ui-include` or `data-ui-load`.
  * All available options are described in the
  * `ContextOptions` object documentation.
- * HTML attribute equivalent: `data-ui-context`.
  *
  * @example
  *
@@ -2584,6 +2596,7 @@ Zuix.prototype.unload = function (context) {
 /**
  * Get the `ComponentContext`, given its `contextId`
  * or component's container/view element.
+ * HTML attribute equivalent: `data-ui-context`.
  *
  * @example
 <small>**Example - HTML**</small>
@@ -2607,7 +2620,7 @@ ctx.setSlide(1);
  */
 Zuix.prototype.context = context;
 /**
- * Triggers the event `eventPath`.
+ * Triggers the event specified by `eventPath`.
  *
  * @param {Object} context Context (`this`) for the event handler
  * @param {string} eventPath The path of the event to fire.

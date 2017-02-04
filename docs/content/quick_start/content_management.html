@@ -215,14 +215,14 @@ Container including the above:
 
 <small><strong>RESULT</strong></small>
 <div data-ui-include="site/common/links"
-     data-ui-options="main.options.content"
-     data-ui-lazyload="false"></div>
+     data-ui-options="main.options.content"></div>
 
 <p>&nbsp;</p>
 
 So, as shown in the processed output, the ```.css``` style definitions
 are applied only to the loaded content via the ```data-ui-component``` constraint,
-making possible to keep **global style** files separated from **content-local style** files.
+making possible to keep **global style** files separated from **content-local style** files
+(scoped CSS).
 
 <div data-ui-include="content/quick_start/view_templates"
      data-ui-options="main.options.content_no_css"

@@ -280,9 +280,19 @@ function load(componentId, options) {
         if (cachedComponent !== null && util.isNoU(ctx.controller()))
             ctx.controller(cachedComponent.controller);
 
-        if (cachedComponent !== null && cachedComponent.view != null)
+        if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
-        else {
+            // TODO: implement CSS caching as well
+            if (options.css !== false)
+                ctx.loadCss({
+                    error: function (err) {
+                        console.log(err, ctx);
+                    },
+                    then: function () {
+                        loadController(ctx);
+                    }
+                });
+        } else {
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
             if (util.isNoU(ctx.view())) {
@@ -299,19 +309,18 @@ function load(componentId, options) {
                                     },
                                     then: function () {
                                         loadController(ctx);
+                                        task.end();
                                     }
                                 });
                             else {
                                 loadController(ctx);
+                                task.end();
                             }
                         },
                         error: function (err) {
                             console.log(err, ctx);
                             if (util.isFunction(options.error))
                                 (ctx.error).call(ctx, err);
-                        },
-                        then: function () {
-                            task.end();
                         }
                     });
 

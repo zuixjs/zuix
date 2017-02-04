@@ -295,12 +295,15 @@ ZxQuery.prototype.isEmpty = function () {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 /**
- * Gets the element position.
+ * Gets coordinates and visibility status of the element.
  *
  * @return {{x, y, visible}}
  */
 ZxQuery.prototype.position = function () {
-    return z$.getPosition(this._selection[0])
+    if (this._selection[0] != null)
+        return z$.getPosition(this._selection[0])
+    else // TODO: check this out; should prevent this from happening
+        return { x: -1, y: -1, visible: false };
 };
 
 /**

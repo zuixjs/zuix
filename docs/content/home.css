@@ -22,3 +22,11 @@ cite {
 .intro {
     margin-top: 24px;
 }
+.mdl-mini-footer, .mdl-logo {
+    background-color: rgb(255,235,59);
+    color: dimgrey;
+}
+.mdl-mini-footer a {
+    color: #545454;
+    text-decoration: none;
+}
