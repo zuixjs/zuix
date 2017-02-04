@@ -1419,9 +1419,9 @@
       },
       {
         "type": "param",
-        "string": "{ContextControllerHandler} handler The controller handler\nfunction ```function(context_controller){ ... } ```,\nwhere `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)\nobject that is passed to the handler once the component\nis created.",
+        "string": "{ContextControllerHandler} handler The controller handler\nfunction ```function(cp){ ... } ```,\nwhere `cp` is the [`{ContextController}`](#ZUIX_API--ContextController)\nobject that is passed to the handler once the component\nis created.",
         "name": "handler",
-        "description": "The controller handler function ```function(context_controller){ ... } ```,\nwhere `context_controller` is the [`{ContextController}`](#ZUIX_API--ContextController)\nobject that is passed to the handler once the component\nis created.",
+        "description": "The controller handler function ```function(cp){ ... } ```,\nwhere `cp` is the [`{ContextController}`](#ZUIX_API--ContextController)\nobject that is passed to the handler once the component\nis created.",
         "types": [
           "ContextControllerHandler"
         ],

@@ -3,8 +3,8 @@
 Exception made for handling of standard events and behaviors,
 a [view template](#Getting_Started--View_Templates) cannot implement a more complex UI logic.
 
-This is where *components* are being used. Differently from a
-view template, a component has a piece of *JavaScript* code associated
+This is where *components* are being used. In addition to all the features of
+a view template, a component has a piece of *JavaScript* code associated
 to it and can so control any element in its view and implement
 any kind of UI functionality.
 
@@ -19,10 +19,10 @@ used. This will be described in next paragraph.
 
 ##### Loading a component
 
-To load a component, the ```data-ui-load``` attribute is used. The value of this
-attribute is the *component identifier*. Also a ```data-ui-options```
-attribute might be provided as for all other options/features already described
-for ```data-ui-include``` in [content loading](#Getting_Started--Content_Loading),
+In place of `data-ui-include` attribute, to load a component, the ```data-ui-load```
+attribute is used. The value of this attribute is the *component identifier*.
+Also a ```data-ui-options``` attribute may be provided as for all other options/features
+already described for ```data-ui-include``` in [content loading](#Getting_Started--Content_Loading),
 such as *lazy loading* and *data binding*.
 
 For example, consider the following "Summary Card" component, which
