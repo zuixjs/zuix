@@ -55,7 +55,6 @@ zuix.controller(function (cp) {
         if (anchor != null) {
             var targetTop = pages.eq(p).find('a[id='+anchor+']')
                 .position().y;
-            console.log(targetTop);
             pages.get(p).scrollTop = targetTop;
         }
     }

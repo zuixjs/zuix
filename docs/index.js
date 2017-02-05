@@ -164,7 +164,7 @@ zuix
     // Force opening of all non-local links in a new window
     zuix.$('a[href*="://"]').attr('target','_blank');
     // Material Design Light integration - DOM upgrade
-    if (this.options().mdl && componentHandler)
+    if (/*this.options().mdl &&*/ componentHandler)
         componentHandler.upgradeElements(data.get());
 });
 

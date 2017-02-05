@@ -5,17 +5,17 @@
     margin-top: 16px;
 }
 .opaqueBlocK .animated {
-    -webkit-animation-delay: 0.45s;
-    -moz-animation-delay: 0.45s;
-    -o-animation-delay: 0.45s;
-    -ms-animation-delay: 0.45s;
+    -webkit-animation-delay: 0.28s;
+    -moz-animation-delay: 0.28s;
+    -o-animation-delay: 0.28s;
+    -ms-animation-delay: 0.28s;
 }
 .opaqueBlocK div {
-    padding: 12px;
+    padding: 2px;
 }
 .opaqueBlocK a {
     color:black;
     text-decoration: none;
     font-size: 80%;
-    padding: 12px;
+    padding: 32px;
 }
