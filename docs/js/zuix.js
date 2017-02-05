@@ -1290,12 +1290,15 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
  *
  * @private
  * @param {object} [options] The options object.
+ * @param {boolean} [enableCaching] Enable HTTP
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadCss = function (options) {
+ComponentContext.prototype.loadCss = function (options, enableCaching) {
     var context = this;
-    var cssPath = context.componentId + ".css?" + new Date().getTime();
+    var cssPath = context.componentId + '.css' + (enableCaching ? '?'+new Date().getTime() : '');
     if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.caching))
+        enableCaching = options.caching;
     if (!util.isNoU(options.path))
         cssPath = options.path;
     z$.ajax({
@@ -1338,12 +1341,15 @@ ComponentContext.prototype.loadCss = function (options) {
  *
  * @private
  * @param {object} [options] The options object.
+ * @param {boolean} [enableCaching] Enable HTTP caching
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadHtml = function(options) {
+ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     var context = this;
     var htmlPath = context.componentId;
     if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.caching))
+        enableCaching = options.caching;
     if (!util.isNoU(options.path))
         htmlPath = options.path;
     // TODO: check if view caching is working in this case too
@@ -1361,7 +1367,7 @@ ComponentContext.prototype.loadHtml = function(options) {
             (options.then).call(context);
     } else {
         if (htmlPath == context.componentId)
-            htmlPath +=  '.html?' + new Date().getTime();
+            htmlPath +=  '.html' + (enableCaching ? '?'+new Date().getTime() : '');
         z$.ajax({
             url: htmlPath,
             success: function (viewHtml) {
@@ -2146,6 +2152,7 @@ function load(componentId, options) {
             // TODO: implement CSS caching as well
             if (options.css !== false) {
                 ctx.loadCss({
+                    caching: !_disableHttpCaching,
                     error: function (err) {
                         console.log(err, ctx);
                     },
@@ -2165,9 +2172,11 @@ function load(componentId, options) {
                     var task = this;
 
                     ctx.loadHtml({
+                        caching: !_disableHttpCaching,
                         success: function () {
                             if (options.css !== false) {
                                 ctx.loadCss({
+                                    caching: !_disableHttpCaching,
                                     error: function (err) {
                                         console.log(err, ctx);
                                     },
@@ -2295,7 +2304,18 @@ function lazyLoad(enable) {
         _disableLazyLoading = !enable;
     return !_isCrawlerBotClient && !_disableLazyLoading;
 }
-
+/**
+ * Enable/Disable HTTP caching
+ *
+ * @private
+ * @param {boolean} [enable]
+ * @return {boolean} *true* if HTTP caching is enabled, *false* otherwise.
+ */
+function httpCaching(enable) {
+    if (enable != null)
+        _disableHttpCaching = !enable;
+    return !_disableHttpCaching;
+}
 
 /*********************** private members *************************/
 
@@ -2336,8 +2356,9 @@ function loadController(context, task) {
         } else {
             var job = function(t) {
                 z$.ajax({
-                    url: context.componentId + ".js?" + new Date().getTime(),
+                    url: context.componentId + ".js" + (_disableHttpCaching ? '' : '?'+new Date().getTime()),
                     success: function (ctrlJs) {
+console.log("@@@", context.componentId + ".js" + (_disableHttpCaching ? '' : '?'+new Date().getTime()));
                         // TODO: improve js parsing!
                         try {
                             var fn = ctrlJs.indexOf('function');
@@ -2352,13 +2373,13 @@ function loadController(context, task) {
                                 ctrlJs = ctrlJs.substring(0, ec);
                             context.controller(getController(ctrlJs));
                         } catch (e) {
-                            console.log(e, ctrlJs, context);
+                            console.log(new Error(), e, ctrlJs, context);
                             if (util.isFunction(context.error))
                                 (context.error).call(context, e);
                         }
                     },
                     error: function (err) {
-                        console.log(err, context);
+                        console.log(err, new Error(), context);
                         if (util.isFunction(context.error))
                             (context.error).call(context, err);
                     },
@@ -2425,9 +2446,9 @@ function initComponent(context) {
                 // it can be then restored with c.restoreView()
                 c.saveView();
                 if (context.options().css !== false)
-                    context.loadCss();
+                    context.loadCss({ caching: !_disableHttpCaching });
                 if (context.options().html !== false)
-                    context.loadHtml();
+                    context.loadHtml({ caching: !_disableHttpCaching });
             }
             c.view().css('visibility', '');
         }
@@ -2462,7 +2483,9 @@ function getController(javascriptCode) {
 // Browser Agent / Bot detection
 /** @private */
 /** @private */
-var _isCrawlerBotClient = false, _disableLazyLoading = false;
+var _isCrawlerBotClient = false,
+    _disableLazyLoading = false,
+    _disableHttpCaching = false;
 if (navigator && navigator.userAgent)
     _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
         .test(navigator.userAgent);
@@ -2702,6 +2725,13 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
  * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
 Zuix.prototype.lazyLoad = lazyLoad;
+/**
+ * Enable/Disable HTTP caching
+ *
+ * @param {boolean} [enable]
+ * @return {boolean} *true* if HTTP caching is enabled, *false* otherwise.
+ */
+Zuix.prototype.httpCaching = httpCaching;
 
 Zuix.prototype.$ = z$;
 Zuix.prototype.TaskQueue = TaskQueue;

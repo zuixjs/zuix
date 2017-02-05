@@ -692,7 +692,7 @@
     "ignore": false,
     "line": 266,
     "codeStart": 274,
-    "code": "}\n\nif (util.isFunction(options.ready))\n    ctx.ready = options.ready;\nif (util.isFunction(options.error))\n    ctx.error = options.error;\n\nif (util.isNoU(options.view)) {\n\n    // pick it from cache if found\n    var cachedComponent = getCachedComponent(ctx.componentId);\n    if (cachedComponent !== null && util.isNoU(ctx.controller()))\n        ctx.controller(cachedComponent.controller);\n\n    if (cachedComponent !== null && cachedComponent.view != null) {\n        ctx.view(cachedComponent.view);\n        // TODO: implement CSS caching as well\n        if (options.css !== false) {\n            ctx.loadCss({\n                error: function (err) {\n                    console.log(err, ctx);\n                },\n                then: function () {\n                    loadController(ctx);\n                }\n            });\n            // defer controller loading\n            return ctx;\n        }\n    } else {\n        // if not able to inherit the view from the base cachedComponent\n        // or from an inline element, then load the view from web\n        if (util.isNoU(ctx.view())) {\n            // Load View\n            tasker.queue('html:' + ctx.componentId, function () {\n                var task = this;\n\n                ctx.loadHtml({\n                    success: function () {\n                        if (options.css !== false) {\n                            ctx.loadCss({\n                                error: function (err) {\n                                    console.log(err, ctx);\n                                },\n                                then: function () {\n                                    loadController(ctx, task);\n                                }\n                            });\n                        } else {\n                            loadController(ctx, task);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, ctx);\n                        if (util.isFunction(options.error))\n                            (ctx.error).call(ctx, err);\n                    }\n                });\n\n            }, options.priority);\n            // defer controller loading\n            return ctx;\n        }\n    }\n} else {\n    ctx.view(options.view);\n}\nloadController(ctx);\nreturn ctx;\n}",
+    "code": "}\n\nif (util.isFunction(options.ready))\n    ctx.ready = options.ready;\nif (util.isFunction(options.error))\n    ctx.error = options.error;\n\nif (util.isNoU(options.view)) {\n\n    // pick it from cache if found\n    var cachedComponent = getCachedComponent(ctx.componentId);\n    if (cachedComponent !== null && util.isNoU(ctx.controller()))\n        ctx.controller(cachedComponent.controller);\n\n    if (cachedComponent !== null && cachedComponent.view != null) {\n        ctx.view(cachedComponent.view);\n        // TODO: implement CSS caching as well\n        if (options.css !== false) {\n            ctx.loadCss({\n                caching: !_disableHttpCaching,\n                error: function (err) {\n                    console.log(err, ctx);\n                },\n                then: function () {\n                    loadController(ctx);\n                }\n            });\n            // defer controller loading\n            return ctx;\n        }\n    } else {\n        // if not able to inherit the view from the base cachedComponent\n        // or from an inline element, then load the view from web\n        if (util.isNoU(ctx.view())) {\n            // Load View\n            tasker.queue('html:' + ctx.componentId, function () {\n                var task = this;\n\n                ctx.loadHtml({\n                    caching: !_disableHttpCaching,\n                    success: function () {\n                        if (options.css !== false) {\n                            ctx.loadCss({\n                                caching: !_disableHttpCaching,\n                                error: function (err) {\n                                    console.log(err, ctx);\n                                },\n                                then: function () {\n                                    loadController(ctx, task);\n                                }\n                            });\n                        } else {\n                            loadController(ctx, task);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, ctx);\n                        if (util.isFunction(options.error))\n                            (ctx.error).call(ctx, err);\n                    }\n                });\n\n            }, options.priority);\n            // defer controller loading\n            return ctx;\n        }\n    }\n} else {\n    ctx.view(options.view);\n}\nloadController(ctx);\nreturn ctx;\n}",
     "ctx": false
   },
   {
@@ -725,8 +725,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 345,
-    "codeStart": 351,
+    "line": 348,
+    "codeStart": 354,
     "code": "function unload(context) {\n    if (!util.isNoU(context) && !util.isNoU(context._c)) {\n        if (!util.isNoU(context._c.view()))\n            context._c.view().attr('data-ui-component', null);\n\n        //context.unregisterEvents();\n        // TODO: unregister events and local context behavior\n        // TODO: detach view from parent if context.container is not null\n\n        if (util.isFunction(context._c.destroy))\n            context._c.destroy();\n    }\n}",
     "ctx": {
       "type": "function",
@@ -752,8 +752,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 365,
-    "codeStart": 366,
+    "line": 368,
+    "codeStart": 369,
     "code": "function createContext(options) {\n    var context = new ComponentContext(options, trigger);\n    _contextRoot.push(context);\n    return context;\n}",
     "ctx": {
       "type": "function",
@@ -808,8 +808,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 372,
-    "codeStart": 379,
+    "line": 375,
+    "codeStart": 382,
     "code": "function context(contextId) {\n    var context = null;\n    if (contextId instanceof z$.ZxQuery)\n        contextId = contextId.get();\n    z$.each(_contextRoot, function (k, v) {\n        if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId))\n            || util.objectEquals(v.contextId, contextId)) {\n            context = v;\n            return false;\n        }\n    });\n    return context;\n}",
     "ctx": {
       "type": "function",
@@ -835,8 +835,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 393,
-    "codeStart": 394,
+    "line": 396,
+    "codeStart": 397,
     "code": "function removeContext(contextId) {\n    // TODO: removeContext\n}",
     "ctx": {
       "type": "function",
@@ -886,8 +886,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 398,
-    "codeStart": 405,
+    "line": 401,
+    "codeStart": 408,
     "code": "function hook(path, handler) {\n    if (util.isNoU(handler))\n        return _hooksCallbacks[path];\n    _hooksCallbacks[path] = handler;\n}",
     "ctx": {
       "type": "function",
@@ -949,8 +949,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 411,
-    "codeStart": 419,
+    "line": 414,
+    "codeStart": 422,
     "code": "function trigger(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n    if (path == 'view:process')\n        componentize(data);\n}",
     "ctx": {
       "type": "function",
@@ -1003,13 +1003,67 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 430,
-    "codeStart": 437,
+    "line": 433,
+    "codeStart": 440,
     "code": "function lazyLoad(enable) {\n    if (enable != null)\n        _disableLazyLoading = !enable;\n    return !_isCrawlerBotClient && !_disableLazyLoading;\n}",
     "ctx": {
       "type": "function",
       "name": "lazyLoad",
       "string": "lazyLoad()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "private",
+        "string": "",
+        "visibility": "private"
+      },
+      {
+        "type": "param",
+        "string": "{boolean} [enable]",
+        "name": "[enable]",
+        "description": "",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{boolean} *true* if HTTP caching is enabled, *false* otherwise.",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "*true* if HTTP caching is enabled, *false* otherwise."
+      }
+    ],
+    "description": {
+      "full": "Enable/Disable HTTP caching",
+      "summary": "Enable/Disable HTTP caching",
+      "body": ""
+    },
+    "isPrivate": true,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 445,
+    "codeStart": 452,
+    "code": "function httpCaching(enable) {\n    if (enable != null)\n        _disableHttpCaching = !enable;\n    return !_disableHttpCaching;\n}",
+    "ctx": {
+      "type": "function",
+      "name": "httpCaching",
+      "string": "httpCaching()"
     }
   },
   {
@@ -1024,8 +1078,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 444,
-    "codeStart": 445
+    "line": 458,
+    "codeStart": 459
   },
   {
     "tags": [
@@ -1045,8 +1099,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 447,
-    "codeStart": 448,
+    "line": 461,
+    "codeStart": 462,
     "code": "function removeCachedComponent(componentId) {\n    // TODO: removeCachedComponent\n}",
     "ctx": {
       "type": "function",
@@ -1099,8 +1153,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 452,
-    "codeStart": 457,
+    "line": 466,
+    "codeStart": 471,
     "code": "function getCachedComponent(componentId) {",
     "ctx": {
       "type": "function",
@@ -1133,8 +1187,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 458,
-    "codeStart": 459,
+    "line": 472,
+    "codeStart": 473,
     "code": "var cached = null;\nz$.each(_componentCache, function (k, v) {\n    if (util.objectEquals(v.componentId, componentId)) {\n        cached = v;\n        return false;\n    }\n});\nreturn cached;\n}",
     "ctx": {
       "type": "declaration",
@@ -1189,9 +1243,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 469,
-    "codeStart": 474,
-    "code": "function loadController(context, task) {\n    if (typeof context.options().controller === 'undefined' && context.controller() === null) {\n        if (util.isFunction(_globalHandlers[context.componentId])) {\n            context.controller(_globalHandlers[context.componentId]);\n            createComponent(context);\n            if (!util.isNoU(task)) task.end();\n        } else {\n            var job = function(t) {\n                z$.ajax({\n                    url: context.componentId + \".js?\" + new Date().getTime(),\n                    success: function (ctrlJs) {\n                        // TODO: improve js parsing!\n                        try {\n                            var fn = ctrlJs.indexOf('function');\n                            var il = ctrlJs.indexOf('.load');\n                            if (il > 1 && il < fn)\n                                ctrlJs = ctrlJs.substring(0, il - 4);\n                            var ih = ctrlJs.indexOf('.controller');\n                            if (ih > 1 && ih < fn)\n                                ctrlJs = ctrlJs.substring(ih + 11);\n                            var ec = ctrlJs.indexOf('//<--controller');\n                            if (ec > 0)\n                                ctrlJs = ctrlJs.substring(0, ec);\n                            context.controller(getController(ctrlJs));\n                        } catch (e) {\n                            console.log(e, ctrlJs, context);\n                            if (util.isFunction(context.error))\n                                (context.error).call(context, e);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, context);\n                        if (util.isFunction(context.error))\n                            (context.error).call(context, err);\n                    },\n                    then: function () {\n                        createComponent(context);\n                        t.end();\n                    }\n                });\n            };\n            if (util.isNoU(task)) {\n                tasker.queue('js:' + context.componentId, function () {\n                    job(this);\n                }, context.options().priority);\n            } else job(task);\n        }\n    } else {\n        createComponent(context);\n        if (!util.isNoU(task)) task.end();\n    }\n}",
+    "line": 483,
+    "codeStart": 488,
+    "code": "function loadController(context, task) {\n    if (typeof context.options().controller === 'undefined' && context.controller() === null) {\n        if (util.isFunction(_globalHandlers[context.componentId])) {\n            context.controller(_globalHandlers[context.componentId]);\n            createComponent(context);\n            if (!util.isNoU(task)) task.end();\n        } else {\n            var job = function(t) {\n                z$.ajax({\n                    url: context.componentId + \".js\" + (_disableHttpCaching ? '' : '?'+new Date().getTime()),\n                    success: function (ctrlJs) {\nconsole.log(\"@@@\", context.componentId + \".js\" + (_disableHttpCaching ? '' : '?'+new Date().getTime()));\n                        // TODO: improve js parsing!\n                        try {\n                            var fn = ctrlJs.indexOf('function');\n                            var il = ctrlJs.indexOf('.load');\n                            if (il > 1 && il < fn)\n                                ctrlJs = ctrlJs.substring(0, il - 4);\n                            var ih = ctrlJs.indexOf('.controller');\n                            if (ih > 1 && ih < fn)\n                                ctrlJs = ctrlJs.substring(ih + 11);\n                            var ec = ctrlJs.indexOf('//<--controller');\n                            if (ec > 0)\n                                ctrlJs = ctrlJs.substring(0, ec);\n                            context.controller(getController(ctrlJs));\n                        } catch (e) {\n                            console.log(new Error(), e, ctrlJs, context);\n                            if (util.isFunction(context.error))\n                                (context.error).call(context, e);\n                        }\n                    },\n                    error: function (err) {\n                        console.log(err, new Error(), context);\n                        if (util.isFunction(context.error))\n                            (context.error).call(context, err);\n                    },\n                    then: function () {\n                        createComponent(context);\n                        t.end();\n                    }\n                });\n            };\n            if (util.isNoU(task)) {\n                tasker.queue('js:' + context.componentId, function () {\n                    job(this);\n                }, context.options().priority);\n            } else job(task);\n        }\n    } else {\n        createComponent(context);\n        if (!util.isNoU(task)) task.end();\n    }\n}",
     "ctx": {
       "type": "function",
       "name": "loadController",
@@ -1228,8 +1282,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 527,
-    "codeStart": 531,
+    "line": 542,
+    "codeStart": 546,
     "code": "function createComponent(context) {\n    if (!util.isNoU(context.view())) {\n        if (!context.options().viewDeferred) {\n            var cached = getCachedComponent(context.componentId);\n            if (cached === null) {\n                var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);\n                var c = z$.wrapElement('div', html);\n                _componentCache.push({\n                    componentId: context.componentId,\n                    view: c.innerHTML,\n                    controller: context.controller()\n                });\n            }\n        }\n        initComponent(context);\n    } else {\n        // TODO: report error\n    }\n}",
     "ctx": {
       "type": "function",
@@ -1269,8 +1323,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 551,
-    "codeStart": 555,
+    "line": 566,
+    "codeStart": 570,
     "code": "function initComponent(context) {\n    if (util.isFunction(context.controller())) {",
     "ctx": {
       "type": "function",
@@ -1303,9 +1357,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 557,
-    "codeStart": 558,
-    "code": "var c = context._c = new ContextController(context);\nif (!util.isNoU(c.view())) {\n    c.view().attr('data-ui-component', context.componentId);\n    // if no model is supplied, try auto-create from view fields\n    if (util.isNoU(context.model()) && !util.isNoU(context.view()))\n        context.viewToModel();\n    c.trigger('view:apply');\n    if (context.options().viewDeferred) {\n        context.options().viewDeferred = false;\n        // save the original inline view\n        // before loading the view template\n        // it can be then restored with c.restoreView()\n        c.saveView();\n        if (context.options().css !== false)\n            context.loadCss();\n        if (context.options().html !== false)\n            context.loadHtml();\n    }\n    c.view().css('visibility', '');\n}\nif (util.isFunction(c.create)) c.create();\nc.trigger('view:create');\n    }\n    if (util.isFunction(context.ready))\n(context.ready).call(context);\n}",
+    "line": 572,
+    "codeStart": 573,
+    "code": "var c = context._c = new ContextController(context);\nif (!util.isNoU(c.view())) {\n    c.view().attr('data-ui-component', context.componentId);\n    // if no model is supplied, try auto-create from view fields\n    if (util.isNoU(context.model()) && !util.isNoU(context.view()))\n        context.viewToModel();\n    c.trigger('view:apply');\n    if (context.options().viewDeferred) {\n        context.options().viewDeferred = false;\n        // save the original inline view\n        // before loading the view template\n        // it can be then restored with c.restoreView()\n        c.saveView();\n        if (context.options().css !== false)\n            context.loadCss({ caching: !_disableHttpCaching });\n        if (context.options().html !== false)\n            context.loadHtml({ caching: !_disableHttpCaching });\n    }\n    c.view().css('visibility', '');\n}\nif (util.isFunction(c.create)) c.create();\nc.trigger('view:create');\n    }\n    if (util.isFunction(context.ready))\n(context.ready).call(context);\n}",
     "ctx": {
       "type": "declaration",
       "name": "c",
@@ -1356,8 +1410,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 585,
-    "codeStart": 590,
+    "line": 600,
+    "codeStart": 605,
     "code": "// TODO: refactor this method name\nfunction getController(javascriptCode) {\n    var instance = function (ctx) {\n    };\n    if (typeof javascriptCode === 'string') {\n        try {\n            instance = (eval).call(this, javascriptCode);\n        } catch (e) {\n            // TODO: should trigger a global hook\n            // eg. 'controller:error'\n            console.log(this, e, javascriptCode);\n        }\n    }\n    return instance;\n}\n\n// Browser Agent / Bot detection",
     "ctx": false
   },
@@ -1379,8 +1433,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 607,
-    "codeStart": 608
+    "line": 622,
+    "codeStart": 623
   },
   {
     "tags": [
@@ -1400,13 +1454,13 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 608,
-    "codeStart": 609,
-    "code": "var _isCrawlerBotClient = false, _disableLazyLoading = false;\nif (navigator && navigator.userAgent)\n    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)\n        .test(navigator.userAgent);\nif (_isCrawlerBotClient)\n    console.log(navigator.userAgent, \"is a bot, ignoring 'data-ui-lazyload' option.\");",
+    "line": 623,
+    "codeStart": 624,
+    "code": "var _isCrawlerBotClient = false,\n    _disableLazyLoading = false,\n    _disableHttpCaching = false;\nif (navigator && navigator.userAgent)\n    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)\n        .test(navigator.userAgent);\nif (_isCrawlerBotClient)\n    console.log(navigator.userAgent, \"is a bot, ignoring 'data-ui-lazyload' option.\");",
     "ctx": {
       "type": "declaration",
       "name": "_isCrawlerBotClient",
-      "value": "false, _disableLazyLoading = false",
+      "value": "false,",
       "string": "_isCrawlerBotClient"
     }
   },
@@ -1422,8 +1476,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 617,
-    "codeStart": 618
+    "line": 634,
+    "codeStart": 635
   },
   {
     "tags": [
@@ -1469,8 +1523,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 620,
-    "codeStart": 642,
+    "line": 637,
+    "codeStart": 659,
     "code": "Zuix.prototype.controller = controller;",
     "ctx": {
       "type": "property",
@@ -1539,8 +1593,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 643,
-    "codeStart": 666,
+    "line": 660,
+    "codeStart": 683,
     "code": "Zuix.prototype.field = field;",
     "ctx": {
       "type": "property",
@@ -1595,8 +1649,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 667,
-    "codeStart": 684,
+    "line": 684,
+    "codeStart": 701,
     "code": "Zuix.prototype.componentize = function (element) {\n    componentize(element);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1664,8 +1718,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 688,
-    "codeStart": 728,
+    "line": 705,
+    "codeStart": 745,
     "code": "Zuix.prototype.load = load;",
     "ctx": {
       "type": "property",
@@ -1720,8 +1774,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 729,
-    "codeStart": 742,
+    "line": 746,
+    "codeStart": 759,
     "code": "Zuix.prototype.unload = function (context) {\n    unload(context);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1777,8 +1831,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 746,
-    "codeStart": 771,
+    "line": 763,
+    "codeStart": 788,
     "code": "Zuix.prototype.context = context;",
     "ctx": {
       "type": "property",
@@ -1857,8 +1911,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 772,
-    "codeStart": 780,
+    "line": 789,
+    "codeStart": 797,
     "code": "Zuix.prototype.trigger = function (context, eventPath, eventData) {\n    trigger(context, eventPath, eventData);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1922,8 +1976,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 784,
-    "codeStart": 838,
+    "line": 801,
+    "codeStart": 855,
     "code": "Zuix.prototype.hook = function (eventPath, eventHandler) {\n    hook(eventPath, eventHandler);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1973,9 +2027,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 842,
-    "codeStart": 848,
-    "code": "Zuix.prototype.lazyLoad = lazyLoad;\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
+    "line": 859,
+    "codeStart": 865,
+    "code": "Zuix.prototype.lazyLoad = lazyLoad;",
     "ctx": {
       "type": "property",
       "constructor": "Zuix",
@@ -1983,6 +2037,58 @@
       "name": "lazyLoad",
       "value": "lazyLoad",
       "string": "Zuix.prototype.lazyLoad"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "string": "{boolean} [enable]",
+        "name": "[enable]",
+        "description": "",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "return",
+        "string": "{boolean} *true* if HTTP caching is enabled, *false* otherwise.",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false,
+        "description": "*true* if HTTP caching is enabled, *false* otherwise."
+      }
+    ],
+    "description": {
+      "full": "Enable/Disable HTTP caching",
+      "summary": "Enable/Disable HTTP caching",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 866,
+    "codeStart": 872,
+    "code": "Zuix.prototype.httpCaching = httpCaching;\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    console.log(\"ZUIX\", \"Component Cache\", _componentCache);\n};\nZuix.prototype.dumpContexts = function () {\n    console.log(\"ZUIX\", \"Loaded Component Instances\", _contextRoot);\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
+    "ctx": {
+      "type": "property",
+      "constructor": "Zuix",
+      "cons": "Zuix",
+      "name": "httpCaching",
+      "value": "httpCaching",
+      "string": "Zuix.prototype.httpCaching"
     }
   },
   {
@@ -2023,8 +2129,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 864,
-    "codeStart": 868,
+    "line": 888,
+    "codeStart": 892,
     "code": "module.exports = function (root) {\n    var zuix = new Zuix();\n    document.addEventListener(\"DOMContentLoaded\", function(event) {\n        zuix.componentize();\n    });\n    return zuix;\n};",
     "ctx": {
       "type": "method",

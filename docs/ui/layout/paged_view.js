@@ -56,7 +56,7 @@ zuix.controller(function (cp) {
             var targetTop = pages.eq(p).find('a[id='+anchor+']')
                 .position().y;
             pages.get(p).scrollTop = targetTop;
-        }
+        } else pages.get(p).scrollTop = 0;
     }
 
 });

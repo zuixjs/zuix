@@ -847,6 +847,20 @@
         "variable": false
       },
       {
+        "type": "param",
+        "string": "{boolean} [enableCaching] Enable HTTP",
+        "name": "[enableCaching]",
+        "description": "Enable HTTP",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
         "type": "return",
         "string": "{ComponentContext} The ```{ComponentContext}``` object itself.",
         "types": [
@@ -871,8 +885,8 @@
     "isEvent": false,
     "ignore": false,
     "line": 319,
-    "codeStart": 342,
-    "code": "ComponentContext.prototype.loadCss = function (options) {\n    var context = this;\n    var cssPath = context.componentId + \".css?\" + new Date().getTime();\n    if (util.isNoU(options)) options = {};\n    if (!util.isNoU(options.path))\n        cssPath = options.path;\n    z$.ajax({\n        url: cssPath,\n        success: function (viewCss) {\n            context.style(viewCss);\n            if (util.isFunction(options.success))\n                (options.success).call(context);\n        },\n        error: function (err) {\n            console.log(err, context);\n            if (util.isFunction(options.error))\n                (options.error).call(context, err);\n        },\n        then: function () {\n            if (util.isFunction(options.then))\n                (options.then).call(context);\n        }\n    });\n    return this;\n};",
+    "codeStart": 343,
+    "code": "ComponentContext.prototype.loadCss = function (options, enableCaching) {\n    var context = this;\n    var cssPath = context.componentId + '.css' + (enableCaching ? '?'+new Date().getTime() : '');\n    if (util.isNoU(options)) options = {};\n    if (!util.isNoU(options.caching))\n        enableCaching = options.caching;\n    if (!util.isNoU(options.path))\n        cssPath = options.path;\n    z$.ajax({\n        url: cssPath,\n        success: function (viewCss) {\n            context.style(viewCss);\n            if (util.isFunction(options.success))\n                (options.success).call(context);\n        },\n        error: function (err) {\n            console.log(err, context);\n            if (util.isFunction(options.error))\n                (options.error).call(context, err);\n        },\n        then: function () {\n            if (util.isFunction(options.then))\n                (options.then).call(context);\n        }\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "ComponentContext",
@@ -907,6 +921,20 @@
         "variable": false
       },
       {
+        "type": "param",
+        "string": "{boolean} [enableCaching] Enable HTTP caching",
+        "name": "[enableCaching]",
+        "description": "Enable HTTP caching",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
         "type": "return",
         "string": "{ComponentContext} The ```{ComponentContext}``` object itself.",
         "types": [
@@ -930,9 +958,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 367,
-    "codeStart": 390,
-    "code": "ComponentContext.prototype.loadHtml = function(options) {\n    var context = this;\n    var htmlPath = context.componentId;\n    if (util.isNoU(options)) options = {};\n    if (!util.isNoU(options.path))\n        htmlPath = options.path;\n    // TODO: check if view caching is working in this case too\n    var inlineView = z$().find('[data-ui-view=\"' + htmlPath + '\"]:not([data-ui-component*=\"\"])');\n    if (inlineView.length() > 0) {\n        var inlineElement = inlineView.get(0);\n        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement)))\n            // TODO: test this case\n            context.view(inlineElement);\n        else\n            context.view(inlineElement.outerHTML);\n        if (util.isFunction(options.success))\n            (options.success).call(context);\n        if (util.isFunction(options.then))\n            (options.then).call(context);\n    } else {\n        if (htmlPath == context.componentId)\n            htmlPath +=  '.html?' + new Date().getTime();\n        z$.ajax({\n            url: htmlPath,\n            success: function (viewHtml) {\n                context.view(viewHtml);\n                if (util.isFunction(options.success))\n                    (options.success).call(context);\n            },\n            error: function (err) {\n                console.log(err, context);\n                if (util.isFunction(options.error))\n                    (options.error).call(context, err);\n            },\n            then: function () {\n                if (util.isFunction(options.then))\n                    (options.then).call(context);\n            }\n        });\n    }\n    return this;\n};",
+    "line": 370,
+    "codeStart": 394,
+    "code": "ComponentContext.prototype.loadHtml = function(options, enableCaching) {\n    var context = this;\n    var htmlPath = context.componentId;\n    if (util.isNoU(options)) options = {};\n    if (!util.isNoU(options.caching))\n        enableCaching = options.caching;\n    if (!util.isNoU(options.path))\n        htmlPath = options.path;\n    // TODO: check if view caching is working in this case too\n    var inlineView = z$().find('[data-ui-view=\"' + htmlPath + '\"]:not([data-ui-component*=\"\"])');\n    if (inlineView.length() > 0) {\n        var inlineElement = inlineView.get(0);\n        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement)))\n            // TODO: test this case\n            context.view(inlineElement);\n        else\n            context.view(inlineElement.outerHTML);\n        if (util.isFunction(options.success))\n            (options.success).call(context);\n        if (util.isFunction(options.then))\n            (options.then).call(context);\n    } else {\n        if (htmlPath == context.componentId)\n            htmlPath +=  '.html' + (enableCaching ? '?'+new Date().getTime() : '');\n        z$.ajax({\n            url: htmlPath,\n            success: function (viewHtml) {\n                context.view(viewHtml);\n                if (util.isFunction(options.success))\n                    (options.success).call(context);\n            },\n            error: function (err) {\n                console.log(err, context);\n                if (util.isFunction(options.error))\n                    (options.error).call(context, err);\n            },\n            then: function () {\n                if (util.isFunction(options.then))\n                    (options.then).call(context);\n            }\n        });\n    }\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "ComponentContext",
@@ -967,8 +995,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 432,
-    "codeStart": 438,
+    "line": 438,
+    "codeStart": 444,
     "code": "ComponentContext.prototype.viewToModel = function() {\n    var _t = this;\n    this._model = {};\n    // create data model from inline view fields\n    z$(this._view).find('[data-ui-field]').each(function(i, el) {\n        if (this.parent('pre,code').length() > 0)\n            return true;\n        var name = this.attr('data-ui-field');\n        var value = '';\n        switch(el.tagName.toLowerCase()) {\n            // TODO: complete binding cases\n            case 'img':\n                value = el.src;\n                break;\n            case 'input':\n                value = el.value;\n                break;\n            default:\n                value = el.innerHTML;\n        }\n        // dotted field path\n        if (name.indexOf('.')>0) {\n            var path = name.split('.');\n            var cur = _t._model;\n            for (var p = 0; p < path.length - 1; p++) {\n                if (typeof cur[path[p]] === 'undefined')\n                    cur[path[p]] = {};\n                cur = cur[path[p]];\n            }\n            cur[path[path.length - 1]] = value;\n        } else _t._model[name] = value;\n    });\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1004,8 +1032,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 472,
-    "codeStart": 478,
+    "line": 478,
+    "codeStart": 484,
     "code": "ComponentContext.prototype.modelToView = function () {\n    if (this._view != null && this._model != null) {\n        var _t = this;\n        z$(this._view).find('[data-ui-field]').each(function(i, el) {\n            if (this.parent('pre,code').length() > 0)\n                return true;\n            var boundField = this.attr('data-bind-to');\n            if (boundField == null)\n                boundField = this.attr('data-ui-field');\n            if (typeof _t._model === 'function')\n                (_t._model).call(z$(_t._view), this, boundField);\n            else {\n                var boundData = util.propertyFromPath(_t._model, boundField);\n                if (typeof boundData === 'function') {\n                    (boundData).call(z$(_t._view), this, boundField);\n                } else if (boundData != null) {\n                    // try to guess target property\n                    switch (el.tagName.toLowerCase()) {\n                        // TODO: complete binding cases\n                        case 'img':\n                            el.src = boundData;\n                            break;\n                        case 'input':\n                            el.value = boundData;\n                            break;\n                        default:\n                            el.innerHTML = boundData;\n                    }\n                }\n            }\n        });\n    }\n    return this;\n};\n\nmodule.exports = ComponentContext;",
     "ctx": {
       "type": "method",

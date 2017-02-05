@@ -102,6 +102,7 @@ var splashScreen = zuix.field('splashScreen').show();
 var loaderMessage = zuix.field('loaderMessage');
 var mainPage = zuix.field('main').hide();
 //zuix.lazyLoad(false);
+zuix.httpCaching(false);
 zuix
 .hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
@@ -116,8 +117,6 @@ zuix
             .animateCss('bounce');
     loaderMessage.html('Loading "<em>'+data.task+'</em>" complete.')
         .animateCss('bounceInUp', { duration: '1.0s' });
-
-    console.log(data.task);
     if (data.task === 'html:content/footer') {
         // reveal page after footer is loaded
         if (splashScreen) {

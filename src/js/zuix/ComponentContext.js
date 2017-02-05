@@ -337,12 +337,15 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
  *
  * @private
  * @param {object} [options] The options object.
+ * @param {boolean} [enableCaching] Enable HTTP
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadCss = function (options) {
+ComponentContext.prototype.loadCss = function (options, enableCaching) {
     var context = this;
-    var cssPath = context.componentId + ".css?" + new Date().getTime();
+    var cssPath = context.componentId + '.css' + (enableCaching ? '?'+new Date().getTime() : '');
     if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.caching))
+        enableCaching = options.caching;
     if (!util.isNoU(options.path))
         cssPath = options.path;
     z$.ajax({
@@ -385,12 +388,15 @@ ComponentContext.prototype.loadCss = function (options) {
  *
  * @private
  * @param {object} [options] The options object.
+ * @param {boolean} [enableCaching] Enable HTTP caching
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadHtml = function(options) {
+ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     var context = this;
     var htmlPath = context.componentId;
     if (util.isNoU(options)) options = {};
+    if (!util.isNoU(options.caching))
+        enableCaching = options.caching;
     if (!util.isNoU(options.path))
         htmlPath = options.path;
     // TODO: check if view caching is working in this case too
@@ -408,7 +414,7 @@ ComponentContext.prototype.loadHtml = function(options) {
             (options.then).call(context);
     } else {
         if (htmlPath == context.componentId)
-            htmlPath +=  '.html?' + new Date().getTime();
+            htmlPath +=  '.html' + (enableCaching ? '?'+new Date().getTime() : '');
         z$.ajax({
             url: htmlPath,
             success: function (viewHtml) {
