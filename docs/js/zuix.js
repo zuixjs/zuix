@@ -40,11 +40,12 @@ function TaskQueue(listener) {
     _t._requests = [];
     if (listener == null)
         listener = function () { };
-    _t.taskQueue = function (tid, fn) {
+    _t.taskQueue = function (tid, fn, pri) {
         _t._taskList.push({
             tid: tid,
             fn: fn,
             status: 0,
+            priority:  pri,
             end: function () {
                 this.status = 2;
                 var _h = this;
@@ -55,6 +56,13 @@ function TaskQueue(listener) {
                 _t.taskCheck();
             }
         });
+        _t._taskList.sort(function(a,b) {
+            return (a.priority > b.priority) ?
+                1 :
+                ((b.priority > a.priority)
+                    ? -1 : 0);
+        } );
+        console.log(_t._taskList);
         _t.taskCheck();
     };
     _t.taskCheck = function () {
@@ -79,8 +87,8 @@ function TaskQueue(listener) {
         listener(_t, 'load:end');
     }
 }
-TaskQueue.prototype.queue = function(tid, fn) {
-    return this.taskQueue(tid, fn);
+TaskQueue.prototype.queue = function(tid, fn, pri) {
+    return this.taskQueue(tid, fn, pri);
 };
 /**
  * Request a lock for throttle invocation
@@ -2059,6 +2067,9 @@ function loadInline(element) {
     if (!util.isNoU(contextId))
         options.contextId = contextId;
 
+    var priority = v.attr('data-ui-priority');
+    if (!util.isNoU(priority))
+        options.priority = priority;
     // TODO: Behavior are also definable in "data-ui-behavior" attribute
     // TODO: Events are also definable in "data-ui-on" attribute
     // TODO: perhaps "data-ui-ready" and "data-ui-error" too
@@ -2176,7 +2187,7 @@ function load(componentId, options) {
                         }
                     });
 
-                });
+                }, options.priority);
                 // defer controller loading
                 return ctx;
             }
@@ -2361,7 +2372,7 @@ function loadController(context, task) {
             if (util.isNoU(task)) {
                 tasker.queue('js:' + context.componentId, function () {
                     job(this);
-                });
+                }, context.options().priority);
             } else job(task);
         }
     } else {

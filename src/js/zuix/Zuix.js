@@ -210,6 +210,9 @@ function loadInline(element) {
     if (!util.isNoU(contextId))
         options.contextId = contextId;
 
+    var priority = v.attr('data-ui-priority');
+    if (!util.isNoU(priority))
+        options.priority = priority;
     // TODO: Behavior are also definable in "data-ui-behavior" attribute
     // TODO: Events are also definable in "data-ui-on" attribute
     // TODO: perhaps "data-ui-ready" and "data-ui-error" too
@@ -327,7 +330,7 @@ function load(componentId, options) {
                         }
                     });
 
-                });
+                }, options.priority);
                 // defer controller loading
                 return ctx;
             }
@@ -512,7 +515,7 @@ function loadController(context, task) {
             if (util.isNoU(task)) {
                 tasker.queue('js:' + context.componentId, function () {
                     job(this);
-                });
+                }, context.options().priority);
             } else job(task);
         }
     } else {

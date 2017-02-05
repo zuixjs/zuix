@@ -117,24 +117,29 @@ zuix
     loaderMessage.html('Loading "<em>'+data.task+'</em>" complete.')
         .animateCss('bounceInUp', { duration: '1.0s' });
 
-}).hook('load:end', function(data){
-    if (splashScreen) {
-        // this is only executed once, on app startup
-        var s = splashScreen; splashScreen = false;
-        s.animateCss('fadeOutUp', function(){
-            s.hide();
-        });
-        // fade in main page
-        mainPage.animateCss('fadeIn',
-            { duration: '1.2s' },
-        function(){
-            s.hide();
-        }).show();
-        if (coverBlock == null) {
-            coverBlock = zuix.$.find('[data-ui-component="content/home/cover"]');
-            featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
+    console.log(data.task);
+    if (data.task === 'html:content/footer') {
+        // reveal page after footer is loaded
+        if (splashScreen) {
+            // this is only executed once, on app startup
+            var s = splashScreen; splashScreen = false;
+            s.animateCss('fadeOutUp', function(){
+                s.hide();
+            });
+            // fade in main page
+            mainPage.animateCss('fadeIn',
+                { duration: '1.2s' },
+                function(){
+                    s.hide();
+                }).show();
+            if (coverBlock == null) {
+                coverBlock = zuix.$.find('[data-ui-component="content/home/cover"]');
+                featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
+            }
         }
     }
+}).hook('load:end', function(data){
+
     loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
         this.hide();
     });

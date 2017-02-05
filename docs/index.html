@@ -166,14 +166,12 @@
          data-ui-field="loaderMessage"></div>
 </div>
 
-<div data-ui-include="content/api/menu"></div>
-<div data-ui-include="content/quick_start/menu"></div>
+
+<div data-ui-include="content/api/menu" data-ui-priority="-1"></div>
+<div data-ui-include="content/quick_start/menu" data-ui-priority="-1"></div>
 
 
-
-
-
-<!-- Loader Overlay, this shall always be inline -->
+<!-- Loader Overlay, this should always be inline -->
 <div data-ui-field="splashScreen" layout="column stretch-stretch"
      style="background-color:rgba(255,255,255,1);position: fixed; left: 0; top: 0px; bottom:0; right:0;z-index: 100;">
     <div layout="column bottom-center">
