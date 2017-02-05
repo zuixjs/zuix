@@ -1,19 +1,25 @@
 zuix.controller(function (cp) {
     var toolbar, fab, actions;
-    var open = true; // initial state
+    var open = false; // initial state
 
     cp.create = function () {
 
+        cp.expose('showMenu', showMenu);
+        cp.expose('hideMenu', hideMenu);
+
         // toolbar view
         toolbar = cp.view();
+        toolbar.css('overflow', 'hidden');
         // fab button
-        fab = toolbar.children().eq(0);
+        // fab button
+        fab = toolbar.find('.menu');
         fab.on('click', function () {
             toolbarToggle();
         });
         // actions buttons
-        actions = toolbar.children().eq(1)
+        actions = toolbar.find('.options')
             .css('overflow', 'hidden')
+            .hide()
             .children();
         actions.each(function (index, item) {
             this.on('click', function () {
@@ -22,7 +28,6 @@ zuix.controller(function (cp) {
             });
         });
 
-        toolbarToggle();
     };
 
     cp.destroy = function () {
@@ -35,24 +40,31 @@ zuix.controller(function (cp) {
 
     // Private Members
 
+    function showMenu() {
+
+        console.log("SHOW", this, cp, cp.view());
+        cp.view().show().animateCss('flipInY');
+    }
+    function hideMenu() {
+        cp.view().animateCss('flipOutY', function () {
+            if (!cp.view().hasClass('animated'))
+                cp.view().hide()
+        });
+    }
+
     function toolbarToggle() {
+        var duration = 0.5;
         open = !open;
-        /** @type {ZxQuery} actions */
-        actions.each(function (i, button) {
-            if (open)
-                this.animateCss('fadeInLeftBig', {
-                        delay: (i / 10) + 's',
-                        duration: '0.35s'
-                    }).css('visibility', 'visible');
-            else
-                this.animateCss('fadeOutLeftBig', {
-                        delay: (i / 8) + 's',
-                        duration: '1.0s'
-                    }, function () {
-                        this.css('visibility', 'hidden');
-                    });
-        }).reverse();
-        fab.animateCss('rubberBand', { 'duration': '0.6s' });
+        if (open)
+            toolbar.find('.options').show().animateCss('bounceInUp', { duration: duration+'s' }, function () {
+                open = true;
+            });
+        else
+            toolbar.find('.options').animateCss('bounceOutDown', { duration: duration+'s' }, function () {
+                toolbar.find('.options').hide();
+                open = false;
+            });
+        fab.animateCss('rubberBand', { duration: duration+'s' });
     }
 
 });

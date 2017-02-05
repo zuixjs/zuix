@@ -283,7 +283,7 @@ function load(componentId, options) {
         if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
             // TODO: implement CSS caching as well
-            if (options.css !== false)
+            if (options.css !== false) {
                 ctx.loadCss({
                     error: function (err) {
                         console.log(err, ctx);
@@ -292,6 +292,9 @@ function load(componentId, options) {
                         loadController(ctx);
                     }
                 });
+                // defer controller loading
+                return ctx;
+            }
         } else {
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
@@ -302,19 +305,17 @@ function load(componentId, options) {
 
                     ctx.loadHtml({
                         success: function () {
-                            if (options.css !== false)
+                            if (options.css !== false) {
                                 ctx.loadCss({
                                     error: function (err) {
                                         console.log(err, ctx);
                                     },
                                     then: function () {
-                                        loadController(ctx);
-                                        task.end();
+                                        loadController(ctx, task);
                                     }
                                 });
-                            else {
-                                loadController(ctx);
-                                task.end();
+                            } else {
+                                loadController(ctx, task);
                             }
                         },
                         error: function (err) {
@@ -463,15 +464,16 @@ function getCachedComponent(componentId) {
 /***
  * @private
  * @param {ComponentContext} context
+ * @param {TaskQueue} [task]
  */
-function loadController(context) {
+function loadController(context, task) {
     if (typeof context.options().controller === 'undefined' && context.controller() === null) {
         if (util.isFunction(_globalHandlers[context.componentId])) {
             context.controller(_globalHandlers[context.componentId]);
             createComponent(context);
-        } else
-            tasker.queue('js:' + context.componentId, function () {
-                var task = this;
+            if (!util.isNoU(task)) task.end();
+        } else {
+            var job = function(t) {
                 z$.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
                     success: function (ctrlJs) {
@@ -500,13 +502,20 @@ function loadController(context) {
                             (context.error).call(context, err);
                     },
                     then: function () {
-                        task.end();
                         createComponent(context);
+                        t.end();
                     }
                 });
-            });
+            };
+            if (util.isNoU(task)) {
+                tasker.queue('js:' + context.componentId, function () {
+                    job(this);
+                });
+            } else job(task);
+        }
     } else {
         createComponent(context);
+        if (!util.isNoU(task)) task.end();
     }
 }
 

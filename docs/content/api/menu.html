@@ -1,0 +1,77 @@
+<div style="position: fixed;right:16px;bottom:16px;z-index:100; height: auto;">
+    <div data-ui-options="api_menu_options"
+         data-ui-load="site/components/actions_menu"
+         data-ui-context="menu_api"
+         class="content-padding"
+         layout="column center-right">
+        <!-- menu actions -->
+        <!-- Colored FAB button with ripple -->
+        <div layout="column center-right"
+             class="options mdl-shadow--8dp">
+            <div class="menu-item" layout="row center-spread">
+                <span>API</span>
+                <i self="right" class="material-icons">toc</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>Zuix class</span>
+                <i self="right" class="material-icons">code</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>ContextOptions object</span>
+                <i self="right" class="material-icons">radio_button_unchecked</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>ComponentContext class</span>
+                <i self="right" class="material-icons">code</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>ContextController class</span>
+                <i self="right" class="material-icons">code</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>ZxQuery class</span>
+                <i self="right" class="material-icons">code</i>
+            </div>
+        </div>
+        <div class="menu" style="max-width: 56px;">
+            <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color--blue mdl-shadow--6dp">
+                <i class="material-icons">toc</i>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    var api_menu_options = {
+        css: false,
+        html: false,
+        on: {
+            'view:create': function () {
+                this.hide();
+            },
+            'item:click': function (e, i) {
+                var p = pagedView.getPage(2);
+                switch (i) {
+                    case 0:
+                        scrollTo(p.get(), p.find('a[id=ZUIX_API').position().y);
+                        break;
+                    case 1:
+                        scrollTo(p.get(), p.find('a[id=ZUIX_API--Zuix').position().y);
+                        break;
+                    case 2:
+                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ContextOptions').position().y);
+                        break;
+                    case 3:
+                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ComponentContext').position().y);
+                        break;
+                    case 4:
+                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ContextController').position().y);
+                        break;
+                    case 5:
+                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ZxQuery').position().y);
+                        break;
+                }
+                e.preventDefault();
+            }
+        }
+    };
+</script>

@@ -46,6 +46,8 @@ function TaskQueue(listener) {
             status: 0,
             end: function () {
                 this.status = 2;
+                _t.check();
+                _t.taskCheck();
             }
         });
         _t.check();
@@ -81,12 +83,17 @@ function TaskQueue(listener) {
             }
         }
         if (next >= 0) {
-            _t._taskList[next].status = 1;
-            (_t._taskList[next].fn).call(_t._taskList[next]);
-            _t.check();
-            listener(_t, 'load:begin', {
-                task: _t._taskList[next].tid
-            });
+            if (_t._taskList[next] != null) {
+                _t._taskList[next].status = 1;
+                listener(_t, 'load:begin', {
+                    task: _t._taskList[next].tid
+                });
+                (_t._taskList[next].fn).call(_t._taskList[next]);
+                _t.check();
+            } else {
+                // TODO: check why is this case happening
+                _t.check();
+            }
         } else {
             listener(_t, 'load:end');
         }
@@ -111,7 +118,7 @@ TaskQueue.prototype.releaseLock = function(handlerFn) {
     // Throttle rate 100ms (+ execution time)
     setTimeout(function () {
         delete handlerFn._taskerLock;
-    }, 100);
+    }, 1);
 };
 /**
  * Debounce. The calling function must also call 'requestLock'.

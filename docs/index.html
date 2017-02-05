@@ -81,23 +81,26 @@
 
     <header class="site-header mdl-layout__header">
         <div class="mdl-layout__header-row">
-
-            <!-- zuix "ui/layout/actions_view" layout -->
-            <div data-ui-load="ui/layout/actions_view" data-ui-options="main.topMenu" layout="row center-spread">
-                <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-                    <i class="material-icons">home</i>
-                    <small>Home</small>
-                </div>
-                <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-                    <i class="material-icons md-18">school</i>
-                    <small>Get Started</small>
-                </div>
-                <div align="center" class="content-padding mdl-button mdl-js-button mdl-js-ripple-effect">
-                    <i class="material-icons md-18">import_contacts</i>
-                    <small>API</small>
-                </div>
-            </div>
-
+            <!-- Title -->
+            <span class="mdl-layout-title">
+                <a layout="row center-center" style="font-size: 140%;" class="mdl-color-text--black" href="javascript:pagedView.setPage(0)">
+                    <i class="material-icons">chevron_left</i>
+                    <span class="mdl-color-text--grey-600">Z</span>UI<span class="mdl-color-text--grey-600">X</span>
+                </a>
+            </span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation -mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link" href="https://github.com/genielabs/zuix">
+                    <i class="material-icons">link</i>
+                    GitHub
+                </a>
+                <a class="mdl-navigation__link" href="javascript:pagedView.setPage(1, 'Getting_Started')">
+                    <i class="material-icons">file_download</i>
+                    Download
+                </a>
+            </nav>
         </div>
     </header>
     <main class="mdl-layout__content">
@@ -119,7 +122,7 @@
             </section>
 
             <!-- page 2 -->
-            <section data-ui-lazyload="true">
+            <section data-ui-lazyload="false">
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
                     <div self="size-larger top-center" class="section-content mdl-shadow--8dp">
@@ -151,8 +154,23 @@
         </div>
 
     </main>
-    <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp" data-ui-field="loaderMessage"></div>
+
 </div>
+
+
+
+<!-- absolute positioned elements -->
+
+<div data-ui-field="loaderMessage-c">
+    <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp"
+         data-ui-field="loaderMessage"></div>
+</div>
+
+<div data-ui-include="content/api/menu"></div>
+<div data-ui-include="content/quick_start/menu"></div>
+
+
+
 
 
 <!-- Loader Overlay, this shall always be inline -->

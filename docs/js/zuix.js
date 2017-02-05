@@ -47,6 +47,8 @@ function TaskQueue(listener) {
             status: 0,
             end: function () {
                 this.status = 2;
+                _t.check();
+                _t.taskCheck();
             }
         });
         _t.check();
@@ -82,12 +84,17 @@ function TaskQueue(listener) {
             }
         }
         if (next >= 0) {
-            _t._taskList[next].status = 1;
-            (_t._taskList[next].fn).call(_t._taskList[next]);
-            _t.check();
-            listener(_t, 'load:begin', {
-                task: _t._taskList[next].tid
-            });
+            if (_t._taskList[next] != null) {
+                _t._taskList[next].status = 1;
+                listener(_t, 'load:begin', {
+                    task: _t._taskList[next].tid
+                });
+                (_t._taskList[next].fn).call(_t._taskList[next]);
+                _t.check();
+            } else {
+                // TODO: check why is this case happening
+                _t.check();
+            }
         } else {
             listener(_t, 'load:end');
         }
@@ -112,7 +119,7 @@ TaskQueue.prototype.releaseLock = function(handlerFn) {
     // Throttle rate 100ms (+ execution time)
     setTimeout(function () {
         delete handlerFn._taskerLock;
-    }, 100);
+    }, 1);
 };
 /**
  * Debounce. The calling function must also call 'requestLock'.
@@ -2146,7 +2153,7 @@ function load(componentId, options) {
         if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
             // TODO: implement CSS caching as well
-            if (options.css !== false)
+            if (options.css !== false) {
                 ctx.loadCss({
                     error: function (err) {
                         console.log(err, ctx);
@@ -2155,6 +2162,9 @@ function load(componentId, options) {
                         loadController(ctx);
                     }
                 });
+                // defer controller loading
+                return ctx;
+            }
         } else {
             // if not able to inherit the view from the base cachedComponent
             // or from an inline element, then load the view from web
@@ -2165,20 +2175,17 @@ function load(componentId, options) {
 
                     ctx.loadHtml({
                         success: function () {
-                            if (options.css !== false)
+                            if (options.css !== false) {
                                 ctx.loadCss({
                                     error: function (err) {
                                         console.log(err, ctx);
-                                        task.end();
                                     },
                                     then: function () {
-                                        loadController(ctx);
-                                        task.end();
+                                        loadController(ctx, task);
                                     }
                                 });
-                            else {
-                                loadController(ctx);
-                                task.end();
+                            } else {
+                                loadController(ctx, task);
                             }
                         },
                         error: function (err) {
@@ -2327,15 +2334,16 @@ function getCachedComponent(componentId) {
 /***
  * @private
  * @param {ComponentContext} context
+ * @param {TaskQueue} [task]
  */
-function loadController(context) {
+function loadController(context, task) {
     if (typeof context.options().controller === 'undefined' && context.controller() === null) {
         if (util.isFunction(_globalHandlers[context.componentId])) {
             context.controller(_globalHandlers[context.componentId]);
             createComponent(context);
-        } else
-            tasker.queue('js:' + context.componentId, function () {
-                var task = this;
+            if (!util.isNoU(task)) task.end();
+        } else {
+            var job = function(t) {
                 z$.ajax({
                     url: context.componentId + ".js?" + new Date().getTime(),
                     success: function (ctrlJs) {
@@ -2364,13 +2372,20 @@ function loadController(context) {
                             (context.error).call(context, err);
                     },
                     then: function () {
-                        task.end();
                         createComponent(context);
+                        t.end();
                     }
                 });
-            });
+            };
+            if (util.isNoU(task)) {
+                tasker.queue('js:' + context.componentId, function () {
+                    job(this);
+                });
+            } else job(task);
+        }
     } else {
         createComponent(context);
+        if (!util.isNoU(task)) task.end();
     }
 }
 

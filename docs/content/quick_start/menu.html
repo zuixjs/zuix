@@ -1,0 +1,99 @@
+<div style="position: fixed;right:32px;bottom:16px;z-index:100; height: auto;">
+    <div data-ui-options="get_started_menu_options"
+         data-ui-load="site/components/actions_menu"
+         data-ui-context="menu_getting_started"
+         class="content-padding"
+         layout="column center-right">
+        <!-- menu actions -->
+        <!-- Colored FAB button with ripple -->
+        <div layout="column center-right"
+             class="options mdl-shadow--8dp">
+            <div class="menu-item" layout="row center-spread">
+                <span>Install</span>
+                <i self="right" class="material-icons">file_download</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>Quick Start Guide</span>
+                <i self="right" class="material-icons">book</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>Content Management</span>
+                <i self="right" class="material-icons">dashboard</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>View Templates</span>
+                <i self="right" class="material-icons">settings_ethernet</i>
+            </div>
+            <div class="menu-item" layout="row center-spread">
+                <span>Component Management</span>
+                <i self="right" class="material-icons">extension</i>
+            </div>
+        </div>
+        <div class="menu" style="max-width: 56px;">
+            <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
+                <i class="material-icons">toc</i>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    var get_started_menu_options = {
+        css: false,
+        html: false,
+        on: {
+            'view:create': function () {
+                this.hide();
+            },
+            'item:click': function (e, i) {
+                var p = pagedView.getPage(1);
+                switch (i) {
+                    case 0:
+                        scrollTo(p.get(), p.find('a[id=Getting_Started').position().y);
+                        break;
+                    case 1:
+                        scrollTo(p.get(), p.find('a[id=Getting_Started--Quick_Start').position().y);
+                        break;
+                    case 2:
+                        scrollTo(p.get(), p.find('a[id=Getting_Started--Content_Management').position().y);
+                        break;
+                    case 3:
+                        scrollTo(p.get(), p.find('a[id=Getting_Started--View_Templates').position().y);
+                        break;
+                    case 4:
+                        scrollTo(p.get(), p.find('a[id=Getting_Started--Component_Management').position().y);
+                        break;
+                }
+                e.preventDefault();
+            }
+        }
+    };
+
+
+    // TODO: move this to ZxQuery
+    function scrollTo(el, targetY) {
+        if (targetY === 0 || targetY == null)
+            return;
+        var duration = 500;
+        var scrollTop = el.scrollTop+targetY - 56;
+        var scrollOffset = el.scrollTop-scrollTop;
+        el.firstElementChild.style.transition = 'transform '+duration+'ms ease';
+        if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
+            el.firstElementChild.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
+        else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
+            el.firstElementChild.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
+        else
+            el.firstElementChild.style.transform = "translate(0, " + (scrollOffset) + "px)";
+        window.setTimeout(function () {
+            // TODO: should backup and restore old value
+            if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
+                el.firstElementChild.style.WebkitTransform = "";
+            else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
+                el.firstElementChild.style.MozTransform= "";
+            else
+                el.firstElementChild.style.transform = "";
+            el.firstElementChild.style.transition = '';
+            el.scrollTop = scrollTop;
+        }, duration);
+
+    }
+</script>

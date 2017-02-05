@@ -106,7 +106,7 @@ zuix
 .hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
     loaderMessage.html('Loading "<em>'+data.task+'</em>" ...')
-        .animateCss('bounceInRight')
+        .animateCss('bounceInUp', { duration: '1.0s' })
         .show();
 
 }).hook('load:next', function(data){
@@ -115,7 +115,7 @@ zuix
             .html(data.task).prev()
             .animateCss('bounce');
     loaderMessage.html('Loading "<em>'+data.task+'</em>" complete.')
-        .animateCss('bounceInRight');
+        .animateCss('bounceInUp', { duration: '1.0s' });
 
 }).hook('load:end', function(data){
     if (splashScreen) {
@@ -135,7 +135,7 @@ zuix
             featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
         }
     }
-    loaderMessage.animateCss('bounceOutRight', { delay: '1s' }, function () {
+    loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
         this.hide();
     });
 
@@ -205,6 +205,7 @@ function menuItemClicked(e, i) {
     console.log("item::click@ActionsView", i);
 }
 
+
 // PagedView `page:change` behavior handler
 function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     if (i.page === 0) {
@@ -219,6 +220,10 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
                 checkMenuVisibility();
             });
         //zuix.$.find('.site-footer').visibility('hidden');
+        if (i.old === 1)
+            zuix.context('menu_getting_started').hideMenu();
+        else if (i.old === 2)
+            zuix.context('menu_api').hideMenu();
     } else if (i.old === 0) {
         zxHeader.show().animateCss('fadeIn');
         coverBlock
@@ -226,7 +231,12 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         featuresBlock
             .animateCss('slideOutDown');
         //zuix.$.find('.site-footer').visibility('');
+        if (i.page === 1)
+            zuix.context('menu_getting_started').showMenu();
+        else
+            zuix.context('menu_api').showMenu();
     }
+
     if (effectIn == null) effectIn = 'fadeIn';
     if (effectOut == null) effectOut = 'fadeOut';
     // Animate page changing
@@ -262,14 +272,17 @@ zuix.$.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) 
             callback = param1;
         else options = param1;
     }
+    // stops any previously running animation
+    if (this.hasClass('animated')) {
+        this.css('transition', ''); // TODO: <-- is this really needed?
+        this.trigger('animationend');
+    }
     // TODO: should run all the following code for each element in the ZxQuery selection
     var prefixes = [ '-webkit', '-moz', '-o', '-ms' ];
     for(var key in options)
         for (var p in prefixes)
             this.css(prefixes[p] + '-animation-' + key, options[key]);
     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-    if (this.hasClass('animated'))
-        this.trigger('animationend');
     var _t = this;
     this.addClass('animated ' + animationName).one(animationEnd, function () {
         this.removeClass('animated ' + animationName);
