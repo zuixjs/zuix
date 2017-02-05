@@ -47,18 +47,10 @@ function TaskQueue(listener) {
             status: 0,
             end: function () {
                 this.status = 2;
-                _t.check();
                 _t.taskCheck();
             }
         });
-        _t.check();
-    };
-    _t.check = function () {
-        if (_t._worker != null)
-            clearTimeout(_t._worker);
-        _t._worker = setTimeout(function () {
-            _t.taskCheck();
-        }, 10);
+        _t.taskCheck();
     };
     _t.taskCheck = function () {
         var next = -1;
@@ -68,10 +60,6 @@ function TaskQueue(listener) {
             }
             else if (_t._taskList[i].status == 1) {
                 next = -2;
-                _t.check();
-                //listener(_t, 'load:step', {
-                //    task: _t._taskList[i].tid
-                //});
                 return;
             }
             else if (_t._taskList[i].status == 2) {
@@ -79,7 +67,7 @@ function TaskQueue(listener) {
                     task: _t._taskList[i].tid
                 });
                 _t._taskList.splice(i, 1);
-                _t.check();
+                _t.taskCheck();
                 return;
             }
         }
@@ -90,10 +78,9 @@ function TaskQueue(listener) {
                     task: _t._taskList[next].tid
                 });
                 (_t._taskList[next].fn).call(_t._taskList[next]);
-                _t.check();
             } else {
-                // TODO: check why is this case happening
-                _t.check();
+                // TODO: check if this case is still happening
+                _t.taskCheck();
             }
         } else {
             listener(_t, 'load:end');
@@ -116,7 +103,7 @@ TaskQueue.prototype.requestLock = function(handlerFn) {
     return true;
 };
 TaskQueue.prototype.releaseLock = function(handlerFn) {
-    // Throttle rate 100ms (+ execution time)
+    // Throttle rate 1ms (+ execution time)
     setTimeout(function () {
         delete handlerFn._taskerLock;
     }, 1);
