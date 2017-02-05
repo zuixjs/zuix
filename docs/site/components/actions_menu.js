@@ -41,9 +41,7 @@ zuix.controller(function (cp) {
     // Private Members
 
     function showMenu() {
-
-        console.log("SHOW", this, cp, cp.view());
-        cp.view().show().animateCss('flipInY');
+        cp.view().show().animateCss('flipInY', { delay: '0.5s' });
     }
     function hideMenu() {
         cp.view().animateCss('flipOutY', function () {
