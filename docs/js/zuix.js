@@ -62,7 +62,6 @@ function TaskQueue(listener) {
                 ((b.priority > a.priority)
                     ? -1 : 0);
         } );
-        console.log(_t._taskList);
         _t.taskCheck();
     };
     _t.taskCheck = function () {
