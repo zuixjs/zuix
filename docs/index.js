@@ -139,13 +139,6 @@ zuix
         this.hide();
     });
 
-    // disable lazy load and loads all the other
-    // stuff in background
-    if (zuix.lazyLoad()) {
-        zuix.lazyLoad(false);
-        zuix.componentize();
-    }
-
 }).hook('html:parse', function (data) {
     // ShowDown - Markdown compiler
     if (this.options().markdown === true && typeof showdown !== 'undefined')

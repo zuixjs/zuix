@@ -46,44 +46,36 @@ function TaskQueue(listener) {
             status: 0,
             end: function () {
                 this.status = 2;
+                var _h = this;
+                listener(_t, 'load:next', {
+                    task: _h.tid
+                });
+                _t._taskList.splice(this.index, 1);
                 _t.taskCheck();
             }
         });
         _t.taskCheck();
     };
     _t.taskCheck = function () {
-        var next = -1;
         for (var i = 0; i < _t._taskList.length; i++) {
-            if (next != -2 && _t._taskList[i].status == 0) {
-                next = i;
-            }
-            else if (_t._taskList[i].status == 1) {
-                next = -2;
+            if (_t._taskList[i].status == 0) {
+                _t._taskList[i].status = 1;
+                listener(_t, 'load:begin', {
+                    task: _t._taskList[i].tid
+                });
+                _t._taskList[i].index = i;
+                (_t._taskList[i].fn).call(_t._taskList[i]);
+                return;
+            }  else if (_t._taskList[i].status == 1) {
+                // currently running
                 return;
             }
             else if (_t._taskList[i].status == 2) {
-                listener(this, 'load:next', {
-                    task: _t._taskList[i].tid
-                });
-                _t._taskList.splice(i, 1);
-                _t.taskCheck();
+                // TODO: _!!!-!
                 return;
             }
         }
-        if (next >= 0) {
-            if (_t._taskList[next] != null) {
-                _t._taskList[next].status = 1;
-                listener(_t, 'load:begin', {
-                    task: _t._taskList[next].tid
-                });
-                (_t._taskList[next].fn).call(_t._taskList[next]);
-            } else {
-                // TODO: check if this case is still happening
-                _t.taskCheck();
-            }
-        } else {
-            listener(_t, 'load:end');
-        }
+        listener(_t, 'load:end');
     }
 }
 TaskQueue.prototype.queue = function(tid, fn) {
@@ -102,10 +94,10 @@ TaskQueue.prototype.requestLock = function(handlerFn) {
     return true;
 };
 TaskQueue.prototype.releaseLock = function(handlerFn) {
-    // Throttle rate 1ms (+ execution time)
+    // Throttle rate 10ms (+ execution time)
     setTimeout(function () {
         delete handlerFn._taskerLock;
-    }, 1);
+    }, 10);
 };
 /**
  * Debounce. The calling function must also call 'requestLock'.

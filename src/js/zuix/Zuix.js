@@ -126,7 +126,9 @@ function componentize(element) {
         z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function (i, el) {
             this.visibility('hidden');
             // defer element loading if lazy loading is enabled and the element is not in view
-            var lazyContainer = el.lazyContainer || z$.getClosest(el, '[data-ui-lazyload=true],[data-ui-lazyload=force]');
+            var lazyContainer = el.lazyContainer || z$.getClosest(el, '[data-ui-lazyload=scroll]');
+//            if (lazyContainer == null)
+//                lazyContainer = el;
             el.lazyContainer = lazyContainer;
             // override lazy loading if 'lazyload' is set to 'false' for the current element
             if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
