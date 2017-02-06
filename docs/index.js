@@ -205,6 +205,8 @@ function menuItemClicked(e, i) {
 
 // PagedView `page:change` behavior handler
 function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
+
+    // cover+header animation reveal/hide
     if (i.page === 0) {
         zxHeader.animateCss('fadeOut', function () {
             this.hide();
@@ -216,24 +218,25 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
                 zxHeader.hidden = true;
                 checkMenuVisibility();
             });
-        //zuix.$.find('.site-footer').visibility('hidden');
-        if (i.old === 1)
-            zuix.context('menu_getting_started').hideMenu();
-        else if (i.old === 2)
-            zuix.context('menu_api').hideMenu();
     } else if (i.old === 0) {
         zxHeader.show().animateCss('fadeIn');
         coverBlock
             .animateCss('slideOutUp');
         featuresBlock
             .animateCss('slideOutDown');
-        //zuix.$.find('.site-footer').visibility('');
-        if (i.page === 1)
-            zuix.context('menu_getting_started').showMenu();
-        else
-            zuix.context('menu_api').showMenu();
     }
 
+    // contextual FAB menu
+    if (i.old === 1)
+        zuix.context('menu_getting_started').hideMenu();
+    else if (i.old === 2)
+        zuix.context('menu_api').hideMenu();
+    if (i.page === 1)
+        zuix.context('menu_getting_started').showMenu();
+    else if (i.page === 2)
+        zuix.context('menu_api').showMenu();
+
+    // 'page change' animation
     if (effectIn == null) effectIn = 'fadeIn';
     if (effectOut == null) effectOut = 'fadeOut';
     // Animate page changing

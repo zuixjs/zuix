@@ -11,11 +11,14 @@ div.options {
     padding: 16px;
     color:white;
     background-color: rgba(60, 60, 60, 0.9);
-    font-weight: 600;
+    font-weight: 400;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
 }
 .options .menu-item i {
     color: white;
+}
+.menu {
+    max-width: 56px;
 }
