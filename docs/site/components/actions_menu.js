@@ -44,7 +44,8 @@ zuix.controller(function (cp) {
         cp.view().show().animateCss('flipInY', { delay: '0.5s' });
     }
     function hideMenu() {
-        cp.view().animateCss('flipOutY', function () {
+        if (open) toolbarToggle();
+        cp.view().animateCss('fadeOut', function () {
             if (!cp.view().hasClass('animated'))
                 cp.view().hide()
         });

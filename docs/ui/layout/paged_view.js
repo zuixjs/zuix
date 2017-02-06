@@ -52,11 +52,12 @@ zuix.controller(function (cp) {
                 });
             }
         }
-        if (anchor != null) {
+        if (!isNaN(anchor)) pages.get(p).scrollTop = anchor;
+        else if (anchor != null) {
             var targetTop = pages.eq(p).find('a[id='+anchor+']')
                 .position().y;
             pages.get(p).scrollTop = targetTop;
-        } else pages.get(p).scrollTop = 0;
+        }
     }
 
 });
