@@ -45,7 +45,7 @@ zuix.controller(function (cp) {
     }
     function hideMenu() {
         if (open) toolbarToggle();
-        cp.view().animateCss('fadeOut', function () {
+        fab.animateCss('flipOutY', function () {
             if (!cp.view().hasClass('animated'))
                 cp.view().hide()
         });
