@@ -9,6 +9,9 @@ p {
     margin-bottom: 28px;
     font-weight: 400;
 }
+ul li {
+    list-style: disc;
+}
 .mdl-card {
     padding: 16px;
 }
