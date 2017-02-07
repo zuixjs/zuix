@@ -1,6 +1,6 @@
 zuix.controller(function (cp) {
     var currentTitle = '', currentPos = 0;
-    var offset = 116, items = [], title = null;
+    var offset = 200, items = [], title = null;
     var timeout = null;
 
     cp.create = function () {

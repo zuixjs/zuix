@@ -33,10 +33,15 @@ header {
 header .mdl-layout__header-row {
     padding-left: 16px;
 }
-header .mdl-layout-spacer {
+header .mdl-layout-spacer, header .mdl-navigation .mdl-button {
     font-size: 90%;
-    font-weight: 500;
+    font-weight: 700;
     font-family: 'Dosis', sans-serif;
+    vertical-align: middle;
+    color: grey;
+}
+header .mdl-navigation .mdl-button i {
+    vertical-align:text-bottom;
 }
 h1 {
     font-size: 260%;
