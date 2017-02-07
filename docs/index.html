@@ -89,7 +89,9 @@
                 </a>
             </span>
             <!-- Add spacer, to align navigation to the right -->
-            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-layout-spacer" align="center">
+                <div data-ui-field="title"></div>
+            </div>
             <!-- Navigation. We hide it in small screens. -->
             <nav class="mdl-navigation -mdl-layout--large-screen-only">
                 <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="javascript:pagedView.setPage(1)">
@@ -126,7 +128,7 @@
             </section>
 
             <!-- page 2 -->
-            <section data-ui-lazyload="scroll">
+            <section data-ui-field="page-usage" data-ui-lazyload="scroll">
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
                     <div self="size-larger top-center" class="section-content mdl-shadow--8dp">
@@ -141,7 +143,7 @@
             </section>
 
             <!-- page 3 -->
-            <section data-ui-lazyload="scroll">
+            <section data-ui-field="page-api" data-ui-lazyload="scroll">
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
                     <div self="size-larger top-center" class="section-content mdl-shadow--8dp">

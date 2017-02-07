@@ -1,5 +1,5 @@
 <a id="Getting_Started--View_Templates"></a>
-#### View Templates <i class="material-icons mdl-color-text--grey-500">view_column</i>
+#### View Templates <i class="material-icons mdl-color-text--grey-500">settings_ethernet</i>
 
 In a more generic fashion, we call it **View Template** (or just *View*),
 when we refer to that particular kind of content where some elements
@@ -13,9 +13,9 @@ is used to bind them to the associated fields in the model.
 <pre data-line="3,6"><code class="language-html">
 <!-- View Template - Article item summary -->
 <div class="article">
-    <h3 data-ui-field="title">
+    <h6 data-ui-field="title">
         Article Title
-    </h3>
+    </h6>
     <div data-ui-field="summary">
         This is the place holder for the article summary.
     </div>
@@ -32,7 +32,7 @@ model = {
 
 <small><strong>RESULT</strong></small>
 <div self="size-1of2" class="zuix-example article mdl-shadow--6dp">
-<h4 data-ui-field="title">Pizza recipe</h4>
+<h6 data-ui-field="title">Pizza recipe</h6>
 <div data-ui-field="summary">
 Classic homemade pizza recipe, including pizza dough and toppings, step-by-step instructions with photos.
 </div>

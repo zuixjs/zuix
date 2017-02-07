@@ -1,0 +1,248 @@
+
+<h4 align="center"><mark>DRAFT TEXT BELOW THIS LINE</mark></h4>
+---
+
+##### More Examples
+
+The following example is an "Action Menu" component.
+
+<small><strong>EXAMPLE COMPONENT</strong> Inline definition of the component ```site/components/actions_menu```</small>
+<pre data-line="1,24,30"><code class="language-html">
+<div data-ui-view="site/components/actions_menu"
+     layout="row center-left">
+    <!-- FAB menu button -->
+    <div style="max-width: 56px;">
+        <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
+            <i class="material-icons">settings</i>
+        </a>
+    </div>
+    <!-- menu actions buttons -->
+    <div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">edit</i>
+        </div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">insert_comment</i>
+        </div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">delete_forever</i>
+        </div>
+    </div>
+</div>
+<script>
+// 'site/components/actions_menu' controller
+zuix.controller(function(cp) {
+
+    cp.create = function() { /* ... */ };
+
+    cp.destroy = function() { /* ... */ }
+
+}).for('site/components/actions_menu');
+</script>
+</code></pre>
+
+Loading of the above component
+
+```html
+<div data-ui-load="site/components/actions_menu"></div>
+```
+
+<small><strong>RESULT</strong> Component ```site/components/actions_menu```</small>
+
+<div data-ui-field="example-actions_menu"
+     data-ui-options="example_action_menu_options"
+     data-ui-load="site/components/actions_menu"
+     class="content-padding"
+     layout="row center-left">
+    <!-- menu actions -->
+    <!-- Colored FAB button with ripple -->
+    <div style="max-width: 56px;">
+        <a class="menu mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--6dp">
+            <i class="material-icons">settings</i>
+        </a>
+    </div>
+    <div class="options">
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">edit</i>
+        </div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">insert_comment</i>
+        </div>
+        <div class="mdl-button mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab mdl-shadow--2dp">
+            <i class="material-icons">delete_forever</i>
+        </div>
+    </div>
+</div>
+<style>
+    [data-ui-load="site/components/actions_menu"] [class*="mdl-button--mini-fab"] {
+        margin: 4px 0 4px 16px;
+    }
+</style>
+<script>
+    var example_action_menu_options = {
+        css: false,
+        html: false,
+        on: {
+            'item:click': function (e, i) {
+                console.log('Action menu clicked ', i, this);
+            }
+        }
+    };
+</script>
+
+
+The *controller* code will take care of collapsing/expanding
+the actions buttons when the user clicks the FAB button.
+It will also cause an ```item:click``` event when an
+action buttons is clicked.
+
+<small><strong>EXAMPLE</strong> Controller implementation in file [site/components/actions_menu](https://genielabs.github.io/zuix/site/components/actions_menu.js)</small>
+
+<pre><code class="language-js">
+zuix.controller(function (cp) {
+
+    var toolbar, fab, actions;
+    var open = true; // initial state
+
+    cp.create = function () {
+
+        // toolbar view
+        toolbar = cp.view();
+        // fab button
+        fab = toolbar.children().eq(0);
+        fab.on('click', function () {
+            toolbarToggle();
+        });
+        // actions buttons
+        actions = toolbar.children().eq(1)
+            .css('overflow', 'hidden')
+            .children();
+        actions.each(function (index, item) {
+            item.on('click', function () {
+                toolbarToggle();
+                cp.trigger('item:click', index);
+            });
+        });
+
+        toolbarToggle();
+    };
+
+    cp.destroy = function () {
+
+        actions.each(function (i, item) {
+            item.off('click');
+        });
+
+    };
+
+});
+</code></pre>
+
+
+Example picture slide-show component
+[site/components/slideshow](https://genielabs.github.io/zuix/site/components/slideshow.js).
+
+
+<div data-ui-field="test"
+     data-ui-load="site/components/slideshow"
+     data-ui-options="main.options.example_component"
+     style="visibility:hidden;background: black">
+    <img src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=60&auto=compress"
+         data-href="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=60&auto=compress"
+         data-href="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?h=60&auto=compress"
+         data-href="https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=60&auto=compress"
+         data-href=https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=60&auto=compress"
+         data-href="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=60&auto=compress"
+         data-href="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?h=60&auto=compress"
+         data-href="https://images.pexels.com/photos/36717/amazing-animal-beautiful-beautifull.jpg?h=240&auto=compress">
+    <img src="https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=60&auto=compress"
+         data-href=https://images.pexels.com/photos/30469/pexels-photo-30469.jpg?h=240&auto=compress">
+</div>
+
+<p>.</p>
+
+<style type="text/css">
+    /*
+     * Custom keyword styles
+     */
+    .token.keyword.keyword-data-ui-load, .token.keyword.keyword-load {
+        color: #f92672;
+    }
+    .token.zuix_obj {
+        color: purple;
+    }
+    .token.zuix_ctr {
+        color: gray;
+    }
+</style>
+
+#### Hooks
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+
+#### About caching
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+#### Guidelines
+
+
+<p></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p></p>
+
+<!--
+##### Example - Loading external hosted component
+
+<small>HTML</small>
+<pre><code class="language-markup">
+    <div data-ui-load="https://codepen.io/genielabs/pen/RomJZy"></div>
+</code></pre>
+<small>JavaScript</small>
+<pre><code class="language-js">
+    // load a component from CodePen
+    // and override its controller logic
+    // with an inline one
+    zuix.load('https://codepen.io/genielabs/pen/RomJZy', {
+        container: zuix.field('my-container'),
+        controller: zuix.controller(function(cp) {
+            // inline controller function
+            // TODO: implement your own controller logic
+        },
+        ready: function (context) {
+            // component loaded and ready
+            console.log(context);
+        }
+    });
+</code></pre>
+<small>Result</small>
+<div self="size1of2">
+<div data-ui-load="https://codepen.io/genielabs/pen/RomJZy">
+<h4 data-ui-field="data.title">Test title...</h4>
+<p data-ui-field="data.description">Test description...</p>
+</div>
+</div>
+
+<small>Component on CodePen</small>
+<p data-height="430" data-theme-id="26976" data-slug-hash="RomJZy" data-default-tab="js,result" data-user="genielabs" data-embed-version="2" data-pen-title="zuix test" class="codepen">See the Pen <a href="https://codepen.io/genielabs/pen/RomJZy/">zuix test</a> by Gene (<a href="https://codepen.io/genielabs">@genielabs</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+-->

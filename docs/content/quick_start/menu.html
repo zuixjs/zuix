@@ -9,12 +9,10 @@
         <div layout="column center-right"
              class="options mdl-shadow--8dp">
             <div class="menu-item" layout="row center-spread">
-                <span>Install</span>
-                <i self="right" class="material-icons">file_download</i>
+                <span>Usage</span>
             </div>
             <div class="menu-item" layout="row center-spread">
                 <span>Quick Start Guide</span>
-                <i self="right" class="material-icons">book</i>
             </div>
             <div class="menu-item" layout="row center-spread">
                 <span>Content Management</span>
@@ -48,7 +46,7 @@
                 var p = pagedView.getPage(1);
                 switch (i) {
                     case 0:
-                        scrollTo(p.get(), p.find('a[id=Getting_Started').position().y);
+                        scrollTo(p.get(), p.position().y /*p.find('a[id=Getting_Started').position().y*/);
                         break;
                     case 1:
                         scrollTo(p.get(), p.find('a[id=Getting_Started--Quick_Start').position().y);

@@ -167,15 +167,69 @@ zuix
         componentHandler.upgradeElements(data.get());
 });
 
+// TODO: move animateCss to a separate util.js file
+// animateCss extension method for ZxQuery
+zuix.$.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
+    var callback, options;
+    if (typeof param2 === 'function') {
+        options = param1;
+        callback = param2;
+    } else {
+        if (typeof param1 === 'function')
+            callback = param1;
+        else options = param1;
+    }
+    // stops any previously running animation
+    if (this.hasClass('animated')) {
+        this.css('transition', ''); // TODO: <-- is this really needed?
+        this.trigger('animationend');
+    }
+    // TODO: should run all the following code for each element in the ZxQuery selection
+    var prefixes = [ '-webkit', '-moz', '-o', '-ms' ];
+    for(var key in options)
+        for (var p in prefixes)
+            this.css(prefixes[p] + '-animation-' + key, options[key]);
+    var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+    var _t = this;
+    this.addClass('animated ' + animationName).one(animationEnd, function () {
+        this.removeClass('animated ' + animationName);
+        for(var key in options)
+            for (var p in prefixes)
+                _t.css(prefixes[p] + '-animation-' + key, '');
+        if (typeof callback === 'function')
+            callback.call(_t, animationName);
+    });
+    return this;
+};
 
 var zxHeader = zuix.$.find('.site-header').hide();
 zxHeader.hidden = true; var headerTriggerY = 100;
+var zxHeaderTitle = zxHeader.find('[data-ui-field=title]');
 var zxFooter = zuix.$.find('.site-footer').hide();
 var featuresBlock = null;
 var coverBlock = null;
 
 zuix.$.find('section').eq(0).on('scroll', function (data) {
    checkMenuVisibility();
+});
+
+// USAGE section header title - on scroll
+var usagePage = zuix.field('page-usage');
+var usageTitlePath = zuix.load('ui/usability/content_path', {
+    view: usagePage,
+    tags: 'h3,h4,h5',
+    target: zxHeaderTitle,
+    html: false,
+    css: false
+});
+// API section header title - on scroll
+var apiPage = zuix.field('page-api');
+var apiTitlePath = zuix.load('ui/usability/content_path', {
+    view: apiPage,
+    tags: 'h3',
+    target: zxHeaderTitle,
+    html: false,
+    css: false
 });
 
 function checkMenuVisibility() {
@@ -205,6 +259,7 @@ function menuItemClicked(e, i) {
 
 // PagedView `page:change` behavior handler
 function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
+    zxHeaderTitle.html('');
 
     // cover+header animation reveal/hide
     if (i.page === 0) {
@@ -225,6 +280,16 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         featuresBlock
             .animateCss('slideOutDown');
     }
+
+    // header title path
+    if (i.page === 1)
+        setTimeout(function () {
+            usageTitlePath.update();
+        }, 1000);
+    else if (i.page === 2)
+        setTimeout(function () {
+            apiTitlePath.update();
+        }, 1000);
 
     // contextual FAB menu
     if (i.old === 1)
@@ -260,40 +325,6 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         }).show();
     }
 }
-
-// animateCss extension method for ZxQuery
-zuix.$.ZxQuery.prototype.animateCss  = function (animationName, param1, param2) {
-    var callback, options;
-    if (typeof param2 === 'function') {
-        options = param1;
-        callback = param2;
-    } else {
-        if (typeof param1 === 'function')
-            callback = param1;
-        else options = param1;
-    }
-    // stops any previously running animation
-    if (this.hasClass('animated')) {
-        this.css('transition', ''); // TODO: <-- is this really needed?
-        this.trigger('animationend');
-    }
-    // TODO: should run all the following code for each element in the ZxQuery selection
-    var prefixes = [ '-webkit', '-moz', '-o', '-ms' ];
-    for(var key in options)
-        for (var p in prefixes)
-            this.css(prefixes[p] + '-animation-' + key, options[key]);
-    var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-    var _t = this;
-    this.addClass('animated ' + animationName).one(animationEnd, function () {
-        this.removeClass('animated ' + animationName);
-        for(var key in options)
-            for (var p in prefixes)
-                _t.css(prefixes[p] + '-animation-' + key, '');
-        if (typeof callback === 'function')
-            callback.call(_t, animationName);
-    });
-    return this;
-};
 
 // debug stuff
 setTimeout(function () {

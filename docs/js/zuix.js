@@ -1115,6 +1115,8 @@ ComponentContext.prototype.view = function (view) {
         this.trigger(this, 'view:process', z$(this._view));
 
     } else {
+        if (view instanceof z$.ZxQuery)
+            view = view.get();
         // load inline view
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
