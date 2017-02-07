@@ -1,26 +1,30 @@
 zuix.controller(function (cp) {
     var currentTitle = '', currentPos = 0;
     var offset = 116, items = [], title = null;
-    var ready = false;
+    var timeout = null;
 
     cp.create = function () {
         title = zuix.$(cp.options().target);
         cp.view().on('scroll', function (e) {
-            update();
+            postUpdate();
         });
         cp.expose('update', function () {
             title.attr('title', '');
             currentPos = 0;
-            update();
+            postUpdate();
         });
-        ready = true;
     };
 
+    function postUpdate() {
+        if (timeout != null)
+            clearTimeout(timeout);
+        timeout = setTimeout(update, 100);
+    }
+
     function update() {
-        items = cp.view().find(cp.options().tags);
-        if (!ready || items.length < 1) return;
         var direction = '', top = 0;
         currentTitle = '';
+        items = cp.view().find(cp.options().tags);
         items.each(function (k, v) {
             var p = this.position();
             if (p.y < offset) {
