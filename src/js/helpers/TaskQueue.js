@@ -26,6 +26,9 @@
 
 "use strict";
 
+var _log =
+    require('./Logger')('TaskQueue.js');
+
 /**
  * Task Queue Manager
  *
@@ -45,16 +48,31 @@ function TaskQueue(listener) {
             fn: fn,
             status: 0,
             priority:  pri,
+            step: function (tid) {
+                //var _h = this;
+                //_h.tid = tid;
+                _log.t(tid, 'load:step');
+                listener(_t, 'load:step', {
+                    task: tid
+                });
+            },
             end: function () {
                 this.status = 2;
                 var _h = this;
+                _log.t(_h.tid, 'load:next', 'timer:task:stop');
                 listener(_t, 'load:next', {
                     task: _h.tid
                 });
                 _t._taskList.splice(this.index, 1);
                 _t.taskCheck();
+                if (this._callback != null)
+                    this._callback.call(this);
+            },
+            callback: function (callback) {
+                this._callback = callback;
             }
         });
+        _log.t(tid, 'task added', pri, 'priority');
         _t._taskList.sort(function(a,b) {
             return (a.priority > b.priority) ?
                 1 :
@@ -67,6 +85,7 @@ function TaskQueue(listener) {
         for (var i = 0; i < _t._taskList.length; i++) {
             if (_t._taskList[i].status == 0) {
                 _t._taskList[i].status = 1;
+                _log.t(_t._taskList[i].tid, 'load:begin', i, 'timer:task:start');
                 listener(_t, 'load:begin', {
                     task: _t._taskList[i].tid
                 });
@@ -82,6 +101,7 @@ function TaskQueue(listener) {
                 return;
             }
         }
+        _log.t('load:end');
         listener(_t, 'load:end');
     }
 }

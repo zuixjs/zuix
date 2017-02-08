@@ -26,6 +26,8 @@
 
 "use strict";
 
+var _log =
+    require('./Logger')('TaskQueue.js');
 var util = require('./Util.js');
 
 /**
@@ -55,7 +57,7 @@ function addEventHandler(el, path, handler) {
     var found = false;
     z$.each(_zuix_events_mapping, function () {
         if (this.element === el && this.path === path && this.handler == handler) {
-            console.log('handler already registered', el, path, handler);
+            _log.w('Handler already registered', el, path, handler);
             found = true;
             return false;
         }
@@ -118,8 +120,8 @@ function ZxQuery(element) {
     else if (typeof element === 'string')
         this._selection = document.documentElement.querySelectorAll(element);
     else if (element !== null) { //if (typeof element === 'string') {
-        console.log('ZxQuery cannot wrap object of this type.', (typeof element), element);
-        throw(element);
+        _log.e('ZxQuery cannot wrap object of this type.', (typeof element), element);
+        throw(new Error(), element);
     }
     return this;
 }
@@ -551,7 +553,7 @@ z$.wrapCss = function (wrapperRule, css) {
                 });
                 wrappedCss += ' {' + ruleParts[2] + '}\n';
             } else {
-                console.log('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);
+                _log.w('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);
             }
         }
         result = r;

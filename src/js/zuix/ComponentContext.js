@@ -26,6 +26,8 @@
 
 "use strict";
 
+var _log =
+    require('../helpers/Logger')('ComponentContext.js');
 var z$ =
     require('../helpers/ZxQuery');
 var util =
@@ -344,12 +346,14 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
  */
 ComponentContext.prototype.loadCss = function (options, enableCaching) {
     var context = this;
-    var cssPath = context.componentId + '.css' + (enableCaching ? '?'+new Date().getTime() : '');
     if (util.isNoU(options)) options = {};
     if (!util.isNoU(options.caching))
         enableCaching = options.caching;
+    var cssPath = context.componentId + '.css';
     if (!util.isNoU(options.path))
         cssPath = options.path;
+    if (!enableCaching)
+        cssPath += '?'+new Date().getTime();
     z$.ajax({
         url: cssPath,
         success: function (viewCss) {
@@ -358,7 +362,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
                 (options.success).call(context);
         },
         error: function (err) {
-            console.log(err, context);
+            _log.e(err, context);
             if (util.isFunction(options.error))
                 (options.error).call(context, err);
         },
@@ -416,7 +420,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
             (options.then).call(context);
     } else {
         if (htmlPath == context.componentId)
-            htmlPath +=  '.html' + (enableCaching ? '?'+new Date().getTime() : '');
+            htmlPath +=  '.html' + (!enableCaching ? '?'+new Date().getTime() : '');
         z$.ajax({
             url: htmlPath,
             success: function (viewHtml) {
@@ -425,7 +429,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
                     (options.success).call(context);
             },
             error: function (err) {
-                console.log(err, context);
+                _log.e(err, context);
                 if (util.isFunction(options.error))
                     (options.error).call(context, err);
             },

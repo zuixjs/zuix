@@ -97,18 +97,23 @@ var main = {
 
 };
 
+var revealTimeout = null;
 // Zuix hook handlers
 var splashScreen = zuix.field('splashScreen').show();
 var loaderMessage = zuix.field('loaderMessage');
 var mainPage = zuix.field('main').hide();
+
 //zuix.lazyLoad(false);
-zuix.httpCaching(false);
+//zuix.httpCaching(false);
+
 zuix
 .hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
     loaderMessage.html('Loading "<em>'+data.task+'</em>" ...')
         .animateCss('bounceInUp', { duration: '1.0s' })
         .show();
+    if (revealTimeout != null)
+        clearTimeout(revealTimeout);
 
 }).hook('load:next', function(data){
     if (splashScreen)
@@ -117,31 +122,18 @@ zuix
             .animateCss('bounce');
     loaderMessage.html('Loading "<em>'+data.task+'</em>" complete.')
         .animateCss('bounceInUp', { duration: '1.0s' });
-    if (data.task === 'html:content/footer') {
-        // reveal page after footer is loaded
-        if (splashScreen) {
-            // this is only executed once, on app startup
-            var s = splashScreen; splashScreen = false;
-            s.animateCss('fadeOutUp', function(){
-                s.hide();
-            });
-            // fade in main page
-            mainPage.animateCss('fadeIn',
-                { duration: '1.2s' },
-                function(){
-                    s.hide();
-                }).show();
-            if (coverBlock == null) {
-                coverBlock = zuix.$.find('[data-ui-component="content/home/cover"]');
-                featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
-            }
-        }
-    }
+    if (revealTimeout != null)
+        clearTimeout(revealTimeout);
+
 }).hook('load:end', function(data){
 
     loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
         this.hide();
     });
+
+    if (revealTimeout != null)
+        clearTimeout(revealTimeout);
+    revealTimeout = setTimeout(reveal, 500);
 
 }).hook('html:parse', function (data) {
     // ShowDown - Markdown compiler
@@ -166,6 +158,26 @@ zuix
     if (/*this.options().mdl &&*/ componentHandler)
         componentHandler.upgradeElements(data.get());
 });
+
+function reveal() {
+    if (splashScreen) {
+        // this is only executed once, on app startup
+        var s = splashScreen; splashScreen = false;
+        s.animateCss('fadeOutUp', function(){
+            s.hide();
+        });
+        // fade in main page
+        mainPage.animateCss('fadeIn',
+            { duration: '1.2s' },
+            function(){
+                s.hide();
+            }).show();
+        if (coverBlock == null) {
+            coverBlock = zuix.$.find('[data-ui-component="content/home/cover"]');
+            featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
+        }
+    }
+}
 
 // TODO: move animateCss to a separate util.js file
 // animateCss extension method for ZxQuery
