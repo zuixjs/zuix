@@ -32,4 +32,6 @@ Start local web server
 
 #### Quick Start Guide
 
-https://genielabs.github.io/zuix/
+[ZUIX Home](https://genielabs.github.io/zuix/)
+
+http://www.zuix.it

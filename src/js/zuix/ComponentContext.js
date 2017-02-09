@@ -142,21 +142,21 @@ ComponentContext.prototype.view = function (view) {
         z$(this._view).find('script').each(function (i, el) {
             if (this.attr('zuix-loaded') !== 'true') {
                 this.attr('zuix-loaded', 'true');
-                (eval).call(window, el.innerHTML);
-                /*
-                 var clonedScript = document.createElement('script');
-                 clonedScript.setAttribute('zuix-loaded', 'true');
-                 clonedScript.onload = function () {
-                 // TODO: ...
-                 };
-                 if (!util.isNoU(this.type) && this.type.length > 0)
-                 clonedScript.type = this.type;
-                 if (!util.isNoU(this.text) && this.text.length > 0)
-                 clonedScript.text = this.text;
-                 if (!util.isNoU(this.src) && this.src.length > 0)
-                 clonedScript.src = this.src;
-                 this.parentNode.insertBefore(clonedScript, this);
-                 */
+                /*if (el.src != null && el.src.length > 0) {
+                    var clonedScript = document.createElement('script');
+                    clonedScript.setAttribute('zuix-loaded', 'true');
+                    clonedScript.onload = function () {
+                        // TODO: ...
+                    };
+                    if (!util.isNoU(this.type) && this.type.length > 0)
+                        clonedScript.type = this.type;
+                    if (!util.isNoU(this.text) && this.text.length > 0)
+                        clonedScript.text = this.text;
+                    if (!util.isNoU(this.src) && this.src.length > 0)
+                        clonedScript.src = this.src;
+                    this.get().parentNode.insertBefore(clonedScript, this.get());
+                } else */
+                    (eval).call(window, el.innerHTML);
             }
         });
 
