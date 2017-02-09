@@ -2,7 +2,7 @@
     overflow: hidden;
     background-color: rgba(16, 16, 53, 0.9);
     color:white;
-    padding: 24px 0 24px;
+    padding: 24px;
     font-size: 110%;
 }
 .logo {
@@ -12,7 +12,6 @@
     font-size: 200%;
 }
 .logo .material-icons {
-    font-size:100%;
     font-size: 90%;
 }
 .logo span {

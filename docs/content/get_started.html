@@ -1,15 +1,23 @@
 ### Usage
 
 <a id="Getting_Started"></a>
-###### Local copy
+###### Download
 
-Download **[zuix.min.js](https://genielabs.github.io/zuix/js/zuix.min.js)** and include it in the ```head``` section of the page.
+Get **ZUIX** minified Javascript file and include it in the `head` section of the page.
 
 <pre><code class="language-html">
     <script src="js/zuix.min.js"></script>
 </code></pre>
 
-###### CDN
+<div align="center">
+    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+       href="https://genielabs.github.io/zuix/js/zuix.min.js">
+        Download <strong>ZUIX v0.4.7</strong>
+    </a>
+</div>
+<div align="center"><small><em>8,8 kB (gzipped)</em></small></div>
+
+###### Hosted
 
 Link the script as an external resource by adding the following line in the ```head``` section of the page:
 
@@ -17,24 +25,25 @@ Link the script as an external resource by adding the following line in the ```h
     <script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>
 </code></pre>
 
-###### NPM
-
-Install development package
-
-    npm install zuix
+###### Build
 
 Build source and create minified version in ```./build/js``` folder:
 
     gulp browserify ; gulp compile ; gulp dox ; gulp dist
 
+###### NPM
+
+Install development package
+
+    npm install zuix --save
+
 Start local web server
 
     npm start
 
-
 ###### Bower
 
-    bower install zuix
+    bower install zuix --save
 
 <p>&nbsp;</p>
 
