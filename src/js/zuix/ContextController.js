@@ -47,7 +47,10 @@ function ContextController(context) {
         return context.behavior;
     };*/
 
-    /** @protected */
+    /**
+     * @protected
+     * @type {!Array.<ZxQuery>}
+     **/
     this._fieldCache = [];
 
     /** @type {function} */
@@ -158,25 +161,8 @@ desc.html('The spectacle before us was indeed sublime.');
  * @returns {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
 ContextController.prototype.field = function (fieldName) {
-    var _t = this, el = null;
-    if (typeof this._fieldCache[fieldName] === 'undefined') {
-        el = this.view().find('[data-ui-field=' + fieldName + ']');
-        if (el != null) {
-            // TODO: add this override to API docs
-            // ZxQuery base methods override
-            el.on = function (eventPath, eventHandler, eventData, isHook) {
-                if (typeof eventHandler === 'string') {
-                    var eh = eventHandler;
-                    eventHandler = function () { _t.trigger(eh, eventData, isHook); }
-                }
-                z$.ZxQuery.prototype.on.call(el, eventPath, eventHandler);
-            };
-            this._fieldCache[fieldName] = el;
-        }
-    } else {
-        el = this._fieldCache[fieldName];
-    }
-    return el;
+    // this method is "attacched" from Zuix.js on controller initialization
+    return null;
 };
 ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;

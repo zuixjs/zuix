@@ -51,6 +51,11 @@ var ZUIX_FIELD_ATTRIBUTE = 'data-ui-field';
  * @returns {Zuix}
  */
 function Zuix() {
+    /**
+     * @private
+     * @type {!Array.<ZxQuery>}
+     **/
+    this._fieldCache = [];
     return this;
 }
 
@@ -106,12 +111,24 @@ function controller(handler) {
  *
  * @private
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
- * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
+ * @param {!Element|!ZxQuery} [container] Starting DOM element for this search (**default:** *document*)
+ * @param {object} [context] The context
  * @return {ZxQuery}
  */
-function field(fieldName, container) {
-    // TODO: implement caching ?
-    return z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]');
+function field(fieldName, container, context) {
+    if (util.isNoU(context))
+        context = this;
+    if (context._fieldCache == null)
+        context._fieldCache = {};
+
+    var el = null;
+    if (typeof context._fieldCache[fieldName] === 'undefined') {
+        el = z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]');
+        if (el != null)
+            context._fieldCache[fieldName] = el;
+    } else el = context._fieldCache[fieldName];
+
+    return el;
 }
 
 /**
@@ -126,6 +143,7 @@ function componentize(element) {
     // Throttle method
     if (tasker.requestLock(componentize)) {
         z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function (i, el) {
+            // hide the component while loading. It will be shown after the controller initialization.
             this.visibility('hidden');
             // defer element loading if lazy loading is enabled and the element is not in view
             var lazyContainer = el.lazyContainer || z$.getClosest(el, '[data-ui-lazyload=scroll]');
@@ -572,16 +590,16 @@ function createComponent(context, task) {
         } else {
             _log.w(context.componentId, 'deferred view, not caching');
         }
-        //initComponent(context);
 
         if (task != null)
             task.callback(function () {
-                setTimeout(function () {
+//                setTimeout(function () {
                     _log.d(context.componentId, 'controller::create:deferred');
-                    if (util.isFunction(c.create)) c.create();
-                    c.trigger('view:create');
+                    initController(c);
+                    // TODO: 'componentize()' should not be needed here
+                    // TODO: if initialization sequence is correct
                     componentize();
-                }, 500);
+//                }, 500);
             });
 
         _log.d(context.componentId, 'initializing component');
@@ -640,33 +658,51 @@ function createComponent(context, task) {
                     if (pending == -1 && task != null)
                         task.end();
                 } else if (task != null) task.end();
-                c.view().css('visibility', '');
             }
 
             if (task == null) {
                 _log.d(context.componentId, 'controller::create');
-                if (util.isFunction(c.create)) c.create();
-                c.trigger('view:create');
+                initController(c);
             }
 
         } else {
             _log.w(context.componentId, 'no controller defined');
         }
-        if (util.isFunction(context.ready))
-            (context.ready).call(context);
-
 
     } else {
         // TODO: report error
+        _log.e(context.componentId, 'no view attacched');
     }
-    _log.d(context.componentId, 'component created');
 }
 
 /***
  * @private
- * @param {ComponentContext} context
+ * @param {ContextController} c
  */
-function initComponent(context) {
+function initController(c) {
+
+    // bind {ContextController}.field method
+    c.field = function(fieldName) {
+        var el = field(fieldName, c.view(), c);
+        el.on = function (eventPath, eventHandler, eventData, isHook) {
+            if (typeof eventHandler === 'string') {
+                var eh = eventHandler;
+                eventHandler = function () { c.trigger(eh, eventData, isHook); }
+            }
+            z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
+        };
+        return el;
+    };
+
+    c.view().css('visibility', '');
+
+    if (util.isFunction(c.create)) c.create();
+    c.trigger('view:create');
+
+    if (util.isFunction(c.context.ready))
+        (c.context.ready).call(c.context);
+
+    _log.d(c.context.componentId, 'component created');
 }
 
 /***
