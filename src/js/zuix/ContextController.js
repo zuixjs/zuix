@@ -53,6 +53,10 @@ function ContextController(context) {
      **/
     this._fieldCache = [];
 
+    // Interface methods
+
+    /** @type {function} */
+    this.init = null;
     /** @type {function} */
     this.create = null;
     /** @type {function} */

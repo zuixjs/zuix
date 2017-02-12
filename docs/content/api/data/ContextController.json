@@ -164,7 +164,7 @@
     "ignore": false,
     "line": 50,
     "codeStart": 54,
-    "code": "this._fieldCache = [];",
+    "code": "this._fieldCache = [];\n\n// Interface methods",
     "ctx": {
       "type": "property",
       "receiver": "this",
@@ -198,8 +198,44 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 56,
-    "codeStart": 57,
+    "line": 58,
+    "codeStart": 59,
+    "code": "this.init = null;",
+    "ctx": {
+      "type": "property",
+      "receiver": "this",
+      "name": "init",
+      "value": "null",
+      "string": "this.init"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "type",
+        "string": "{function}",
+        "types": [
+          "function"
+        ],
+        "typesDescription": "<code>function</code>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      }
+    ],
+    "description": {
+      "full": "",
+      "summary": "",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 60,
+    "codeStart": 61,
     "code": "this.create = null;",
     "ctx": {
       "type": "property",
@@ -234,8 +270,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 58,
-    "codeStart": 59,
+    "line": 62,
+    "codeStart": 63,
     "code": "this.destroy = null;",
     "ctx": {
       "type": "property",
@@ -263,8 +299,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 61,
-    "codeStart": 62,
+    "line": 65,
+    "codeStart": 66,
     "code": "this._childNodes = [];",
     "ctx": {
       "type": "property",
@@ -299,8 +335,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 63,
-    "codeStart": 64,
+    "line": 67,
+    "codeStart": 68,
     "code": "this.saveView = function () {\n    this.restoreView();\n    this.view().children().each(function (i, el) {\n        _t._childNodes.push(el);\n    });\n};\nthis.restoreView = function() {\n    if (this._childNodes.length > 0) {\n        _t.view().html('');\n        z$.each(_t._childNodes, function (i, el) {\n            _t.view().append(el);\n        });\n        this._childNodes.length = 0;\n    }\n};\n\nthis.on = function (eventPath, handler_fn) {\n    this.addEvent(this.view(), eventPath, handler_fn);\n    // TODO: implement automatic event unbinding (off) in super().destroy()\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -327,8 +363,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 85,
-    "codeStart": 86,
+    "line": 89,
+    "codeStart": 90,
     "code": "this.mapEvent = function (eventMap, target, eventPath, handler_fn) {\n    if (target != null) {\n        target.off(eventPath, this.eventRouter);\n        eventMap[eventPath] = handler_fn;\n        target.on(eventPath, this.eventRouter);\n    } else {\n        // TODO: should report missing target\n    }\n};",
     "ctx": {
       "type": "method",
@@ -355,8 +391,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 95,
-    "codeStart": 96,
+    "line": 99,
+    "codeStart": 100,
     "code": "this.eventRouter = function (e) {\n    if (typeof context._behaviorMap[e.type] === 'function')\n        context._behaviorMap[e.type].call(_t.view(), e, e.detail);\n    if (typeof context._eventMap[e.type] === 'function')\n        context._eventMap[e.type].call(_t.view(), e, e.detail);\n    // TODO: else-> should report anomaly\n};\n\n// create event map from context options\nvar options = context.options(), handler = null;\nif (options.on != null) {\n    for (var ep in options.on) {\n        handler = options.on[ep];\n        // TODO: should log.warn if k already exists\n        _t.addEvent(_t.view(), ep, handler);\n    }\n}\n// create behavior map from context options\nif (options.behavior != null) {\n    for (var bp in options.behavior) {\n        handler = options.behavior[bp];\n        // TODO: should log.warn if k already exists\n        _t.addBehavior(_t.view(), bp, handler);\n    }\n}\n\ncontext.controller().call(this, this);\n\nreturn this;\n}\n\n// TODO: add jsDoc\nContextController.prototype.addEvent = function (target, eventPath, handler_fn) {\nthis.mapEvent(this.context._eventMap, target, eventPath, handler_fn);\nreturn this;\n};\n\n// TODO: add jsDoc\nContextController.prototype.addBehavior = function (target, eventPath, handler_fn) {\nthis.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);\nreturn this;\n};",
     "ctx": {
       "type": "method",
@@ -409,8 +445,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 139,
-    "codeStart": 163,
+    "line": 143,
+    "codeStart": 167,
     "code": "ContextController.prototype.field = function (fieldName) {\n    // this method is \"attacched\" from Zuix.js on controller initialization\n    return null;\n};\nContextController.prototype.clearCache = function () {\n    this._fieldCache.length = 0;\n};",
     "ctx": {
       "type": "method",
@@ -464,8 +500,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 170,
-    "codeStart": 188,
+    "line": 174,
+    "codeStart": 192,
     "code": "ContextController.prototype.view = function (filter) {\n    if (this.context.view() != null || this._view !== this.context.view())\n        this._view = z$(this.context.view());\n    if (filter != null)\n        return this._view.find(filter);\n    else if (this._view !== null)\n        return this._view;\n    else\n        throw({\n            message: 'Not attacched to a view yet.',\n            source: this\n        });\n};",
     "ctx": {
       "type": "method",
@@ -520,8 +556,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 201,
-    "codeStart": 219,
+    "line": 205,
+    "codeStart": 223,
     "code": "ContextController.prototype.model = function (model) {\n    if (model == null)\n        return this.context.model();\n    else this.context.model(model);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -557,8 +593,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 225,
-    "codeStart": 230,
+    "line": 229,
+    "codeStart": 234,
     "code": "ContextController.prototype.options = function () {\n    return this.context.options();\n};",
     "ctx": {
       "type": "method",
@@ -640,8 +676,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 233,
-    "codeStart": 258,
+    "line": 237,
+    "codeStart": 262,
     "code": "ContextController.prototype.trigger = function (eventPath, eventData, isHook) {\n    if (this.context._eventMap[eventPath] == null && isHook !== true)\n        this.addEvent(this.view(), eventPath, null);\n    // TODO: ...\n    if (isHook === true)\n        this.context.trigger(this.context, eventPath, eventData);\n    else\n        this.view().trigger(eventPath, eventData);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -709,8 +745,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 268,
-    "codeStart": 297,
+    "line": 272,
+    "codeStart": 301,
     "code": "ContextController.prototype.expose = function (methodName, handler) {\n    this.context[methodName] = handler;\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -764,8 +800,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 301,
-    "codeStart": 323,
+    "line": 305,
+    "codeStart": 327,
     "code": "ContextController.prototype.loadCss = function(options) {\n    this.context.loadCss(options);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -819,8 +855,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 327,
-    "codeStart": 349,
+    "line": 331,
+    "codeStart": 353,
     "code": "ContextController.prototype.loadHtml = function(options) {\n    this.saveView();\n    this.context.loadHtml(options);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -874,8 +910,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 354,
-    "codeStart": 371,
+    "line": 358,
+    "codeStart": 375,
     "code": "ContextController.prototype.for = function (componentId) { return this; };\n\n\nmodule.exports = ContextController;",
     "ctx": {
       "type": "method",

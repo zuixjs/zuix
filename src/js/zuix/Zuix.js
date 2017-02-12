@@ -309,6 +309,7 @@ function load(componentId, options) {
 
     {
         /*
+        TODO: CSS caching, to be tested.
         if (cachedComponent !== null && util.isNoU(options.css)) {
             ctx.style(cachedComponent.css);
             options.css = false;
@@ -595,7 +596,7 @@ function createComponent(context, task) {
             task.callback(function () {
 //                setTimeout(function () {
                     _log.d(context.componentId, 'controller::create:deferred');
-                    initController(c);
+                    initController(context._c);
                     // TODO: 'componentize()' should not be needed here
                     // TODO: if initialization sequence is correct
                     componentize();
@@ -606,6 +607,8 @@ function createComponent(context, task) {
         if (util.isFunction(context.controller())) {
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
+            if (typeof c.init === 'function')
+                c.init();
             if (!util.isNoU(c.view())) {
                 c.view().attr('data-ui-component', context.componentId);
                 // if no model is supplied, try auto-create from view fields
@@ -634,11 +637,13 @@ function createComponent(context, task) {
                             if (pending == -1) pending = 0; pending++;
                             context.loadCss({
                                 caching: _enableHttpCaching,
+                                success: function(css) {
+                                    cached.css = css;
+                                    _log.e(context.componentId, 'updated cached css', cached, pending);
+                                },
                                 then: function () {
-                                    cached.css = this._css;
                                     if (--pending === 0 && task != null)
                                         task.end();
-                                    _log.e(context.componentId, 'updated cached css', cached, pending);
                                 }
                             });
                         } else context.style(cached.css);
@@ -647,11 +652,13 @@ function createComponent(context, task) {
                             if (pending == -1) pending = 0; pending++;
                             context.loadHtml({
                                 caching: _enableHttpCaching,
+                                success: function(html) {
+                                    cached.view = html;
+                                    _log.e(context.componentId, 'updated cached html', cached, pending);
+                                },
                                 then: function () {
-                                    cached.view = this.view().innerHTML;
                                     if (--pending === 0 && task != null)
                                         task.end();
-                                    _log.e(context.componentId, 'updated cached html', cached, pending);
                                 }
                             });
                         } else context.view(cached.view);
@@ -694,14 +701,15 @@ function initController(c) {
         return el;
     };
 
-    c.view().css('visibility', '');
-
     if (util.isFunction(c.create)) c.create();
     c.trigger('view:create');
+
+    c.trigger('component:ready', c.view(), true);
 
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);
 
+    c.view().css('visibility', '');
     _log.d(c.context.componentId, 'component created');
 }
 
@@ -968,16 +976,28 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
  * Enable/Disable lazy-loading, or get current setting.
  *
  * @param {boolean} [enable] Set lazy-load option.
- * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
+ * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Zuix.prototype.lazyLoad = lazyLoad;
+Zuix.prototype.lazyLoad = function (enable) {
+    if (enable != null)
+        lazyLoad(enable);
+    else
+        return lazyLoad();
+    return this;
+};
 /**
  * Enable/Disable HTTP caching
  *
  * @param {boolean} [enable]
- * @return {boolean} *true* if HTTP caching is enabled, *false* otherwise.
+ * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
  */
-Zuix.prototype.httpCaching = httpCaching;
+Zuix.prototype.httpCaching = function(enable) {
+    if (enable != null)
+        httpCaching(enable);
+    else
+        return httpCaching();
+    return this;
+};
 
 Zuix.prototype.$ = z$;
 Zuix.prototype.TaskQueue = TaskQueue;

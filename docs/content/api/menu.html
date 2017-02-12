@@ -49,7 +49,7 @@
             },
             'item:click': function (e, i) {
                 var p = pagedView.getPage(2);
-                switch (i) {
+                switch (parseInt(i)) {
                     case 0:
                         scrollTo(p.get(), p.find('a[id=ZUIX_API').position().y);
                         break;

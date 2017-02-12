@@ -44,7 +44,7 @@
             },
             'item:click': function (e, i) {
                 var p = pagedView.getPage(1);
-                switch (i) {
+                switch (parseInt(i)) {
                     case 0:
                         scrollTo(p.get(), p.position().y /*p.find('a[id=Getting_Started').position().y*/);
                         break;

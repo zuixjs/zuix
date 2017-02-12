@@ -269,6 +269,9 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, el) {
         z$.each(events, function (k, ev) {
+            // TODO: verify if this case apply to all events
+            if (el.tagName.toLowerCase() === 'body')
+                el = document;
             addEventHandler(el, ev, eventHandler);
         });
     });
@@ -284,6 +287,9 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, el) {
         z$.each(events, function (k, ev) {
+            // TODO: verify if this case apply to all events
+            if (el.tagName.toLowerCase() === 'body')
+                el = document;
             removeEventHandler(el, ev, eventHandler);
         });
     });
@@ -310,15 +316,24 @@ ZxQuery.prototype.position = function () {
 
 /**
  * Sets or gets the given css property.
- * @param {string} attr The CSS property name
+ * @param {string|JSON} attr The CSS property name or JSON list of properties/values.
  * @param {string|undefined} [val] The attribute value.
  * @return {string|ZxQuery} The *attr* css value when no *val* specified, otherwise the *ZxQuery* object itself
  */
 ZxQuery.prototype.css = function (attr, val) {
-    if (util.isNoU(val))
+    var _t = this;
+    if (typeof attr === 'object') {
+        _log.t(typeof attr, attr, Object.keys(attr).length);
+        z$.each(attr, function (i, v) {
+            _t.each(function (k, el) {
+                _log.t(attr, k, el);
+                el.style[i] = v;
+            });
+        });
+    } else if (util.isNoU(val))
         return this._selection[0].style[attr];
     else
-        this.each(function (k, el) {
+        _t.each(function (k, el) {
             el.style[attr] = val;
         });
     return this;
@@ -482,14 +497,20 @@ z$.find = function (filter) {
  * @return {z$} `this`.
  */
 z$.each = function (items, iterationCallback) {
-    if (items != null)
-        for (var i = 0, len = items.length; i < len; i++) {
+    var len = (items == null ? 0 : Object.keys(items).length);
+    if (len > 0) {
+        var count = 0;
+        for (var i in items) {
             var item = items[i];
             if (item instanceof Element)
                 item = z$(item);
             if (iterationCallback.call(item, i, items[i]) === false)
                 break;
+            count++;
+            if (count >= len)
+                break;
         }
+    }
     return this;
 };
 z$.hasClass = function(el, className) {

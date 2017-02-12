@@ -359,7 +359,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
         success: function (viewCss) {
             context.style(viewCss);
             if (util.isFunction(options.success))
-                (options.success).call(context);
+                (options.success).call(context, viewCss);
         },
         error: function (err) {
             _log.e(err, context);
@@ -414,8 +414,9 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
             context.view(inlineElement);
         else
             context.view(inlineElement.outerHTML);
+        var html = context.view().innerHTML;
         if (util.isFunction(options.success))
-            (options.success).call(context);
+            (options.success).call(context, html);
         if (util.isFunction(options.then))
             (options.then).call(context);
     } else {
@@ -426,7 +427,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
             success: function (viewHtml) {
                 context.view(viewHtml);
                 if (util.isFunction(options.success))
-                    (options.success).call(context);
+                    (options.success).call(context, viewHtml);
             },
             error: function (err) {
                 _log.e(err, context);
@@ -455,18 +456,7 @@ ComponentContext.prototype.viewToModel = function() {
         if (this.parent('pre,code').length() > 0)
             return true;
         var name = this.attr('data-ui-field');
-        var value = '';
-        switch(el.tagName.toLowerCase()) {
-            // TODO: complete binding cases
-            case 'img':
-                value = el.src;
-                break;
-            case 'input':
-                value = el.value;
-                break;
-            default:
-                value = el.innerHTML;
-        }
+        var value = el;
         // dotted field path
         if (name.indexOf('.')>0) {
             var path = name.split('.');
@@ -507,13 +497,18 @@ ComponentContext.prototype.modelToView = function () {
                     switch (el.tagName.toLowerCase()) {
                         // TODO: complete binding cases
                         case 'img':
-                            el.src = boundData;
+                            el.src = boundData.src || boundData.innerHTML || boundData;
+                            if (boundData.alt) el.alt = boundData.alt;
+                            break;
+                        case 'a':
+                            el.href = boundData.href || boundData.innerHTML || boundData;
+                            if (boundData.title) el.title = boundData.title;
                             break;
                         case 'input':
-                            el.value = boundData;
+                            el.value = boundData.value || boundData.innerHTML || boundData;
                             break;
                         default:
-                            el.innerHTML = boundData;
+                            el.innerHTML = boundData.innerHTML || boundData;
                     }
                 }
             }

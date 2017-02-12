@@ -29,6 +29,39 @@
     </div>
 
     <div layout="rows center-center"
-         data-ui-include="content/home/sharing"></div>
+         data-ui-options="main.options.sharing_buttons_options"
+         data-ui-include="content/home/sharing">
+        <a data-ui-field="url" href="http://zuix.it">ZUIX Home</a>
+        <p data-ui-field="description">JavaScript UI content and component manager for creating sites and web apps.</p>
+    </div>
+    <script>
+        main.options.sharing_buttons_options = {
+            ready: function () {
+                var html = this.view().innerHTML,
+                    outHtml = '',
+                    matched = 0, currentIndex = 0;
+                var tags = new RegExp(/[^{}]+(?=})/g);
+                while (result = tags.exec(html)) {
+                    var value = '{'+result[0]+'}';
+                    switch (result[0]) {
+                        case 'url':
+                            matched++;
+                            value = encodeURIComponent(this.model()[result[0]].href);
+                            break;
+                        case 'description':
+                            matched++;
+                            value = encodeURIComponent(this.model()[result[0]].innerHTML);
+                            break;
+                    }
+                    outHtml += html.substr(currentIndex, result.index-currentIndex-1)+value;
+                    currentIndex = result.index+result[0].length+1;
+                }
+                if (matched > 0) {
+                    outHtml += html.substr(currentIndex);
+                    this.view(outHtml);
+                }
+            }
+        };
+    </script>
 
 </div>

@@ -1,37 +1,52 @@
 JavaScript UI content and component manager for creating sites and web apps.
 
-#### Local copy
+### Usage
 
-Download **[zuix.min.js](https://genielabs.github.io/zuix/js/zuix.min.js)** and include it in the ```head``` section of the page.
+<a id="Getting_Started"></a>
+###### Download
 
-```<script src="js/zuix.min.js"></script>```
+Get **ZUIX** minified Javascript file and include it in the `head` section of the page.
 
-#### CDN
+<pre><code class="language-html">
+&lt;script src="js/zuix.min.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<div align="center">
+<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+   href="https://genielabs.github.io/zuix/js/zuix.min.js">
+    Download <strong>ZUIX v0.4.7</strong>
+</a>
+</div>
+<div align="center"><small><em>8,8 kB (gzipped)</em></small></div>
+
+###### Hosted
 
 Link the script as an external resource by adding the following line in the ```head``` section of the page:
 
-```<script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>```
+<pre><code class="language-html">
+    <script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>
+</code></pre>
 
-#### Bower
-
-    bower install zuix
-
-#### NPM
-
-Install development package
-
-    npm install zuix
+###### Build
 
 Build source and create minified version in ```./build/js``` folder:
 
     gulp browserify ; gulp compile ; gulp dox ; gulp dist
 
+###### NPM
+
+Install development package
+
+    npm install zuix --save
+
 Start local web server
 
     npm start
 
+###### Bower
+
+    bower install zuix --save
+
 #### Quick Start Guide
 
-[ZUIX Home](https://genielabs.github.io/zuix/)
-
-http://www.zuix.it
+[ZUIX Home](https://genielabs.github.io/zuix/) http://www.zuix.it

@@ -674,6 +674,9 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, el) {
         z$.each(events, function (k, ev) {
+            // TODO: verify if this case apply to all events
+            if (el.tagName.toLowerCase() === 'body')
+                el = document;
             addEventHandler(el, ev, eventHandler);
         });
     });
@@ -689,6 +692,9 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, el) {
         z$.each(events, function (k, ev) {
+            // TODO: verify if this case apply to all events
+            if (el.tagName.toLowerCase() === 'body')
+                el = document;
             removeEventHandler(el, ev, eventHandler);
         });
     });
@@ -715,15 +721,24 @@ ZxQuery.prototype.position = function () {
 
 /**
  * Sets or gets the given css property.
- * @param {string} attr The CSS property name
+ * @param {string|JSON} attr The CSS property name or JSON list of properties/values.
  * @param {string|undefined} [val] The attribute value.
  * @return {string|ZxQuery} The *attr* css value when no *val* specified, otherwise the *ZxQuery* object itself
  */
 ZxQuery.prototype.css = function (attr, val) {
-    if (util.isNoU(val))
+    var _t = this;
+    if (typeof attr === 'object') {
+        _log.t(typeof attr, attr, Object.keys(attr).length);
+        z$.each(attr, function (i, v) {
+            _t.each(function (k, el) {
+                _log.t(attr, k, el);
+                el.style[i] = v;
+            });
+        });
+    } else if (util.isNoU(val))
         return this._selection[0].style[attr];
     else
-        this.each(function (k, el) {
+        _t.each(function (k, el) {
             el.style[attr] = val;
         });
     return this;
@@ -887,14 +902,20 @@ z$.find = function (filter) {
  * @return {z$} `this`.
  */
 z$.each = function (items, iterationCallback) {
-    if (items != null)
-        for (var i = 0, len = items.length; i < len; i++) {
+    var len = (items == null ? 0 : Object.keys(items).length);
+    if (len > 0) {
+        var count = 0;
+        for (var i in items) {
             var item = items[i];
             if (item instanceof Element)
                 item = z$(item);
             if (iterationCallback.call(item, i, items[i]) === false)
                 break;
+            count++;
+            if (count >= len)
+                break;
         }
+    }
     return this;
 };
 z$.hasClass = function(el, className) {
@@ -1090,6 +1111,7 @@ module.exports =  z$;
 
 "use strict";
 
+// TODO: detect whether running in a browser enviroment or not
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -1467,7 +1489,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
         success: function (viewCss) {
             context.style(viewCss);
             if (util.isFunction(options.success))
-                (options.success).call(context);
+                (options.success).call(context, viewCss);
         },
         error: function (err) {
             _log.e(err, context);
@@ -1522,8 +1544,9 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
             context.view(inlineElement);
         else
             context.view(inlineElement.outerHTML);
+        var html = context.view().innerHTML;
         if (util.isFunction(options.success))
-            (options.success).call(context);
+            (options.success).call(context, html);
         if (util.isFunction(options.then))
             (options.then).call(context);
     } else {
@@ -1534,7 +1557,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
             success: function (viewHtml) {
                 context.view(viewHtml);
                 if (util.isFunction(options.success))
-                    (options.success).call(context);
+                    (options.success).call(context, viewHtml);
             },
             error: function (err) {
                 _log.e(err, context);
@@ -1563,18 +1586,7 @@ ComponentContext.prototype.viewToModel = function() {
         if (this.parent('pre,code').length() > 0)
             return true;
         var name = this.attr('data-ui-field');
-        var value = '';
-        switch(el.tagName.toLowerCase()) {
-            // TODO: complete binding cases
-            case 'img':
-                value = el.src;
-                break;
-            case 'input':
-                value = el.value;
-                break;
-            default:
-                value = el.innerHTML;
-        }
+        var value = el;
         // dotted field path
         if (name.indexOf('.')>0) {
             var path = name.split('.');
@@ -1615,13 +1627,18 @@ ComponentContext.prototype.modelToView = function () {
                     switch (el.tagName.toLowerCase()) {
                         // TODO: complete binding cases
                         case 'img':
-                            el.src = boundData;
+                            el.src = boundData.src || boundData.innerHTML || boundData;
+                            if (boundData.alt) el.alt = boundData.alt;
+                            break;
+                        case 'a':
+                            el.href = boundData.href || boundData.innerHTML || boundData;
+                            if (boundData.title) el.title = boundData.title;
                             break;
                         case 'input':
-                            el.value = boundData;
+                            el.value = boundData.value || boundData.innerHTML || boundData;
                             break;
                         default:
-                            el.innerHTML = boundData;
+                            el.innerHTML = boundData.innerHTML || boundData;
                     }
                 }
             }
@@ -1687,6 +1704,10 @@ function ContextController(context) {
      **/
     this._fieldCache = [];
 
+    // Interface methods
+
+    /** @type {function} */
+    this.init = null;
     /** @type {function} */
     this.create = null;
     /** @type {function} */
@@ -2318,6 +2339,7 @@ function load(componentId, options) {
 
     {
         /*
+        TODO: CSS caching, to be tested.
         if (cachedComponent !== null && util.isNoU(options.css)) {
             ctx.style(cachedComponent.css);
             options.css = false;
@@ -2604,7 +2626,7 @@ function createComponent(context, task) {
             task.callback(function () {
 //                setTimeout(function () {
                     _log.d(context.componentId, 'controller::create:deferred');
-                    initController(c);
+                    initController(context._c);
                     // TODO: 'componentize()' should not be needed here
                     // TODO: if initialization sequence is correct
                     componentize();
@@ -2615,6 +2637,8 @@ function createComponent(context, task) {
         if (util.isFunction(context.controller())) {
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
+            if (typeof c.init === 'function')
+                c.init();
             if (!util.isNoU(c.view())) {
                 c.view().attr('data-ui-component', context.componentId);
                 // if no model is supplied, try auto-create from view fields
@@ -2643,11 +2667,13 @@ function createComponent(context, task) {
                             if (pending == -1) pending = 0; pending++;
                             context.loadCss({
                                 caching: _enableHttpCaching,
+                                success: function(css) {
+                                    cached.css = css;
+                                    _log.e(context.componentId, 'updated cached css', cached, pending);
+                                },
                                 then: function () {
-                                    cached.css = this._css;
                                     if (--pending === 0 && task != null)
                                         task.end();
-                                    _log.e(context.componentId, 'updated cached css', cached, pending);
                                 }
                             });
                         } else context.style(cached.css);
@@ -2656,11 +2682,13 @@ function createComponent(context, task) {
                             if (pending == -1) pending = 0; pending++;
                             context.loadHtml({
                                 caching: _enableHttpCaching,
+                                success: function(html) {
+                                    cached.view = html;
+                                    _log.e(context.componentId, 'updated cached html', cached, pending);
+                                },
                                 then: function () {
-                                    cached.view = this.view().innerHTML;
                                     if (--pending === 0 && task != null)
                                         task.end();
-                                    _log.e(context.componentId, 'updated cached html', cached, pending);
                                 }
                             });
                         } else context.view(cached.view);
@@ -2703,14 +2731,15 @@ function initController(c) {
         return el;
     };
 
-    c.view().css('visibility', '');
-
     if (util.isFunction(c.create)) c.create();
     c.trigger('view:create');
+
+    c.trigger('component:ready', c.view(), true);
 
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);
 
+    c.view().css('visibility', '');
     _log.d(c.context.componentId, 'component created');
 }
 
@@ -2977,16 +3006,28 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
  * Enable/Disable lazy-loading, or get current setting.
  *
  * @param {boolean} [enable] Set lazy-load option.
- * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
+ * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Zuix.prototype.lazyLoad = lazyLoad;
+Zuix.prototype.lazyLoad = function (enable) {
+    if (enable != null)
+        lazyLoad(enable);
+    else
+        return lazyLoad();
+    return this;
+};
 /**
  * Enable/Disable HTTP caching
  *
  * @param {boolean} [enable]
- * @return {boolean} *true* if HTTP caching is enabled, *false* otherwise.
+ * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
  */
-Zuix.prototype.httpCaching = httpCaching;
+Zuix.prototype.httpCaching = function(enable) {
+    if (enable != null)
+        httpCaching(enable);
+    else
+        return httpCaching();
+    return this;
+};
 
 Zuix.prototype.$ = z$;
 Zuix.prototype.TaskQueue = TaskQueue;
