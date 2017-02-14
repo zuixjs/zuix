@@ -307,65 +307,64 @@ function load(componentId, options) {
         _log.t(ctx.componentId, 'loaded controller from cache');
     }
 
-    {
-        /*
-        TODO: CSS caching, to be tested.
-        if (cachedComponent !== null && util.isNoU(options.css)) {
-            ctx.style(cachedComponent.css);
-            options.css = false;
-            _log.t(ctx.componentId, 'loaded css from cache');
+    if (util.isNoU(options.view)) {
+
+        if (cachedComponent !== null && cachedComponent.view != null) {
+            ctx.view(cachedComponent.view);
+            _log.t(ctx.componentId, 'loaded html from cache');
+            /*
+             TODO: CSS caching, to be tested.
+             */
+             if (cachedComponent !== null && util.isNoU(options.css)) {
+             ctx.style(cachedComponent.css);
+             options.css = false;
+             _log.t(ctx.componentId, 'loaded css from cache');
+             }
         }
-        */
 
-        if (util.isNoU(options.view)) {
+        // if not able to inherit the view from the base cachedComponent
+        // or from an inline element, then load the view from web
+        if (util.isNoU(ctx.view())) {
+            // Load View
+            tasker.queue('html:' + ctx.componentId, function () {
+                var task = this;
 
-            if (cachedComponent !== null && cachedComponent.view != null) {
-                ctx.view(cachedComponent.view);
-                _log.t(ctx.componentId, 'loaded html from cache');
-            }
-                // if not able to inherit the view from the base cachedComponent
-            // or from an inline element, then load the view from web
-            if (util.isNoU(ctx.view())) {
-                // Load View
-                tasker.queue('html:' + ctx.componentId, function () {
-                    var task = this;
-
-                    ctx.loadHtml({
-                        caching: _enableHttpCaching,
-                        success: function () {
-                            if (options.css !== false) {
-                                task.step('css:'+ctx.componentId);
-                                ctx.loadCss({
-                                    caching: _enableHttpCaching,
-                                    error: function (err) {
-                                        _log.e(err, ctx);
-                                    },
-                                    then: function () {
-                                        loadController(ctx, task);
-                                    }
-                                });
-                            } else {
-                                loadController(ctx, task);
-                            }
-                        },
-                        error: function (err) {
-                            _log.e(err, ctx);
-                            if (util.isFunction(options.error))
-                                (ctx.error).call(ctx, err);
+                ctx.loadHtml({
+                    caching: _enableHttpCaching,
+                    success: function () {
+                        if (options.css !== false) {
+                            task.step('css:'+ctx.componentId);
+                            ctx.loadCss({
+                                caching: _enableHttpCaching,
+                                error: function (err) {
+                                    _log.e(err, ctx);
+                                },
+                                then: function () {
+                                    loadController(ctx, task);
+                                }
+                            });
+                        } else {
+                            loadController(ctx, task);
                         }
-                    });
+                    },
+                    error: function (err) {
+                        _log.e(err, ctx);
+                        if (util.isFunction(options.error))
+                            (ctx.error).call(ctx, err);
+                    }
+                });
 
-                }, options.priority);
-                // defer controller loading
-                return ctx;
-            }
-        } else {
-            ctx.view(options.view);
+            }, options.priority);
+            // defer controller loading
+            return ctx;
         }
-        tasker.queue('js:' + ctx.componentId, function () {
-            loadController(ctx, this);
-        }, _contextRoot.length);
+    } else {
+        ctx.view(options.view);
     }
+    tasker.queue('js:' + ctx.componentId, function () {
+        loadController(ctx, this);
+    }, _contextRoot.length);
+
     return ctx;
 }
 /**
@@ -734,6 +733,10 @@ function getController(javascriptCode) {
     return instance;
 }
 
+function replaceCache(c) {
+    _componentCache = c;
+}
+
 // Browser Agent / Bot detection
 /** @private */
 /** @private */
@@ -997,6 +1000,10 @@ Zuix.prototype.httpCaching = function(enable) {
     else
         return httpCaching();
     return this;
+};
+
+Zuix.prototype.setBundle = function (b) {
+    replaceCache(b);
 };
 
 Zuix.prototype.$ = z$;

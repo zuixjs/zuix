@@ -226,7 +226,7 @@ function animation_reveal () {
     });
     var blocks = this.children().eq(0).children();
     blocks.each(function (i, item) {
-        this.animateCss('bounceInDown', { delay: (0.5+((i+1)/20))+'s', duration: (0.3+((i+1)/10))+'s' });
+        this.animateCss('bounceInDown', { delay: 0.4+(i/5)+'s', duration: '0.3s' });
     });
 }
 </script>
