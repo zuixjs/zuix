@@ -1,5 +1,21 @@
 html{ font-size:100%; }
 @media( min-width:60em ){ html { font-size: 100% } }
+@media screen and (max-width: 720px) {
+    .app_menu_small {
+        display: flex;
+    }
+    .app_menu_large {
+        display: none;
+    }
+}
+@media screen and (min-width: 720px) {
+    .app_menu_large {
+        display: flex;
+    }
+    .app_menu_small {
+        display: none;
+    }
+}
 body {
     background-size: cover;
     font-family: 'Titillium Web', sans-serif !important;

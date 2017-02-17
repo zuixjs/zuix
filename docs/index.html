@@ -101,7 +101,7 @@
                 <div data-ui-field="title"></div>
             </div>
             <!-- Navigation. We hide it in small screens. -->
-            <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <nav class="mdl-navigation app_menu_large">
                 <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="javascript:pagedView.setPage(1)">
                     <i class="material-icons">school</i>
                     Usage
@@ -115,7 +115,7 @@
                     Source
                 </a>
             </nav>
-            <nav class="-mdl-navigation mdl-layout--small-screen-only">
+            <nav class="app_menu_small">
                 <!-- Right aligned menu below button -->
                 <button id="app-menu-small-screen"
                         class="mdl-button mdl-js-button mdl-button--icon">
@@ -123,23 +123,17 @@
                 </button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                     for="app-menu-small-screen">
-                    <li class="mdl-menu__item">
-                    <a class="mdl-color-text--grey-700" href="javascript:pagedView.setPage(1)">
+                    <li class="mdl-menu__item" data-index="1">
                         <i class="material-icons">school</i>
                         Usage
-                    </a>
                     </li>
-                    <li class="mdl-menu__item">
-                    <a class="mdl-color-text--grey-700" href="javascript:pagedView.setPage(2)">
+                    <li class="mdl-menu__item" data-index="2">
                         <i class="material-icons">import_contacts</i>
                         API
-                    </a>
                     </li>
-                    <li class="mdl-menu__item">
-                    <a class="mdl-color-text--grey-700" href="https://github.com/genielabs/zuix">
+                    <li class="mdl-menu__item" data-href="https://github.com/genielabs/zuix">
                         <i class="material-icons">link</i>
                         Source
-                    </a>
                     </li>
                 </ul>
             </nav>
@@ -204,8 +198,8 @@
 
 <!-- absolute positioned elements -->
 
-<div data-ui-include="content/api/menu"></div>
-<div data-ui-include="content/quick_start/menu"></div>
+<div data-ui-include="content/api/menu" data-ui-priority="-1"></div>
+<div data-ui-include="content/quick_start/menu" data-ui-priority="-1"></div>
 
 <div data-ui-field="loaderMessage-c">
     <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp"

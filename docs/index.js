@@ -107,6 +107,17 @@ var actionsView = null;
 //zuix.lazyLoad(false);
 //zuix.httpCaching(false);
 
+zuix.$.find('nav li.mdl-menu__item').on('click', function () {
+    var url = this.attr('data-href');
+    var index = this.attr('data-index');
+    var el = this;
+    setTimeout(function () {
+        if (url != null && url.length > 0)
+            window.open(url);
+        else pagedView.setPage(index);
+    }, 200);
+});
+
 zuix
 .hook('load:begin', function(data){
     if (splashScreen) splashScreen.show();
@@ -134,7 +145,7 @@ zuix
 
     if (revealTimeout != null)
         clearTimeout(revealTimeout);
-    revealTimeout = setTimeout(reveal, 200);
+    revealTimeout = setTimeout(reveal, 350);
 
 }).hook('html:parse', function (data) {
     // ShowDown - Markdown compiler
@@ -282,7 +293,7 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     zxHeaderTitle.html('');
 
     // cover+header animation reveal/hide
-    if (i.page === 0) {
+    if (i.page == 0) {
         zxHeader.animateCss('fadeOut', function () {
             this.hide();
         });
@@ -293,7 +304,7 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
                 zxHeader.hidden = true;
                 checkMenuVisibility();
             });
-    } else if (i.old === 0) {
+    } else if (i.old == 0) {
         zxHeader.show().animateCss('fadeIn');
         coverBlock
             .animateCss('slideOutUp');
@@ -302,23 +313,23 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     }
 
     // header title path
-    if (i.page === 1)
+    if (i.page == 1)
         setTimeout(function () {
             usageTitlePath.update();
         }, 1000);
-    else if (i.page === 2)
+    else if (i.page == 2)
         setTimeout(function () {
             apiTitlePath.update();
         }, 1000);
 
     // contextual FAB menu
-    if (i.old === 1)
+    if (i.old == 1)
         zuix.context('menu_getting_started').hideMenu();
-    else if (i.old === 2)
+    else if (i.old == 2)
         zuix.context('menu_api').hideMenu();
-    if (i.page === 1)
+    if (i.page == 1)
         zuix.context('menu_getting_started').showMenu();
-    else if (i.page === 2)
+    else if (i.page == 2)
         zuix.context('menu_api').showMenu();
 
     // 'page change' animation
