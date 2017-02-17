@@ -2240,7 +2240,7 @@ function componentize(element) {
         tasker.lockLater(componentize, function () {
             _log.t('componentize:throttle', element);
             componentize(element);
-        }, 200);
+        }, 10);
 }
 
 /** @protected */
