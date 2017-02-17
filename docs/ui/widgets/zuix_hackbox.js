@@ -94,9 +94,9 @@ zuix.controller(function (cp) {
     }
 
     function showToolbox() {
-        toolbox.animateCss('fadeInUp').show();
         cp.view().css('width', '');
         cp.view().css('height', '');
+        toolbox.animateCss('fadeInUp').show();
         fab.animateCss('fadeOutLeft', function () {
             this.hide();
             // scroll to last log item
@@ -110,9 +110,9 @@ zuix.controller(function (cp) {
 
     function hideToolbox(animate) {
         var hide = function () {
+            toolbox.hide();
             cp.view().css('width', '0');
             cp.view().css('height', '64px');
-            toolbox.hide();
         };
         if (animate)
             toolbox.animateCss('fadeOutDown', function () {

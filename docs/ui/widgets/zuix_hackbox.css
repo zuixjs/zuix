@@ -66,7 +66,6 @@ div[data-ui-field=debug-log] {
     font-size:70%;
     font-family: monospace;
     text-align: left;
-    width: 100%;
 }
 a[data-ui-field="components"] {
     overflow: visible;

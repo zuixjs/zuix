@@ -29,6 +29,10 @@
 // Generic utility class
 module.exports = {
 
+    isIE: function() {
+        return (window.navigator.userAgent.indexOf('Trident') > 0);
+    },
+
     isNoU: function (obj) {
         return (typeof obj === 'undefined' || obj === null);
     },

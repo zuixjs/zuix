@@ -324,6 +324,10 @@ module.exports = TaskQueue;
 // Generic utility class
 module.exports = {
 
+    isIE: function() {
+        return (window.navigator.userAgent.indexOf('Trident') > 0);
+    },
+
     isNoU: function (obj) {
         return (typeof obj === 'undefined' || obj === null);
     },
@@ -1592,7 +1596,10 @@ ComponentContext.prototype.viewToModel = function() {
         if (this.parent('pre,code').length() > 0)
             return true;
         var name = this.attr('data-ui-field');
-        var value = el;
+        var value =
+            // TODO: this is a work around for IE where "el.innerHTML" is lost after view replacing
+            (!util.isNoU(el.innerHTML) && util.isIE())
+                ? el.cloneNode(true) : el;
         // dotted field path
         if (name.indexOf('.')>0) {
             var path = name.split('.');
@@ -1633,18 +1640,21 @@ ComponentContext.prototype.modelToView = function () {
                     switch (el.tagName.toLowerCase()) {
                         // TODO: complete binding cases
                         case 'img':
-                            el.src = boundData.src || boundData.innerHTML || boundData;
+                            el.src = (!util.isNoU(boundData.src) ?  boundData.src :
+                                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             if (boundData.alt) el.alt = boundData.alt;
                             break;
                         case 'a':
-                            el.href = boundData.href || boundData.innerHTML || boundData;
+                            el.href = (!util.isNoU(boundData.href) ? boundData.href :
+                                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             if (boundData.title) el.title = boundData.title;
                             break;
                         case 'input':
-                            el.value = boundData.value || boundData.innerHTML || boundData;
+                            el.value = (!util.isNoU(boundData.value) ? boundData.value :
+                                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             break;
                         default:
-                            el.innerHTML = boundData.innerHTML || boundData;
+                            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
                     }
                 }
             }
