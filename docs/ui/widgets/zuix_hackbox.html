@@ -1,0 +1,51 @@
+<div data-ui-field="toolbox" layout="columns spread-stretch" class="toolbox mdl-shadow--24dp">
+    <div class="header"
+         layout="row center-justify">
+        <div class="logo">
+            <span>z</span><strong>UI</strong><span>x</span>
+            hack box
+        </div>
+        <div self="size-x1" align="right">
+        </div>
+    </div>
+    <div data-ui-field="fragment-log" self="size-x1" layout="column stretch" class="log-box mdl-shadow--16dp">
+        <div data-ui-field="debug-log"></div>
+    </div>
+    <div data-ui-field="fragment-bundle" self="size-x1" layout="columns top-center" class="bundle-box mdl-color-text--lime-400 content-padding">
+        <h6>Bundle</h6>
+        <p>
+            This will pack all components (html, css, js) into a single <strong>app.bundle.js</strong> file.
+            <br/>
+            Using a single app bundle will speed up loading when ready for
+            <br/>
+            production. Include the generated file right after the <u>zuix.min.js</u> script.
+        </p>
+        <div data-ui-field="bundle-progress" self="size-1of3" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+        <div align="center">
+            <a data-ui-field="button-generate" class="mdl-button mdl-js-button mdl-button--raised mdl-color-text--lime-400">Generate app.bundle.js</a>
+        </div>
+    </div>
+    <div class="footer"
+         layout="row center-justify">
+        <a data-ui-field="button-hide" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">chevron_left</i>
+        </a>
+        <div self="size-x1">
+        </div>
+        <a data-ui-field="button-log" class="mdl-button mdl-js-button">Log</a>
+        <a data-ui-field="button-bundle" class="mdl-button mdl-js-button">Bundle</a>
+        <i data-ui-field="components" class="material-icons mdl-color-text--blue-900 mdl-badge mdl-badge--overlap" data-badge="..">
+            extension
+        </i>
+    </div>
+</div>
+
+<div data-ui-field="log-overlay" class="log-overlay">
+
+</div>
+
+<div data-ui-field="fab-menu" class="fab-menu">
+    <a data-ui-field="components" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-color--yellow-A400 mdl-js-ripple-effect mdl-shadow--24dp mdl-badge mdl-badge--overlap" data-badge="..">
+        <i class="material-icons mdl-color-text--blue-900">extension</i>
+    </a>
+</div>

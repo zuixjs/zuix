@@ -85,7 +85,7 @@ function TaskQueue(listener) {
         for (var i = 0; i < _t._taskList.length; i++) {
             if (_t._taskList[i].status == 0) {
                 _t._taskList[i].status = 1;
-                _log.t(_t._taskList[i].tid, 'load:begin', i, 'timer:task:start');
+                _log.t(_t._taskList[i].tid, 'load:begin', 'timer:task:start');
                 listener(_t, 'load:begin', {
                     task: _t._taskList[i].tid
                 });

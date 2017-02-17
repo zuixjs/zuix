@@ -1,0 +1,89 @@
+code {
+    padding-left: 8px;
+}
+.header {
+    padding: 4px 8px 4px 4px;
+    border: solid 1px rgba(150,150,150,0.5);
+    background-color: rgba(230,230,255,0.95);
+}
+.header .logo {
+    margin-left: 8px;
+}
+.footer {
+    padding: 8px 24px 8px 0;
+    border: solid 1px rgba(150,150,150,0.5);
+    background-color: rgba(230,230,255,0.95);
+    z-index: 1;
+}
+.log-box {
+    border: solid 1px rgba(150,150,150,0.5);
+    padding: 8px;
+    overflow: hidden;
+    overflow-y: auto;
+    color: greenyellow;
+}
+.bundle-box {
+    border: solid 1px rgba(150,150,150,0.5);
+    padding: 8px;
+    overflow: hidden;
+    overflow-y: auto;
+    color: greenyellow;
+}
+.log-row {
+    color: white;
+    vertical-align: middle;
+    line-height: 200%;
+    margin-bottom: 1px;
+}
+.log-row.linked {
+    cursor: pointer;
+}
+.log-row:hover {
+    background-color: rgba(150,150,150,0.4);
+}
+.log-row .level {
+    width: 30px;
+    text-align: right;
+    padding-right: 12px;
+    margin-left: 8px;
+}
+.log-row .odd {
+    color: yellow;
+}
+.log-row.error { }
+.log-row.warn { }
+.log-row.info { background-color: rgba(150,255,100,0.2); }
+.log-row.debug { }
+.log-row.trace { }
+.log-row .level.error { background-color: rgba(255,0,0,0.5)}
+.log-row .level.warn { background-color: rgba(255,255,0,0.5)}
+.log-row .level.info { background-color: rgba(255,255,255,0.5)}
+.log-row .level.debug { background-color: rgba(100,50,250,0.5)}
+.log-row .level.trace { background-color: rgba(40,140,0,0.5)}
+
+div[data-ui-field=debug-log] {
+    color: white;
+    font-size:70%;
+    font-family: monospace;
+    text-align: left;
+    width: 100%;
+}
+a[data-ui-field="components"] {
+    overflow: visible;
+}
+.fab-menu {
+    position: absolute;
+    bottom: -24px;
+    left: -24px;
+    padding: 8px;
+}
+.toolbox {
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    overflow: hidden;
+}
+.is-active {
+    border-top: 4px solid ;
+    color: rgba(255,0,100,0.8);
+    transform: translate(0,-4px);
+}

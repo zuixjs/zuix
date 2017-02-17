@@ -40,6 +40,8 @@ var _bc = 'background-color:rgba(200,200,200,0.2);',
     _c_start = 'color:#999900;',
     _c_end = 'color:#00aa00;';
 
+var _callback = null;
+
 /**
  * Simple Logging Helper
  *
@@ -48,7 +50,6 @@ var _bc = 'background-color:rgba(200,200,200,0.2);',
  */
 function Logger(ctx) {
     _console = window ? window.console : {};
-    this._context = ctx;
     this._timers = {};
     this.args = function(context, level, args) {
         var logHeader = '%c '+level+' %c'+(new Date().toISOString())+' %c'+context;
@@ -83,7 +84,19 @@ function Logger(ctx) {
         Array.prototype.unshift.call(args, logHeader);
         Array.prototype.push.call(args, '\n\n');
     };
+    this.log = function (level, args) {
+        if (typeof _callback === 'function')
+            _callback.call(ctx, level, args);
+        this.args(ctx, level, args);
+        // route event
+        _console.log.apply(_console, args);
+    };
 }
+
+Logger.prototype.monitor = function (callback) {
+    // global callback for debugging purpose
+    _callback = callback;
+};
 
 Logger.prototype.console = function(enable) {
     if (enable) {
@@ -100,28 +113,23 @@ Logger.prototype.console = function(enable) {
 
 Logger.prototype.i = Logger.prototype.info =
 Logger.prototype.l = Logger.prototype.log = function(){
-    this.args(this._context, 'INFO', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("INFO", arguments);
     return this;
 };
 Logger.prototype.w = Logger.prototype.warn = function () {
-    this.args(this._context, 'WARN', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("WARN", arguments);
     return this;
 };
 Logger.prototype.e = Logger.prototype.error = function () {
-    this.args(this._context, 'ERROR', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("ERROR", arguments);
     return this;
 };
 Logger.prototype.d = Logger.prototype.debug = function(){
-    this.args(this._context, 'DEBUG', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("DEBUG", arguments);
     return this;
 };
 Logger.prototype.t = Logger.prototype.trace = function () {
-    this.args(this._context, 'TRACE', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("TRACE", arguments);
     return this;
 };
 

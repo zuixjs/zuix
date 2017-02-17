@@ -323,10 +323,8 @@ ZxQuery.prototype.position = function () {
 ZxQuery.prototype.css = function (attr, val) {
     var _t = this;
     if (typeof attr === 'object') {
-        _log.t(typeof attr, attr, Object.keys(attr).length);
         z$.each(attr, function (i, v) {
             _t.each(function (k, el) {
-                _log.t(attr, k, el);
                 el.style[i] = v;
             });
         });
@@ -426,7 +424,7 @@ ZxQuery.prototype.prepend = function (el) {
     if (typeof el === 'string')
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
     else
-        this._selection[0].insertBefore(el, this._selection[0].innerHTML.firstElementChild);
+        this._selection[0].insertBefore(el, this._selection[0].firstElementChild);
     return this;
 };
 /**

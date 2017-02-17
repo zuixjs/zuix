@@ -63,12 +63,20 @@
 
     <!-- ZUIX library  -->
     <script src="js/zuix.min.js"></script>
+    <!-- app bundle -->
+    <script src="app.bundle.js"></script>
 
     <!-- Main Page includes -->
     <link rel="stylesheet" href="index.css">
     <script defer type="text/javascript" src="index.js"></script>
 </head>
 <body>
+
+
+<div data-ui-load="ui/widgets/zuix_hackbox"
+     data-ui-priority="0"
+     class="hackbox"></div>
+
 
 <!-- TODO: rip-off inline styles, move them to index.css -->
 
@@ -149,6 +157,7 @@
 
                     <!-- include content from local resource -->
                     <div data-ui-include="content/home"
+                         data-ui-priority="1"
                          data-ui-options="main.options.content_no_md"
                          layout="columns center-stretch"></div>
 
@@ -163,6 +172,7 @@
 
                         <!-- include content from local resource -->
                         <div data-ui-include="content/get_started"
+                             data-ui-priority="2"
                              data-ui-options="main.options.content"
                              class="progressive-content-container"></div>
 
@@ -178,6 +188,7 @@
 
                         <!-- include content from local resource -->
                         <div data-ui-include="content/api"
+                             data-ui-priority="3"
                              data-ui-options="main.options.content"
                              data-ui-lazyload="false"></div>
 
@@ -191,19 +202,15 @@
 
 </div>
 
-
-
 <!-- absolute positioned elements -->
+
+<div data-ui-include="content/api/menu"></div>
+<div data-ui-include="content/quick_start/menu"></div>
 
 <div data-ui-field="loaderMessage-c">
     <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp"
          data-ui-field="loaderMessage"></div>
 </div>
-
-
-<div data-ui-include="content/api/menu" data-ui-priority="-1"></div>
-<div data-ui-include="content/quick_start/menu" data-ui-priority="-1"></div>
-
 
 <!-- Loader Overlay, this should always be inline -->
 <div data-ui-field="splashScreen" layout="column stretch-stretch"

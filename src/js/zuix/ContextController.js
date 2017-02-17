@@ -190,8 +190,10 @@ ContextController.prototype.clearCache = function () {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function (filter) {
-    if (this.context.view() != null || this._view !== this.context.view())
+    if (this.context.view() != null || this._view !== this.context.view()) {
+        this.clearCache();
         this._view = z$(this.context.view());
+    }
     if (filter != null)
         return this._view.find(filter);
     else if (this._view !== null)

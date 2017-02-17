@@ -41,6 +41,8 @@ var _bc = 'background-color:rgba(200,200,200,0.2);',
     _c_start = 'color:#999900;',
     _c_end = 'color:#00aa00;';
 
+var _callback = null;
+
 /**
  * Simple Logging Helper
  *
@@ -49,7 +51,6 @@ var _bc = 'background-color:rgba(200,200,200,0.2);',
  */
 function Logger(ctx) {
     _console = window ? window.console : {};
-    this._context = ctx;
     this._timers = {};
     this.args = function(context, level, args) {
         var logHeader = '%c '+level+' %c'+(new Date().toISOString())+' %c'+context;
@@ -84,7 +85,19 @@ function Logger(ctx) {
         Array.prototype.unshift.call(args, logHeader);
         Array.prototype.push.call(args, '\n\n');
     };
+    this.log = function (level, args) {
+        if (typeof _callback === 'function')
+            _callback.call(ctx, level, args);
+        this.args(ctx, level, args);
+        // route event
+        _console.log.apply(_console, args);
+    };
 }
+
+Logger.prototype.monitor = function (callback) {
+    // global callback for debugging purpose
+    _callback = callback;
+};
 
 Logger.prototype.console = function(enable) {
     if (enable) {
@@ -101,28 +114,23 @@ Logger.prototype.console = function(enable) {
 
 Logger.prototype.i = Logger.prototype.info =
 Logger.prototype.l = Logger.prototype.log = function(){
-    this.args(this._context, 'INFO', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("INFO", arguments);
     return this;
 };
 Logger.prototype.w = Logger.prototype.warn = function () {
-    this.args(this._context, 'WARN', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("WARN", arguments);
     return this;
 };
 Logger.prototype.e = Logger.prototype.error = function () {
-    this.args(this._context, 'ERROR', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("ERROR", arguments);
     return this;
 };
 Logger.prototype.d = Logger.prototype.debug = function(){
-    this.args(this._context, 'DEBUG', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("DEBUG", arguments);
     return this;
 };
 Logger.prototype.t = Logger.prototype.trace = function () {
-    this.args(this._context, 'TRACE', arguments);
-    _console.log.apply(_console, arguments);
+    this.log("TRACE", arguments);
     return this;
 };
 
@@ -218,7 +226,7 @@ function TaskQueue(listener) {
         for (var i = 0; i < _t._taskList.length; i++) {
             if (_t._taskList[i].status == 0) {
                 _t._taskList[i].status = 1;
-                _log.t(_t._taskList[i].tid, 'load:begin', i, 'timer:task:start');
+                _log.t(_t._taskList[i].tid, 'load:begin', 'timer:task:start');
                 listener(_t, 'load:begin', {
                     task: _t._taskList[i].tid
                 });
@@ -728,10 +736,8 @@ ZxQuery.prototype.position = function () {
 ZxQuery.prototype.css = function (attr, val) {
     var _t = this;
     if (typeof attr === 'object') {
-        _log.t(typeof attr, attr, Object.keys(attr).length);
         z$.each(attr, function (i, v) {
             _t.each(function (k, el) {
-                _log.t(attr, k, el);
                 el.style[i] = v;
             });
         });
@@ -831,7 +837,7 @@ ZxQuery.prototype.prepend = function (el) {
     if (typeof el === 'string')
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
     else
-        this._selection[0].insertBefore(el, this._selection[0].innerHTML.firstElementChild);
+        this._selection[0].insertBefore(el, this._selection[0].firstElementChild);
     return this;
 };
 /**
@@ -1841,8 +1847,10 @@ ContextController.prototype.clearCache = function () {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function (filter) {
-    if (this.context.view() != null || this._view !== this.context.view())
+    if (this.context.view() != null || this._view !== this.context.view()) {
+        this.clearCache();
         this._view = z$(this.context.view());
+    }
     if (filter != null)
         return this._view.find(filter);
     else if (this._view !== null)
@@ -2170,9 +2178,13 @@ function field(fieldName, container, context) {
  * @param [element] {Element} Optional container to use as starting node for the search.
  */
 function componentize(element) {
+    var waitingLoad = null;
     // Throttle method
     if (tasker.requestLock(componentize)) {
-        z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])').each(function (i, el) {
+        _log.t('componentize:begin', 'timer:task:start', element, _lazyQueued.length);
+        waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
+        _log.t('componentize:count', waitingLoad.length());
+        waitingLoad.each(function (i, el) {
             // hide the component while loading. It will be shown after the controller initialization.
             this.visibility('hidden');
             // defer element loading if lazy loading is enabled and the element is not in view
@@ -2185,10 +2197,12 @@ function componentize(element) {
                 &&
                 (!lazyLoad() || this.attr('data-ui-lazyload') == 'false')) {
                 loadInline(el);
-                return true;
+                // process current element only
+                return false;
             }
             if (lazyContainer !== null) {
                 if (_lazyLoaders.indexOf(lazyContainer) == -1) {
+                    _log.t('componentize:lazyload', 'scroll:container', lazyContainer);
                     _lazyLoaders.push(lazyContainer);
                     z$(lazyContainer).on('scroll', function () {
                         componentize(lazyContainer);
@@ -2197,6 +2211,7 @@ function componentize(element) {
                 var position = z$.getPosition(el);
                 if (!position.visible) {
                     if (_lazyQueued.indexOf(el) == -1) {
+                        _log.t('componentize:lazyload', 'queue:add', el);
                         _lazyQueued.push(el);
                     }
                     // Not in view: defer element loading and
@@ -2204,16 +2219,18 @@ function componentize(element) {
                     return true;
                 }
             }
+            _log.t('componentize:lazyload', 'queue:load', el);
             // proceed loading inline element
-            var queued = _lazyQueued.indexOf(el);
-            if (queued > -1)
-                _lazyQueued.splice(queued, 1);
             loadInline(el);
         });
+        _log.t('componentize:end', 'timer:task:end', element, _contextRoot.length, _componentCache.length);
         tasker.releaseLock(componentize);
-    } else tasker.lockLater(componentize, function () {
-        componentize(element);
-    }, 200);
+    }
+    if ((waitingLoad != null && waitingLoad.length() > _lazyQueued.length))
+        tasker.lockLater(componentize, function () {
+            _log.t('componentize:throttle', element);
+            componentize(element);
+        }, 200);
 }
 
 /** @protected */
@@ -2271,6 +2288,13 @@ function loadInline(element) {
     // util.propertyFromPath( ... )
 
     load(componentId, options);
+
+    var queued = _lazyQueued.indexOf(element);
+    _log.t('componentize:lazyload', 'queue:remove', queued, element);
+    if (queued > -1) {
+        _lazyQueued.splice(queued, 1);
+    }
+
 }
 
 /**
@@ -2334,21 +2358,21 @@ function load(componentId, options) {
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
         ctx.controller(cachedComponent.controller);
-        _log.t(ctx.componentId, 'loaded controller from cache');
+        _log.t('js:'+ctx.componentId, 'component:cached:js');
     }
 
     if (util.isNoU(options.view)) {
 
         if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
-            _log.t(ctx.componentId, 'loaded html from cache');
+            _log.t('html:'+ctx.componentId, 'component:cached:html');
             /*
              TODO: CSS caching, to be tested.
              */
              if (cachedComponent !== null && util.isNoU(options.css)) {
              ctx.style(cachedComponent.css);
              options.css = false;
-             _log.t(ctx.componentId, 'loaded css from cache');
+             _log.t('css:'+ctx.componentId, 'component:cached:css');
              }
         }
 
@@ -2539,7 +2563,7 @@ function getCachedComponent(componentId) {
  */
 function loadController(context, task) {
     if (typeof context.options().controller === 'undefined' && context.controller() === null) {
-        _log.d(context.componentId, 'loading controller');
+        _log.d(context.componentId, 'controller:load');
         if (!util.isNoU(task))
             task.step('js:'+context.componentId);
         if (util.isFunction(_globalHandlers[context.componentId])) {
@@ -2601,7 +2625,7 @@ function cacheComponent(context) {
         controller: context.controller()
     };
     _componentCache.push(cached);
-    _log.t(context.componentId, 'added to cache', cached);
+    _log.t(context.componentId, 'bundle:added');
     return cached;
 }
 
@@ -2615,16 +2639,15 @@ function createComponent(context, task) {
         if (!context.options().viewDeferred) {
             if (cached === null) {
                 cached = cacheComponent(context);
-                _log.t(context.componentId, 'added to cache', cached);
             }
         } else {
-            _log.w(context.componentId, 'deferred view, not caching');
+            _log.w(context.componentId, 'component:deferred:load');
         }
 
         if (task != null)
             task.callback(function () {
 //                setTimeout(function () {
-                    _log.d(context.componentId, 'controller::create:deferred');
+                    _log.d(context.componentId, 'controller:create:deferred');
                     initController(context._c);
                     // TODO: 'componentize()' should not be needed here
                     // TODO: if initialization sequence is correct
@@ -2632,7 +2655,7 @@ function createComponent(context, task) {
 //                }, 500);
             });
 
-        _log.d(context.componentId, 'initializing component');
+        _log.d(context.componentId, 'component:initializing');
         if (util.isFunction(context.controller())) {
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
@@ -2657,7 +2680,7 @@ function createComponent(context, task) {
                             controller: context.controller()
                         };
                         _componentCache.push(cached);
-                        _log.e(context.componentId, 'added to cache', cached);
+                        _log.d(context.componentId, 'component:deferred:load');
                     }
 
                     var pending = -1;
@@ -2668,7 +2691,7 @@ function createComponent(context, task) {
                                 caching: _enableHttpCaching,
                                 success: function(css) {
                                     cached.css = css;
-                                    _log.e(context.componentId, 'updated cached css', cached, pending);
+                                    _log.d(context.componentId, 'component:deferred:css', pending);
                                 },
                                 then: function () {
                                     if (--pending === 0 && task != null)
@@ -2683,7 +2706,7 @@ function createComponent(context, task) {
                                 caching: _enableHttpCaching,
                                 success: function(html) {
                                     cached.view = html;
-                                    _log.e(context.componentId, 'updated cached html', cached, pending);
+                                    _log.d(context.componentId, 'component:deferred:html', pending);
                                 },
                                 then: function () {
                                     if (--pending === 0 && task != null)
@@ -2697,17 +2720,17 @@ function createComponent(context, task) {
             }
 
             if (task == null) {
-                _log.d(context.componentId, 'controller::create');
+                _log.d(context.componentId, 'controller:create');
                 initController(c);
             }
 
         } else {
-            _log.w(context.componentId, 'no controller defined');
+            _log.w(context.componentId, 'component:controller:undefined');
         }
 
     } else {
         // TODO: report error
-        _log.e(context.componentId, 'no view attacched');
+        _log.e(context.componentId, 'component:view:undefined');
     }
 }
 
@@ -2739,7 +2762,7 @@ function initController(c) {
         (c.context.ready).call(c.context);
 
     c.view().css('visibility', '');
-    _log.d(c.context.componentId, 'component created');
+    _log.i(c.context.componentId, 'component:loaded', c.context.contextId);
 }
 
 /***
@@ -3032,8 +3055,38 @@ Zuix.prototype.httpCaching = function(enable) {
     return this;
 };
 
-Zuix.prototype.setBundle = function (b) {
-    replaceCache(b);
+/**
+ * Gets/Sets the components data bundle.
+ *
+ * @param {Array.<{ view, css, controller }>} bundleData A bundle object holding in memory all components data (cache).
+ * @param {function} [callback]
+ * @return {Zuix|Array.<{ view, css, controller }>}
+ */
+Zuix.prototype.bundle = function(bundleData, callback) {
+    if (util.isNoU(bundleData))
+        return _componentCache;
+    else if (bundleData && typeof bundleData === 'boolean') {
+        _log.t('bundle:start');
+        var ll = lazyLoad();
+        lazyLoad(false);
+        componentize();
+        if (typeof callback === 'function') {
+            var waitLoop = function(w) {
+                if (_lazyQueued.length > 0) {
+                    _log.t('bundle:wait');
+                    setTimeout(function () {
+                        w(w);
+                    }, 1000);
+                } else {
+                    _log.t('bundle:end');
+                    lazyLoad(ll);
+                    callback();
+                }
+            };
+            waitLoop(waitLoop);
+        }
+    } else _componentCache = bundleData;
+    return this;
 };
 
 Zuix.prototype.$ = z$;
@@ -3045,6 +3098,9 @@ Zuix.prototype.dumpCache = function () {
 };
 Zuix.prototype.dumpContexts = function () {
     _log.d('Loaded Component Instances', _contextRoot);
+};
+Zuix.prototype.dumpLazyLoaders = function () {
+    _log.d('Loaded Component Instances', _lazyLoaders, _lazyQueued, _lazyQueued.length);
 };
 
 // TODO: add zuix.options to configure stuff like
@@ -3063,6 +3119,11 @@ module.exports = function (root) {
             zuix.componentize();
         });
     }
+    // log messages monitor (one global listener)
+    _log.monitor(function (level, args) {
+        if (util.isFunction(zuix.monitor))
+            zuix.monitor(level, Array.prototype.slice.call(args));
+    });
     return zuix;
 };
 
