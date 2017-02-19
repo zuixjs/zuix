@@ -584,13 +584,14 @@ z$.wrapCss = function (wrapperRule, css) {
     }
     return css;
 };
-z$.appendCss = function (css, target) {
+z$.appendCss = function (css, target, cssId) {
     var style = null, head;
     if (typeof css === 'string') {
         // output css
         head = document.head || document.getElementsByTagName('head')[0];
         style = document.createElement('style');
         style.type = 'text/css';
+        style.id = cssId;
         if (style.styleSheet)
             style.styleSheet.cssText = css;
         else

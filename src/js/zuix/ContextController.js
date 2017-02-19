@@ -146,19 +146,19 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
  *
  * @example
  *
-<small>**Example - View's HTML**</small>
-```html
-<h1 data-ui-field="title">...</h1>
-<p data-ui-field="description">...</p>
-```
+ <small>**Example - View's HTML**</small>
+ ```html
+ <h1 data-ui-field="title">...</h1>
+ <p data-ui-field="description">...</p>
+ ```
 
-<small>**Example - JavaScript**</small>
-```js
-cp.field('title')
-  .html('Hello World!');
-var desc = cp.field('description');
-desc.html('The spectacle before us was indeed sublime.');
-```
+ <small>**Example - JavaScript**</small>
+ ```js
+ cp.field('title')
+ .html('Hello World!');
+ var desc = cp.field('description');
+ desc.html('The spectacle before us was indeed sublime.');
+ ```
  *
  *
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
@@ -358,6 +358,10 @@ ContextController.prototype.loadHtml = function(options) {
     return this;
 };
 /**
+ * this member is "attacched" from Zuix.js on controller initialization
+ * @type {Logger} */
+ContextController.prototype.log = {};
+/**
  * Register as default controller for the given component type.
  *
  * @example
@@ -375,6 +379,5 @@ var ctrl = zuix.controller(function(cp) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.for = function (componentId) { return this; };
-
 
 module.exports = ContextController;

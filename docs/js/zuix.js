@@ -262,10 +262,10 @@ TaskQueue.prototype.requestLock = function(handlerFn) {
     return true;
 };
 TaskQueue.prototype.releaseLock = function(handlerFn) {
-    // Throttle rate 10ms (+ execution time)
+    // Throttle rate 100ms (+ execution time)
     setTimeout(function () {
         delete handlerFn._taskerLock;
-    }, 10);
+    }, 100);
 };
 /**
  * Debounce. The calling function must also call 'requestLock'.
@@ -1001,13 +1001,14 @@ z$.wrapCss = function (wrapperRule, css) {
     }
     return css;
 };
-z$.appendCss = function (css, target) {
+z$.appendCss = function (css, target, cssId) {
     var style = null, head;
     if (typeof css === 'string') {
         // output css
         head = document.head || document.getElementsByTagName('head')[0];
         style = document.createElement('style');
         style.type = 'text/css';
+        style.id = cssId;
         if (style.styleSheet)
             style.styleSheet.cssText = css;
         else
@@ -1244,7 +1245,9 @@ function ComponentContext(options, eventCallback) {
 ComponentContext.prototype.container = function (container) {
     // TODO: should automatically re-attach view to the new parent?
     if (container == null) return this._container;
-    else this._container = container;
+    else if (container instanceof z$.ZxQuery)
+        container = container.get();
+    this._container = container;
     return this;
 };
 
@@ -1260,6 +1263,9 @@ ComponentContext.prototype.container = function (container) {
  */
 ComponentContext.prototype.view = function (view) {
     if (typeof view === 'undefined') return this._view;
+    else if (view instanceof z$.ZxQuery)
+        view = view.get();
+
     if (typeof view === 'string') {
         // load view from HTML source
 
@@ -1353,7 +1359,7 @@ ComponentContext.prototype.style = function (css) {
     if (css == null || css instanceof Element) {
 
         this._css = (css instanceof Element) ? css.innerText : css;
-        this._style = z$.appendCss(css, this._style);
+        this._style = z$.appendCss(css, this._style, this.componentId);
 
     } else if (typeof css === 'string') {
 
@@ -1370,7 +1376,7 @@ ComponentContext.prototype.style = function (css) {
         css = hookData.content;
 
         // output css
-        this._style = z$.appendCss(css, this._style);
+        this._style = z$.appendCss(css, this._style, this.componentId);
 
     }
     // TODO: should throw error if ```css``` is not a valid type
@@ -1813,19 +1819,19 @@ ContextController.prototype.addBehavior = function (target, eventPath, handler_f
  *
  * @example
  *
-<small>**Example - View's HTML**</small>
-```html
-<h1 data-ui-field="title">...</h1>
-<p data-ui-field="description">...</p>
-```
+ <small>**Example - View's HTML**</small>
+ ```html
+ <h1 data-ui-field="title">...</h1>
+ <p data-ui-field="description">...</p>
+ ```
 
-<small>**Example - JavaScript**</small>
-```js
-cp.field('title')
-  .html('Hello World!');
-var desc = cp.field('description');
-desc.html('The spectacle before us was indeed sublime.');
-```
+ <small>**Example - JavaScript**</small>
+ ```js
+ cp.field('title')
+ .html('Hello World!');
+ var desc = cp.field('description');
+ desc.html('The spectacle before us was indeed sublime.');
+ ```
  *
  *
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
@@ -2025,6 +2031,10 @@ ContextController.prototype.loadHtml = function(options) {
     return this;
 };
 /**
+ * this member is "attacched" from Zuix.js on controller initialization
+ * @type {Logger} */
+ContextController.prototype.log = {};
+/**
  * Register as default controller for the given component type.
  *
  * @example
@@ -2042,7 +2052,6 @@ var ctrl = zuix.controller(function(cp) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.for = function (componentId) { return this; };
-
 
 module.exports = ContextController;
 },{"../helpers/ZxQuery":4}],8:[function(_dereq_,module,exports){
@@ -2132,10 +2141,18 @@ var _lazyQueued = []; // Lazy loading - queued elements
 /** @private */
 var _lazyLoaders = []; // "data-ui-lazyload" elements
 
+
 /** @private **/
-var tasker = new TaskQueue(function (tq, eventPath, eventValue) {
-    trigger(tq, eventPath, eventValue);
-});
+var _componentTask = [];
+/** @private **/
+var taskQueue = function(tid) {
+    if (util.isNoU(_componentTask[tid])) {
+        _componentTask[tid] = new TaskQueue(function (tq, eventPath, eventValue) {
+            trigger(tq, eventPath, eventValue);
+        });
+    }
+    return _componentTask[tid];
+};
 
 /**
  * Initializes a controller ```handler```.
@@ -2190,7 +2207,7 @@ function field(fieldName, container, context) {
 function componentize(element) {
     var waitingLoad = null;
     // Throttle method
-    if (tasker.requestLock(componentize)) {
+    if (taskQueue('zuix').requestLock(componentize)) {
         _log.t('componentize:begin', 'timer:task:start', element, _lazyQueued.length);
         waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
         _log.t('componentize:count', waitingLoad.length());
@@ -2234,10 +2251,10 @@ function componentize(element) {
             loadInline(el);
         });
         _log.t('componentize:end', 'timer:task:end', element, _contextRoot.length, _componentCache.length);
-        tasker.releaseLock(componentize);
+        taskQueue('zuix').releaseLock(componentize);
     }
     if ((waitingLoad != null && waitingLoad.length() > _lazyQueued.length))
-        tasker.lockLater(componentize, function () {
+        taskQueue('zuix').lockLater(componentize, function () {
             _log.t('componentize:throttle', element);
             componentize(element);
         }, 10);
@@ -2379,10 +2396,13 @@ function load(componentId, options) {
             /*
              TODO: CSS caching, to be tested.
              */
-             if (cachedComponent !== null && util.isNoU(options.css)) {
-             ctx.style(cachedComponent.css);
-             options.css = false;
-             _log.t('css:'+ctx.componentId, 'component:cached:css');
+             if (cachedComponent.view != null && util.isNoU(options.css)) {
+                 options.css = false;
+                 if (!cachedComponent.css_applied) {
+                     cachedComponent.css_applied = true;
+                     ctx.style(cachedComponent.css);
+                     _log.t('css:'+ctx.componentId, 'component:cached:css');
+                 }
              }
         }
 
@@ -2390,7 +2410,7 @@ function load(componentId, options) {
         // or from an inline element, then load the view from web
         if (util.isNoU(ctx.view())) {
             // Load View
-            tasker.queue('html:' + ctx.componentId, function () {
+            taskQueue(ctx.componentId).queue('html:' + ctx.componentId, function () {
                 var task = this;
 
                 ctx.loadHtml({
@@ -2425,7 +2445,7 @@ function load(componentId, options) {
     } else {
         ctx.view(options.view);
     }
-    tasker.queue('js:' + ctx.componentId, function () {
+    taskQueue(ctx.componentId).queue('js:' + ctx.componentId, function () {
         loadController(ctx, this);
     }, _contextRoot.length);
 
@@ -2615,7 +2635,7 @@ function loadController(context, task) {
                 });
             };
             if (util.isNoU(task)) {
-                tasker.queue('js:' + context.componentId, function () {
+                taskQueue(context.componentId).queue('js:' + context.componentId, function () {
                     job(this);
                 }, context.options().priority);
             } else job(task);
@@ -2626,7 +2646,7 @@ function loadController(context, task) {
 }
 
 function cacheComponent(context) {
-    var html = (context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
+    var html = context.view().innerHTML; //(context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
     var c = z$.wrapElement('div', html);
     var cached = {
         componentId: context.componentId,
@@ -2667,8 +2687,10 @@ function createComponent(context, task) {
 
         _log.d(context.componentId, 'component:initializing');
         if (util.isFunction(context.controller())) {
+            // TODO: should use 'require' istead of 'new Controller' ... ?
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
+            c.log = _dereq_('../helpers/Logger')(context.contextId);
             if (typeof c.init === 'function')
                 c.init();
             if (!util.isNoU(c.view())) {
@@ -3095,7 +3117,14 @@ Zuix.prototype.bundle = function(bundleData, callback) {
             };
             waitLoop(waitLoop);
         }
-    } else _componentCache = bundleData;
+    } else {
+        // reset css flag before importing bundle
+        for (var c = 0; c < bundleData.length; c++) {
+            if (bundleData[c].css_applied)
+                delete bundleData[c].css_applied;
+        }
+        _componentCache = bundleData;
+    }
     return this;
 };
 

@@ -121,10 +121,10 @@ TaskQueue.prototype.requestLock = function(handlerFn) {
     return true;
 };
 TaskQueue.prototype.releaseLock = function(handlerFn) {
-    // Throttle rate 10ms (+ execution time)
+    // Throttle rate 100ms (+ execution time)
     setTimeout(function () {
         delete handlerFn._taskerLock;
-    }, 10);
+    }, 100);
 };
 /**
  * Debounce. The calling function must also call 'requestLock'.

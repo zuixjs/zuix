@@ -104,7 +104,9 @@ function ComponentContext(options, eventCallback) {
 ComponentContext.prototype.container = function (container) {
     // TODO: should automatically re-attach view to the new parent?
     if (container == null) return this._container;
-    else this._container = container;
+    else if (container instanceof z$.ZxQuery)
+        container = container.get();
+    this._container = container;
     return this;
 };
 
@@ -120,6 +122,9 @@ ComponentContext.prototype.container = function (container) {
  */
 ComponentContext.prototype.view = function (view) {
     if (typeof view === 'undefined') return this._view;
+    else if (view instanceof z$.ZxQuery)
+        view = view.get();
+
     if (typeof view === 'string') {
         // load view from HTML source
 
@@ -213,7 +218,7 @@ ComponentContext.prototype.style = function (css) {
     if (css == null || css instanceof Element) {
 
         this._css = (css instanceof Element) ? css.innerText : css;
-        this._style = z$.appendCss(css, this._style);
+        this._style = z$.appendCss(css, this._style, this.componentId);
 
     } else if (typeof css === 'string') {
 
@@ -230,7 +235,7 @@ ComponentContext.prototype.style = function (css) {
         css = hookData.content;
 
         // output css
-        this._style = z$.appendCss(css, this._style);
+        this._style = z$.appendCss(css, this._style, this.componentId);
 
     }
     // TODO: should throw error if ```css``` is not a valid type

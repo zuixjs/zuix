@@ -1,0 +1,8 @@
+.row {
+    line-height: 120%;
+    cursor: pointer;
+}
+.row div {
+    margin:0;
+    padding-right: 8px;
+}

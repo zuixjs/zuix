@@ -120,6 +120,7 @@ zuix.$.find('nav li.mdl-menu__item').on('click', function () {
 
 zuix
 .hook('load:begin', function(data){
+    if (data.task.indexOf('zuix_hackbox') > 0) return;
     if (splashScreen) splashScreen.show();
     loaderMessage.html('Loading "<em>'+data.task+'</em>" ...')
         .animateCss('bounceInUp', { duration: '1.0s' })
@@ -128,6 +129,7 @@ zuix
         clearTimeout(revealTimeout);
 
 }).hook('load:next', function(data){
+    if (data.task.indexOf('zuix_hackbox') > 0) return;
     if (splashScreen)
         zuix.field('loader-progress')
             .html(data.task).prev()

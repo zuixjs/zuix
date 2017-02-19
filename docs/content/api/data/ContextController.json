@@ -405,7 +405,7 @@
     "tags": [
       {
         "type": "example",
-        "string": "\n<small>**Example - View's HTML**</small>\n```html\n<h1 data-ui-field=\"title\">...</h1>\n<p data-ui-field=\"description\">...</p>\n```\n\n<small>**Example - JavaScript**</small>\n```js\ncp.field('title')\n  .html('Hello World!');\nvar desc = cp.field('description');\ndesc.html('The spectacle before us was indeed sublime.');\n```"
+        "string": "\n <small>**Example - View's HTML**</small>\n ```html\n <h1 data-ui-field=\"title\">...</h1>\n <p data-ui-field=\"description\">...</p>\n ```\n\n <small>**Example - JavaScript**</small>\n ```js\n cp.field('title')\n .html('Hello World!');\n var desc = cp.field('description');\n desc.html('The spectacle before us was indeed sublime.');\n ```"
       },
       {
         "type": "param",
@@ -869,6 +869,43 @@
   {
     "tags": [
       {
+        "type": "type",
+        "string": "{Logger}",
+        "types": [
+          "Logger"
+        ],
+        "typesDescription": "<a href=\"Logger.html\">Logger</a>",
+        "optional": false,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      }
+    ],
+    "description": {
+      "full": "this member is \"attacched\" from Zuix.js on controller initialization",
+      "summary": "this member is \"attacched\" from Zuix.js on controller initialization",
+      "body": ""
+    },
+    "isPrivate": false,
+    "isConstructor": false,
+    "isClass": false,
+    "isEvent": false,
+    "ignore": false,
+    "line": 360,
+    "codeStart": 363,
+    "code": "ContextController.prototype.log = {};",
+    "ctx": {
+      "type": "property",
+      "constructor": "ContextController",
+      "cons": "ContextController",
+      "name": "log",
+      "value": "{}",
+      "string": "ContextController.prototype.log"
+    }
+  },
+  {
+    "tags": [
+      {
         "type": "example",
         "string": "<small>**Example - JavaScript**</small>\n<pre data-line=\"6\"><code class=\"language-js\">\n// Controller of component 'path/to/component_name'\nvar ctrl = zuix.controller(function(cp) {\n    // `cp` is the {ContextController}\n    cp.create = function() { ... };\n    cp.destroy = function() { ... }\n}).for('path/to/component_name');\n</pre></code>"
       },
@@ -910,9 +947,9 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 360,
-    "codeStart": 377,
-    "code": "ContextController.prototype.for = function (componentId) { return this; };\n\n\nmodule.exports = ContextController;",
+    "line": 364,
+    "codeStart": 381,
+    "code": "ContextController.prototype.for = function (componentId) { return this; };\n\nmodule.exports = ContextController;",
     "ctx": {
       "type": "method",
       "constructor": "ContextController",

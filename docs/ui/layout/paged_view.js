@@ -1,17 +1,24 @@
 zuix.controller(function (cp) {
 
+    cp.init = function () {
+        cp.options().html = false;
+        cp.options().css = false;
+    };
+
     cp.create = function () {
         cp.expose('setPage', setPage);
         cp.expose('getPage', getPage);
         cp.expose('getCurrent', getCurrent);
         cp.view().children().each(function (i, el) {
-            el.style['position'] = 'absolute';
-            el.style['top'] = '0';
-            el.style['left'] = '0';
-            el.style['bottom'] = '0';
-            el.style['right'] = '0';
-            el.style['overflow'] = 'auto';
-            el.style['overflow-x'] = 'hidden';
+            if (cp.view().attr('data-ui-relative') != 'true') {
+                el.style['position'] = 'absolute';
+                el.style['top'] = '0';
+                el.style['left'] = '0';
+                el.style['bottom'] = '0';
+                el.style['right'] = '0';
+                el.style['overflow'] = 'auto';
+                el.style['overflow-x'] = 'hidden';
+            }
             this.hide();
         });
         setPage(0);
