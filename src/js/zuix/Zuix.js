@@ -358,11 +358,17 @@ function load(componentId, options) {
 
                 ctx.loadHtml({
                     caching: _enableHttpCaching,
-                    success: function () {
+                    success: function (html) {
+                        cachedComponent = cacheComponent(ctx);
+                        cachedComponent.view = html;
+                        delete cachedComponent.controller;
                         if (options.css !== false) {
                             task.step('css:'+ctx.componentId);
                             ctx.loadCss({
                                 caching: _enableHttpCaching,
+                                success: function (css) {
+                                    cachedComponent.css = css;
+                                },
                                 error: function (err) {
                                     _log.e(err, ctx);
                                 },
@@ -609,23 +615,21 @@ function cacheComponent(context) {
 function createComponent(context, task) {
     if (!util.isNoU(context.view())) {
         var cached = getCachedComponent(context.componentId);
-        if (!context.options().viewDeferred) {
-            if (cached === null) {
+        if (!context.options().viewDeferred)
+            if (cached === null)
                 cached = cacheComponent(context);
-            }
-        } else {
+            else if (cached.controller == null)
+                cached.controller = context.controller();
+        else
             _log.w(context.componentId, 'component:deferred:load');
-        }
 
         if (task != null)
             task.callback(function () {
-//                setTimeout(function () {
-                    _log.d(context.componentId, 'controller:create:deferred');
-                    initController(context._c);
-                    // TODO: 'componentize()' should not be needed here
-                    // TODO: if initialization sequence is correct
-                    componentize();
-//                }, 500);
+                _log.d(context.componentId, 'controller:create:deferred');
+                initController(context._c);
+                // TODO: 'componentize()' should not be needed here
+                // TODO: if initialization sequence is correct
+                componentize();
             });
 
         _log.d(context.componentId, 'component:initializing');
@@ -649,12 +653,14 @@ function createComponent(context, task) {
                     // it can be then restored with c.restoreView()
                     c.saveView();
 
+                    // TODO: check if this case is still required, otherwise remove it.
                     if (cached === null) {
                         cached = {
                             componentId: context.componentId,
                             controller: context.controller()
                         };
                         _componentCache.push(cached);
+                        _log.t(context.componentId, 'bundle:added');
                         _log.d(context.componentId, 'component:deferred:load');
                     }
 
@@ -665,7 +671,9 @@ function createComponent(context, task) {
                             context.loadCss({
                                 caching: _enableHttpCaching,
                                 success: function(css) {
-                                    cached.css = css;
+                                    // TODO: this is a work-around for 'componentize' overlapping issue
+                                    if (cached.css == null)
+                                        cached.css = css;
                                     _log.d(context.componentId, 'component:deferred:css', pending);
                                 },
                                 then: function () {
@@ -680,7 +688,9 @@ function createComponent(context, task) {
                             context.loadHtml({
                                 caching: _enableHttpCaching,
                                 success: function(html) {
-                                    cached.view = html;
+                                    // TODO: this is a work-around for 'componentize' overlapping issue
+                                    if (cached.view == null)
+                                        cached.view = html;
                                     _log.d(context.componentId, 'component:deferred:html', pending);
                                 },
                                 then: function () {
