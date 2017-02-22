@@ -397,7 +397,7 @@ function loadResources(ctx, options) {
         // or from an inline element, then load the view from web
         if (util.isNoU(ctx.view())) {
             // Load View
-            taskQueue(ctx.componentId).queue('html:' + ctx.componentId, function () {
+            taskQueue('resource-loader').queue('html:' + ctx.componentId, function () {
                 resourceLoadTask[ctx.componentId] = this;
 
                 ctx.loadHtml({
@@ -439,7 +439,7 @@ function loadResources(ctx, options) {
     } else {
         ctx.view(options.view);
     }
-    taskQueue(ctx.componentId).queue('js:' + ctx.componentId, function () {
+    taskQueue('resource-loader').queue('js:' + ctx.componentId, function () {
         resourceLoadTask[ctx.componentId] = this;
         loadController(ctx, resourceLoadTask[ctx.componentId]);
     }, _contextRoot.length);
@@ -630,7 +630,7 @@ function loadController(context, task) {
                 });
             };
             if (util.isNoU(task)) {
-                taskQueue(context.componentId).queue('js:' + context.componentId, function () {
+                taskQueue('resource-loader').queue('js:' + context.componentId, function () {
                     job(resourceLoadTask[context.componentId] = this);
                 }, context.options().priority);
             } else job(task);
@@ -772,8 +772,6 @@ function createComponent(context, task) {
  */
 function initController(c) {
 
-    c.trigger('component:ready', c.view(), true);
-
     // bind {ContextController}.field method
     c.field = function(fieldName) {
         var el = field(fieldName, c.view(), c);
@@ -790,7 +788,7 @@ function initController(c) {
     if (util.isFunction(c.create)) c.create();
     c.trigger('view:create');
 
-//    c.trigger('component:ready', c.view(), true);
+    c.trigger('component:ready', c.view(), true);
 
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);

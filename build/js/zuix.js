@@ -1904,10 +1904,12 @@ ContextController.prototype.clearCache = function () {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function (filter) {
+    // dispose cached fields from previous attacched view
     if (this.context.view() != null || this._view !== this.context.view()) {
         this.clearCache();
         this._view = z$(this.context.view());
     }
+    // TODO: dispose also events on view change (!!!)
     if (filter != null)
         return this._view.find(filter);
     else if (this._view !== null)
@@ -1980,8 +1982,10 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
         this.addEvent(this.view(), eventPath, null);
     // TODO: ...
     if (isHook === true) {
-        if (this.context.container() != null)
-            z$(this.context.container())
+        var target = this.context.container();
+        if (target == null) target = this.context.view();
+        if (target != null)
+            z$(target)
                 .trigger(eventPath, eventData);
         this.context.trigger(this.context, eventPath, eventData);
     } else
@@ -2503,7 +2507,7 @@ function loadResources(ctx, options) {
         // or from an inline element, then load the view from web
         if (util.isNoU(ctx.view())) {
             // Load View
-            taskQueue(ctx.componentId).queue('html:' + ctx.componentId, function () {
+            taskQueue('resource-loader').queue('html:' + ctx.componentId, function () {
                 resourceLoadTask[ctx.componentId] = this;
 
                 ctx.loadHtml({
@@ -2545,7 +2549,7 @@ function loadResources(ctx, options) {
     } else {
         ctx.view(options.view);
     }
-    taskQueue(ctx.componentId).queue('js:' + ctx.componentId, function () {
+    taskQueue('resource-loader').queue('js:' + ctx.componentId, function () {
         resourceLoadTask[ctx.componentId] = this;
         loadController(ctx, resourceLoadTask[ctx.componentId]);
     }, _contextRoot.length);
@@ -2736,7 +2740,7 @@ function loadController(context, task) {
                 });
             };
             if (util.isNoU(task)) {
-                taskQueue(context.componentId).queue('js:' + context.componentId, function () {
+                taskQueue('resource-loader').queue('js:' + context.componentId, function () {
                     job(resourceLoadTask[context.componentId] = this);
                 }, context.options().priority);
             } else job(task);

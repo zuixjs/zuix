@@ -28,7 +28,9 @@
 zuix.controller(function (cp) {
     var mainToolbox = null,
         pagedView = null,
-        logList = null;
+        logListContainer = null;
+    /** @type {ComponentContext} */
+    var logListView;
 
     var logCache = [],
         timeout = null,
@@ -45,30 +47,15 @@ zuix.controller(function (cp) {
     cp.init = function () {
         // disable zuix logging to console
         window.zuixNoConsoleOutput = true;
-        cp.field('fragmemnt-components').on('component:ready', function (e, ctx) {
-            zuixEditor = zuix.context(this);
-            // if editor is ready, register event handler
-            zuixEditor.on('page:change', function (e, data) {
-                if (data.page == 'editor') {
-                    cp.field('editor-info').html(data.context.model().componentId);
-                    cp.field('button-bundle').hide();
-                    cp.field('button-log').hide();
-                    editorOpen = true;
-                } else {
-                    cp.field('editor-info').html('');
-                    cp.field('button-bundle').show();
-                    cp.field('button-log').show();
-                    editorOpen = false;
-                }
-            });
-        });
     };
 
     cp.create = function () {
         // the main toolbox fragment
         mainToolbox = cp.field('toolbox').hide();
         pagedView = cp.field('paged-view');
-        logList = cp.field('log-list');
+        logListContainer = cp.field('log-list').on('component:ready', function () {
+            logListView = zuix.context(this);
+        });
         // the components fragment
         componentsBox = cp.field('fragment-components').hide();
         // the bundle fragment
@@ -104,6 +91,23 @@ zuix.controller(function (cp) {
         cp.field('button-components').on('click', function () {
             showComponents();
         });
+        cp.field('fragmemnt-components').on('component:ready', function (e, ctx) {
+            zuixEditor = zuix.context(this);
+            // if editor is ready, register event handler
+            zuixEditor.on('page:change', function (e, data) {
+                if (data.page == 'editor') {
+                    cp.field('editor-info').html(data.context.model().componentId);
+                    cp.field('button-bundle').hide();
+                    cp.field('button-log').hide();
+                    editorOpen = true;
+                } else {
+                    cp.field('editor-info').html('');
+                    cp.field('button-bundle').show();
+                    cp.field('button-log').show();
+                    editorOpen = false;
+                }
+            });
+        });
         // hide the toolbox at startup
         backOrHide(false);
         // init
@@ -114,7 +118,7 @@ zuix.controller(function (cp) {
 
     function updateLog() {
 
-        zuix.context(logList).model({
+        logListView.model({
             itemList: logCache.slice(0),
             getItem: function (index, item) {
                 return {
@@ -243,8 +247,9 @@ zuix.controller(function (cp) {
         fabMenu.animateCss('zoomOutDown', function () {
             fabMenu.css('z-index', '0').hide();
         });
+        // force loading of visible lazy-elements (log items)
         setTimeout(function () {
-            zuix.componentize(logList);
+            zuix.componentize(logListContainer);
         }, 500);
     }
 

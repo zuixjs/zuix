@@ -190,10 +190,12 @@ ContextController.prototype.clearCache = function () {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function (filter) {
+    // dispose cached fields from previous attacched view
     if (this.context.view() != null || this._view !== this.context.view()) {
         this.clearCache();
         this._view = z$(this.context.view());
     }
+    // TODO: dispose also events on view change (!!!)
     if (filter != null)
         return this._view.find(filter);
     else if (this._view !== null)
@@ -266,8 +268,10 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
         this.addEvent(this.view(), eventPath, null);
     // TODO: ...
     if (isHook === true) {
-        if (this.context.container() != null)
-            z$(this.context.container())
+        var target = this.context.container();
+        if (target == null) target = this.context.view();
+        if (target != null)
+            z$(target)
                 .trigger(eventPath, eventData);
         this.context.trigger(this.context, eventPath, eventData);
     } else

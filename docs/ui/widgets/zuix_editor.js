@@ -1,11 +1,16 @@
 zuix.controller(function (cp) {
-    var componentList = null,
-        editorFragment = null,
+    /** @type {ComponentContext} */
+    var componentListView = null;
+    /** @type {ZxQuery} */
+    var editorFragment = null,
         componentListFragment = null;
 
     cp.create = function () {
         editorFragment = cp.field('fragment-editor');
         componentListFragment = cp.field('fragment-list');
+        cp.field('component-list').on('component:ready', function () {
+            componentListView = zuix.context(this);
+        });
         cp.expose({
             list: showComponents,
             serialize: serialize
@@ -26,7 +31,7 @@ zuix.controller(function (cp) {
                     ? 1 : 0;
         });
 
-        zuix.context(cp.field('component-list')).model({
+        componentListView.model({
             itemList: bundle,
             getItem: function (index, item) {
                 return {
