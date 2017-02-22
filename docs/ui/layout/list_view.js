@@ -30,13 +30,19 @@ zuix.controller(function (cp) {
                 var container = listItems[id].container();
                 // set a temporary height for the container (for lazy load to work property)
                 container.style['min-height'] = '24px';
-                cp.view().insert(i, container);
+                var attach = function (i, container) {
+                    setTimeout(function () {
+                        cp.view().insert(i, container);
+                    }, i*5);
+                }(i, container);
             } else {
                 // update item model's data
                 item.model(dataItem.options.model);
             }
         }
-        zuix.componentize(cp.view());
+        setTimeout(function () {
+            zuix.componentize(cp.view());
+        }, modelList.length*5);
 
     }
 
