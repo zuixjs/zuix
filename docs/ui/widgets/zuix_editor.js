@@ -4,10 +4,8 @@ zuix.controller(function (cp) {
         componentListFragment = null;
 
     cp.create = function () {
-        componentListFragment = cp.field('fragment-list');
-        componentList = cp.field('component-list');
         editorFragment = cp.field('fragment-editor');
-        showComponents();
+        componentListFragment = cp.field('fragment-list');
         cp.expose({
             list: showComponents,
             serialize: serialize
@@ -28,7 +26,7 @@ zuix.controller(function (cp) {
                     ? 1 : 0;
         });
 
-        zuix.context(componentList).model({
+        zuix.context(cp.field('component-list')).model({
             itemList: bundle,
             getItem: function (index, item) {
                 return {
@@ -105,7 +103,6 @@ zuix.controller(function (cp) {
     }
 
     function closeEditor() {
-
         componentListFragment.show();
         editorFragment.hide();
 

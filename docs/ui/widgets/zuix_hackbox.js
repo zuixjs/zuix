@@ -87,6 +87,23 @@ zuix.controller(function (cp) {
         cp.field('button-components').on('click', function () {
             showComponents();
         });
+        cp.field('fragmemnt-components').on('component:ready', function (e, ctx) {
+            zuixEditor = zuix.context(this);
+            // if editor is ready, register event handler
+            zuixEditor.on('page:change', function (e, data) {
+                if (data.page == 'editor') {
+                    cp.field('editor-info').html(data.context.model().componentId);
+                    cp.field('button-bundle').hide();
+                    cp.field('button-log').hide();
+                    editorOpen = true;
+                } else {
+                    cp.field('editor-info').html('');
+                    cp.field('button-bundle').show();
+                    cp.field('button-log').show();
+                    editorOpen = false;
+                }
+            });
+        });
         // hide the toolbox at startup
         backOrHide(false);
         // init
@@ -189,27 +206,6 @@ zuix.controller(function (cp) {
                 else setTimeout(updateTimeout, 500);
             };
             timeout = setTimeout(updateTimeout, 500);
-
-            // TODO: improve this by allowing event registering prior to context availability
-            if (zuixEditor == null) {
-                zuixEditor = zuix.context('zuix-editor');
-                if (zuixEditor != null && zuixEditor._c != null) {
-                    // if editor is ready, register event handler
-                    zuixEditor.on('page:change', function (e, data) {
-                        if (data.page == 'editor') {
-                            cp.field('editor-info').html(data.context.model().componentId);
-                            cp.field('button-bundle').hide();
-                            cp.field('button-log').hide();
-                            editorOpen = true;
-                        } else {
-                            cp.field('editor-info').html('');
-                            cp.field('button-bundle').show();
-                            cp.field('button-log').show();
-                            editorOpen = false;
-                        }
-                    });
-                } else zuixEditor = null;
-            }
         };
         cp.field('bundle-progress').hide();
     }

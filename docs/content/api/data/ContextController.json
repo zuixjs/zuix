@@ -678,7 +678,7 @@
     "ignore": false,
     "line": 239,
     "codeStart": 264,
-    "code": "ContextController.prototype.trigger = function (eventPath, eventData, isHook) {\n    if (this.context._eventMap[eventPath] == null && isHook !== true)\n        this.addEvent(this.view(), eventPath, null);\n    // TODO: ...\n    if (isHook === true)\n        this.context.trigger(this.context, eventPath, eventData);\n    else\n        this.view().trigger(eventPath, eventData);\n    return this;\n};",
+    "code": "ContextController.prototype.trigger = function (eventPath, eventData, isHook) {\n    if (this.context._eventMap[eventPath] == null && isHook !== true)\n        this.addEvent(this.view(), eventPath, null);\n    // TODO: ...\n    if (isHook === true) {\n        if (this.context.container() != null)\n            z$(this.context.container())\n                .trigger(eventPath, eventData);\n        this.context.trigger(this.context, eventPath, eventData);\n    } else\n        this.view().trigger(eventPath, eventData);\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "ContextController",
@@ -746,8 +746,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 274,
-    "codeStart": 303,
+    "line": 277,
+    "codeStart": 306,
     "code": "ContextController.prototype.expose = function (methodName, handler) {\n    if (typeof methodName === 'object') {\n        var _t = this;\n        z$.each(methodName, function (k, v) {\n            _t.context[k] = v;\n        });\n    } else this.context[methodName] = handler;\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -801,8 +801,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 312,
-    "codeStart": 334,
+    "line": 315,
+    "codeStart": 337,
     "code": "ContextController.prototype.loadCss = function(options) {\n    this.context.loadCss(options);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -856,8 +856,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 338,
-    "codeStart": 360,
+    "line": 341,
+    "codeStart": 363,
     "code": "ContextController.prototype.loadHtml = function(options) {\n    this.saveView();\n    this.context.loadHtml(options);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -892,8 +892,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 365,
-    "codeStart": 368,
+    "line": 368,
+    "codeStart": 371,
     "code": "ContextController.prototype.log = {};",
     "ctx": {
       "type": "property",
@@ -948,8 +948,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 369,
-    "codeStart": 386,
+    "line": 372,
+    "codeStart": 389,
     "code": "ContextController.prototype.for = function (componentId) { return this; };\n\nmodule.exports = ContextController;",
     "ctx": {
       "type": "method",

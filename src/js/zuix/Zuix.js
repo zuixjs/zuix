@@ -780,7 +780,7 @@ function initController(c) {
                 var eh = eventHandler;
                 eventHandler = function () { c.trigger(eh, eventData, isHook); }
             }
-            z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
+            return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
         };
         return el;
     };

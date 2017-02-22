@@ -1979,9 +1979,12 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
     if (this.context._eventMap[eventPath] == null && isHook !== true)
         this.addEvent(this.view(), eventPath, null);
     // TODO: ...
-    if (isHook === true)
+    if (isHook === true) {
+        if (this.context.container() != null)
+            z$(this.context.container())
+                .trigger(eventPath, eventData);
         this.context.trigger(this.context, eventPath, eventData);
-    else
+    } else
         this.view().trigger(eventPath, eventData);
     return this;
 };
@@ -2883,7 +2886,7 @@ function initController(c) {
                 var eh = eventHandler;
                 eventHandler = function () { c.trigger(eh, eventData, isHook); }
             }
-            z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
+            return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
         };
         return el;
     };
