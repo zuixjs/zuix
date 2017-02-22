@@ -28,7 +28,7 @@ zuix.controller(function (cp) {
             if (typeof item === 'undefined') {
                 listItems[id] = zuix.createComponent(dataItem.componentId, dataItem.options);
                 var container = listItems[id].container();
-                // set a temporary height for the container (for lazy load to work property)
+                // set a temporary height for the container (for lazy load to work properly)
                 container.style['min-height'] = '24px';
                 var attach = function (i, container) {
                     setTimeout(function () {

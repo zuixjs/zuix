@@ -1,4 +1,6 @@
-JavaScript UI content and component manager for creating sites and web apps.
+## ZUIX.js - Content and Component Manager
+
+ZUIX is a JavaScript library for creating component-based sites and web apps.
 
 ### Usage
 
@@ -7,15 +9,17 @@ JavaScript UI content and component manager for creating sites and web apps.
 
 Get **ZUIX** minified Javascript file and include it in the `head` section of the page.
 
-<pre><code class="language-html">
-&lt;script src="js/zuix.min.js"&gt;&lt;/script&gt;
-</code></pre>
+```html
+<script src="js/zuix.min.js"></script>
+```
 
 <div align="center">
+
 <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
    href="https://genielabs.github.io/zuix/js/zuix.min.js">
-    Download <strong>ZUIX v0.4.9-3</strong>
+   &gt;&gt;&gt; Download <strong>ZUIX v0.4.9-3</strong> &lt;&lt;&lt;
 </a>
+
 </div>
 <div align="center"><small><em>9,8 kB (gzipped)</em></small></div>
 

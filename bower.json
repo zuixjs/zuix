@@ -1,6 +1,6 @@
 {
   "name": "zuix",
-  "description": "ZUIX, JavaScript UI content and component manager for creating sites and web apps.",
+  "description": "ZUIX is a JavaScript library for creating component-based sites and web apps.",
   "main": [
     "build/js/zuix.js"
   ],
