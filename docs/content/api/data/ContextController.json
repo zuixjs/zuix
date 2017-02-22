@@ -695,13 +695,14 @@
       },
       {
         "type": "param",
-        "string": "{string} methodName Name of the exposed function.",
+        "string": "{string|JSON} methodName Name of the exposed function, or list of method names/functions.",
         "name": "methodName",
-        "description": "Name of the exposed function.",
+        "description": "Name of the exposed function, or list of method names/functions.",
         "types": [
-          "string"
+          "string",
+          "JSON"
         ],
-        "typesDescription": "<code>string</code>",
+        "typesDescription": "<code>string</code>|<a href=\"JSON.html\">JSON</a>",
         "optional": false,
         "nullable": false,
         "nonNullable": false,
@@ -709,14 +710,14 @@
       },
       {
         "type": "param",
-        "string": "{function} handler Reference to the controller member to expose.",
-        "name": "handler",
+        "string": "{function} [handler] Reference to the controller member to expose.",
+        "name": "[handler]",
         "description": "Reference to the controller member to expose.",
         "types": [
           "function"
         ],
         "typesDescription": "<code>function</code>",
-        "optional": false,
+        "optional": true,
         "nullable": false,
         "nonNullable": false,
         "variable": false
@@ -747,7 +748,7 @@
     "ignore": false,
     "line": 274,
     "codeStart": 303,
-    "code": "ContextController.prototype.expose = function (methodName, handler) {\n    this.context[methodName] = handler;\n    return this;\n};",
+    "code": "ContextController.prototype.expose = function (methodName, handler) {\n    if (typeof methodName === 'object') {\n        var _t = this;\n        z$.each(methodName, function (k, v) {\n            _t.context[k] = v;\n        });\n    } else this.context[methodName] = handler;\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "ContextController",
@@ -800,8 +801,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 307,
-    "codeStart": 329,
+    "line": 312,
+    "codeStart": 334,
     "code": "ContextController.prototype.loadCss = function(options) {\n    this.context.loadCss(options);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -855,8 +856,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 333,
-    "codeStart": 355,
+    "line": 338,
+    "codeStart": 360,
     "code": "ContextController.prototype.loadHtml = function(options) {\n    this.saveView();\n    this.context.loadHtml(options);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -891,8 +892,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 360,
-    "codeStart": 363,
+    "line": 365,
+    "codeStart": 368,
     "code": "ContextController.prototype.log = {};",
     "ctx": {
       "type": "property",
@@ -947,8 +948,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 364,
-    "codeStart": 381,
+    "line": 369,
+    "codeStart": 386,
     "code": "ContextController.prototype.for = function (componentId) { return this; };\n\nmodule.exports = ContextController;",
     "ctx": {
       "type": "method",

@@ -6,7 +6,10 @@
             <span>z</span><strong>UI</strong><span>x</span>
             hack box
         </div>
-        <div self="size-x1" align="right">
+        <div self="right">
+            <!--a class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                <i class="material-icons">fullscreen</i>
+            </a-->
         </div>
     </div>
 
@@ -34,23 +37,6 @@
              data-ui-lazyload="scroll"
              class="bundle-box  mdl-color--white mdl-color-text--black scrollable content-padding">
 
-            <div data-ui-field="component-list"
-                 data-ui-lazyload="false"
-                 data-ui-load="ui/layout/list_view">
-
-                loading...
-
-            </div>
-
-            <div layout="row center-spread" class="summary">
-                <div self="left">
-                    <small>loaded <span data-ui-field="total-components">--</span> components</small>
-                </div>
-                <div self="right">
-                    <small>total instances <span data-ui-field="total-instances">--</span></small>
-                </div>
-            </div>
-
             <div class="content-padding" layout="columns spread">
                 <p>
                     Bundling the application will pack all loaded components so far (html, css, js),
@@ -70,45 +56,29 @@
                 </div>
             </div>
 
-
         </div>
-        <div data-ui-field="fragment-editor" class="editor-box mdl-color-text--lime-400"
-             layout="row stretch-stretch">
-
-            <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-color--white" layout="column top-stretch">
-                <div class="mdl-tabs__tab-bar">
-                    <a href="#hackbox-editor-js" class="mdl-tabs__tab is-active">JavaScript</a>
-                    <a href="#hackbox-editor-html" class="mdl-tabs__tab">HTML</a>
-                    <a href="#hackbox-editor-css" class="mdl-tabs__tab">CSS</a>
-                </div>
-                <pre self="size-x1" class="mdl-tabs__panel scrollable-relative is-active" id="hackbox-editor-js">
-                    <code data-ui-field="js" class="language-javascript"></code>
-                </pre>
-                <pre self="size-x1" class="mdl-tabs__panel scrollable-relative" id="hackbox-editor-html">
-                    <code data-ui-field="html" class="language-html"></code>
-                </pre>
-                <pre self="size-x1" class="mdl-tabs__panel scrollable-relative" id="hackbox-editor-css">
-                    <code data-ui-field="css" class="language-css"></code>
-                </pre>
-            </div>
-
-        </div>
+        <div data-ui-field="fragmemnt-components"
+             data-ui-load="ui/widgets/zuix_editor"
+             data-ui-context="zuix-editor"
+             data-ui-lazyload="scroll"
+             class="bundle-box  mdl-color--white mdl-color-text--black scrollable content-padding"
+             layout="row stretch-stretch"></div>
 
     </div>
 
     <div class="footer mdl-shadow--24dp"
-         layout="row center-justify">
+         layout="row center-spread">
         <a data-ui-field="button-hide" class="mdl-button mdl-js-button mdl-js-ripple-effect">
             <i class="material-icons">chevron_left</i>
         </a>
-        <div self="size-x1">
+        <div self="size-x1" layout="row center-center">
             <small data-ui-field="editor-info" class="mdl-color-text--accent"></small>
         </div>
-        <a data-ui-field="button-log" class="mdl-button mdl-js-button">Log</a>
-        <a data-ui-field="button-bundle" class="mdl-button mdl-js-button">Bundle</a>
-        <i data-ui-field="components" class="material-icons mdl-color-text--blue-900 mdl-badge mdl-badge--overlap" data-badge="..">
+        <a data-ui-field="button-bundle" class="mdl-button mdl-js-button margin-left">Bundle</a>
+        <a data-ui-field="button-log" class="mdl-button mdl-js-button margin-left is-active">Log</a>
+        <a data-ui-field="button-components" class="material-icons mdl-color-text--blue-900 mdl-badge mdl-badge--overlap mdl-badge--no-background margin-left" data-badge="!">
             extension
-        </i>
+        </a>
     </div>
 </div>
 
@@ -117,7 +87,7 @@
 </div>
 
 <div data-ui-field="fab-menu" class="fab-menu">
-    <a data-ui-field="components" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-color--yellow-A400 mdl-js-ripple-effect mdl-shadow--24dp mdl-badge mdl-badge--overlap" data-badge="..">
+    <a data-ui-field="components" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-color--yellow-A400 mdl-js-ripple-effect mdl-shadow--24dp mdl-badge mdl-badge--overlap" data-badge="!">
         <i class="material-icons mdl-color-text--blue-900">extension</i>
     </a>
 </div>

@@ -296,12 +296,17 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
  * </code></pre>
  *
  *
- * @param {string} methodName Name of the exposed function.
- * @param {function} handler Reference to the controller member to expose.
+ * @param {string|JSON} methodName Name of the exposed function, or list of method names/functions.
+ * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.expose = function (methodName, handler) {
-    this.context[methodName] = handler;
+    if (typeof methodName === 'object') {
+        var _t = this;
+        z$.each(methodName, function (k, v) {
+            _t.context[k] = v;
+        });
+    } else this.context[methodName] = handler;
     return this;
 };
 /**

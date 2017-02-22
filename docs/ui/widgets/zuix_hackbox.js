@@ -28,13 +28,19 @@
 zuix.controller(function (cp) {
     var mainToolbox = null,
         pagedView = null,
-        logList,
-        componentList = null;
-    var timeout = null;
-    var logCache = [];
+        logList = null;
 
-    var bundleBox = null, logBox = null;
-    var logOverlay = null, fabMenu = null, buttonHide = null, editorOpen = false;
+    var logCache = [],
+        timeout = null,
+        editorOpen = false,
+        zuixEditor = null;
+
+    var PAGE_LOG = 0,
+        PAGE_BUNDLE = 1,
+        PAGE_COMPONENTS = 2;
+
+    var bundleBox = null, logBox = null, componentsBox;
+    var logOverlay = null, fabMenu = null, buttonHide = null;
 
     cp.init = function () {
         // disable zuix logging to console
@@ -46,7 +52,8 @@ zuix.controller(function (cp) {
         mainToolbox = cp.field('toolbox').hide();
         pagedView = cp.field('paged-view');
         logList = cp.field('log-list');
-        componentList = cp.field('component-list');
+        // the components fragment
+        componentsBox = cp.field('fragment-components').hide();
         // the bundle fragment
         bundleBox = cp.field('fragment-bundle').hide();
         // the debug log fragment
@@ -76,6 +83,9 @@ zuix.controller(function (cp) {
             zuix.bundle(true, function () {
                 cp.field('bundle-progress').hide();
             });
+        });
+        cp.field('button-components').on('click', function () {
+            showComponents();
         });
         // hide the toolbox at startup
         backOrHide(false);
@@ -170,7 +180,7 @@ zuix.controller(function (cp) {
             if (timeout != null)
                 clearTimeout(timeout);
             var updateTimeout = function () {
-                cp.field('components')
+                cp.view('.mdl-badge')
                     .animateCss('tada', function () {
                         this.attr('data-badge', zuix.bundle().length);
                     });
@@ -179,66 +189,54 @@ zuix.controller(function (cp) {
                 else setTimeout(updateTimeout, 500);
             };
             timeout = setTimeout(updateTimeout, 500);
+
+            // TODO: improve this by allowing event registering prior to context availability
+            if (zuixEditor == null) {
+                zuixEditor = zuix.context('zuix-editor');
+                if (zuixEditor != null && zuixEditor._c != null) {
+                    // if editor is ready, register event handler
+                    zuixEditor.on('page:change', function (e, data) {
+                        if (data.page == 'editor') {
+                            cp.field('editor-info').html(data.context.model().componentId);
+                            cp.field('button-bundle').hide();
+                            cp.field('button-log').hide();
+                            editorOpen = true;
+                        } else {
+                            cp.field('editor-info').html('');
+                            cp.field('button-bundle').show();
+                            cp.field('button-log').show();
+                            editorOpen = false;
+                        }
+                    });
+                } else zuixEditor = null;
+            }
         };
         cp.field('bundle-progress').hide();
     }
 
-    function showBundle() {
-        var instancesCount = 0;
-        zuix.context(pagedView).setPage(1);
-//        bundleBox.show().animateCss('fadeInRight', { duration: '0.5s' });
-        cp.field('button-log').removeClass('is-active');
-        cp.field('button-bundle').addClass('is-active');
-
-        var bundle = zuix.bundle().slice(0);
-        bundle.sort(function (a, b) {
-            return (a.componentId.toString() < b.componentId.toString())
-                ? -1 : (a.componentId.toString() > b.componentId.toString())
-                    ? 1 : 0;
-        });
-
-        zuix.context(componentList).model({
-            itemList: bundle,
-            getItem: function (index, item) {
-                return {
-                    // unique identifier for this item
-                    itemId: item.componentId,
-                    // display as "bundle item"
-                    componentId: 'ui/widgets/zuix_hackbox/bundle_item',
-                    // loading options
-                    options: {
-                        model: item,
-                        lazyLoad: true,
-                        on: {
-                            'item:click': openEditor,
-                            'item:update': function () {
-                                var ctx = zuix.context(this);
-                                // do not count if is zuix-hackbox
-                                if (!ctx.isHackBox()) {
-                                    instancesCount += ctx.count();
-                                }
-                                if (index == bundle.length - 1) {
-                                    cp.field('total-components').html(zuix.bundle().length);
-                                    cp.field('total-instances').html(instancesCount);
-                                    instancesCount = 0;
-                                }
-                            }
-                        },
-                        ready: function () {
-                        }
-                    }
-                }
-            }
-        });
-
-    }
-
     function showLog(animate) {
-        zuix.context(pagedView).setPage(0);
 //        if (animate) logBox
 //            .animateCss('fadeInLeft', { duration: '0.5s' });
         cp.field('button-bundle').removeClass('is-active');
         cp.field('button-log').addClass('is-active');
+        cp.field('button-components').addClass('mdl-badge--no-background');
+        zuix.context(pagedView).setPage(PAGE_LOG);
+    }
+
+    function showComponents() {
+        cp.field('button-log').removeClass('is-active');
+        cp.field('button-bundle').removeClass('is-active');
+        cp.field('button-components').removeClass('mdl-badge--no-background');
+        zuix.context(pagedView).setPage(PAGE_COMPONENTS);
+        if (zuixEditor) zuixEditor.list();
+    }
+
+    function showBundle() {
+//        bundleBox.show().animateCss('fadeInRight', { duration: '0.5s' });
+        cp.field('button-log').removeClass('is-active');
+        cp.field('button-bundle').addClass('is-active');
+        cp.field('button-components').addClass('mdl-badge--no-background');
+        zuix.context(pagedView).setPage(PAGE_BUNDLE);
     }
 
     function showToolbox() {
@@ -254,44 +252,10 @@ zuix.controller(function (cp) {
         }, 500);
     }
 
-    function openEditor(e, item) {
-        //cp.log.e(item.componentId);
-
-        cp.field('js').html(serialize(item.controller));
-        if (item.view != null) {
-            var html = item.view
-                .replace(/\</g, "&lt;")
-                .replace(/\>/g, "&gt;")
-                .replace(/ zuix-loaded="true"/g, '');
-            cp.field('html').html(html);
-        } else {
-            cp.field('html').html('');
-        }
-        cp.field('css').html(item.css);
-        Prism.highlightElement(cp.field('js').get());
-        Prism.highlightElement(cp.field('html').get());
-        Prism.highlightElement(cp.field('css').get());
-
-        cp.field('editor-info').html(item.componentId);
-        cp.field('button-bundle').hide();
-        cp.field('button-log').hide();
-        zuix.context(pagedView).setPage(2);
-        editorOpen = true;
-
-    }
-
-    function closeEditor() {
-        zuix.context(pagedView).setPage(1);
-        cp.field('editor-info').html('');
-        cp.field('button-bundle').show();
-        cp.field('button-log').show();
-        editorOpen = false;
-    }
-
     function backOrHide(animate) {
         if (editorOpen) {
-            // close editor / go back
-            closeEditor();
+            // close editor / go back to components list
+            zuixEditor.list();
         } else {
             // hide toolbox
             var hide = function () {
@@ -311,7 +275,7 @@ zuix.controller(function (cp) {
     function saveBundle() {
 
         var saveAs = saveAs || function(e){"use strict";if(typeof e==="undefined"||typeof navigator!=="undefined"&&/MSIE [1-9]\./.test(navigator.userAgent)){return}var t=e.document,n=function(){return e.URL||e.webkitURL||e},r=t.createElementNS("http://www.w3.org/1999/xhtml","a"),o="download"in r,a=function(e){var t=new MouseEvent("click");e.dispatchEvent(t)},i=/constructor/i.test(e.HTMLElement)||e.safari,f=/CriOS\/[\d]+/.test(navigator.userAgent),u=function(t){(e.setImmediate||e.setTimeout)(function(){throw t},0)},s="application/octet-stream",d=1e3*40,c=function(e){var t=function(){if(typeof e==="string"){n().revokeObjectURL(e)}else{e.remove()}};setTimeout(t,d)},l=function(e,t,n){t=[].concat(t);var r=t.length;while(r--){var o=e["on"+t[r]];if(typeof o==="function"){try{o.call(e,n||e)}catch(a){u(a)}}}},p=function(e){if(/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(e.type)){return new Blob([String.fromCharCode(65279),e],{type:e.type})}return e},v=function(t,u,d){if(!d){t=p(t)}var v=this,w=t.type,m=w===s,y,h=function(){l(v,"writestart progress write writeend".split(" "))},S=function(){if((f||m&&i)&&e.FileReader){var r=new FileReader;r.onloadend=function(){var t=f?r.result:r.result.replace(/^data:[^;]*;/,"data:attachment/file;");var n=e.open(t,"_blank");if(!n)e.location.href=t;t=undefined;v.readyState=v.DONE;h()};r.readAsDataURL(t);v.readyState=v.INIT;return}if(!y){y=n().createObjectURL(t)}if(m){e.location.href=y}else{var o=e.open(y,"_blank");if(!o){e.location.href=y}}v.readyState=v.DONE;h();c(y)};v.readyState=v.INIT;if(o){y=n().createObjectURL(t);setTimeout(function(){r.href=y;r.download=u;a(r);h();c(y);v.readyState=v.DONE});return}S()},w=v.prototype,m=function(e,t,n){return new v(e,t||e.name||"download",n)};if(typeof navigator!=="undefined"&&navigator.msSaveOrOpenBlob){return function(e,t,n){t=t||e.name||"download";if(!n){e=p(e)}return navigator.msSaveOrOpenBlob(e,t)}}w.abort=function(){};w.readyState=w.INIT=0;w.WRITING=1;w.DONE=2;w.error=w.onwritestart=w.onprogress=w.onwrite=w.onabort=w.onerror=w.onwriteend=null;return m}(typeof self!=="undefined"&&self||typeof window!=="undefined"&&window||this.content);if(typeof module!=="undefined"&&module.exports){module.exports.saveAs=saveAs}else if(typeof define!=="undefined"&&define!==null&&define.amd!==null){define("FileSaver.js",function(){return saveAs})}
-        var bundle = serialize(zuix.bundle());
+        var bundle = zuixEditor.serialize(zuix.bundle());
         // revert loaded status before exporting
         bundle = bundle.replace(/data-ui-loaded=\\"true\\"/g, 'data-ui-loaded=\\"false\\"');
         bundle = bundle.replace(/zuix-loaded=\\"true\\"/g, 'zuix-loaded=\\"false\\"');
@@ -321,112 +285,4 @@ zuix.controller(function (cp) {
         return bundle;
     }
 
-
-
-    var isRegExp = function (re) {
-        return Object.prototype.toString.call(re) === '[object RegExp]';
-    };
-
-    // FileSaver polyfill:
-    //      https://github.com/eligrey/FileSaver.js/blob/master/FileSaver.min.js
-    // Generate an internal UID to make the regexp pattern harder to guess.
-
-    var UID                 = Math.floor(Math.random() * 0x10000000000).toString(16);
-    var PLACE_HOLDER_REGEXP = new RegExp('"@__(F|R)-' + UID + '-(\\d+)__@"', 'g');
-
-    var IS_NATIVE_CODE_REGEXP = /\{\s*\[native code\]\s*\}/g;
-    var UNSAFE_CHARS_REGEXP   = /[<>\/\u2028\u2029]/g;
-
-    // Mapping of unsafe HTML and invalid JavaScript line terminator chars to their
-    // Unicode char counterparts which are safe to use in JavaScript strings.
-    var ESCAPED_CHARS = {
-        '<'     : '\\u003C',
-        '>'     : '\\u003E',
-        '/'     : '\\u002F',
-        '\u2028': '\\u2028',
-        '\u2029': '\\u2029'
-    };
-
-    function escapeUnsafeChars(unsafeChar) {
-        return ESCAPED_CHARS[unsafeChar];
-    }
-
-    var serialize = function(obj, options) {
-        options || (options = {});
-
-        // Backwards-compatability for `space` as the second argument.
-        if (typeof options === 'number' || typeof options === 'string') {
-            options = {space: options};
-        }
-
-        var functions = [];
-        var regexps = [];
-
-        // Returns placeholders for functions and regexps (identified by index)
-        // which are later replaced by their string representation.
-        function replacer(key, value) {
-            if (!value) {
-                return value;
-            }
-
-            var type = typeof value;
-
-            if (type === 'object') {
-                if (isRegExp(value)) {
-                    return '@__R-' + UID + '-' + (regexps.push(value) - 1) + '__@';
-                }
-
-                return value;
-            }
-
-            if (type === 'function') {
-                return '@__F-' + UID + '-' + (functions.push(value) - 1) + '__@';
-            }
-
-            return value;
-        }
-
-        var str;
-
-        // Creates a JSON string representation of the value.
-        // NOTE: Node 0.12 goes into slow mode with extra JSON.stringify() args.
-        if (options.isJSON && !options.space) {
-            str = JSON.stringify(obj);
-        } else {
-            str = JSON.stringify(obj, options.isJSON ? null : replacer, options.space);
-        }
-
-        // Protects against `JSON.stringify()` returning `undefined`, by serializing
-        // to the literal string: "undefined".
-        if (typeof str !== 'string') {
-            return String(str);
-        }
-
-        // Replace unsafe HTML and invalid JavaScript line terminator chars with
-        // their safe Unicode char counterpart. This _must_ happen before the
-        // regexps and functions are serialized and added back to the string.
-        str = str.replace(UNSAFE_CHARS_REGEXP, escapeUnsafeChars);
-
-        if (functions.length === 0 && regexps.length === 0) {
-            return str;
-        }
-
-        // Replaces all occurrences of function and regexp placeholders in the JSON
-        // string with their string representations. If the original value can not
-        // be found, then `undefined` is used.
-        return str.replace(PLACE_HOLDER_REGEXP, function (match, type, valueIndex) {
-            if (type === 'R') {
-                return regexps[valueIndex].toString();
-            }
-
-            var fn = functions[valueIndex];
-            var serializedFn = fn.toString();
-
-            if (IS_NATIVE_CODE_REGEXP.test(serializedFn)) {
-                throw new TypeError('Serializing native function: ' + fn.name);
-            }
-
-            return serializedFn;
-        });
-    };
 });

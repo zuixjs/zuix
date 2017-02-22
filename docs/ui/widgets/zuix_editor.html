@@ -1,17 +1,43 @@
-<div>
-    <div layout="row spread-center">
-        <a data-ui-field="btn-preview" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</a>
-        <a data-ui-field="btn-html" class="mdl-button mdl-js-button mdl-js-ripple-effect">HTML</a>
-        <a data-ui-field="btn-css" class="mdl-button mdl-js-button mdl-js-ripple-effect">CSS</a>
-        <a data-ui-field="btn-js" class="mdl-button mdl-js-button mdl-js-ripple-effect">JavaScript</a>
+
+<div data-ui-field="fragment-list">
+
+    <div data-ui-field="component-list"
+         data-ui-lazyload="false"
+         data-ui-load="ui/layout/list_view">
+
+        loading...
+
     </div>
-    <div data-ui-field="preview-panel" class="content-padding">
-        <div data-ui-include="site/common/contact_card" layout="column center-center"></div>
+
+    <div layout="row center-justify" class="summary">
+        <div self="left">
+            <small>loaded <span data-ui-field="total-components">--</span> components</small>
+        </div>
+        <div self="right">
+            <small>total instances <span data-ui-field="total-instances">--</span></small>
+        </div>
     </div>
-    <div data-ui-field="html-panel" class="content-padding">
+
+</div>
+
+<div data-ui-field="fragment-editor" class="editor-box mdl-color-text--lime-400"
+     layout="row stretch-stretch">
+
+    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-color--white" layout="column top-stretch">
+        <div class="mdl-tabs__tab-bar">
+            <a href="#hackbox-editor-js" class="mdl-tabs__tab is-active">JavaScript</a>
+            <a href="#hackbox-editor-html" class="mdl-tabs__tab">HTML</a>
+            <a href="#hackbox-editor-css" class="mdl-tabs__tab">CSS</a>
+        </div>
+        <pre id="hackbox-editor-js"
+             self="size-x1"
+             class="mdl-tabs__panel scrollable-relative is-active"><code data-ui-field="js" class="language-javascript"></code></pre>
+        <pre id="hackbox-editor-html"
+             self="size-x1"
+             class="mdl-tabs__panel scrollable-relative"><code data-ui-field="html" class="language-html"></code></pre>
+        <pre id="hackbox-editor-css"
+             self="size-x1"
+             class="mdl-tabs__panel scrollable-relative"><code data-ui-field="css" class="language-css"></code></pre>
     </div>
-    <div data-ui-field="css-panel" class="content-padding">
-    </div>
-    <div data-ui-field="js-panel" class="content-padding">
-    </div>
+
 </div>

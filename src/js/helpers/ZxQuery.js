@@ -182,7 +182,16 @@ ZxQuery.prototype.get = function (i) {
  * @return {ZxQuery} A new *ZxQuery* object
  */
 ZxQuery.prototype.eq = function (i) {
-    return new ZxQuery(this._selection[i]);
+    var selection = this._selection;
+    var resultSet = selection[i];
+    if (arguments.length > 1) {
+        resultSet = [];
+        z$.each(arguments, function (k, v) {
+            if (selection[v] != null)
+                resultSet.push(selection[v])
+        });
+    }
+    return new ZxQuery(resultSet);
 };
 /**
  * Select all descendants matching the given *DOM* query selector filter.
@@ -512,7 +521,7 @@ z$.find = function (filter) {
  *
  * If the callback returns *false*, the iteration loop will interrupt.
  *
- * @param {Array<Object>} items Enumerable objects collection.
+ * @param {Array<Object>|JSON} items Enumerable objects collection.
  * @param {ZxQuery~iterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {z$} `this`.
  */
