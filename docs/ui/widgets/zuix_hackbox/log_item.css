@@ -1,7 +1,7 @@
 .log-row {
     color: white;
     vertical-align: middle;
-    line-height: 200%;
+    font-size:70%;
     margin-bottom: 1px;
 }
 .log-row.linked {
@@ -25,3 +25,9 @@
 .log-row .level.info { background-color: rgba(0,255,0,0.5)}
 .log-row .level.debug { background-color: rgba(100,50,250,0.5)}
 .log-row .level.trace { background-color: rgba(255,140,0,0.5)}
+
+.animated {
+    -moz-animation-duration: 0.3s;
+    -o-animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+}

@@ -10,6 +10,7 @@ pre {
     padding: 4px 8px 4px 4px;
     border: solid 1px rgba(150,150,150,0.5);
     background-color: rgba(230,230,255,0.95);
+    z-index: 1;
 }
 .header .logo {
     margin-left: 8px;
@@ -20,6 +21,9 @@ pre {
     background-color: rgba(230,230,255,0.95);
     z-index: 1;
 }
+.footer small {
+    font-weight: 700;
+}
 .log-box {
     border: solid 1px rgba(150,150,150,0.5);
     padding-right: 8px;
@@ -29,11 +33,24 @@ pre {
     border: solid 1px rgba(150,150,150,0.5);
     padding: 8px;
     color: greenyellow;
+    -webkit-box-shadow: inset 0 -1px 5px 0 rgba(0,0,0,0.35);
+    -moz-box-shadow:    inset 0 -1px 5px 0 rgba(0,0,0,0.35);
+    box-shadow:         inset 0 -1px 5px 0 rgba(0,0,0,0.35);
+}
+.summary {
+    margin-bottom: 48px;
+    padding: 16px;
+    background-color: rgba(0,255,0,0.1);
+}
+.summary span {
+    font-weight: 700;
 }
 .editor-box {
     overflow-y: auto;
     max-height: 100%;
     position: relative;
+    padding: 2px;
+    z-index: 10;
 }
 
 .editor-box .mdl-tabs {

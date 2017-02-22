@@ -156,7 +156,7 @@ zuix
             .makeHtml(data.content);
 
 }).hook('css:parse', function (data) {
-    console.log(data);
+    //console.log(data);
 
 }).hook('view:process', function (data) {
     // Prism code syntax highlighter

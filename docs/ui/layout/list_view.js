@@ -1,53 +1,43 @@
 zuix.controller(function (cp) {
 
+    var listItems = {};
+
+    cp.init = function () {
+        cp.options().html = false;
+        cp.options().css = false;
+    };
+
     cp.create = function () {
-
-        cp.view().children().each(function (index) {
-            this.on('click', function () {
-                setSelected(index);
-            });
-        });
-        setSelected(0);
-
-        cp.expose('setSelected', setSelected);
-
+        cp.view().html('');
+        cp.update();
     };
 
     cp.destroy = function () {
 
-        cp.view().children().each(function () {
-            this.off('click');
-            this.removeClass('is-active');
-        });
-        selectedItem = -1;
-
     };
 
-    // Private Members
+    cp.update = function() {
 
-    var selectedItem = -1;
+        var modelList = cp.model().itemList;
+        if (modelList == null) return;
 
-    function setItems(items) {
-        for (var i = 0; i < items.length; i++) {
-            // TODO: ...
-            var listItem = items[i];
-            if (listItem.componentId != null && listItem.ctx != null) {
-                // load and add to list the component associated to the item
-                listItem.ctx = zuix.load(listItem.componentId, {
-                    container: this.view()
-                });
+        for (var i = 0; i < modelList.length; i++) {
+            var dataItem = cp.model().getItem(i, modelList[i]);
+            var id = dataItem.itemId;
+            var item = listItems[id];
+            if (typeof item === 'undefined') {
+                listItems[id] = zuix.createComponent(dataItem.componentId, dataItem.options);
+                var container = listItems[id].container();
+                // set a temporary height for the container (for lazy load to work property)
+                container.style['min-height'] = '24px';
+                cp.view().insert(i, container);
+            } else {
+                // update item model's data
+                item.model(dataItem.options.model);
             }
         }
-    }
+        zuix.componentize(cp.view());
 
-    function setSelected(index) {
-        var actions = cp.view().children();
-        actions.each(function () {
-            this.removeClass('is-active');
-        });
-        if (index != selectedItem)
-            actions.eq(index).addClass('is-active');
-        cp.trigger('item:click', index);
     }
 
 });

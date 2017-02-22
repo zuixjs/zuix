@@ -59,12 +59,12 @@ zuix.controller(function (cp) {
                 });
             }
         }
-        if (!isNaN(anchor)) pages.get(p).scrollTop = anchor;
-        else if (anchor != null) {
-            var targetTop = pages.eq(p).find('a[id='+anchor+']')
+        if (!isNaN(anchor))
+            pages.get(p).scrollTop = anchor;
+        else if (anchor != null)
+            pages.get(p).scrollTop = pages.eq(p)
+                .find('a[id='+anchor+']')
                 .position().y;
-            pages.get(p).scrollTop = targetTop;
-        }
     }
 
 });

@@ -64,19 +64,13 @@
     <!-- ZUIX library  -->
     <script src="js/zuix.min.js"></script>
     <!-- app bundle -->
-    <script src="app.bundle.js"></script>
+    <!--script src="app.bundle.js"></script-->
 
     <!-- Main Page includes -->
     <link rel="stylesheet" href="index.css">
     <script defer type="text/javascript" src="index.js"></script>
 </head>
 <body>
-
-
-<div data-ui-load="ui/widgets/zuix_hackbox"
-     data-ui-priority="0"
-     class="hackbox"></div>
-
 
 <!-- TODO: rip-off inline styles, move them to index.css -->
 
@@ -229,6 +223,11 @@
     </div>
 </div>
 
+<!-- ZUIX Hack Box widget -->
+<div data-ui-load="ui/widgets/zuix_hackbox"
+     data-ui-priority="-10"
+     class="hackbox"
+     self="size-large lg-full"></div>
 
 </body>
 </html>

@@ -260,6 +260,9 @@ ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
     else this._model = model; // model can be set to null
     this.modelToView();
+    // call controller's `update` method when model is updated
+    if (this._c != null && util.isFunction(this._c.update))
+        this._c.update.call(this._c);
     return this;
 };
 /**
@@ -295,15 +298,24 @@ ComponentContext.prototype.controller = function (controller) {
 ComponentContext.prototype.options = function (options) {
     if (options == null)
         return this._options;
-    this._options = options;
-    if (options.componentId != null)
-        this.componentId = options.componentId;
-    this.container(options.container);
-    this.view(options.view);
-    if (typeof options.css !== 'undefined')
-        this.style(options.css);
-    this.controller(options.controller);
-    this.model(options.model);
+    var o = this._options = this._options || {};
+    z$.each(options, function (k, v) {
+        o[k] = v;
+    });
+    if (o.componentId != null)
+        this.componentId = o.componentId;
+    this.container(o.container);
+    this.view(o.view);
+    if (typeof o.css !== 'undefined')
+        this.style(o.css);
+    this.controller(o.controller);
+    this.model(o.model);
+    // map options to element's attributes
+    if (o.lazyLoad && this.container() != null) {
+        this.container().setAttribute('data-ui-context', this.contextId);
+        this.container().setAttribute('data-ui-load', this.componentId);
+        this.container().setAttribute('data-ui-lazyload', 'true');
+    }
     return this;
 };
 

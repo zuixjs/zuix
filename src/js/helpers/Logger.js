@@ -26,7 +26,7 @@
 
 "use strict";
 
-var _console = null;
+var _console = null, _global = null;
 var _console_m = [
     "log", "info", "warn", "error", "debug", "trace", "dir", "group",
     "groupCollapsed", "groupEnd", "time", "timeEnd", "profile", "profileEnd",
@@ -50,6 +50,7 @@ var _callback = null;
  */
 function Logger(ctx) {
     _console = window ? window.console : {};
+    _global = window ? window : {};
     this._timers = {};
     this.args = function(context, level, args) {
         var logHeader = '%c '+level+' %c'+(new Date().toISOString())+' %c'+context;
@@ -89,7 +90,8 @@ function Logger(ctx) {
             _callback.call(ctx, level, args);
         this.args(ctx, level, args);
         // route event
-        _console.log.apply(_console, args);
+        if (!_global.zuixNoConsoleOutput)
+            _console.log.apply(_console, args);
     };
 }
 

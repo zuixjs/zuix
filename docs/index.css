@@ -223,3 +223,6 @@ div[data-ui-field="loaderMessage"] {
     z-index: 1000;
     margin: 48px;
 }
+@media screen and (max-width: 1080px) {
+    .hackbox { width: 84%; }
+}

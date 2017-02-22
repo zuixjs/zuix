@@ -26,28 +26,37 @@
  */
 
 zuix.controller(function (cp) {
-    var toolbox = null;
+    var mainToolbox = null,
+        pagedView = null,
+        logList,
+        componentList = null;
     var timeout = null;
     var logCache = [];
 
     var bundleBox = null, logBox = null;
-    var logOverlay = null, fab = null, hide = null;
+    var logOverlay = null, fabMenu = null, buttonHide = null, editorOpen = false;
 
-    var logItemController = null;
+    cp.init = function () {
+        // disable zuix logging to console
+        window.zuixNoConsoleOutput = true;
+    };
 
     cp.create = function () {
         // the main toolbox fragment
-        toolbox = cp.field('toolbox').hide();
+        mainToolbox = cp.field('toolbox').hide();
+        pagedView = cp.field('paged-view');
+        logList = cp.field('log-list');
+        componentList = cp.field('component-list');
         // the bundle fragment
         bundleBox = cp.field('fragment-bundle').hide();
         // the debug log fragment
         logBox = cp.field('fragment-log').show();
         // the fab button
-        fab = cp.field('fab-menu');
-        fab.on('click', showToolbox);
+        fabMenu = cp.field('fab-menu');
+        fabMenu.on('click', showToolbox);
         // the hide button
-        hide = cp.field('button-hide')
-            .on('click', hideToolbox);
+        buttonHide = cp.field('button-hide')
+            .on('click', backOrHide);
         // move overlay to the document root
         logOverlay = cp.field('log-overlay');
         logOverlay.css({
@@ -59,55 +68,65 @@ zuix.controller(function (cp) {
         // event listeners
         cp.field('button-bundle').on('click', showBundle);
         cp.field('button-log').on('click', showLog);
-        cp.field('button-generate').on('click', generateBundle);
+        cp.field('button-save').on('click', saveBundle);
+        cp.field('button-load').on('click', function () {
+            cp.field('button-load').attr('disabled', true)
+                .removeClass('mdl-button--accent');
+            cp.field('bundle-progress').show();
+            zuix.bundle(true, function () {
+                cp.field('bundle-progress').hide();
+            });
+        });
         // hide the toolbox at startup
-        hideToolbox(false);
+        backOrHide(false);
         // init
         initialize();
         cp.expose('saveBundle', saveBundle);
     };
 
-    function update() {
-        var next = function(i, log) {
-            var model = {
-                index: i,
-                time: log[i].time,
-                level: log[i].level,
-                args: log[i].args
-            };
-            zuix.load('ui/widgets/zuix_hackbox/log_item', {
-                model: model,
-                on: {
-                    'item:enter': function (e, sourceView) {
-                        highlight(sourceView, true);
-                    },
-                    'item:leave': function (e, sourceView) {
-                        highlight(sourceView, false);
-                    },
-                    'item:click': function (e, sourceView) {
-                        highlight(sourceView, false);
-                        sourceView.get()
-                            .scrollIntoView({
-                                block: 'end',
-                                behavior: 'smooth'
-                            });
-                        highlight(sourceView, true);
+
+    function updateLog() {
+
+        zuix.context(logList).model({
+            itemList: logCache.slice(0),
+            getItem: function (index, item) {
+                return {
+                    // unique identifier for this item
+                    itemId: index,
+                    // display as "bundle item"
+                    componentId: 'ui/widgets/zuix_hackbox/log_item',
+                    // loading options
+                    options: {
+                        model: item,
+                        lazyLoad: true,
+                        on: {
+                            'item:enter': function (e, sourceView) {
+                                highlightComponent(sourceView, true);
+                            },
+                            'item:leave': function (e, sourceView) {
+                                highlightComponent(sourceView, false);
+                            },
+                            'item:click': function (e, sourceView) {
+                                highlightComponent(sourceView, false);
+                                sourceView.get()
+                                    .scrollIntoView({
+                                        //block: 'end',
+                                        //behavior: 'smooth'
+                                    });
+                                highlightComponent(sourceView, true);
+                            }
+                        },
+                        ready: function () {
+                            // TODO: ...
+                        }
                     }
-                },
-                ready: function () {
-                    cp.field('debug-log').append(this.view());
-                    setTimeout(function() {
-                        if (++i < log.length)
-                            next(i, log);
-                    }, 1);
                 }
-            });
-        };
-        next(0, logCache);
-        logCache = [];
+            }
+        });
+
     }
 
-    function highlight(view, enable) {
+    function highlightComponent(view, enable) {
         if (enable) {
             var p = view.position();
             if (!p.visible) return;
@@ -134,7 +153,14 @@ zuix.controller(function (cp) {
 
     function initialize() {
         zuix.monitor = function (level, args) {
-            if (level.toLowerCase() == 'trace' || args[0].toString().indexOf('/zuix_hackbox/') > 0)
+            if (level == 'TRACE' ||
+                args[0].toString().indexOf('load:end') == 0 ||
+                args[0].toString().indexOf('componentize:check') == 0 ||
+                args[0].toString().indexOf('componentize:lazyload') == 0 ||
+                args[0].toString().indexOf('componentize:begin') == 0 ||
+                args[0].toString().indexOf('componentize:count') == 0 ||
+                args[0].toString().indexOf('componentize:end') == 0 ||
+                args[0].toString().indexOf('/zuix_hackbox/') > 0) // args[0] == 'load:end' || args[0].toString().indexOf('componentize:') == 0 || args[0].toString().indexOf('/zuix_hackbox/') > 0)
                 return;
             logCache.push({
                 level: level,
@@ -143,65 +169,72 @@ zuix.controller(function (cp) {
             });
             if (timeout != null)
                 clearTimeout(timeout);
-            timeout = setTimeout(function () {
+            var updateTimeout = function () {
                 cp.field('components')
                     .animateCss('tada', function () {
                         this.attr('data-badge', zuix.bundle().length);
                     });
-                update();
-            }, 500);
+                if (logBox.display() != 'none')
+                    updateLog();
+                else setTimeout(updateTimeout, 500);
+            };
+            timeout = setTimeout(updateTimeout, 500);
         };
         cp.field('bundle-progress').hide();
     }
 
     function showBundle() {
-        zuix.context('pagedView').setPage(1);
+        var instancesCount = 0;
+        zuix.context(pagedView).setPage(1);
 //        bundleBox.show().animateCss('fadeInRight', { duration: '0.5s' });
         cp.field('button-log').removeClass('is-active');
         cp.field('button-bundle').addClass('is-active');
-        cp.field('component-list').html('');
-        var next = function(i, list) {
 
-            zuix.load('ui/widgets/zuix_hackbox/bundle_item', {
-                model: list[i],
-                on: {
-                    'item:click': function (e, item) {
-                        cp.log.e(item.componentId);
+        var bundle = zuix.bundle().slice(0);
+        bundle.sort(function (a, b) {
+            return (a.componentId.toString() < b.componentId.toString())
+                ? -1 : (a.componentId.toString() > b.componentId.toString())
+                    ? 1 : 0;
+        });
 
-                        cp.field('js').html(serialize(item.controller));
-                        if (item.view != null) {
-                            var html = item.view
-                                .replace(/\</g, "&lt;")
-                                .replace(/\>/g, "&gt;")
-                                .replace(/ zuix-loaded="true"/g, '');
-                            cp.field('html').html(html);
-                        } else {
-                            cp.field('html').html('');
+        zuix.context(componentList).model({
+            itemList: bundle,
+            getItem: function (index, item) {
+                return {
+                    // unique identifier for this item
+                    itemId: item.componentId,
+                    // display as "bundle item"
+                    componentId: 'ui/widgets/zuix_hackbox/bundle_item',
+                    // loading options
+                    options: {
+                        model: item,
+                        lazyLoad: true,
+                        on: {
+                            'item:click': openEditor,
+                            'item:update': function () {
+                                var ctx = zuix.context(this);
+                                // do not count if is zuix-hackbox
+                                if (!ctx.isHackBox()) {
+                                    instancesCount += ctx.count();
+                                }
+                                if (index == bundle.length - 1) {
+                                    cp.field('total-components').html(zuix.bundle().length);
+                                    cp.field('total-instances').html(instancesCount);
+                                    instancesCount = 0;
+                                }
+                            }
+                        },
+                        ready: function () {
                         }
-                        cp.field('css').html(item.css);
-                        Prism.highlightElement(cp.field('js').get());
-                        Prism.highlightElement(cp.field('html').get());
-                        Prism.highlightElement(cp.field('css').get());
-
-                        zuix.context('pagedView')
-                            .setPage(2);
                     }
-                },
-                ready: function () {
-                    cp.field('component-list').append(this.view());
-                    setTimeout(function () {
-                        if (++i < list.length)
-                            next(i, list);
-                    }, 1);
                 }
-            });
+            }
+        });
 
-        };
-        next(0, zuix.bundle());
     }
 
     function showLog(animate) {
-        zuix.context('pagedView').setPage(0);
+        zuix.context(pagedView).setPage(0);
 //        if (animate) logBox
 //            .animateCss('fadeInLeft', { duration: '0.5s' });
         cp.field('button-bundle').removeClass('is-active');
@@ -211,35 +244,68 @@ zuix.controller(function (cp) {
     function showToolbox() {
         cp.view().css('width', '');
         cp.view().css('height', '');
-        toolbox.animateCss('fadeInUp').show();
-        fab.animateCss('fadeOutLeft', function () {
-            this.hide();
+        mainToolbox.animateCss('fadeInLeftBig').show();
+        fabMenu.css('z-index', '-10');
+        fabMenu.animateCss('zoomOutDown', function () {
+            fabMenu.css('z-index', '0').hide();
         });
+        setTimeout(function () {
+            zuix.componentize(logList);
+        }, 500);
     }
 
-    function hideToolbox(animate) {
-        var hide = function () {
-            toolbox.hide();
-            cp.view().css('width', '0');
-            cp.view().css('height', '64px');
-        };
-        if (animate)
-            toolbox.animateCss('fadeOutDown', function () {
-                hide();
-            });
-        else hide();
-        fab.animateCss('fadeInLeft').show();
+    function openEditor(e, item) {
+        //cp.log.e(item.componentId);
+
+        cp.field('js').html(serialize(item.controller));
+        if (item.view != null) {
+            var html = item.view
+                .replace(/\</g, "&lt;")
+                .replace(/\>/g, "&gt;")
+                .replace(/ zuix-loaded="true"/g, '');
+            cp.field('html').html(html);
+        } else {
+            cp.field('html').html('');
+        }
+        cp.field('css').html(item.css);
+        Prism.highlightElement(cp.field('js').get());
+        Prism.highlightElement(cp.field('html').get());
+        Prism.highlightElement(cp.field('css').get());
+
+        cp.field('editor-info').html(item.componentId);
+        cp.field('button-bundle').hide();
+        cp.field('button-log').hide();
+        zuix.context(pagedView).setPage(2);
+        editorOpen = true;
+
     }
 
-    function generateBundle() {
-        cp.field('bundle-progress').show();
-        cp.field('button-generate').hide();
-        // build app bundle
-        zuix.bundle(true, function () {
-            cp.field('bundle-progress').hide();
-            cp.field('button-generate').show();
-            saveBundle();
-        });
+    function closeEditor() {
+        zuix.context(pagedView).setPage(1);
+        cp.field('editor-info').html('');
+        cp.field('button-bundle').show();
+        cp.field('button-log').show();
+        editorOpen = false;
+    }
+
+    function backOrHide(animate) {
+        if (editorOpen) {
+            // close editor / go back
+            closeEditor();
+        } else {
+            // hide toolbox
+            var hide = function () {
+                mainToolbox.hide();
+                cp.view().css('width', '0');
+                cp.view().css('height', '64px');
+            };
+            if (animate)
+                mainToolbox.animateCss('fadeOutLeft', function () {
+                    hide();
+                });
+            else hide();
+            fabMenu.animateCss('fadeInUp').show();
+        }
     }
 
     function saveBundle() {

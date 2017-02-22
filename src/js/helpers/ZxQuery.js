@@ -211,12 +211,19 @@ ZxQuery.prototype.each = function (iterationCallback) {
 };
 /**
  * Gets or sets the given element attribute.
- * @param {string} attr The attribute name
+ * @param {string|JSON} attr The attribute name
  * @param {string|undefined} [val] The attribute value
  * @return {string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself
  */
 ZxQuery.prototype.attr = function (attr, val) {
-    if (util.isNoU(val))
+    var _t = this;
+    if (typeof attr === 'object') {
+        z$.each(attr, function (i, v) {
+            _t.each(function (k, el) {
+                el.setAttribute(i, v);
+            });
+        });
+    } else if (util.isNoU(val))
         return this._selection[0].getAttribute(attr);
     else
         this.each(function (k, v) {
@@ -411,6 +418,21 @@ ZxQuery.prototype.html = function (htmlText) {
 ZxQuery.prototype.append = function (el) {
     if (typeof el === 'string')
         this._selection[0].innerHTML += el;
+    else
+        this._selection[0].appendChild(el);
+    return this;
+};
+/**
+ * Insert the given child element before the one at the
+ * specified index.
+ *
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to append.
+ * @return {ZxQuery} The *ZxQuery* object itself
+ */
+ZxQuery.prototype.insert = function (index, el) {
+    var target = this.children().get(index);
+    if (target !== null)
+        this._selection[0].insertBefore(el, target);
     else
         this._selection[0].appendChild(el);
     return this;
