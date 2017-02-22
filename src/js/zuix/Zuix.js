@@ -772,6 +772,8 @@ function createComponent(context, task) {
  */
 function initController(c) {
 
+    c.trigger('component:ready', c.view(), true);
+
     // bind {ContextController}.field method
     c.field = function(fieldName) {
         var el = field(fieldName, c.view(), c);
@@ -788,7 +790,7 @@ function initController(c) {
     if (util.isFunction(c.create)) c.create();
     c.trigger('view:create');
 
-    c.trigger('component:ready', c.view(), true);
+//    c.trigger('component:ready', c.view(), true);
 
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);

@@ -45,6 +45,23 @@ zuix.controller(function (cp) {
     cp.init = function () {
         // disable zuix logging to console
         window.zuixNoConsoleOutput = true;
+        cp.field('fragmemnt-components').on('component:ready', function (e, ctx) {
+            zuixEditor = zuix.context(this);
+            // if editor is ready, register event handler
+            zuixEditor.on('page:change', function (e, data) {
+                if (data.page == 'editor') {
+                    cp.field('editor-info').html(data.context.model().componentId);
+                    cp.field('button-bundle').hide();
+                    cp.field('button-log').hide();
+                    editorOpen = true;
+                } else {
+                    cp.field('editor-info').html('');
+                    cp.field('button-bundle').show();
+                    cp.field('button-log').show();
+                    editorOpen = false;
+                }
+            });
+        });
     };
 
     cp.create = function () {
@@ -86,23 +103,6 @@ zuix.controller(function (cp) {
         });
         cp.field('button-components').on('click', function () {
             showComponents();
-        });
-        cp.field('fragmemnt-components').on('component:ready', function (e, ctx) {
-            zuixEditor = zuix.context(this);
-            // if editor is ready, register event handler
-            zuixEditor.on('page:change', function (e, data) {
-                if (data.page == 'editor') {
-                    cp.field('editor-info').html(data.context.model().componentId);
-                    cp.field('button-bundle').hide();
-                    cp.field('button-log').hide();
-                    editorOpen = true;
-                } else {
-                    cp.field('editor-info').html('');
-                    cp.field('button-bundle').show();
-                    cp.field('button-log').show();
-                    editorOpen = false;
-                }
-            });
         });
         // hide the toolbox at startup
         backOrHide(false);
