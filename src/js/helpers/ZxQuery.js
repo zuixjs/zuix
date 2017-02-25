@@ -232,8 +232,10 @@ ZxQuery.prototype.attr = function (attr, val) {
                 el.setAttribute(i, v);
             });
         });
-    } else if (util.isNoU(val))
+    } else if (typeof val == 'undefined')
         return this._selection[0].getAttribute(attr);
+    else if (val === null)
+        this._selection[0].removeAttribute(attr);
     else
         this.each(function (k, v) {
             this.get().setAttribute(attr, val);
@@ -587,23 +589,24 @@ z$.wrapElement = function (containerTag, element) {
     return container;
 };
 z$.wrapCss = function (wrapperRule, css) {
-    var wrapReX = /([.,\w])([^/{};]+)({)/g;
+    var wrapReX = /([.,\w])([^/{};]*)({)/g;
     var r, result = null, wrappedCss = '';
     while (r = wrapReX.exec(css)) {
         if (result != null) {
             var rule = css.substring(result.index, r.index);
-            var splitReX = /(.*)[^s]\{([^\}]+)[\}]/g; // [^{]
+            var splitReX = /(.*)\{([^\}]+)[\}]/g; // [^{]
             var ruleParts = splitReX.exec(rule);
             if (ruleParts != null && ruleParts.length > 1) {
                 var classes = ruleParts[1].split(',');
                 z$.each(classes, function (k, v) {
+                    if (v.replace(' ', '') == '.') v = ''; // <-- `.` it means 'self' (the container itself)
                     wrappedCss += '\n' + wrapperRule + '\n' + v;
                     if (k < classes.length - 1)
                         wrappedCss += ', ';
                 });
                 wrappedCss += ' {' + ruleParts[2] + '}\n';
             } else {
-                _log.w('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);
+                _log.w('z$.wrapCss was unable to parse rule.', ruleParts, rule);
             }
         }
         result = r;
@@ -634,6 +637,27 @@ z$.appendCss = function (css, target, cssId) {
     if (!util.isNoU(style))
         head.appendChild(style);
     return style;
+};
+z$.replaceBraces = function (html, callback) {
+    var outHtml = '', matched = 0, currentIndex = 0;
+    var tags = new RegExp(/[^{}]+(?=})/g),
+        result;
+    while (result = tags.exec(html)) {
+        var value = '{'+result[0]+'}';
+        if (typeof callback === 'function') {
+            var r = callback(result[0]);
+            if (!util.isNoU(r)) {
+                value = r;
+                matched++;
+            }
+        }
+        outHtml += html.substr(currentIndex, result.index-currentIndex-1)+value;
+        currentIndex = result.index+result[0].length+1;
+    }
+    if (matched > 0) {
+        outHtml += html.substr(currentIndex);
+        return outHtml;
+    }
 };
 z$.getClosest = function (elem, selector) {
     // Get closest match
@@ -674,6 +698,32 @@ z$.isInView = function (el) {
         && rect.top < (window.innerHeight || document.documentElement.clientHeight);
     /* or $(window).height() */
 };
+z$.scrollTo = function(el, targetY) {
+    if (targetY === 0 || targetY == null)
+        return;
+    var duration = 500;
+    var scrollTop = el.scrollTop+targetY - 56;
+    var scrollOffset = el.scrollTop-scrollTop;
+    el.firstElementChild.style.transition = 'transform '+duration+'ms ease';
+    if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
+        el.firstElementChild.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
+    else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
+        el.firstElementChild.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
+    else
+        el.firstElementChild.style.transform = "translate(0, " + (scrollOffset) + "px)";
+    window.setTimeout(function () {
+        // TODO: should backup and restore old value
+        if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
+            el.firstElementChild.style.WebkitTransform = "";
+        else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
+            el.firstElementChild.style.MozTransform= "";
+        else
+            el.firstElementChild.style.transform = "";
+        el.firstElementChild.style.transition = '';
+        el.scrollTop = scrollTop;
+    }, duration);
+};
+
 z$.ZxQuery = ZxQuery;
 
 // Element.matches() polyfill

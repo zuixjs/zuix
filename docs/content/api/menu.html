@@ -51,22 +51,28 @@
                 var p = pagedView.getPage(2);
                 switch (parseInt(i)) {
                     case 0:
-                        scrollTo(p.get(), p.find('a[id=ZUIX_API').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=ZUIX_API').position().y);
                         break;
                     case 1:
-                        scrollTo(p.get(), p.find('a[id=ZUIX_API--Zuix').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=ZUIX_API--Zuix').position().y);
                         break;
                     case 2:
-                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ContextOptions').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=ZUIX_API--ContextOptions').position().y);
                         break;
                     case 3:
-                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ComponentContext').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=ZUIX_API--ComponentContext').position().y);
                         break;
                     case 4:
-                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ContextController').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=ZUIX_API--ContextController').position().y);
                         break;
                     case 5:
-                        scrollTo(p.get(), p.find('a[id=ZUIX_API--ZxQuery').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=ZUIX_API--ZxQuery').position().y);
                         break;
                 }
                 e.preventDefault();

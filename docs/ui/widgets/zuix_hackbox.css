@@ -1,3 +1,17 @@
+/* a single `.` symbol is used to reference the component container itself */
+. {
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 50%;
+    z-index: 1000;
+    margin: 48px;
+}
+h6 {
+    padding-top:0;
+    font-weight: 700;
+}
 code {
     padding-left: 8px;
 }

@@ -2,7 +2,6 @@
     color: white;
     vertical-align: middle;
     font-size:70%;
-    margin-bottom: 1px;
 }
 .log-row.linked {
     cursor: pointer;
@@ -27,7 +26,7 @@
 .log-row .level.trace { background-color: rgba(255,140,0,0.5)}
 
 .animated {
-    -moz-animation-duration: 0.3s;
-    -o-animation-duration: 0.3s;
-    -webkit-animation-duration: 0.3s;
+    -moz-animation-duration: 0.2s;
+    -o-animation-duration: 0.2s;
+    -webkit-animation-duration: 0.2s;
 }

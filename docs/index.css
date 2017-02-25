@@ -214,15 +214,6 @@ div[data-ui-field="loaderMessage"] {
     margin-bottom:60px;
     border-top: dotted 1px rgba(230,230,230,0.5);
 }
-.hackbox {
-    position: fixed;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    height: 50%;
-    z-index: 1000;
-    margin: 48px;
-}
 @media screen and (max-width: 1080px) {
     .hackbox { width: 84%; }
 }

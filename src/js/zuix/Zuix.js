@@ -37,27 +37,13 @@ var ComponentContext =
     require('./ComponentContext');
 var ContextController =
     require('./ContextController');
+var _componentizer =
+    require('./Componentizer')();
 
 /**
  * @const
  */
 var ZUIX_FIELD_ATTRIBUTE = 'data-ui-field';
-
-/**
- *  ZUIX, Javascript library for component-based development.
- *
- * @class Zuix
- * @constructor
- * @returns {Zuix}
- */
-function Zuix() {
-    /**
-     * @private
-     * @type {!Array.<ZxQuery>}
-     **/
-    this._fieldCache = [];
-    return this;
-}
 
 /**
  * @private
@@ -83,10 +69,7 @@ var _hooksCallbacks = [];
 var _globalHandlers = {};
 
 /** @private */
-var _lazyQueued = []; // Lazy loading - queued elements
-/** @private */
-var _lazyLoaders = []; // "data-ui-lazyload" elements
-
+var _enableHttpCaching = true;
 
 /** @private **/
 var _componentTask = [];
@@ -99,6 +82,23 @@ var taskQueue = function(tid) {
     }
     return _componentTask[tid];
 };
+
+/**
+ *  ZUIX, Javascript library for component-based development.
+ *
+ * @class Zuix
+ * @constructor
+ * @returns {Zuix}
+ */
+function Zuix() {
+    _componentizer.setHost(this);
+    /**
+     * @private
+     * @type {!Array.<ZxQuery>}
+     **/
+    this._fieldCache = [];
+    return this;
+}
 
 /**
  * Initializes a controller ```handler```.
@@ -140,146 +140,6 @@ function field(fieldName, container, context) {
     } else el = context._fieldCache[fieldName];
 
     return el;
-}
-
-/**
- * Searches inside the given element ```element```
- * for all ```data-ui-include``` and ```data-ui-load```
- * directives and process them.
- *
- * @private
- * @param [element] {Element} Optional container to use as starting node for the search.
- */
-function componentize(element) {
-    // Throttle method
-    _log.t('componentize:check', 'lock:request');
-    if (taskQueue('zuix').requestLock(componentize)) {
-        _log.t('componentize:begin', 'timer:task:start', element, _lazyQueued.length);
-        var waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
-        waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
-        // sort loadable elements by priority
-        waitingLoad.sort(function (a, b) {
-            var pria = parseInt(a.getAttribute('data-ui-priority'));
-            if (isNaN(pria)) pria = 0;
-            var prib = parseInt(b.getAttribute('data-ui-priority'));
-            if (isNaN(prib)) prib = 0;
-            return pria - prib;
-        });
-        _log.t('componentize:count', waitingLoad.length);
-        z$.each(waitingLoad, function (i, el) {
-            // hide the component while loading. It will be shown after the controller initialization.
-            this.visibility('hidden');
-            // defer element loading if lazy loading is enabled and the element is not in view
-            var lazyContainer = el.lazyContainer || z$.getClosest(el, '[data-ui-lazyload=scroll]');
-//            if (lazyContainer == null)
-//                lazyContainer = el;
-            el.lazyContainer = lazyContainer;
-            // override lazy loading if 'lazyload' is set to 'false' for the current element
-            if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
-                &&
-                (!lazyLoad() || this.attr('data-ui-lazyload') == 'false')) {
-                loadInline(el);
-                // process current element only
-                return false;
-            }
-            if (lazyContainer !== null) {
-                if (_lazyLoaders.indexOf(lazyContainer) == -1) {
-                    //_log.t('componentize:lazyload', 'scroll:container', lazyContainer);
-                    _lazyLoaders.push(lazyContainer);
-                    z$(lazyContainer).on('scroll', function () {
-                        componentize(lazyContainer);
-                    });
-                }
-                var position = z$.getPosition(el);
-                if (!position.visible) {
-                    if (_lazyQueued.indexOf(el) == -1) {
-                        _log.t('componentize:lazyload', 'queue:add', el);
-                        _lazyQueued.push(el);
-                    }
-                    // Not in view: defer element loading and
-                    // process next inline element
-                    return true;
-                }
-            }
-            _log.t('componentize:lazyload', 'queue:load', el);
-            // proceed loading inline element
-            loadInline(el);
-        });
-        _log.t('componentize:end', 'timer:task:end', element, _contextRoot.length, _componentCache.length);
-        taskQueue('zuix').releaseLock(componentize);
-    }
-
-    if ((waitingLoad != null && waitingLoad.length > _lazyQueued.length))
-        //_log.t('componentize:check', 'lock:later');
-        taskQueue('zuix').lockLater(componentize, function () {
-            //_log.t('componentize:throttle', element);
-            componentize(element);
-            // the 200ms throttling also affects "lazy scrollers" scroll event update frequency
-        }, 200);
-}
-
-/** @protected */
-function loadInline(element) {
-    var v = z$(element);
-    if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
-        _log.w("Skipped", element);
-        return;
-    }
-    v.attr('data-ui-loaded', 'true');
-    /** @type {ContextOptions} */
-    var options = v.attr('data-ui-options');
-    if (!util.isNoU(options)) {
-        options = util.propertyFromPath(window, options);
-        // copy passed options
-        options = util.cloneObject(options) || {};
-    } else options = {};
-
-    // Automatic view/container selection
-    if (util.isNoU(options.view) && !v.isEmpty()) {
-        options.view = element;
-        options.viewDeferred = true;
-    } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
-        options.container = element;
-
-    var componentId = v.attr('data-ui-load');
-    if (util.isNoU(componentId)) {
-        // Static include should not have any controller
-        componentId = v.attr('data-ui-include');
-        v.attr('data-ui-component', componentId);
-        // disable controller auto-loading
-        if (util.isNoU(options.controller))
-            options.controller = function () {
-            }; // null
-    }
-
-    // inline attributes have precedence over ```options```
-
-    var model = v.attr('data-bind-model');
-    if (!util.isNoU(model) && model.length > 0)
-        options.model = util.propertyFromPath(window, model);
-
-    var contextId = v.attr('data-ui-context');
-    if (!util.isNoU(contextId))
-        options.contextId = contextId;
-
-    var priority = v.attr('data-ui-priority');
-    if (!util.isNoU(priority))
-        options.priority = priority;
-    else
-        options.priority = _contextRoot.length;
-    // TODO: Behavior are also definable in "data-ui-behavior" attribute
-    // TODO: Events are also definable in "data-ui-on" attribute
-    // TODO: perhaps "data-ui-ready" and "data-ui-error" too
-    // util.propertyFromPath( ... )
-
-    load(componentId, options);
-
-    var queued = _lazyQueued.indexOf(element);
-    _log.t('componentize:lazyload', 'queue:remove', queued, element);
-    if (queued > -1) {
-        _lazyQueued.splice(queued, 1);
-    }
-
 }
 
 /**
@@ -372,14 +232,14 @@ function loadResources(ctx, options) {
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
         ctx.controller(cachedComponent.controller);
-        _log.t('js:'+ctx.componentId, 'component:cached:js');
+        _log.t(ctx.componentId+':js', 'component:cached:js');
     }
 
     if (util.isNoU(options.view)) {
 
         if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
-            _log.t('html:'+ctx.componentId, 'component:cached:html');
+            _log.t(ctx.componentId+':html', 'component:cached:html');
             /*
              TODO: CSS caching, to be tested.
              */
@@ -388,7 +248,7 @@ function loadResources(ctx, options) {
                  if (!cachedComponent.css_applied) {
                      cachedComponent.css_applied = true;
                      ctx.style(cachedComponent.css);
-                     _log.t('css:'+ctx.componentId, 'component:cached:css');
+                     _log.t(ctx.componentId+':css', 'component:cached:css');
                  }
              }
         }
@@ -397,7 +257,7 @@ function loadResources(ctx, options) {
         // or from an inline element, then load the view from web
         if (util.isNoU(ctx.view())) {
             // Load View
-            taskQueue('resource-loader').queue('html:' + ctx.componentId, function () {
+            taskQueue('resource-loader').queue(ctx.componentId+':html', function () {
                 resourceLoadTask[ctx.componentId] = this;
 
                 ctx.loadHtml({
@@ -408,7 +268,7 @@ function loadResources(ctx, options) {
                         cachedComponent.view = html;
                         delete cachedComponent.controller;
                         if (options.css !== false) {
-                            resourceLoadTask[ctx.componentId].step('css:'+ctx.componentId);
+                            resourceLoadTask[ctx.componentId].step(ctx.componentId+':css');
                             ctx.loadCss({
                                 caching: _enableHttpCaching,
                                 success: function (css) {
@@ -439,7 +299,7 @@ function loadResources(ctx, options) {
     } else {
         ctx.view(options.view);
     }
-    taskQueue('resource-loader').queue('js:' + ctx.componentId, function () {
+    taskQueue('resource-loader').queue(ctx.componentId+':js', function () {
         resourceLoadTask[ctx.componentId] = this;
         loadController(ctx, resourceLoadTask[ctx.componentId]);
     }, _contextRoot.length);
@@ -528,21 +388,9 @@ function trigger(context, path, data) {
 
     // ZUIX Componentizer is the last executed hook (built-in)
     if (path == 'view:process')
-        componentize(data);
+        _componentizer.componentize(data);
 }
 
-/**
- * Enable/Disable lazy-loading, or get current value.
- *
- * @private
- * @param {boolean} [enable]
- * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
- */
-function lazyLoad(enable) {
-    if (enable != null)
-        _disableLazyLoading = !enable;
-    return !_isCrawlerBotClient && !_disableLazyLoading;
-}
 /**
  * Enable/Disable HTTP caching
  *
@@ -570,7 +418,6 @@ function removeCachedComponent(componentId) {
  * @return {ComponentCache}
  */
 function getCachedComponent(componentId) {
-    /** @type {ComponentCache} */
     var cached = null;
     z$.each(_componentCache, function (k, v) {
         if (util.objectEquals(v.componentId, componentId)) {
@@ -590,7 +437,7 @@ function loadController(context, task) {
     if (typeof context.options().controller === 'undefined' && context.controller() === null) {
         _log.d(context.componentId, 'controller:load');
         if (!util.isNoU(task))
-            task.step('js:'+context.componentId);
+            task.step(context.componentId+':js');
         if (util.isFunction(_globalHandlers[context.componentId])) {
             context.controller(_globalHandlers[context.componentId]);
             createComponent(context, task);
@@ -630,7 +477,7 @@ function loadController(context, task) {
                 });
             };
             if (util.isNoU(task)) {
-                taskQueue('resource-loader').queue('js:' + context.componentId, function () {
+                taskQueue('resource-loader').queue(context.componentId+':js', function () {
                     job(resourceLoadTask[context.componentId] = this);
                 }, context.options().priority);
             } else job(task);
@@ -674,14 +521,11 @@ function createComponent(context, task) {
             task.callback(function () {
                 _log.d(context.componentId, 'controller:create:deferred');
                 initController(context._c);
-                // TODO: 'componentize()' should not be needed here
-                // TODO: if initialization sequence is correct
-                //componentize();
             });
 
         _log.d(context.componentId, 'component:initializing');
         if (util.isFunction(context.controller())) {
-            // TODO: should use 'require' istead of 'new Controller' ... ?
+            // TODO: should use 'require' instead of 'new Controller' ... ?
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
             c.log = require('../helpers/Logger')(context.contextId);
@@ -788,12 +632,17 @@ function initController(c) {
     if (util.isFunction(c.create)) c.create();
     c.trigger('view:create');
 
-    c.trigger('component:ready', c.view(), true);
-
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);
 
-    c.view().css('visibility', '');
+    window.setTimeout(function () {
+        // TODO: 'componentize()' should not be needed here
+        // TODO: if initialization sequence is correct
+        _componentizer.componentize(c.view().get());
+        c.trigger('component:ready', c.view(), true);
+    });
+
+    //c.view().css('visibility', '');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);
 }
 
@@ -821,19 +670,6 @@ function getController(javascriptCode) {
 function replaceCache(c) {
     _componentCache = c;
 }
-
-// Browser Agent / Bot detection
-/** @private */
-/** @private */
-var _isCrawlerBotClient = false,
-    _disableLazyLoading = false,
-    _enableHttpCaching = true;
-if (navigator && navigator.userAgent)
-    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
-        .test(navigator.userAgent);
-if (_isCrawlerBotClient)
-    _log.d(navigator.userAgent, "is a bot, ignoring 'data-ui-lazyload' option.");
-
 
 /******************* proto ********************/
 
@@ -903,7 +739,7 @@ zuix.componentize(document);
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.componentize = function (element) {
-    componentize(element);
+    _componentizer.componentize(element);
     return this;
 };
 /**
@@ -1082,9 +918,9 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
  */
 Zuix.prototype.lazyLoad = function (enable) {
     if (enable != null)
-        lazyLoad(enable);
+        _componentizer.lazyLoad(enable);
     else
-        return lazyLoad();
+        return _componentizer.lazyLoad();
     return this;
 };
 /**
@@ -1113,21 +949,21 @@ Zuix.prototype.bundle = function(bundleData, callback) {
         return _componentCache;
     else if (bundleData && typeof bundleData === 'boolean') {
         _log.t('bundle:start');
-        var ll = lazyLoad();
-        lazyLoad(false);
-        componentize();
+        var ll = _componentizer.lazyLoad();
+        _componentizer.lazyLoad(false);
+        _componentizer.componentize();
         if (typeof callback === 'function') {
             var waitLoop = function(w) {
-                if (_lazyQueued.length > 0) {
-                    _log.t('bundle:wait');
-                    setTimeout(function () {
+                setTimeout(function () {
+                    if (_componentizer.willLoadMore()) {
+                        _log.t('bundle:wait');
                         w(w);
-                    }, 1000);
-                } else {
-                    _log.t('bundle:end');
-                    lazyLoad(ll);
-                    callback();
-                }
+                    } else {
+                        _log.t('bundle:end');
+                        _componentizer.lazyLoad(ll);
+                        callback();
+                    }
+                }, 1000);
             };
             waitLoop(waitLoop);
         }
@@ -1151,9 +987,6 @@ Zuix.prototype.dumpCache = function () {
 };
 Zuix.prototype.dumpContexts = function () {
     return _contextRoot;
-};
-Zuix.prototype.dumpLazyLoaders = function () {
-    return _lazyLoaders;
 };
 
 // TODO: add zuix.options to configure stuff like

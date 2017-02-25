@@ -13,14 +13,12 @@ zuix.controller(function (cp) {
     };
 
     cp.destroy = function () {
-
     };
 
     cp.update = function() {
 
         var modelList = cp.model().itemList;
         if (modelList == null) return;
-
         for (var i = 0; i < modelList.length; i++) {
             var dataItem = cp.model().getItem(i, modelList[i]);
             var id = dataItem.itemId;
@@ -29,20 +27,17 @@ zuix.controller(function (cp) {
                 listItems[id] = zuix.createComponent(dataItem.componentId, dataItem.options);
                 var container = listItems[id].container();
                 // set a temporary height for the container (for lazy load to work properly)
-                container.style['min-height'] = '24px';
-                var attach = function (i, container) {
-                    setTimeout(function () {
-                        cp.view().insert(i, container);
-                    }, i*5);
-                }(i, container);
+                container.style['min-height'] = dataItem.options.height || '48px';
+                cp.view().insert(i, container);
+                //zuix.$(container).on('component:ready', function () {
+                //    console.log('ok');
+                //});
             } else {
                 // update item model's data
                 item.model(dataItem.options.model);
             }
         }
-        setTimeout(function () {
-            zuix.componentize(cp.view());
-        }, modelList.length*5);
+        zuix.componentize(cp.view());
 
     }
 

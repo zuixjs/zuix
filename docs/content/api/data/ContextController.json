@@ -502,7 +502,7 @@
     "ignore": false,
     "line": 174,
     "codeStart": 192,
-    "code": "ContextController.prototype.view = function (filter) {\n    // dispose cached fields from previous attacched view\n    if (this.context.view() != null || this._view !== this.context.view()) {\n        this.clearCache();\n        this._view = z$(this.context.view());\n    }\n    // TODO: dispose also events on view change (!!!)\n    if (filter != null)\n        return this._view.find(filter);\n    else if (this._view !== null)\n        return this._view;\n    else\n        throw({\n            message: 'Not attacched to a view yet.',\n            source: this\n        });\n};",
+    "code": "ContextController.prototype.view = function (filter) {\n    // context view changed, dispose cached fields from previous attacched view\n    if (this.context.view() != null || this._view !== this.context.view()) {\n        this.clearCache();\n        // TODO: dispose also events on view change (!!!)\n        this._view = z$(this.context.view());\n    }\n    if (filter != null)\n        return this._view.find(filter);\n    else if (this._view !== null)\n        return this._view;\n    else\n        throw({\n            message: 'Not attacched to a view yet.',\n            source: this\n        });\n};",
     "ctx": {
       "type": "method",
       "constructor": "ContextController",

@@ -37,29 +37,17 @@
     <script>
         main.options.sharing_buttons_options = {
             ready: function () {
-                var html = this.view().innerHTML,
-                    outHtml = '',
-                    matched = 0, currentIndex = 0;
-                var tags = new RegExp(/[^{}]+(?=})/g);
-                while (result = tags.exec(html)) {
-                    var value = '{'+result[0]+'}';
-                    switch (result[0]) {
+                var context = this;
+                var parsedHtml = zuix.$.replaceBraces(context.view().innerHTML, function (varName) {
+                    switch (varName) {
                         case 'url':
-                            matched++;
-                            value = encodeURIComponent(this.model()[result[0]].href);
-                            break;
+                            return encodeURIComponent(context.model()[varName].href);
                         case 'description':
-                            matched++;
-                            value = encodeURIComponent(this.model()[result[0]].innerHTML);
-                            break;
+                            return encodeURIComponent(context.model()[varName].innerHTML);
                     }
-                    outHtml += html.substr(currentIndex, result.index-currentIndex-1)+value;
-                    currentIndex = result.index+result[0].length+1;
-                }
-                if (matched > 0) {
-                    outHtml += html.substr(currentIndex);
-                    this.view(outHtml);
-                }
+                });
+                if (parsedHtml != null)
+                    context.view(parsedHtml);
             }
         };
     </script>

@@ -3,26 +3,30 @@ zuix.controller(function (cp) {
     var componentListView = null;
     /** @type {ZxQuery} */
     var editorFragment = null,
-        componentListFragment = null;
+        /** @type {ZxQuery} */
+        componentListFragment = null,
+        /** @type {ComponentContext} (bundle_item) */
+        currentItem;
 
     cp.create = function () {
         editorFragment = cp.field('fragment-editor');
         componentListFragment = cp.field('fragment-list');
         cp.field('component-list').on('component:ready', function () {
             componentListView = zuix.context(this);
+            update();
+            showComponents();
         });
         cp.expose({
-            list: showComponents,
+            update: update,
+            show: showComponents,
             serialize: serialize
         });
     };
 
     // private members
 
-    function showComponents() {
-        componentListFragment.show();
-        editorFragment.hide();
-
+    function update() {
+        if (componentListView == null) return;
         var instancesCount = 0;
         var bundle = zuix.bundle().slice(0);
         bundle.sort(function (a, b) {
@@ -30,27 +34,27 @@ zuix.controller(function (cp) {
                 ? -1 : (a.componentId.toString() > b.componentId.toString())
                     ? 1 : 0;
         });
-
         componentListView.model({
             itemList: bundle,
             getItem: function (index, item) {
+                item.index = index;
                 return {
                     // unique identifier for this item
                     itemId: item.componentId,
                     // display as "bundle item"
-                    componentId: 'ui/widgets/zuix_hackbox/bundle_item',
+                    componentId: 'ui/widgets/zuix_editor/bundle_item',
                     // loading options
                     options: {
                         model: item,
                         lazyLoad: true,
+                        height: '56px',
                         on: {
                             'item:click': openEditor,
                             'item:update': function () {
                                 var ctx = zuix.context(this);
                                 // do not count if is zuix-hackbox
-                                if (!ctx.isHackBox()) {
+                                if (ctx.instanceCount != null && (ctx.isHackBox == null || !ctx.isHackBox()))
                                     instancesCount += ctx.instanceCount();
-                                }
                                 if (index == bundle.length - 1) {
                                     cp.field('total-components').html(zuix.bundle().length);
                                     cp.field('total-instances').html(instancesCount);
@@ -63,16 +67,19 @@ zuix.controller(function (cp) {
                 }
             }
         });
+    }
 
+    function showComponents() {
+        closeEditor();
         cp.trigger('page:change', {
             page: 'list'
         });
     }
 
-
     function openEditor(e, item) {
         // get the item component context
         var ctx = zuix.context(this);
+        currentItem = ctx;
         var tabs = cp.view('.mdl-tabs__tab,.mdl-tabs__panel')
             .hide();
         if (ctx.hasResource('css')) {
@@ -97,10 +104,10 @@ zuix.controller(function (cp) {
             cp.field('js').html(serialize(item.controller));
             Prism.highlightElement(cp.field('js').get());
         }
-
-        componentListFragment.hide();
-        editorFragment.show();
-
+        editorFragment.animateCss('slideInRight', { duration: '0.2s' }).show();
+        componentListFragment.animateCss('slideOutLeft', { duration: '0.2s' }, function () {
+            this.hide();
+        });
         cp.trigger('page:change', {
             page: 'editor',
             context: ctx
@@ -108,14 +115,20 @@ zuix.controller(function (cp) {
     }
 
     function closeEditor() {
-        componentListFragment.show();
-        editorFragment.hide();
-
-        cp.trigger('page:change', {
-            page: 'list'
-        });
+        if (currentItem != null) {
+            componentListFragment.show().animateCss('slideInLeft', { duration: '0.2s' });
+            editorFragment.animateCss('slideOutRight', { duration: '0.2s' }, function () {
+                this.hide();
+            });
+            currentItem = null;
+            cp.trigger('page:change', {
+                page: 'list'
+            });
+        } else {
+            componentListFragment.show();
+            editorFragment.hide();
+        }
     }
-
 
     // component item serialization
 

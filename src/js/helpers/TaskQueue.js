@@ -108,42 +108,5 @@ function TaskQueue(listener) {
 TaskQueue.prototype.queue = function(tid, fn, pri) {
     return this.taskQueue(tid, fn, pri);
 };
-/**
- * Request a lock for throttle invocation
- *
- * @param {function} handlerFn
- * @returns {boolean}
- */
-TaskQueue.prototype.requestLock = function(handlerFn) {
-    if (handlerFn._taskerLock != null)
-        return false;
-    return (handlerFn._taskerLock = true);
-};
-TaskQueue.prototype.releaseLock = function(handlerFn) {
-    delete handlerFn._taskerLock;
-};
-/**
- * Debounce. The calling function must also call 'requestLock'.
- *
- * @param {function} handlerFn
- * @param {function} callback
- * @param {number} delay
- * @returns {boolean}
- */
-TaskQueue.prototype.lockLater = function(handlerFn, callback, delay) {
-    var _t = this;
-    if (handlerFn._taskerLock == null)
-        callback();
-    else {
-        if (handlerFn._taskerTimeout == null) {
-            handlerFn._taskerTimeout = true;
-            handlerFn._taskerTimeout = setTimeout(function () {
-                delete handlerFn._taskerTimeout;
-                _t.lockLater(handlerFn, callback, delay);
-            }, delay);
-        }
-    }
-    return true;
-};
 
 module.exports = TaskQueue;

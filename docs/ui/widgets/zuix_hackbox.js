@@ -27,7 +27,8 @@
 
 zuix.controller(function (cp) {
     var mainToolbox = null,
-        pagedView = null,
+        pageView = null,
+        pageViewContainer = null,
         logListContainer = null;
     /** @type {ComponentContext} */
     var logListView;
@@ -35,11 +36,12 @@ zuix.controller(function (cp) {
     var logCache = [],
         timeout = null,
         editorOpen = false,
+        monitorDisabled = false,
         zuixEditor = null;
 
-    var PAGE_LOG = 0,
-        PAGE_BUNDLE = 1,
-        PAGE_COMPONENTS = 2;
+    var PAGE_COMPONENTS = 0,
+        PAGE_LOG = 1,
+        PAGE_BUNDLE = 2;
 
     var bundleBox = null, logBox = null, componentsBox;
     var logOverlay = null, fabMenu = null, buttonHide = null;
@@ -52,7 +54,11 @@ zuix.controller(function (cp) {
     cp.create = function () {
         // the main toolbox fragment
         mainToolbox = cp.field('toolbox').hide();
-        pagedView = cp.field('paged-view');
+        pageViewContainer = cp.field('paged-view').on('component:ready', function () {
+            pageView = zuix.context(this);
+            pageView.setPage(PAGE_LOG);
+            pageView.setPage(PAGE_COMPONENTS);
+        });
         logListContainer = cp.field('log-list').on('component:ready', function () {
             logListView = zuix.context(this);
         });
@@ -77,15 +83,26 @@ zuix.controller(function (cp) {
         });
         document.body.appendChild(logOverlay.get());
         // event listeners
+        cp.field('button-fullscreen').on('click', function () {
+            if (cp.view().css('height') != '')
+                cp.view().css('height', '');
+            else
+                cp.view().css('height', '90%');
+        });
         cp.field('button-bundle').on('click', showBundle);
         cp.field('button-log').on('click', showLog);
         cp.field('button-save').on('click', saveBundle);
         cp.field('button-load').on('click', function () {
-            cp.field('button-load').attr('disabled', true)
-                .removeClass('mdl-button--accent');
+            cp.field('button-load').attr('disabled', true);
+            cp.field('button-save').attr('disabled', true);
             cp.field('bundle-progress').show();
+            monitorDisabled = true;
             zuix.bundle(true, function () {
                 cp.field('bundle-progress').hide();
+                cp.field('button-save')
+                    .attr('disabled', null)
+                    .animateCss('tada');
+                monitorDisabled = false;
             });
         });
         cp.field('button-components').on('click', function () {
@@ -118,6 +135,7 @@ zuix.controller(function (cp) {
 
     function updateLog() {
 
+        if (logListView == null) return;
         logListView.model({
             itemList: logCache.slice(0),
             getItem: function (index, item) {
@@ -130,6 +148,7 @@ zuix.controller(function (cp) {
                     options: {
                         model: item,
                         lazyLoad: true,
+                        height: '32px',
                         on: {
                             'item:enter': function (e, sourceView) {
                                 highlightComponent(sourceView, true);
@@ -184,14 +203,14 @@ zuix.controller(function (cp) {
 
     function initialize() {
         zuix.monitor = function (level, args) {
-            if (level == 'TRACE' ||
+            if (monitorDisabled) return;
+            if (/*level == 'TRACE' ||*/
                 args[0].toString().indexOf('load:end') == 0 ||
-                args[0].toString().indexOf('componentize:check') == 0 ||
-                args[0].toString().indexOf('componentize:lazyload') == 0 ||
-                args[0].toString().indexOf('componentize:begin') == 0 ||
                 args[0].toString().indexOf('componentize:count') == 0 ||
+                args[0].toString().indexOf('componentize:begin') == 0 ||
                 args[0].toString().indexOf('componentize:end') == 0 ||
-                args[0].toString().indexOf('/zuix_hackbox/') > 0) // args[0] == 'load:end' || args[0].toString().indexOf('componentize:') == 0 || args[0].toString().indexOf('/zuix_hackbox/') > 0)
+                args[0].toString().indexOf('componentize:complete') == 0 ||
+                args[0].toString().indexOf('/zuix_') > 0) // args[0] == 'load:end' || args[0].toString().indexOf('componentize:') == 0 || args[0].toString().indexOf('/zuix_hackbox/') > 0)
                 return;
             logCache.push({
                 level: level,
@@ -201,34 +220,33 @@ zuix.controller(function (cp) {
             if (timeout != null)
                 clearTimeout(timeout);
             var updateTimeout = function () {
-                cp.view('.mdl-badge')
-                    .animateCss('tada', function () {
-                        this.attr('data-badge', zuix.bundle().length);
-                    });
-                if (logBox.display() != 'none')
-                    updateLog();
-                else setTimeout(updateTimeout, 500);
+                cp.view('.alert').animateCss('tada', { duration: '5s' });
+                cp.view('.mdl-badge').attr('data-badge', zuix.bundle().length);
+                if (zuixEditor) zuixEditor.update();
+                updateLog();
             };
             timeout = setTimeout(updateTimeout, 500);
         };
         cp.field('bundle-progress').hide();
     }
 
-    function showLog(animate) {
-//        if (animate) logBox
-//            .animateCss('fadeInLeft', { duration: '0.5s' });
+    function showLog() {
         cp.field('button-bundle').removeClass('is-active');
         cp.field('button-log').addClass('is-active');
         cp.field('button-components').addClass('mdl-badge--no-background');
-        zuix.context(pagedView).setPage(PAGE_LOG);
+        pageView.setPage(PAGE_LOG);
     }
 
     function showComponents() {
         cp.field('button-log').removeClass('is-active');
         cp.field('button-bundle').removeClass('is-active');
         cp.field('button-components').removeClass('mdl-badge--no-background');
-        zuix.context(pagedView).setPage(PAGE_COMPONENTS);
-        if (zuixEditor) zuixEditor.list();
+        pageView.setPage(PAGE_COMPONENTS);
+        if (zuixEditor) zuixEditor.show();
+        // force loading of visible lazy-elements (log items)
+        setTimeout(function () {
+            zuix.componentize(componentsBox.get());
+        }, 500);
     }
 
     function showBundle() {
@@ -236,7 +254,7 @@ zuix.controller(function (cp) {
         cp.field('button-log').removeClass('is-active');
         cp.field('button-bundle').addClass('is-active');
         cp.field('button-components').addClass('mdl-badge--no-background');
-        zuix.context(pagedView).setPage(PAGE_BUNDLE);
+        pageView.setPage(PAGE_BUNDLE);
     }
 
     function showToolbox() {
@@ -249,14 +267,14 @@ zuix.controller(function (cp) {
         });
         // force loading of visible lazy-elements (log items)
         setTimeout(function () {
-            zuix.componentize(logListContainer);
+            zuix.componentize(componentsBox.get());
         }, 500);
     }
 
     function backOrHide(animate) {
         if (editorOpen) {
             // close editor / go back to components list
-            zuixEditor.list();
+            zuixEditor.show();
         } else {
             // hide toolbox
             var hide = function () {

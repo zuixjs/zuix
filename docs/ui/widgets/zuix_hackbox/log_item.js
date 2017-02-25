@@ -1,35 +1,35 @@
-zuix.controller(function (logItem) {
+zuix.controller(function (cp) {
 
-    logItem.create = function () {
-        var args = logItem.model().args;
+    cp.create = function () {
+        var args = cp.model().args;
         if (args[1] === 'component:loaded') {
-            logItem.view().children().eq(0).addClass('linked');
+            cp.view().children().eq(0).addClass('linked');
             var sourceView = zuix.$(zuix.context(args[2]).view());
-            logItem.view().on('mouseenter', function () {
-                logItem.trigger('item:enter', sourceView);
+            cp.view().on('mouseenter', function () {
+                cp.trigger('item:enter', sourceView);
             }).on('mouseleave', function () {
-                logItem.trigger('item:leave', sourceView);
+                cp.trigger('item:leave', sourceView);
             }).on('click', function () {
-                logItem.trigger('item:click', sourceView);
+                cp.trigger('item:click', sourceView);
             });
         }
-        logItem.update();
+        cp.update();
     };
 
-    logItem.update = function () {
-        var level = logItem.model().level;
-        var args = logItem.model().args;
-        var time = logItem.model().time;
+    cp.update = function () {
+        var level = cp.model().level;
+        var args = cp.model().args;
+        var time = cp.model().time;
 
-        logItem.field('level')
+        cp.field('level')
             .addClass(level.toLowerCase())
             .html(level.substring(0, 1).toUpperCase());
-        logItem.view().addClass(level.toLowerCase());
+        cp.view().addClass(level.toLowerCase());
 
-        logItem.field('target').html(args[0]);
-        logItem.field('state').html(args[1] ? args[1] : '');
-        logItem.field('info').html(args[2] ? args[2] : '');
-        logItem.field('time').html(time);
+        cp.field('target').html(args[0]);
+        cp.field('state').html(args[1] ? args[1] : '');
+        cp.field('info').html(args[2] ? args[2] : '');
+        cp.field('time').html(time);
     };
 
 });

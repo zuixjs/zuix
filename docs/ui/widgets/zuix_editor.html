@@ -1,5 +1,12 @@
 
-<div data-ui-field="fragment-list">
+<div data-ui-field="fragment-list" class="list-box">
+
+    <div class="heading" layout="row center-spread">
+        <div self="left">
+            <h6>Components</h6>
+        </div>
+        <div self="spread right" align="right"><small>loaded<br/>instances</small></div>
+    </div>
 
     <div data-ui-field="component-list"
          data-ui-lazyload="false"
@@ -13,7 +20,7 @@
         <div self="left">
             <small>loaded <span data-ui-field="total-components">--</span> components</small>
         </div>
-        <div self="right">
+        <div layout="row center-right">
             <small>total instances <span data-ui-field="total-instances">--</span></small>
         </div>
     </div>

@@ -1,9 +1,15 @@
+h6 {
+    padding-top:0;
+    font-weight: 700;
+}
+.list-box {
+    position: absolute;
+    top:0;left:0;right:0;bottom:0;
+}
 .editor-box {
-    overflow-y: auto;
-    max-height: 100%;
-    position: relative;
+    position: absolute;
+    top:0;left:0;right:0;bottom:0;
     padding: 2px;
-    z-index: 10;
 }
 .editor-box .mdl-tabs {
     position: absolute;top: 0;bottom: 0;left: 0;right: 0;
@@ -11,6 +17,12 @@
 .scrollable-relative {
     border: 1px solid;
     margin: 2px;
+}
+.heading {
+    padding-left:24px;
+    padding-right:8px;
+    color: grey;
+    font-weight:500;
 }
 .summary {
     display: none;
@@ -20,4 +32,7 @@
 }
 .summary span {
     font-weight: 700;
+}
+.editor-header {
+    z-index: 10;
 }

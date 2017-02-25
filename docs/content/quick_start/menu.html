@@ -46,52 +46,28 @@
                 var p = pagedView.getPage(1);
                 switch (parseInt(i)) {
                     case 0:
-                        scrollTo(p.get(), p.position().y /*p.find('a[id=Getting_Started').position().y*/);
+                        zuix.$.scrollTo(p.get(),
+                            p.position().y /*p.find('a[id=Getting_Started').position().y*/);
                         break;
                     case 1:
-                        scrollTo(p.get(), p.find('a[id=Getting_Started--Quick_Start').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=Getting_Started--Quick_Start').position().y);
                         break;
                     case 2:
-                        scrollTo(p.get(), p.find('a[id=Getting_Started--Content_Management').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=Getting_Started--Content_Management').position().y);
                         break;
                     case 3:
-                        scrollTo(p.get(), p.find('a[id=Getting_Started--View_Templates').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=Getting_Started--View_Templates').position().y);
                         break;
                     case 4:
-                        scrollTo(p.get(), p.find('a[id=Getting_Started--Component_Management').position().y);
+                        zuix.$.scrollTo(p.get(),
+                            p.find('a[id=Getting_Started--Component_Management').position().y);
                         break;
                 }
                 e.preventDefault();
             }
         }
     };
-
-
-    // TODO: move this to ZxQuery
-    function scrollTo(el, targetY) {
-        if (targetY === 0 || targetY == null)
-            return;
-        var duration = 500;
-        var scrollTop = el.scrollTop+targetY - 56;
-        var scrollOffset = el.scrollTop-scrollTop;
-        el.firstElementChild.style.transition = 'transform '+duration+'ms ease';
-        if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
-            el.firstElementChild.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
-        else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
-            el.firstElementChild.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
-        else
-            el.firstElementChild.style.transform = "translate(0, " + (scrollOffset) + "px)";
-        window.setTimeout(function () {
-            // TODO: should backup and restore old value
-            if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
-                el.firstElementChild.style.WebkitTransform = "";
-            else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
-                el.firstElementChild.style.MozTransform= "";
-            else
-                el.firstElementChild.style.transform = "";
-            el.firstElementChild.style.transition = '';
-            el.scrollTop = scrollTop;
-        }, duration);
-
-    }
 </script>

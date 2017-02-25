@@ -21,7 +21,7 @@ Get **ZUIX** minified Javascript file and include it in the `head` section of th
 </a>
 
 </div>
-<div align="center"><small><em>9,8 kB (gzipped)</em></small></div>
+<div align="center"><small><em>10 kB (gzipped)</em></small></div>
 
 ###### Hosted
 

@@ -1,6 +1,6 @@
 zuix.controller(function (cp) {
 
-    var instances = 0, resources = ' ';
+    var instances = 0, resources = ' ', componentType = '';
 
     cp.create = function () {
         cp.view().on('click', function () {
@@ -9,19 +9,37 @@ zuix.controller(function (cp) {
         cp.expose('count', function () {
             return instances;
         });
-        var isHackBox = cp.model().componentId.indexOf('/zuix_hackbox') > 0;
+        var isHackBox = cp.model().componentId.indexOf('/zuix_') > 0;
         if (isHackBox)
             this.view().children().eq(0).addClass('zuix-hackbox');
         // populate fixed fields
-        var c = cp.model();
-        cp.field('componentId').html(c.componentId);
-        if (c.controller != null && c.controller.toString().length > 30)
+        var item = cp.model();
+        cp.field('componentId').html(item.componentId);
+        if (item.controller != null && item.controller.toString().length > 30) {
             resources += 'js ';
-        if (c.view != null)
+            componentType = 'component';
+        }
+        if (item.view != null) {
             resources += 'html ';
-        if (c.css != null)
+            if (componentType == '')
+                (item.view.indexOf('data-ui-field') > 0 || item.view.indexOf('<script') > 0)
+                    ? componentType = 'template'
+                    : componentType = 'content';
+        }
+        if (item.css != null)
             resources += 'css ';
         cp.field('resources').html(resources);
+        switch (componentType) {
+            case 'component':
+                cp.field('icon').html('extension');
+                break;
+            case 'template':
+                cp.field('icon').html('settings_ethernet');
+                break;
+            default:
+                cp.field('icon').html('dashboard');
+                break;
+        }
         // display variable data
         cp.update();
         // expose public interface members

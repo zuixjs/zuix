@@ -251,43 +251,6 @@ function TaskQueue(listener) {
 TaskQueue.prototype.queue = function(tid, fn, pri) {
     return this.taskQueue(tid, fn, pri);
 };
-/**
- * Request a lock for throttle invocation
- *
- * @param {function} handlerFn
- * @returns {boolean}
- */
-TaskQueue.prototype.requestLock = function(handlerFn) {
-    if (handlerFn._taskerLock != null)
-        return false;
-    return (handlerFn._taskerLock = true);
-};
-TaskQueue.prototype.releaseLock = function(handlerFn) {
-    delete handlerFn._taskerLock;
-};
-/**
- * Debounce. The calling function must also call 'requestLock'.
- *
- * @param {function} handlerFn
- * @param {function} callback
- * @param {number} delay
- * @returns {boolean}
- */
-TaskQueue.prototype.lockLater = function(handlerFn, callback, delay) {
-    var _t = this;
-    if (handlerFn._taskerLock == null)
-        callback();
-    else {
-        if (handlerFn._taskerTimeout == null) {
-            handlerFn._taskerTimeout = true;
-            handlerFn._taskerTimeout = setTimeout(function () {
-                delete handlerFn._taskerTimeout;
-                _t.lockLater(handlerFn, callback, delay);
-            }, delay);
-        }
-    }
-    return true;
-};
 
 module.exports = TaskQueue;
 },{"./Logger":1}],3:[function(_dereq_,module,exports){
@@ -647,8 +610,10 @@ ZxQuery.prototype.attr = function (attr, val) {
                 el.setAttribute(i, v);
             });
         });
-    } else if (util.isNoU(val))
+    } else if (typeof val == 'undefined')
         return this._selection[0].getAttribute(attr);
+    else if (val === null)
+        this._selection[0].removeAttribute(attr);
     else
         this.each(function (k, v) {
             this.get().setAttribute(attr, val);
@@ -1002,23 +967,24 @@ z$.wrapElement = function (containerTag, element) {
     return container;
 };
 z$.wrapCss = function (wrapperRule, css) {
-    var wrapReX = /([.,\w])([^/{};]+)({)/g;
+    var wrapReX = /([.,\w])([^/{};]*)({)/g;
     var r, result = null, wrappedCss = '';
     while (r = wrapReX.exec(css)) {
         if (result != null) {
             var rule = css.substring(result.index, r.index);
-            var splitReX = /(.*)[^s]\{([^\}]+)[\}]/g; // [^{]
+            var splitReX = /(.*)\{([^\}]+)[\}]/g; // [^{]
             var ruleParts = splitReX.exec(rule);
             if (ruleParts != null && ruleParts.length > 1) {
                 var classes = ruleParts[1].split(',');
                 z$.each(classes, function (k, v) {
+                    if (v.replace(' ', '') == '.') v = ''; // <-- `.` it means 'self' (the container itself)
                     wrappedCss += '\n' + wrapperRule + '\n' + v;
                     if (k < classes.length - 1)
                         wrappedCss += ', ';
                 });
                 wrappedCss += ' {' + ruleParts[2] + '}\n';
             } else {
-                _log.w('ZUIX WARNING: z$.wrapCss was unable to parse rule.', ruleParts, rule);
+                _log.w('z$.wrapCss was unable to parse rule.', ruleParts, rule);
             }
         }
         result = r;
@@ -1049,6 +1015,27 @@ z$.appendCss = function (css, target, cssId) {
     if (!util.isNoU(style))
         head.appendChild(style);
     return style;
+};
+z$.replaceBraces = function (html, callback) {
+    var outHtml = '', matched = 0, currentIndex = 0;
+    var tags = new RegExp(/[^{}]+(?=})/g),
+        result;
+    while (result = tags.exec(html)) {
+        var value = '{'+result[0]+'}';
+        if (typeof callback === 'function') {
+            var r = callback(result[0]);
+            if (!util.isNoU(r)) {
+                value = r;
+                matched++;
+            }
+        }
+        outHtml += html.substr(currentIndex, result.index-currentIndex-1)+value;
+        currentIndex = result.index+result[0].length+1;
+    }
+    if (matched > 0) {
+        outHtml += html.substr(currentIndex);
+        return outHtml;
+    }
 };
 z$.getClosest = function (elem, selector) {
     // Get closest match
@@ -1089,6 +1076,32 @@ z$.isInView = function (el) {
         && rect.top < (window.innerHeight || document.documentElement.clientHeight);
     /* or $(window).height() */
 };
+z$.scrollTo = function(el, targetY) {
+    if (targetY === 0 || targetY == null)
+        return;
+    var duration = 500;
+    var scrollTop = el.scrollTop+targetY - 56;
+    var scrollOffset = el.scrollTop-scrollTop;
+    el.firstElementChild.style.transition = 'transform '+duration+'ms ease';
+    if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
+        el.firstElementChild.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
+    else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
+        el.firstElementChild.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
+    else
+        el.firstElementChild.style.transform = "translate(0, " + (scrollOffset) + "px)";
+    window.setTimeout(function () {
+        // TODO: should backup and restore old value
+        if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
+            el.firstElementChild.style.WebkitTransform = "";
+        else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
+            el.firstElementChild.style.MozTransform= "";
+        else
+            el.firstElementChild.style.transform = "";
+        el.firstElementChild.style.transition = '';
+        el.scrollTop = scrollTop;
+    }, duration);
+};
+
 z$.ZxQuery = ZxQuery;
 
 // Element.matches() polyfill
@@ -1167,7 +1180,7 @@ module.exports =  z$;
     }
 }(this, _dereq_('./zuix/Zuix.js')));
 
-},{"./zuix/Zuix.js":8}],6:[function(_dereq_,module,exports){
+},{"./zuix/Zuix.js":9}],6:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1740,6 +1753,333 @@ module.exports = ComponentContext;
 
 "use strict";
 
+var _log =
+    _dereq_('../helpers/Logger')('ComponentContext.js');
+var util =
+    _dereq_('../helpers/Util');
+var z$ =
+    _dereq_('../helpers/ZxQuery');
+
+/** @private */
+var _componentizeRequests = [];
+/** @private */
+var _componentizeQueue = [],
+    /** @private */
+    _disableLazyLoading = false;
+
+/** @private */
+var busyLoading = false,
+    /** @private */
+    retryTimeout = null,
+    /** @private */
+    pause = false;
+
+/** @type {Zuix} **/
+var zuix = null;
+
+// Browser Agent / Bot detection
+/** @private */
+var _isCrawlerBotClient = false;
+if (navigator && navigator.userAgent)
+    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
+        .test(navigator.userAgent);
+if (_isCrawlerBotClient)
+    _log.d(navigator.userAgent, "is a bot, ignoring `lazy-loading` option.");
+
+var TaskItem = function () {
+    return {
+        /** @typedef {Element} */
+        element: null,
+        /** @typedef {number} */
+        priority: 0,
+        /** @typedef {boolean} */
+        visible: true,
+        /** @typedef {boolean} */
+        lazy: false
+    }
+};
+
+function Componentizer() {
+
+}
+
+function lazyLoad(enable) {
+    if (enable != null)
+        _disableLazyLoading = !enable;
+    return !_isCrawlerBotClient && !_disableLazyLoading;
+}
+
+function addRequest(element) {
+    if (!_componentizeRequests.indexOf(element))
+        _componentizeRequests.push(element);
+}
+
+function processRequests(element) {
+    if (element == null && _componentizeRequests.length > 0)
+        element = _componentizeRequests.unshift();
+
+    if (element instanceof z$.ZxQuery)
+        element = element.get();
+
+    // Select all loadable elements
+    var waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
+    waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
+
+    /** @type {TaskItem[]} */
+    var waitingTasks = [];
+    for (var w = 0; w < waitingLoad.length; w++) {
+        var pri = parseInt(waitingLoad[w].getAttribute('data-ui-priority'));
+        if (isNaN(pri)) pri = 0;
+        var task = new TaskItem();
+        task.element = waitingLoad[w];
+        task.priority = w - ( 12 * ( w % 2 ) ) + ( pri * 73 );
+        waitingTasks.push(task);
+    }
+
+    // add selected elements to the requests queue
+    var processNext = false;
+    for (var i = 0; i < waitingTasks.length; i++) {
+        var alreadyAdded = false;
+        for (var j = i + 1; j < _componentizeQueue.length; j++) {
+            if (waitingTasks[i].element === _componentizeQueue[j].element) {
+                alreadyAdded = true;
+                break;
+            }
+        }
+        if (!alreadyAdded) {
+            _componentizeQueue.push(waitingTasks[i]);
+            processNext = true;
+        }
+    }
+
+    _log.t('componentize:count', _componentizeQueue.length);
+
+    if (processNext) {
+        // sort by priority (minor number gets higher priority)
+        _componentizeQueue.sort(function (a, b) {
+            return a.priority - b.priority;
+        });
+        loadNext();
+    } else {
+        _log.t('componentize:complete', 'No more requests for this session');
+    }
+
+}
+
+function loadNext() {
+    if (busyLoading) {
+        if (retryTimeout != null)
+            clearTimeout(retryTimeout);
+        retryTimeout = setTimeout(processRequests, 5);
+        return;
+    }
+    busyLoading = true;
+
+    var item = _componentizeQueue.length > 0 ? _componentizeQueue.shift() : null;
+    while (item != null) {
+
+        // store a reference to its scroller container for lazy-loaded elements
+        if (item.element.zuix_lazyContainer == null) {
+            var lazyContainer = item.element.zuix_lazyContainer || z$.getClosest(item.element, '[data-ui-lazyload=scroll]'); //el$.parent('[data-ui-lazyload=scroll]');
+            item.element.zuix_lazyContainer = lazyContainer;
+            // override lazy loading if 'lazyload' is set to 'false' for the current element
+            if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
+                &&
+                (!lazyLoad() || item.element.getAttribute('data-ui-lazyload') == 'false')) {
+                item.element.zuix_lazyContainer = false;
+            } else if (lazyContainer !== null) {
+                // attach 'scroll' event handler to lazy-scroller
+                var scrollWatcher = function (instance, lc) {
+                    z$(lc).on('scroll', function () {
+                        if (lc._zuix_scrollTimeout != null)
+                            return;
+                        lc._zuix_scrollTimeout = setTimeout(function () {
+                            (Componentizer.prototype.componentize).call(instance, lc);
+                            lc._zuix_scrollTimeout = null;
+                        }, 73);
+                    });
+                }(this, lazyContainer);
+            }
+        }
+
+        // defer element loading if lazy loading is enabled and the element is not in view
+        if (lazyLoad() && item.element.zuix_lazyContainer instanceof Element) {
+            var position = z$.getPosition(item.element);
+            if (!position.visible) {
+                item.priority++;
+                item.visible = false;
+            } else item.visible = true;
+        } else item.visible = true;
+
+        // ...
+        if (item.element.getAttribute('data-ui-loaded') == 'true' ||
+            (item.element.zuix_lazyContainer instanceof Element && !item.visible))
+            if (_componentizeQueue.length > 0) {
+                item = _componentizeQueue.shift();
+            } else item = null;
+        else
+            break;
+
+    }
+
+    if (item == null) {
+        if (!pause) {
+            if (retryTimeout != null)
+                clearTimeout(retryTimeout);
+            retryTimeout = setTimeout(processRequests);
+            pause = true;
+        } else pause = false;
+        // no more requests to process for this session
+        busyLoading = false;
+        return;
+    }
+    pause = false;
+
+    // proceed loading item
+    _log.t('componentize:begin', 'timer:task:start', item.element);
+
+    // proceed loading inline element
+    var el = z$(item.element);
+    el.one('component:ready', function () {
+        _log.t('componentize:end', 'timer:task:stop', el.get(), _componentizeQueue.length);
+        busyLoading = false;
+        loadNext();
+    });
+    loadInline(el.get());
+}
+
+/** @protected */
+function loadInline(element) {
+    var v = z$(element);
+    if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
+        //_log.w("Skipped", element);
+        return;
+    }
+
+    v.attr('data-ui-loaded', 'true');
+    /** @type {ContextOptions} */
+    var options = v.attr('data-ui-options');
+    if (!util.isNoU(options)) {
+        options = util.propertyFromPath(window, options);
+        // copy passed options
+        options = util.cloneObject(options) || {};
+    } else options = {};
+
+    // Automatic view/container selection
+    if (util.isNoU(options.view) && !v.isEmpty()) {
+        options.view = element;
+        options.viewDeferred = true;
+    } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
+        options.container = element;
+
+    var componentId = v.attr('data-ui-load');
+    if (util.isNoU(componentId)) {
+        // Static include should not have any controller
+        componentId = v.attr('data-ui-include');
+        v.attr('data-ui-component', componentId);
+        // disable controller auto-loading
+        if (util.isNoU(options.controller))
+            options.controller = function () {
+            }; // null
+    }
+
+    // inline attributes have precedence over ```options```
+
+    var model = v.attr('data-bind-model');
+    if (!util.isNoU(model) && model.length > 0)
+        options.model = util.propertyFromPath(window, model);
+
+    var contextId = v.attr('data-ui-context');
+    if (!util.isNoU(contextId))
+        options.contextId = contextId;
+
+    var priority = v.attr('data-ui-priority');
+    if (!util.isNoU(priority))
+        options.priority = priority;
+    //else
+    //    options.priority = _contextRoot.length;
+
+    // TODO: Behavior are also definable in "data-ui-behavior" attribute
+    // TODO: Events are also definable in "data-ui-on" attribute
+    // TODO: perhaps "data-ui-ready" and "data-ui-error" too
+    // util.propertyFromPath( ... )
+
+    zuix.load(componentId, options);
+}
+
+/**
+ *
+ * @param {Element|ZxQuery|undefined} [element]
+ * @return {Componentizer}
+ */
+Componentizer.prototype.componentize = function(element) {
+    if (element == null)
+        element = document;
+    addRequest(element);
+    loadNext();
+    return this;
+};
+
+/**
+ *
+ * @return {boolean}
+ */
+Componentizer.prototype.willLoadMore = function() {
+    return busyLoading ||  _componentizeQueue.length > 0 || _componentizeRequests.length > 0;
+};
+
+/**
+ * Enable/Disable lazy-loading, or get current value.
+ *
+ * @param {boolean} [enable]
+ * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
+ */
+Componentizer.prototype.lazyLoad = function(enable) {
+    return lazyLoad(enable);
+};
+
+/**
+ *
+ * @param {Zuix} zuixInstance
+ * @return {Componentizer}
+ */
+Componentizer.prototype.setHost = function(zuixInstance) {
+    zuix = zuixInstance;
+    return this;
+};
+
+module.exports = function() {
+    return new Componentizer();
+};
+},{"../helpers/Logger":1,"../helpers/Util":3,"../helpers/ZxQuery":4}],8:[function(_dereq_,module,exports){
+/**
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ *
+ *  This file is part of
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+"use strict";
+
 var z$ =
     _dereq_('../helpers/ZxQuery');
 
@@ -1904,12 +2244,12 @@ ContextController.prototype.clearCache = function () {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function (filter) {
-    // dispose cached fields from previous attacched view
+    // context view changed, dispose cached fields from previous attacched view
     if (this.context.view() != null || this._view !== this.context.view()) {
         this.clearCache();
+        // TODO: dispose also events on view change (!!!)
         this._view = z$(this.context.view());
     }
-    // TODO: dispose also events on view change (!!!)
     if (filter != null)
         return this._view.find(filter);
     else if (this._view !== null)
@@ -2107,7 +2447,7 @@ var ctrl = zuix.controller(function(cp) {
 ContextController.prototype.for = function (componentId) { return this; };
 
 module.exports = ContextController;
-},{"../helpers/ZxQuery":4}],8:[function(_dereq_,module,exports){
+},{"../helpers/ZxQuery":4}],9:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -2147,27 +2487,13 @@ var ComponentContext =
     _dereq_('./ComponentContext');
 var ContextController =
     _dereq_('./ContextController');
+var _componentizer =
+    _dereq_('./Componentizer')();
 
 /**
  * @const
  */
 var ZUIX_FIELD_ATTRIBUTE = 'data-ui-field';
-
-/**
- *  ZUIX, Javascript library for component-based development.
- *
- * @class Zuix
- * @constructor
- * @returns {Zuix}
- */
-function Zuix() {
-    /**
-     * @private
-     * @type {!Array.<ZxQuery>}
-     **/
-    this._fieldCache = [];
-    return this;
-}
 
 /**
  * @private
@@ -2193,10 +2519,7 @@ var _hooksCallbacks = [];
 var _globalHandlers = {};
 
 /** @private */
-var _lazyQueued = []; // Lazy loading - queued elements
-/** @private */
-var _lazyLoaders = []; // "data-ui-lazyload" elements
-
+var _enableHttpCaching = true;
 
 /** @private **/
 var _componentTask = [];
@@ -2209,6 +2532,23 @@ var taskQueue = function(tid) {
     }
     return _componentTask[tid];
 };
+
+/**
+ *  ZUIX, Javascript library for component-based development.
+ *
+ * @class Zuix
+ * @constructor
+ * @returns {Zuix}
+ */
+function Zuix() {
+    _componentizer.setHost(this);
+    /**
+     * @private
+     * @type {!Array.<ZxQuery>}
+     **/
+    this._fieldCache = [];
+    return this;
+}
 
 /**
  * Initializes a controller ```handler```.
@@ -2250,146 +2590,6 @@ function field(fieldName, container, context) {
     } else el = context._fieldCache[fieldName];
 
     return el;
-}
-
-/**
- * Searches inside the given element ```element```
- * for all ```data-ui-include``` and ```data-ui-load```
- * directives and process them.
- *
- * @private
- * @param [element] {Element} Optional container to use as starting node for the search.
- */
-function componentize(element) {
-    // Throttle method
-    _log.t('componentize:check', 'lock:request');
-    if (taskQueue('zuix').requestLock(componentize)) {
-        _log.t('componentize:begin', 'timer:task:start', element, _lazyQueued.length);
-        var waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
-        waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
-        // sort loadable elements by priority
-        waitingLoad.sort(function (a, b) {
-            var pria = parseInt(a.getAttribute('data-ui-priority'));
-            if (isNaN(pria)) pria = 0;
-            var prib = parseInt(b.getAttribute('data-ui-priority'));
-            if (isNaN(prib)) prib = 0;
-            return pria - prib;
-        });
-        _log.t('componentize:count', waitingLoad.length);
-        z$.each(waitingLoad, function (i, el) {
-            // hide the component while loading. It will be shown after the controller initialization.
-            this.visibility('hidden');
-            // defer element loading if lazy loading is enabled and the element is not in view
-            var lazyContainer = el.lazyContainer || z$.getClosest(el, '[data-ui-lazyload=scroll]');
-//            if (lazyContainer == null)
-//                lazyContainer = el;
-            el.lazyContainer = lazyContainer;
-            // override lazy loading if 'lazyload' is set to 'false' for the current element
-            if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
-                &&
-                (!lazyLoad() || this.attr('data-ui-lazyload') == 'false')) {
-                loadInline(el);
-                // process current element only
-                return false;
-            }
-            if (lazyContainer !== null) {
-                if (_lazyLoaders.indexOf(lazyContainer) == -1) {
-                    //_log.t('componentize:lazyload', 'scroll:container', lazyContainer);
-                    _lazyLoaders.push(lazyContainer);
-                    z$(lazyContainer).on('scroll', function () {
-                        componentize(lazyContainer);
-                    });
-                }
-                var position = z$.getPosition(el);
-                if (!position.visible) {
-                    if (_lazyQueued.indexOf(el) == -1) {
-                        _log.t('componentize:lazyload', 'queue:add', el);
-                        _lazyQueued.push(el);
-                    }
-                    // Not in view: defer element loading and
-                    // process next inline element
-                    return true;
-                }
-            }
-            _log.t('componentize:lazyload', 'queue:load', el);
-            // proceed loading inline element
-            loadInline(el);
-        });
-        _log.t('componentize:end', 'timer:task:end', element, _contextRoot.length, _componentCache.length);
-        taskQueue('zuix').releaseLock(componentize);
-    }
-
-    if ((waitingLoad != null && waitingLoad.length > _lazyQueued.length))
-        //_log.t('componentize:check', 'lock:later');
-        taskQueue('zuix').lockLater(componentize, function () {
-            //_log.t('componentize:throttle', element);
-            componentize(element);
-            // the 200ms throttling also affects "lazy scrollers" scroll event update frequency
-        }, 200);
-}
-
-/** @protected */
-function loadInline(element) {
-    var v = z$(element);
-    if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
-        _log.w("Skipped", element);
-        return;
-    }
-    v.attr('data-ui-loaded', 'true');
-    /** @type {ContextOptions} */
-    var options = v.attr('data-ui-options');
-    if (!util.isNoU(options)) {
-        options = util.propertyFromPath(window, options);
-        // copy passed options
-        options = util.cloneObject(options) || {};
-    } else options = {};
-
-    // Automatic view/container selection
-    if (util.isNoU(options.view) && !v.isEmpty()) {
-        options.view = element;
-        options.viewDeferred = true;
-    } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty())
-        options.container = element;
-
-    var componentId = v.attr('data-ui-load');
-    if (util.isNoU(componentId)) {
-        // Static include should not have any controller
-        componentId = v.attr('data-ui-include');
-        v.attr('data-ui-component', componentId);
-        // disable controller auto-loading
-        if (util.isNoU(options.controller))
-            options.controller = function () {
-            }; // null
-    }
-
-    // inline attributes have precedence over ```options```
-
-    var model = v.attr('data-bind-model');
-    if (!util.isNoU(model) && model.length > 0)
-        options.model = util.propertyFromPath(window, model);
-
-    var contextId = v.attr('data-ui-context');
-    if (!util.isNoU(contextId))
-        options.contextId = contextId;
-
-    var priority = v.attr('data-ui-priority');
-    if (!util.isNoU(priority))
-        options.priority = priority;
-    else
-        options.priority = _contextRoot.length;
-    // TODO: Behavior are also definable in "data-ui-behavior" attribute
-    // TODO: Events are also definable in "data-ui-on" attribute
-    // TODO: perhaps "data-ui-ready" and "data-ui-error" too
-    // util.propertyFromPath( ... )
-
-    load(componentId, options);
-
-    var queued = _lazyQueued.indexOf(element);
-    _log.t('componentize:lazyload', 'queue:remove', queued, element);
-    if (queued > -1) {
-        _lazyQueued.splice(queued, 1);
-    }
-
 }
 
 /**
@@ -2482,14 +2682,14 @@ function loadResources(ctx, options) {
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
         ctx.controller(cachedComponent.controller);
-        _log.t('js:'+ctx.componentId, 'component:cached:js');
+        _log.t(ctx.componentId+':js', 'component:cached:js');
     }
 
     if (util.isNoU(options.view)) {
 
         if (cachedComponent !== null && cachedComponent.view != null) {
             ctx.view(cachedComponent.view);
-            _log.t('html:'+ctx.componentId, 'component:cached:html');
+            _log.t(ctx.componentId+':html', 'component:cached:html');
             /*
              TODO: CSS caching, to be tested.
              */
@@ -2498,7 +2698,7 @@ function loadResources(ctx, options) {
                  if (!cachedComponent.css_applied) {
                      cachedComponent.css_applied = true;
                      ctx.style(cachedComponent.css);
-                     _log.t('css:'+ctx.componentId, 'component:cached:css');
+                     _log.t(ctx.componentId+':css', 'component:cached:css');
                  }
              }
         }
@@ -2507,7 +2707,7 @@ function loadResources(ctx, options) {
         // or from an inline element, then load the view from web
         if (util.isNoU(ctx.view())) {
             // Load View
-            taskQueue('resource-loader').queue('html:' + ctx.componentId, function () {
+            taskQueue('resource-loader').queue(ctx.componentId+':html', function () {
                 resourceLoadTask[ctx.componentId] = this;
 
                 ctx.loadHtml({
@@ -2518,7 +2718,7 @@ function loadResources(ctx, options) {
                         cachedComponent.view = html;
                         delete cachedComponent.controller;
                         if (options.css !== false) {
-                            resourceLoadTask[ctx.componentId].step('css:'+ctx.componentId);
+                            resourceLoadTask[ctx.componentId].step(ctx.componentId+':css');
                             ctx.loadCss({
                                 caching: _enableHttpCaching,
                                 success: function (css) {
@@ -2549,7 +2749,7 @@ function loadResources(ctx, options) {
     } else {
         ctx.view(options.view);
     }
-    taskQueue('resource-loader').queue('js:' + ctx.componentId, function () {
+    taskQueue('resource-loader').queue(ctx.componentId+':js', function () {
         resourceLoadTask[ctx.componentId] = this;
         loadController(ctx, resourceLoadTask[ctx.componentId]);
     }, _contextRoot.length);
@@ -2638,21 +2838,9 @@ function trigger(context, path, data) {
 
     // ZUIX Componentizer is the last executed hook (built-in)
     if (path == 'view:process')
-        componentize(data);
+        _componentizer.componentize(data);
 }
 
-/**
- * Enable/Disable lazy-loading, or get current value.
- *
- * @private
- * @param {boolean} [enable]
- * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
- */
-function lazyLoad(enable) {
-    if (enable != null)
-        _disableLazyLoading = !enable;
-    return !_isCrawlerBotClient && !_disableLazyLoading;
-}
 /**
  * Enable/Disable HTTP caching
  *
@@ -2680,7 +2868,6 @@ function removeCachedComponent(componentId) {
  * @return {ComponentCache}
  */
 function getCachedComponent(componentId) {
-    /** @type {ComponentCache} */
     var cached = null;
     z$.each(_componentCache, function (k, v) {
         if (util.objectEquals(v.componentId, componentId)) {
@@ -2700,7 +2887,7 @@ function loadController(context, task) {
     if (typeof context.options().controller === 'undefined' && context.controller() === null) {
         _log.d(context.componentId, 'controller:load');
         if (!util.isNoU(task))
-            task.step('js:'+context.componentId);
+            task.step(context.componentId+':js');
         if (util.isFunction(_globalHandlers[context.componentId])) {
             context.controller(_globalHandlers[context.componentId]);
             createComponent(context, task);
@@ -2740,7 +2927,7 @@ function loadController(context, task) {
                 });
             };
             if (util.isNoU(task)) {
-                taskQueue('resource-loader').queue('js:' + context.componentId, function () {
+                taskQueue('resource-loader').queue(context.componentId+':js', function () {
                     job(resourceLoadTask[context.componentId] = this);
                 }, context.options().priority);
             } else job(task);
@@ -2784,14 +2971,11 @@ function createComponent(context, task) {
             task.callback(function () {
                 _log.d(context.componentId, 'controller:create:deferred');
                 initController(context._c);
-                // TODO: 'componentize()' should not be needed here
-                // TODO: if initialization sequence is correct
-                //componentize();
             });
 
         _log.d(context.componentId, 'component:initializing');
         if (util.isFunction(context.controller())) {
-            // TODO: should use 'require' istead of 'new Controller' ... ?
+            // TODO: should use 'require' instead of 'new Controller' ... ?
             /** @type {ContextController} */
             var c = context._c = new ContextController(context);
             c.log = _dereq_('../helpers/Logger')(context.contextId);
@@ -2898,12 +3082,17 @@ function initController(c) {
     if (util.isFunction(c.create)) c.create();
     c.trigger('view:create');
 
-    c.trigger('component:ready', c.view(), true);
-
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);
 
-    c.view().css('visibility', '');
+    window.setTimeout(function () {
+        // TODO: 'componentize()' should not be needed here
+        // TODO: if initialization sequence is correct
+        _componentizer.componentize(c.view().get());
+        c.trigger('component:ready', c.view(), true);
+    });
+
+    //c.view().css('visibility', '');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);
 }
 
@@ -2931,19 +3120,6 @@ function getController(javascriptCode) {
 function replaceCache(c) {
     _componentCache = c;
 }
-
-// Browser Agent / Bot detection
-/** @private */
-/** @private */
-var _isCrawlerBotClient = false,
-    _disableLazyLoading = false,
-    _enableHttpCaching = true;
-if (navigator && navigator.userAgent)
-    _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
-        .test(navigator.userAgent);
-if (_isCrawlerBotClient)
-    _log.d(navigator.userAgent, "is a bot, ignoring 'data-ui-lazyload' option.");
-
 
 /******************* proto ********************/
 
@@ -3013,7 +3189,7 @@ zuix.componentize(document);
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.componentize = function (element) {
-    componentize(element);
+    _componentizer.componentize(element);
     return this;
 };
 /**
@@ -3192,9 +3368,9 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
  */
 Zuix.prototype.lazyLoad = function (enable) {
     if (enable != null)
-        lazyLoad(enable);
+        _componentizer.lazyLoad(enable);
     else
-        return lazyLoad();
+        return _componentizer.lazyLoad();
     return this;
 };
 /**
@@ -3223,21 +3399,21 @@ Zuix.prototype.bundle = function(bundleData, callback) {
         return _componentCache;
     else if (bundleData && typeof bundleData === 'boolean') {
         _log.t('bundle:start');
-        var ll = lazyLoad();
-        lazyLoad(false);
-        componentize();
+        var ll = _componentizer.lazyLoad();
+        _componentizer.lazyLoad(false);
+        _componentizer.componentize();
         if (typeof callback === 'function') {
             var waitLoop = function(w) {
-                if (_lazyQueued.length > 0) {
-                    _log.t('bundle:wait');
-                    setTimeout(function () {
+                setTimeout(function () {
+                    if (_componentizer.willLoadMore()) {
+                        _log.t('bundle:wait');
                         w(w);
-                    }, 1000);
-                } else {
-                    _log.t('bundle:end');
-                    lazyLoad(ll);
-                    callback();
-                }
+                    } else {
+                        _log.t('bundle:end');
+                        _componentizer.lazyLoad(ll);
+                        callback();
+                    }
+                }, 1000);
             };
             waitLoop(waitLoop);
         }
@@ -3261,9 +3437,6 @@ Zuix.prototype.dumpCache = function () {
 };
 Zuix.prototype.dumpContexts = function () {
     return _contextRoot;
-};
-Zuix.prototype.dumpLazyLoaders = function () {
-    return _lazyLoaders;
 };
 
 // TODO: add zuix.options to configure stuff like
@@ -3292,6 +3465,6 @@ module.exports = function (root) {
 
 
 
-},{"../helpers/Logger":1,"../helpers/TaskQueue":2,"../helpers/Util":3,"../helpers/ZxQuery":4,"./ComponentContext":6,"./ContextController":7}]},{},[5])
+},{"../helpers/Logger":1,"../helpers/TaskQueue":2,"../helpers/Util":3,"../helpers/ZxQuery":4,"./ComponentContext":6,"./Componentizer":7,"./ContextController":8}]},{},[5])
 (5)
 });
