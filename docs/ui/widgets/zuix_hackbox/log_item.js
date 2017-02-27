@@ -13,7 +13,8 @@ zuix.controller(function (cp) {
                 cp.trigger('item:click', sourceView);
             });
         }
-        cp.update();
+        // send the UI update operation in the background to prevent slow scroll
+        setTimeout(cp.update, 10);
     };
 
     cp.update = function () {

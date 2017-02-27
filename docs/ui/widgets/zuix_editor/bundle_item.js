@@ -9,9 +9,24 @@ zuix.controller(function (cp) {
         cp.expose('count', function () {
             return instances;
         });
+
         var isHackBox = cp.model().componentId.indexOf('/zuix_') > 0;
         if (isHackBox)
-            this.view().children().eq(0).addClass('zuix-hackbox');
+            cp.view().children().eq(0).addClass('zuix-hackbox');
+
+        // expose public interface members
+        cp.expose({
+            'instanceCount': countInstances,
+            'hasResource': hasResource,
+            'isHackBox': function () {
+                return isHackBox;
+            }
+        });
+        // display data
+        setTimeout(cp.update, 10);
+    };
+
+    cp.update = function () {
         // populate fixed fields
         var item = cp.model();
         cp.field('componentId').html(item.componentId);
@@ -40,19 +55,6 @@ zuix.controller(function (cp) {
                 cp.field('icon').html('dashboard');
                 break;
         }
-        // display variable data
-        cp.update();
-        // expose public interface members
-        cp.expose({
-            'instanceCount': countInstances,
-            'hasResource': hasResource,
-            'isHackBox': function () {
-                return isHackBox;
-            }
-        });
-    };
-
-    cp.update = function () {
         instances = countInstances();
         cp.field('instances').html(instances);
         cp.trigger('item:update');
