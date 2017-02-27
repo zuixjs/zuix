@@ -387,8 +387,8 @@ function trigger(context, path, data) {
         _hooksCallbacks[path].call(context, data);
 
     // ZUIX Componentizer is the last executed hook (built-in)
-    if (path == 'view:process')
-        _componentizer.componentize(data);
+//    if (path == 'view:process')
+//        _componentizer.componentize(data);
 }
 
 /**
@@ -635,14 +635,8 @@ function initController(c) {
     if (util.isFunction(c.context.ready))
         (c.context.ready).call(c.context);
 
-    window.setTimeout(function () {
-        // TODO: 'componentize()' should not be needed here
-        // TODO: if initialization sequence is correct
-        _componentizer.componentize(c.view().get());
-        c.trigger('component:ready', c.view(), true);
-    });
+    c.trigger('component:ready', c.view(), true);
 
-    //c.view().css('visibility', '');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);
 }
 

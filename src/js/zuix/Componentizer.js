@@ -26,6 +26,56 @@
 
 "use strict";
 
+
+/**
+ *
+ * @param {Element|ZxQuery|undefined} [element]
+ * @return {Componentizer}
+ */
+Componentizer.prototype.componentize = function(element) {
+    if (element == null)
+        element = document;
+    addRequest(element);
+    loadNext();
+    return this;
+};
+
+/**
+ *
+ * @return {boolean}
+ */
+Componentizer.prototype.willLoadMore = function() {
+    return _componentizeQueue.length > 0 || _componentizeRequests.length > 0;
+};
+
+/**
+ * Enable/Disable lazy-loading, or get current value.
+ *
+ * @param {boolean} [enable]
+ * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
+ */
+Componentizer.prototype.lazyLoad = function(enable) {
+    return lazyLoad(enable);
+};
+
+/**
+ *
+ * @param {Zuix} zuixInstance
+ * @return {Componentizer}
+ */
+Componentizer.prototype.setHost = function(zuixInstance) {
+    zuix = zuixInstance;
+    return this;
+};
+
+module.exports = function() {
+    return new Componentizer();
+};
+
+
+// ---------------------------------------------
+
+
 var _log =
     require('../helpers/Logger')('ComponentContext.js');
 var util =
@@ -38,12 +88,13 @@ var _componentizeRequests = [];
 /** @private */
 var _componentizeQueue = [],
     /** @private */
-    _disableLazyLoading = false;
+    _disableLazyLoading = false,
+    /** @private */
+    _lazyElements = [],
+    _lazyContainers = [];
 
 /** @private */
-var busyLoading = false,
-    /** @private */
-    retryTimeout = null,
+var retryTimeout = null,
     /** @private */
     pause = false;
 
@@ -59,6 +110,7 @@ if (navigator && navigator.userAgent)
 if (_isCrawlerBotClient)
     _log.d(navigator.userAgent, "is a bot, ignoring `lazy-loading` option.");
 
+/** @private */
 var TaskItem = function () {
     return {
         /** @typedef {Element} */
@@ -72,8 +124,36 @@ var TaskItem = function () {
     }
 };
 
-function Componentizer() {
+// component loader thread pool
+var threadPool = require('../helpers/ThreadPool')({
 
+    doWork: function(item, callback) {
+        z$(item.element).one('component:ready', function () {
+            callback();
+        });
+        return loadInline(item.element);
+    },
+
+    status: function (status, data) {
+        switch (status) {
+            case 'start':
+                break;
+            case 'stopped':
+                if (data.jobs.length > 0) {
+                    for(var j in data.jobs)
+                        _componentizeQueue.push(data.jobs[j].item);
+                }
+                break;
+            case 'done':
+                loadNext();
+                break;
+        }
+    }
+
+});
+
+function Componentizer() {
+    // ...
 }
 
 function lazyLoad(enable) {
@@ -88,6 +168,8 @@ function addRequest(element) {
 }
 
 function processRequests(element) {
+
+
     if (element == null && _componentizeRequests.length > 0)
         element = _componentizeRequests.unshift();
 
@@ -97,15 +179,13 @@ function processRequests(element) {
     // Select all loadable elements
     var waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
     waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
-
-    /** @type {TaskItem[]} */
     var waitingTasks = [];
     for (var w = 0; w < waitingLoad.length; w++) {
         var pri = parseInt(waitingLoad[w].getAttribute('data-ui-priority'));
         if (isNaN(pri)) pri = 0;
         var task = new TaskItem();
         task.element = waitingLoad[w];
-        task.priority = w - ( 12 * ( w % 2 ) ) + ( pri * 73 );
+        task.priority = pri; //w - ( 12 * ( w % 2 ) ) + ( pri * 73 );
         waitingTasks.push(task);
     }
 
@@ -113,8 +193,9 @@ function processRequests(element) {
     var processNext = false;
     for (var i = 0; i < waitingTasks.length; i++) {
         var alreadyAdded = false;
-        for (var j = i + 1; j < _componentizeQueue.length; j++) {
+        for (var j = 0; j < _componentizeQueue.length; j++) {
             if (waitingTasks[i].element === _componentizeQueue[j].element) {
+                //_componentizeQueue[j].element.priority--;
                 alreadyAdded = true;
                 break;
             }
@@ -124,109 +205,78 @@ function processRequests(element) {
             processNext = true;
         }
     }
-
+    processNext = true;
     _log.t('componentize:count', _componentizeQueue.length);
-
-    if (processNext) {
-        // sort by priority (minor number gets higher priority)
-        _componentizeQueue.sort(function (a, b) {
-            return a.priority - b.priority;
-        });
-        loadNext();
-    } else {
-        _log.t('componentize:complete', 'No more requests for this session');
-    }
-
 }
 
-function loadNext() {
-    if (busyLoading) {
-        if (retryTimeout != null)
-            clearTimeout(retryTimeout);
-        retryTimeout = setTimeout(processRequests, 5);
-        return;
-    }
-    busyLoading = true;
+function getPoolTasks() {
 
+    // sort by priority (minor number gets higher priority)
+    _componentizeQueue.sort(function (a, b) {
+        return a.priority - b.priority;
+    });
+    var reinsert = []; var poolSize = 100; var jobs = [];
     var item = _componentizeQueue.length > 0 ? _componentizeQueue.shift() : null;
-    while (item != null) {
-
-        // store a reference to its scroller container for lazy-loaded elements
-        if (item.element.zuix_lazyContainer == null) {
-            var lazyContainer = item.element.zuix_lazyContainer || z$.getClosest(item.element, '[data-ui-lazyload=scroll]'); //el$.parent('[data-ui-lazyload=scroll]');
-            item.element.zuix_lazyContainer = lazyContainer;
-            // override lazy loading if 'lazyload' is set to 'false' for the current element
-            if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
-                &&
-                (!lazyLoad() || item.element.getAttribute('data-ui-lazyload') == 'false')) {
-                item.element.zuix_lazyContainer = false;
-            } else if (lazyContainer !== null) {
-                // attach 'scroll' event handler to lazy-scroller
-                var scrollWatcher = function (instance, lc) {
-                    z$(lc).on('scroll', function () {
-                        if (lc._zuix_scrollTimeout != null)
-                            return;
-                        lc._zuix_scrollTimeout = setTimeout(function () {
-                            (Componentizer.prototype.componentize).call(instance, lc);
-                            lc._zuix_scrollTimeout = null;
-                        }, 73);
-                    });
-                }(this, lazyContainer);
-            }
-        }
+    while (item != null && item.element != null && poolSize > 0) {
 
         // defer element loading if lazy loading is enabled and the element is not in view
-        if (lazyLoad() && item.element.zuix_lazyContainer instanceof Element) {
-            var position = z$.getPosition(item.element);
-            if (!position.visible) {
-                item.priority++;
-                item.visible = false;
-            } else item.visible = true;
-        } else item.visible = true;
+        var ls = lazyScrollCheck(item.element);
+        if (lazyLoad() && ls.scroller !== false) {
+            item.lazy = true;
+            item.visible = z$.getPosition(item.element).visible;
+            //if (!item.visible) item.priority++;
+        } else {
+            item.lazy = false;
+            item.visible = true;
+        }
 
         // ...
-        if (item.element.getAttribute('data-ui-loaded') == 'true' ||
-            (item.element.zuix_lazyContainer instanceof Element && !item.visible))
-            if (_componentizeQueue.length > 0) {
-                item = _componentizeQueue.shift();
-            } else item = null;
-        else
-            break;
+        if (item.element != null && item.element.getAttribute('data-ui-loaded') == 'true' || !item.visible) {
+            if (!item.visible)
+                reinsert.push(item);
+            item = null;
+        }
 
+        if (item != null && item.element != null && item.visible) {
+            jobs.push({
+                item: item,
+                cancelable: item.lazy
+            });
+            poolSize--
+        }
+
+        if (poolSize > 0) {
+            if (_componentizeQueue.length > 0)
+                item = _componentizeQueue.shift();
+            else
+                item = null;
+        } else item = null;
     }
 
-    if (item == null) {
-        if (!pause) {
-            if (retryTimeout != null)
-                clearTimeout(retryTimeout);
-            retryTimeout = setTimeout(processRequests);
-            pause = true;
-        } else pause = false;
-        // no more requests to process for this session
-        busyLoading = false;
+    _componentizeQueue = _componentizeQueue.concat(reinsert);
+
+
+    return jobs;
+}
+
+function loadNext(element) {
+    if (!threadPool.isReady()) {
         return;
     }
-    pause = false;
-
-    // proceed loading item
-    _log.t('componentize:begin', 'timer:task:start', item.element);
-
-    // proceed loading inline element
-    var el = z$(item.element);
-    el.one('component:ready', function () {
-        _log.t('componentize:end', 'timer:task:stop', el.get(), _componentizeQueue.length);
-        busyLoading = false;
-        loadNext();
-    });
-    loadInline(el.get());
+    processRequests(element);
+    var jobs = getPoolTasks();
+    if (jobs.length > 0)
+        threadPool.setJobs(jobs);
 }
+
 
 /** @protected */
 function loadInline(element) {
+
     var v = z$(element);
     if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
         //_log.w("Skipped", element);
-        return;
+        return false;
     }
 
     v.attr('data-ui-loaded', 'true');
@@ -276,51 +326,81 @@ function loadInline(element) {
     // TODO: Events are also definable in "data-ui-on" attribute
     // TODO: perhaps "data-ui-ready" and "data-ui-error" too
     // util.propertyFromPath( ... )
-
     zuix.load(componentId, options);
+
+    return true;
 }
 
-/**
- *
- * @param {Element|ZxQuery|undefined} [element]
- * @return {Componentizer}
- */
-Componentizer.prototype.componentize = function(element) {
-    if (element == null)
-        element = document;
-    addRequest(element);
-    loadNext();
-    return this;
-};
 
-/**
- *
- * @return {boolean}
- */
-Componentizer.prototype.willLoadMore = function() {
-    return busyLoading ||  _componentizeQueue.length > 0 || _componentizeRequests.length > 0;
-};
+// ------------ Lazy Loading
 
-/**
- * Enable/Disable lazy-loading, or get current value.
- *
- * @param {boolean} [enable]
- * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
- */
-Componentizer.prototype.lazyLoad = function(enable) {
-    return lazyLoad(enable);
-};
+function getLazyElement(el) {
+    for (var l = 0; l < _lazyElements.length; l++) {
+        var le = _lazyElements[l];
+        if (le.element === el)
+            return le;
+    }
+    return null;
+}
 
-/**
- *
- * @param {Zuix} zuixInstance
- * @return {Componentizer}
- */
-Componentizer.prototype.setHost = function(zuixInstance) {
-    zuix = zuixInstance;
-    return this;
-};
+function addLazyElement(el) {
+    var le = {
+        element: el,
+        scroller: false
+    };
+    _lazyElements.push(le);
+    return le;
+}
 
-module.exports = function() {
-    return new Componentizer();
-};
+function getLazyContainer(el) {
+    for (var l = 0; l < _lazyContainers.length; l++) {
+        var ls = _lazyContainers[l];
+        if (ls.element === el)
+            return ls;
+    }
+    return null;
+}
+
+function addLazyContainer(el) {
+    var lc = {
+        element: el,
+        handler: false
+    };
+    _lazyContainers.push(lc);
+    return lc;
+}
+
+function lazyScrollCheck(el) {
+
+    // store a reference to its scroller container for lazy-loaded elements
+    var ls = getLazyElement(el);
+    if (ls == null) {
+        ls = addLazyElement(el);
+        var lazyContainer = z$.getClosest(el, '[data-ui-lazyload=scroll]'); //el$.parent('[data-ui-lazyload=scroll]');
+        // override lazy loading if 'lazyload' is set to 'false' for the current element
+        if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
+            &&
+            (!lazyLoad() || el.getAttribute('data-ui-lazyload') == 'false')) {
+//...TODO: ...
+        } else if (lazyContainer != null) {
+            var lc = getLazyContainer(lazyContainer);
+            if (lc == null) {
+                lc = addLazyContainer(lazyContainer)
+                // attach 'scroll' event handler to lazy-scroller
+                var scrollWatcher = function (instance, lc) {
+                    var last = new Date().getTime();
+                    z$(lc).on('scroll', function () {
+                        var now = new Date().getTime();
+                        var elapsed = now-last;
+                        if (elapsed < 30)
+                            return;
+                        last = now;
+                        threadPool.break();
+                    });
+                }(this, lazyContainer);
+            }
+            ls.scroller = (lc == null ? false : lc);
+        }
+    }
+    return ls;
+}

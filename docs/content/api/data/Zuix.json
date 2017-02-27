@@ -981,7 +981,7 @@
     "ignore": false,
     "line": 375,
     "codeStart": 383,
-    "code": "function trigger(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n    if (path == 'view:process')\n        _componentizer.componentize(data);\n}",
+    "code": "function trigger(context, path, data) {\n\n    // TODO: call all registered callback\n    if (util.isFunction(_hooksCallbacks[path]))\n        _hooksCallbacks[path].call(context, data);\n\n    // ZUIX Componentizer is the last executed hook (built-in)\n//    if (path == 'view:process')\n//        _componentizer.componentize(data);\n}",
     "ctx": {
       "type": "function",
       "name": "trigger",
@@ -1301,7 +1301,7 @@
     "ignore": false,
     "line": 613,
     "codeStart": 617,
-    "code": "function initController(c) {\n\n    // bind {ContextController}.field method\n    c.field = function(fieldName) {\n        var el = field(fieldName, c.view(), c);\n        el.on = function (eventPath, eventHandler, eventData, isHook) {\n            if (typeof eventHandler === 'string') {\n                var eh = eventHandler;\n                eventHandler = function () { c.trigger(eh, eventData, isHook); }\n            }\n            return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);\n        };\n        return el;\n    };\n\n    if (util.isFunction(c.create)) c.create();\n    c.trigger('view:create');\n\n    if (util.isFunction(c.context.ready))\n        (c.context.ready).call(c.context);\n\n    window.setTimeout(function () {\n        // TODO: 'componentize()' should not be needed here\n        // TODO: if initialization sequence is correct\n        _componentizer.componentize(c.view().get());\n        c.trigger('component:ready', c.view(), true);\n    });\n\n    //c.view().css('visibility', '');\n    _log.i(c.context.componentId, 'component:loaded', c.context.contextId);\n}",
+    "code": "function initController(c) {\n\n    // bind {ContextController}.field method\n    c.field = function(fieldName) {\n        var el = field(fieldName, c.view(), c);\n        el.on = function (eventPath, eventHandler, eventData, isHook) {\n            if (typeof eventHandler === 'string') {\n                var eh = eventHandler;\n                eventHandler = function () { c.trigger(eh, eventData, isHook); }\n            }\n            return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);\n        };\n        return el;\n    };\n\n    if (util.isFunction(c.create)) c.create();\n    c.trigger('view:create');\n\n    if (util.isFunction(c.context.ready))\n        (c.context.ready).call(c.context);\n\n    c.trigger('component:ready', c.view(), true);\n\n    _log.i(c.context.componentId, 'component:loaded', c.context.contextId);\n}",
     "ctx": {
       "type": "function",
       "name": "initController",
@@ -1351,8 +1351,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 649,
-    "codeStart": 654,
+    "line": 643,
+    "codeStart": 648,
     "code": "// TODO: refactor this method name\nfunction getController(javascriptCode) {\n    var instance = function (ctx) {\n    };\n    if (typeof javascriptCode === 'string') {\n        try {\n            instance = (eval).call(this, javascriptCode);\n        } catch (e) {\n            // TODO: should trigger a global hook\n            // eg. 'controller:error'\n            _log.e(this, e, javascriptCode);\n        }\n    }\n    return instance;\n}\n\nfunction replaceCache(c) {\n    _componentCache = c;\n}",
     "ctx": false
   },
@@ -1368,8 +1368,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 674,
-    "codeStart": 675
+    "line": 668,
+    "codeStart": 669
   },
   {
     "tags": [
@@ -1415,8 +1415,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 677,
-    "codeStart": 699,
+    "line": 671,
+    "codeStart": 693,
     "code": "Zuix.prototype.controller = controller;",
     "ctx": {
       "type": "property",
@@ -1485,8 +1485,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 700,
-    "codeStart": 723,
+    "line": 694,
+    "codeStart": 717,
     "code": "Zuix.prototype.field = field;",
     "ctx": {
       "type": "property",
@@ -1541,8 +1541,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 724,
-    "codeStart": 741,
+    "line": 718,
+    "codeStart": 735,
     "code": "Zuix.prototype.componentize = function (element) {\n    _componentizer.componentize(element);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1610,8 +1610,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 745,
-    "codeStart": 785,
+    "line": 739,
+    "codeStart": 779,
     "code": "Zuix.prototype.load = load;",
     "ctx": {
       "type": "property",
@@ -1666,8 +1666,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 786,
-    "codeStart": 799,
+    "line": 780,
+    "codeStart": 793,
     "code": "Zuix.prototype.unload = function (context) {\n    unload(context);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1723,8 +1723,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 803,
-    "codeStart": 828,
+    "line": 797,
+    "codeStart": 822,
     "code": "Zuix.prototype.context = context;",
     "ctx": {
       "type": "property",
@@ -1789,8 +1789,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 829,
-    "codeStart": 838,
+    "line": 823,
+    "codeStart": 832,
     "code": "Zuix.prototype.createComponent = function(componentId, options) {\n    if (options == null) options = {};\n    options.container = document.createElement('div');\n    return load(componentId, options);\n};",
     "ctx": {
       "type": "method",
@@ -1868,8 +1868,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 843,
-    "codeStart": 851,
+    "line": 837,
+    "codeStart": 845,
     "code": "Zuix.prototype.trigger = function (context, eventPath, eventData) {\n    trigger(context, eventPath, eventData);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1933,8 +1933,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 855,
-    "codeStart": 909,
+    "line": 849,
+    "codeStart": 903,
     "code": "Zuix.prototype.hook = function (eventPath, eventHandler) {\n    hook(eventPath, eventHandler);\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -1985,8 +1985,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 913,
-    "codeStart": 919,
+    "line": 907,
+    "codeStart": 913,
     "code": "Zuix.prototype.lazyLoad = function (enable) {\n    if (enable != null)\n        _componentizer.lazyLoad(enable);\n    else\n        return _componentizer.lazyLoad();\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -2037,8 +2037,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 926,
-    "codeStart": 932,
+    "line": 920,
+    "codeStart": 926,
     "code": "Zuix.prototype.httpCaching = function(enable) {\n    if (enable != null)\n        httpCaching(enable);\n    else\n        return httpCaching();\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -2103,8 +2103,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 940,
-    "codeStart": 947,
+    "line": 934,
+    "codeStart": 941,
     "code": "Zuix.prototype.bundle = function(bundleData, callback) {\n    if (util.isNoU(bundleData))\n        return _componentCache;\n    else if (bundleData && typeof bundleData === 'boolean') {\n        _log.t('bundle:start');\n        var ll = _componentizer.lazyLoad();\n        _componentizer.lazyLoad(false);\n        _componentizer.componentize();\n        if (typeof callback === 'function') {\n            var waitLoop = function(w) {\n                setTimeout(function () {\n                    if (_componentizer.willLoadMore()) {\n                        _log.t('bundle:wait');\n                        w(w);\n                    } else {\n                        _log.t('bundle:end');\n                        _componentizer.lazyLoad(ll);\n                        callback();\n                    }\n                }, 1000);\n            };\n            waitLoop(waitLoop);\n        }\n    } else {\n        // reset css flag before importing bundle\n        for (var c = 0; c < bundleData.length; c++) {\n            if (bundleData[c].css_applied)\n                delete bundleData[c].css_applied;\n        }\n        _componentCache = bundleData;\n    }\n    return this;\n};\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    return _componentCache;\n};\nZuix.prototype.dumpContexts = function () {\n    return _contextRoot;\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
     "ctx": {
       "type": "method",
@@ -2152,8 +2152,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 995,
-    "codeStart": 999,
+    "line": 989,
+    "codeStart": 993,
     "code": "module.exports = function (root) {\n    var zuix = new Zuix();\n    if (document.readyState != 'loading'){\n        zuix.componentize();\n    } else {\n        document.addEventListener('DOMContentLoaded', function () {\n            zuix.componentize();\n        });\n    }\n    // log messages monitor (one global listener)\n    _log.monitor(function (level, args) {\n        if (util.isFunction(zuix.monitor))\n            zuix.monitor(level, Array.prototype.slice.call(args));\n    });\n    return zuix;\n};",
     "ctx": {
       "type": "method",
