@@ -113,9 +113,6 @@ module.exports = {
         for (var key in obj)
             temp[key] = cloneObject(obj[key]);
         return temp;
-    },
-
-    // work-around for lint eval error
-    evalJs: eval
+    }
 
 };

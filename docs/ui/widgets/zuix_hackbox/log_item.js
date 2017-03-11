@@ -13,14 +13,14 @@ zuix.controller(function (cp) {
                 cp.trigger('item:click', sourceView);
             });
         }
-        // send the UI update operation in the background to prevent slow scroll
-        setTimeout(cp.update, 10);
+        cp.update();
     };
 
-    cp.update = function () {
+    cp.update = function() {
         var level = cp.model().level;
         var args = cp.model().args;
         var time = cp.model().time;
+        var elapsed = cp.model().elapsed;
 
         cp.field('level')
             .addClass(level.toLowerCase())
@@ -29,8 +29,8 @@ zuix.controller(function (cp) {
 
         cp.field('target').html(args[0]);
         cp.field('state').html(args[1] ? args[1] : '');
-        cp.field('info').html(args[2] ? args[2] : '');
+        cp.field('info').html(elapsed != null ? elapsed : (args[2] ? args[2] : ''));
         cp.field('time').html(time);
-    };
+    }
 
 });

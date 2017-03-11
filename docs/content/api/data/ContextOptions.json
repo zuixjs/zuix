@@ -180,6 +180,34 @@
       },
       {
         "type": "property",
+        "string": "{boolean|undefined} lazyLoad Enable or disable lazy-loading (**default:** false).",
+        "name": "lazyLoad",
+        "description": "Enable or disable lazy-loading (**default:** false).",
+        "types": [
+          "boolean"
+        ],
+        "typesDescription": "<code>boolean</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
+        "string": "{number|undefined} priority Loading priority (**default:** 0).",
+        "name": "priority",
+        "description": "Loading priority (**default:** 0).",
+        "types": [
+          "number"
+        ],
+        "typesDescription": "<code>number</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
         "string": "{ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.",
         "name": "ready",
         "description": "The ready callback, called once the component is succesfully loaded.",
@@ -218,6 +246,6 @@
     "isEvent": false,
     "ignore": false,
     "line": 26,
-    "codeStart": 41
+    "codeStart": 43
   }
 ]

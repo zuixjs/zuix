@@ -193,7 +193,9 @@ ContextController.prototype.view = function (filter) {
     // context view changed, dispose cached fields from previous attacched view
     if (this.context.view() != null || this._view !== this.context.view()) {
         this.clearCache();
+        // TODO: !!!!
         // TODO: dispose also events on view change (!!!)
+        // TODO: !!!!
         this._view = z$(this.context.view());
     }
     if (filter != null)

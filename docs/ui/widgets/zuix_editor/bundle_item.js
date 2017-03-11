@@ -23,13 +23,7 @@ zuix.controller(function (cp) {
             }
         });
         // display data
-        setTimeout(cp.update, 10);
-    };
-
-    cp.update = function () {
-        // populate fixed fields
         var item = cp.model();
-        cp.field('componentId').html(item.componentId);
         if (item.controller != null && item.controller.toString().length > 30) {
             resources += 'js ';
             componentType = 'component';
@@ -55,6 +49,13 @@ zuix.controller(function (cp) {
                 cp.field('icon').html('dashboard');
                 break;
         }
+        cp.update();
+    };
+
+    cp.update = function () {
+        // populate fixed fields
+        var item = cp.model();
+        cp.field('componentId').html(item.componentId);
         instances = countInstances();
         cp.field('instances').html(instances);
         cp.trigger('item:update');

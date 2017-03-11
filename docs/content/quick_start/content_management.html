@@ -126,23 +126,28 @@ To force loading of a particular element that currently
 inherits lazy-loading, we set on it the attribute ```data-ui-lazyload="false"```.
 
 <small><strong>EXAMPLE - </strong> Use of lazy loading option</small>
-<pre data-line="1,5"><code class="language-html">
-<div data-ui-lazyload="true">
-    <!-- the "content/preface" include will load anyway
-          because of the 'data-ui-lazyload=false' option -->
-    <div data-ui-include="content/preface"
-         data-ui-lazyload="false"></div>
-    <!-- following 'includes' inherits 'data-ui-lazyload' from
-         the parent and these will be loaded only when the user
-         scrolls the page down to them -->
-    <div data-ui-include="content/chapter_01"></div>
-    <div data-ui-include="content/chapter_02"></div>
-    <!-- ... --->
-    <div data-ui-include="content/chapter_12"></div>
-    <div data-ui-include="content/appendix"></div>
+<pre data-line="1,2,6"><code class="language-html">
+<div class="vertical-scrollable" data-ui-lazyload="scroll">
+    <div data-ui-lazyload="true">
+        <!-- the "content/preface" include will load anyway
+              because of the 'data-ui-lazyload=false' option -->
+        <div data-ui-include="content/preface"
+             data-ui-lazyload="false"></div>
+        <!-- following 'includes' inherits 'data-ui-lazyload' from
+             the parent and these will be loaded only when the user
+             scrolls the page down to them -->
+        <div data-ui-include="content/chapter_01"></div>
+        <div data-ui-include="content/chapter_02"></div>
+        <!-- ... --->
+        <div data-ui-include="content/chapter_12"></div>
+        <div data-ui-include="content/appendix"></div>
+    </div>
 </div>
 </code></pre>
 
+If the visibility of the lazy-loaded elements depends on a scrollable
+container, then the `data-ui-lazyload="scroll"` attribute must be
+specified on the container element.
 
 ##### Styling content
 

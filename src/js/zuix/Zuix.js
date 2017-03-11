@@ -82,6 +82,8 @@ var taskQueue = function(tid) {
     }
     return _componentTask[tid];
 };
+/** @private **/
+var _pendingResourceTask = {};
 
 /**
  *  ZUIX, Javascript library for component-based development.
@@ -208,26 +210,20 @@ function load(componentId, options) {
     if (options.lazyLoad)
         return ctx;
 
-
     if (resourceLoadTask[componentId] == null) {
         resourceLoadTask[componentId] = true;
         return loadResources(ctx, options);
     } else {
-        var i = setInterval(function () {
-            if (resourceLoadTask[componentId] == null) {
-                resourceLoadTask[componentId] = true;
-                clearInterval(i);
-                loadResources(ctx, options);
-            }
-           // _log.e(ctx.componentId, resourceLoadTask);
-        }, 100);
+        if (_pendingResourceTask[componentId] == null)
+            _pendingResourceTask[componentId] = [];
+        _pendingResourceTask[componentId].push({ c: ctx, o: options});
     }
 
     return ctx; //loadResources(ctx, options);
 }
+
 /** @private */
 function loadResources(ctx, options) {
-
     // pick it from cache if found
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
@@ -299,10 +295,12 @@ function loadResources(ctx, options) {
     } else {
         ctx.view(options.view);
     }
-    taskQueue('resource-loader').queue(ctx.componentId+':js', function () {
-        resourceLoadTask[ctx.componentId] = this;
-        loadController(ctx, resourceLoadTask[ctx.componentId]);
-    }, _contextRoot.length);
+    if (ctx.controller() == null) {
+        taskQueue('resource-loader').queue(ctx.componentId + ':js', function () {
+            resourceLoadTask[ctx.componentId] = this;
+            loadController(ctx, resourceLoadTask[ctx.componentId]);
+        }, _contextRoot.length);
+    } else loadController(ctx);
 
     return ctx;
 }
@@ -503,7 +501,8 @@ function cacheComponent(context) {
 
 /***
  * @private
- * @param context {ComponentContext}
+ * @param {ComponentContext} context
+ * @param {TaskQueue} [task]
  */
 function createComponent(context, task) {
     resourceLoadTask[context.componentId] = null;
@@ -616,6 +615,8 @@ function createComponent(context, task) {
  */
 function initController(c) {
 
+    _log.t(c.context.componentId, 'controller:init', 'timer:init:start');
+
     // bind {ContextController}.field method
     c.field = function(fieldName) {
         var el = field(fieldName, c.view(), c);
@@ -637,7 +638,17 @@ function initController(c) {
 
     c.trigger('component:ready', c.view(), true);
 
+    _log.t(c.context.componentId, 'controller:init', 'timer:init:stop');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);
+
+    if (_pendingResourceTask[c.context.componentId] != null) {
+        var pendingRequests = _pendingResourceTask[c.context.componentId];
+        _pendingResourceTask[c.context.componentId] = null;
+        var ctx = null;
+        while (pendingRequests != null && (ctx = pendingRequests.shift()) != null)
+            loadResources(ctx.c, ctx.o);
+    }
+
 }
 
 /***

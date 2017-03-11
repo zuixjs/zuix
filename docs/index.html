@@ -64,7 +64,7 @@
     <!-- ZUIX library  -->
     <script src="js/zuix.min.js"></script>
     <!-- app bundle -->
-    <!--script src="app.bundle.js"></script-->
+    <script src="app.bundle.js"></script>
 
     <!-- Main Page includes -->
     <link rel="stylesheet" href="index.css">
@@ -145,7 +145,7 @@
 
                     <!-- include content from local resource -->
                     <div data-ui-include="content/home"
-                         data-ui-priority="1"
+                         data-ui-field="content-home"
                          data-ui-options="main.options.content_no_md"
                          layout="columns center-stretch"></div>
 
@@ -160,7 +160,6 @@
 
                         <!-- include content from local resource -->
                         <div data-ui-include="content/get_started"
-                             data-ui-priority="2"
                              data-ui-options="main.options.content"
                              data-ui-lazyload="false"
                              class="progressive-content-container"></div>
@@ -177,7 +176,6 @@
 
                         <!-- include content from local resource -->
                         <div data-ui-include="content/api"
-                             data-ui-priority="3"
                              data-ui-options="main.options.content"
                              data-ui-lazyload="false"></div>
 
@@ -217,9 +215,9 @@
             <em>the easy shift to component-based development</em>
         </div>
     </div>
-    <div layout="column bottom-center" class="content-padding">
+    <div layout="column bottom-center" class="content-padding animated bounce">
         <strong><small>loading...</small></strong>
-        <span data-ui-field="loader-progress">...</span>
+        <span data-ui-field="loader-progress">app.bundle.js</span>
     </div>
 </div>
 

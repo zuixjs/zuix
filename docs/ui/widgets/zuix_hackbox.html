@@ -24,21 +24,22 @@
              data-ui-load="ui/widgets/zuix_editor"
              data-ui-context="zuix-editor"
              data-ui-lazyload="scroll"
-             class="bundle-box  mdl-color--white mdl-color-text--black scrollable content-padding"
+             class="bundle-box mdl-color--white mdl-color-text--black scrollable content-padding"
              layout="row stretch-stretch">
         </div>
         <div data-ui-field="fragment-log"
              data-ui-lazyload="scroll"
-             class="log-box scrollable mdl-shadow--16dp">
+             class="log-box scrollable mdl-shadow--16dp"
+             layout="column top-stretch">
 
             <div data-ui-field="log-list"
                  data-ui-lazyload="false"
-                 data-ui-load="ui/layout/list_view">
+                 data-ui-load="ui/layout/list_view"
+                 self="size-x1">
 
                 loading...
 
             </div>
-
         </div>
         <div data-ui-field="fragment-bundle"
              data-ui-lazyload="scroll"
@@ -75,7 +76,6 @@
         </div>
 
     </div>
-
     <div class="footer mdl-shadow--24dp"
          layout="row center-spread">
         <a data-ui-field="button-components" class="material-icons mdl-color-text--blue-900 mdl-badge mdl-badge--overlap margin-left" data-badge="!">

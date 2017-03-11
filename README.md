@@ -17,11 +17,11 @@ Get **ZUIX** minified Javascript file and include it in the `head` section of th
 
 <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
    href="https://genielabs.github.io/zuix/js/zuix.min.js">
-   &gt;&gt;&gt; Download <strong>ZUIX v0.4.9-3</strong> &lt;&lt;&lt;
+   &gt;&gt;&gt; Download <strong>ZUIX v0.4.9-4</strong> &lt;&lt;&lt;
 </a>
 
 </div>
-<div align="center"><small><em>10 kB (gzipped)</em></small></div>
+<div align="center"><small><em>~10 kB (gzipped)</em></small></div>
 
 ###### Hosted
 

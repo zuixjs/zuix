@@ -38,7 +38,9 @@ var _bc = 'background-color:rgba(200,200,200,0.2);',
     _c2 = 'color:#777777',
     _c3 = 'color:#888888;',
     _c_start = 'color:#999900;',
-    _c_end = 'color:#00aa00;';
+    _c_end = 'color:#00aa00;',
+    _c_end_very_slow = 'color:#ff0000;',
+    _c_end_slow = 'color:#ff7700;';
 
 var _callback = null;
 
@@ -66,10 +68,16 @@ function Logger(ctx) {
                             colors.push(_bc+_c_start);
                             break;
                         case 'stop':
+                            var elapsed = (new Date().getTime() - this._timers[t[1]]);
                             logHeader += ' %cSTOP '+t[1]+' '+
-                                (new Date().getTime() - this._timers[t[1]]) +
+                                elapsed +
                                 ' ms';
-                            colors.push(_bc+_c_end);
+                            if (elapsed > 200)
+                                colors.push(_bc+_c_end_very_slow);
+                            else if (elapsed > 100)
+                                colors.push(_bc+_c_end_slow);
+                            else
+                                colors.push(_bc+_c_end);
                             break;
                     }
                 }
@@ -88,10 +96,11 @@ function Logger(ctx) {
     this.log = function (level, args) {
         if (typeof _callback === 'function')
             _callback.call(ctx, level, args);
-        this.args(ctx, level, args);
         // route event
-        if (!_global.zuixNoConsoleOutput)
+        if (!_global.zuixNoConsoleOutput) {
+            this.args(ctx, level, args);
             _console.log.apply(_console, args);
+        }
     };
 }
 

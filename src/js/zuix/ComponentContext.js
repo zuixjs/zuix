@@ -37,6 +37,7 @@ var util =
  * TODO: describe this class...
  *
  * @param {ContextOptions} options The context options.
+ * @param {function} [eventCallback] Event routing callback.
  * @returns {ComponentContext} The component context instance.
  * @constructor
  */
@@ -125,6 +126,7 @@ ComponentContext.prototype.view = function (view) {
     else if (view instanceof z$.ZxQuery)
         view = view.get();
 
+    _log.t(this.componentId, 'view:attach', 'timer:view:start');
     if (typeof view === 'string') {
         // load view from HTML source
 
@@ -190,6 +192,7 @@ ComponentContext.prototype.view = function (view) {
 
     this.modelToView();
 
+    _log.t(this.componentId, 'view:attach', 'timer:view:stop');
     return this;
 };
 
@@ -215,6 +218,7 @@ ComponentContext.prototype.view = function (view) {
  */
 ComponentContext.prototype.style = function (css) {
     if (typeof css === 'undefined') return this._style;
+    _log.t(this.componentId, 'view:style', 'timer:view:start');
     if (css == null || css instanceof Element) {
 
         this._css = (css instanceof Element) ? css.innerText : css;
@@ -239,6 +243,7 @@ ComponentContext.prototype.style = function (css) {
 
     }
     // TODO: should throw error if ```css``` is not a valid type
+    _log.t(this.componentId, 'view:style', 'timer:view:stop');
     return this;
 };
 /**
@@ -466,6 +471,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.viewToModel = function() {
+    _log.t(this.componentId, 'view:model', 'timer:vm:start');
     var _t = this;
     this._model = {};
     // create data model from inline view fields
@@ -489,6 +495,7 @@ ComponentContext.prototype.viewToModel = function() {
             cur[path[path.length - 1]] = value;
         } else _t._model[name] = value;
     });
+    _log.t(this.componentId, 'view:model', 'timer:vm:stop');
     return this;
 };
 /**
@@ -498,6 +505,7 @@ ComponentContext.prototype.viewToModel = function() {
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.modelToView = function () {
+    _log.t(this.componentId, 'model:view', 'timer:mv:start');
     if (this._view != null && this._model != null) {
         var _t = this;
         z$(this._view).find('[data-ui-field]').each(function(i, el) {
@@ -537,6 +545,7 @@ ComponentContext.prototype.modelToView = function () {
             }
         });
     }
+    _log.t(this.componentId, 'model:view', 'timer:mv:stop');
     return this;
 };
 

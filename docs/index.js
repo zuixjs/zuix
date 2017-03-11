@@ -67,7 +67,7 @@ var main = {
         // component ready callback
         ready: function () {
             actionsView = this;
-            console.log("ZUIX", "INFO", "Top menu ready.", this);
+            //console.log("ZUIX", "INFO", "Top menu ready.", this);
         }
     },
 
@@ -78,7 +78,7 @@ var main = {
         // actions map
         on: {
             'page:change': function (e, i) {
-                console.log('page:change@PagedView', i);
+                //console.log('page:change@PagedView', i);
             }
         },
         // behaviors map
@@ -89,7 +89,7 @@ var main = {
         ready: function () {
             // store a reference to this component once it's loaded
             pagedView = this;
-            console.log("ZUIX", "INFO", "Paged view ready.", this);
+            //console.log("ZUIX", "INFO", "Paged view ready.", this);
         }
     }
 
@@ -100,6 +100,12 @@ var revealTimeout = null;
 var splashScreen = zuix.field('splashScreen').show();
 var loaderMessage = zuix.field('loaderMessage');
 var mainPage = zuix.field('main').hide();
+// reference to homepage's cover and features block (used for change-page animation)
+var coverBlock = null, featuresBlock = null;
+zuix.field('content-home').on('component:ready', function (ctx) {
+    coverBlock = zuix.field('mainCover', this);
+    featuresBlock = zuix.field('mainFeatures', this);
+});
 // Reference to navigation components
 var pagedView = null;
 var actionsView = null;
@@ -141,13 +147,11 @@ zuix
 
 }).hook('load:end', function(data){
 
-    loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
-        this.hide();
-    });
+    revealMainPage();
 
-    if (revealTimeout != null)
-        clearTimeout(revealTimeout);
-    revealTimeout = setTimeout(reveal, 350);
+}).hook('componentize:end', function(data){
+
+    revealMainPage();
 
 }).hook('html:parse', function (data) {
     // ShowDown - Markdown compiler
@@ -174,6 +178,15 @@ zuix
 })/*.hook('component:ready', function () {
 })*/;
 
+function revealMainPage() {
+    loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
+        this.hide();
+    });
+    if (revealTimeout != null)
+        clearTimeout(revealTimeout);
+    revealTimeout = setTimeout(reveal, 350);
+}
+
 function reveal() {
     if (splashScreen) {
         // this is only executed once, on app startup
@@ -187,10 +200,6 @@ function reveal() {
             function(){
                 s.hide();
             }).show();
-        if (coverBlock == null) {
-            coverBlock = zuix.$.find('[data-ui-component="content/home/cover"]');
-            featuresBlock = zuix.$.find('[data-ui-component="content/home/features"]');
-        }
     }
 }
 
@@ -240,8 +249,6 @@ var zxHeader = zuix.$.find('.site-header').hide();
 zxHeader.hidden = true; var headerTriggerY = 100;
 var zxHeaderTitle = zxHeader.find('[data-ui-field=title]');
 var zxFooter = zuix.$.find('.site-footer').hide();
-var featuresBlock = null;
-var coverBlock = null;
 
 zuix.$.find('section').eq(0).on('scroll', function (data) {
    checkMenuVisibility();
@@ -253,8 +260,11 @@ var usageTitlePath = zuix.load('ui/usability/content_path', {
     view: usagePage,
     tags: 'h3,h4,h5',
     target: zxHeaderTitle,
-    html: false,
-    css: false
+    callback: function () {
+        // close FAB menu on scroll if it's open
+        if (zuix.context('menu_getting_started').open())
+            zuix.context('menu_getting_started').open(false);
+    }
 });
 // API section header title - on scroll
 var apiPage = zuix.field('page-api');
@@ -262,8 +272,11 @@ var apiTitlePath = zuix.load('ui/usability/content_path', {
     view: apiPage,
     tags: 'h3',
     target: zxHeaderTitle,
-    html: false,
-    css: false
+    callback: function () {
+        // close FAB menu on scroll if it's open
+        if (zuix.context('menu_api').open())
+            zuix.context('menu_api').open(false);
+    }
 });
 
 function checkMenuVisibility() {
@@ -287,7 +300,6 @@ function checkMenuVisibility() {
 function menuItemClicked(e, i) {
     if (pagedView)
         pagedView.setPage(i);
-    console.log("item::click@ActionsView", i);
 }
 
 

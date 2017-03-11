@@ -3,11 +3,14 @@ zuix.controller(function (cp) {
     var offset = 200, items = [], title = null;
     var timeout = null;
 
+    cp.init = function () {
+        cp.options().css = false;
+        cp.options().html = false;
+    };
+
     cp.create = function () {
         title = zuix.$(cp.options().target);
-        cp.view().on('scroll', function (e) {
-            postUpdate();
-        });
+        cp.view().on('scroll', postUpdate);
         cp.expose('update', function () {
             title.attr('title', '');
             currentPos = 0;
@@ -48,6 +51,8 @@ zuix.controller(function (cp) {
                 });
             }
         }
+        var callback = cp.options().callback;
+        if (typeof callback === 'function')
+            callback();
     }
-
 });

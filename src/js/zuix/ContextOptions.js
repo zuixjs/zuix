@@ -35,6 +35,8 @@
  * @property {Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.
  * @property {Element|string|boolean|undefined} css The view style.
  * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
+ * @property {boolean|undefined} lazyLoad Enable or disable lazy-loading (**default:** false).
+ * @property {number|undefined} priority Loading priority (**default:** 0).
  * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
  * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
  */

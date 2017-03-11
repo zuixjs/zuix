@@ -27,6 +27,119 @@
 
 "use strict";
 
+function AsynChain(callback) {
+    listener = callback;
+}
+
+AsynChain.prototype.isReady = function () {
+    return jobsList.length == 0 || currentIndex == -1;
+};
+AsynChain.prototype.getJobs = function () {
+    return jobsList;
+};
+AsynChain.prototype.setJobs = function(list) {
+    if (jobsList.length > 0) {
+        // TODO: this case should never happen
+        currentIndex = -1;
+        jobsList.length = 0;
+        //done();
+        return;
+    }
+    jobsList = list.slice();
+    listener.status('start', jobsList);
+    next();
+};
+AsynChain.prototype.append = function(list) {
+    // TODO: this is causing stack-overflow
+    if (this.isReady())
+        this.setJobs(list);
+    else
+        Array.prototype.push.apply(jobsList, list);
+};
+
+// --------------------------------------------
+
+var jobsList = [];
+var currentIndex = -1;
+var listener = null;
+var lazyThread = null;
+
+function next() {
+    resetAsynCallback();
+    currentIndex++;
+    if (currentIndex < jobsList.length && !listener.willBreak()) {
+        worker();
+        return true;
+    } else if (currentIndex >= jobsList.length || listener.willBreak())
+        done();
+    return false;
+}
+function done(reason) {
+    currentIndex = -1;
+    jobsList.length = 0;
+    jobsList = [];
+    listener.status(reason != null ? reason : 'done');
+}
+
+function worker() {
+    var job = jobsList[currentIndex];
+    if (job == null) return false;
+    var doWork = function () {
+        resetAsynCallback();
+        if (!listener.doWork(job.item, function () {
+            lazyThread = requestAnimationFrame(next);
+        })) next();
+    };
+    if (job.cancelable) {
+        if (listener.willBreak())
+            done('stopped');
+        else if (lazyThread == null)
+            lazyThread = requestAnimationFrame(doWork);
+        //else next();
+        else return false;
+    } else doWork();
+    return true;
+}
+
+function resetAsynCallback() {
+    if (lazyThread != null) {
+        cancelAnimationFrame(lazyThread);
+        lazyThread = null;
+    }
+}
+
+module.exports = function (callback) {
+    return new AsynChain(callback);
+};
+},{}],2:[function(_dereq_,module,exports){
+/**
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ *
+ *  This file is part of
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+"use strict";
+
 var _console = null, _global = null;
 var _console_m = [
     "log", "info", "warn", "error", "debug", "trace", "dir", "group",
@@ -39,7 +152,9 @@ var _bc = 'background-color:rgba(200,200,200,0.2);',
     _c2 = 'color:#777777',
     _c3 = 'color:#888888;',
     _c_start = 'color:#999900;',
-    _c_end = 'color:#00aa00;';
+    _c_end = 'color:#00aa00;',
+    _c_end_very_slow = 'color:#ff0000;',
+    _c_end_slow = 'color:#ff7700;';
 
 var _callback = null;
 
@@ -67,10 +182,16 @@ function Logger(ctx) {
                             colors.push(_bc+_c_start);
                             break;
                         case 'stop':
+                            var elapsed = (new Date().getTime() - this._timers[t[1]]);
                             logHeader += ' %cSTOP '+t[1]+' '+
-                                (new Date().getTime() - this._timers[t[1]]) +
+                                elapsed +
                                 ' ms';
-                            colors.push(_bc+_c_end);
+                            if (elapsed > 200)
+                                colors.push(_bc+_c_end_very_slow);
+                            else if (elapsed > 100)
+                                colors.push(_bc+_c_end_slow);
+                            else
+                                colors.push(_bc+_c_end);
                             break;
                     }
                 }
@@ -89,10 +210,11 @@ function Logger(ctx) {
     this.log = function (level, args) {
         if (typeof _callback === 'function')
             _callback.call(ctx, level, args);
-        this.args(ctx, level, args);
         // route event
-        if (!_global.zuixNoConsoleOutput)
+        if (!_global.zuixNoConsoleOutput) {
+            this.args(ctx, level, args);
             _console.log.apply(_console, args);
+        }
     };
 }
 
@@ -140,7 +262,7 @@ module.exports = function(ctx) {
     return new Logger(ctx);
 };
 
-},{}],2:[function(_dereq_,module,exports){
+},{}],3:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -253,146 +375,7 @@ TaskQueue.prototype.queue = function(tid, fn, pri) {
 };
 
 module.exports = TaskQueue;
-},{"./Logger":1}],3:[function(_dereq_,module,exports){
-/**
- * Copyright 2015-2017 G-Labs. All Rights Reserved.
- *         https://genielabs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- *
- *  This file is part of
- *  ZUIX, Javascript library for component-based development.
- *        https://genielabs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-"use strict";
-
-function ThreadPool(callback) {
-    listener = callback;
-}
-ThreadPool.prototype.break = function () {
-    breakJobs = true;
-    if (activePools == 0) // TODO: this shouldn't be less than zero
-        done();
-};
-ThreadPool.prototype.isReady = function () {
-    return jobsList.length == 0;
-};
-ThreadPool.prototype.setJobs = function(list) {
-    // TODO: stops any pending job
-    if (jobsList.length > 0)
-        alert('ThreadPool warning, should not set a new job list if still working.');
-    jobsList = list;
-    listener.status('start', jobsList);
-    run();
-};
-
-// --------------------------------------------
-
-var jobsList = [];
-var currentIndex = 0;
-var breakJobs = false;
-var listener = null;
-
-var poolSize = 10;
-var activePools = 0;
-var stopping = false;
-
-function run() {
-    //var loadNext = throttle(next, 1);
-    for (var i = 0; i < (poolSize - activePools); i++) {
-        if (!next())
-            break;
-    }
-}
-
-function next() {
-    currentIndex++;
-    if (currentIndex < jobsList.length)
-        return runOne();
-    //else done();
-    return false;
-}
-function done() {
-    breakJobs = false;
-    stopping = false;
-    activePools = 0;
-    currentIndex = -1;
-    jobsList.length = 0;
-    jobsList = [];
-    listener.status('done');
-}
-
-function waitComplete() {
-    stopping = true;
-    if (activePools > 0)
-        setTimeout(function () {
-            waitComplete();
-        }, 2000);
-    else {
-        stopping = false;
-        //done();
-    }
-}
-
-function runOne() {
-    if (stopping) return false;
-    if (breakJobs) {
-        waitComplete();
-        breakJobs = false;
-        if (currentIndex < jobsList.length) {
-            //breakJobs = false;
-            listener.status('stopped', { remaining: jobsList.length-currentIndex-1, jobs: jobsList.splice(0, currentIndex+1)});
-        }
-        return false;
-    }
-    var job = jobsList[currentIndex];
-    if (job == null) return false;
-    var doWork = function () {
-        activePools++;
-        if (!listener.doWork(job.item, function () {
-                // wrapping with request animation frame is needed for "break" to work
-                activePools--;
-                if (currentIndex == -1 || currentIndex >= jobsList.length - 1)
-                    done();
-                else requestAnimationFrame(next);
-            })) { activePools--; next(); };
-    };
-    if (job.cancelable) {
-        requestAnimationFrame(doWork);
-    } else doWork();
-    return true;
-}
-
-function throttle(fn, wait) {
-    var time = Date.now();
-    return function() {
-        if ((time + wait - Date.now()) < 0) {
-            fn();
-            time = Date.now();
-        }
-    }
-}
-
-module.exports = function (callback) {
-    return new ThreadPool(callback);
-};
-},{}],4:[function(_dereq_,module,exports){
+},{"./Logger":2}],4:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -508,10 +491,7 @@ module.exports = {
         for (var key in obj)
             temp[key] = cloneObject(obj[key]);
         return temp;
-    },
-
-    // work-around for lint eval error
-    evalJs: eval
+    }
 
 };
 },{}],5:[function(_dereq_,module,exports){
@@ -954,7 +934,8 @@ ZxQuery.prototype.append = function (el) {
  * Insert the given child element before the one at the
  * specified index.
  *
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to append.
+ * @param index Position where to insert `el` Element.
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.insert = function (index, el) {
@@ -975,6 +956,34 @@ ZxQuery.prototype.prepend = function (el) {
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
     else
         this._selection[0].insertBefore(el, this._selection[0].firstElementChild);
+    return this;
+};
+/**
+ * Re-attach element to its parent.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.attach = function () {
+    var el = this._selection[0];
+    if (el.parentNode == null && el.__zuix_oldParent != null) {
+        z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
+        el.__zuix_oldParent = null;
+        delete el.__zuix_oldParent;
+        delete el.__zuix_oldIndex;
+    }
+    return this;
+};
+/**
+ * Detach element from its parent.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.detach = function () {
+    var el = this._selection[0];
+    var parent = el.parentNode;
+    if (parent != null) {
+        el.__zuix_oldParent = parent;
+        el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
+        parent.removeChild(el);
+    }
     return this;
 };
 /**
@@ -1111,7 +1120,7 @@ z$.wrapCss = function (wrapperRule, css) {
     while (r = wrapReX.exec(css)) {
         if (result != null) {
             var rule = css.substring(result.index, r.index);
-            var splitReX = /(.*)\{([^\}]+)[\}]/g; // [^{]
+            var splitReX = /(.*)\{([^}]+)[}]/g; // [^{]
             var ruleParts = splitReX.exec(rule);
             if (ruleParts != null && ruleParts.length > 1) {
                 var classes = ruleParts[1].split(',');
@@ -1274,7 +1283,7 @@ if (!Element.prototype.matches) {
 
 module.exports =  z$;
 
-},{"./Logger":1,"./Util.js":4}],6:[function(_dereq_,module,exports){
+},{"./Logger":2,"./Util.js":4}],6:[function(_dereq_,module,exports){
 /**
  * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1359,6 +1368,7 @@ var util =
  * TODO: describe this class...
  *
  * @param {ContextOptions} options The context options.
+ * @param {function} [eventCallback] Event routing callback.
  * @returns {ComponentContext} The component context instance.
  * @constructor
  */
@@ -1447,6 +1457,7 @@ ComponentContext.prototype.view = function (view) {
     else if (view instanceof z$.ZxQuery)
         view = view.get();
 
+    _log.t(this.componentId, 'view:attach', 'timer:view:start');
     if (typeof view === 'string') {
         // load view from HTML source
 
@@ -1512,6 +1523,7 @@ ComponentContext.prototype.view = function (view) {
 
     this.modelToView();
 
+    _log.t(this.componentId, 'view:attach', 'timer:view:stop');
     return this;
 };
 
@@ -1537,6 +1549,7 @@ ComponentContext.prototype.view = function (view) {
  */
 ComponentContext.prototype.style = function (css) {
     if (typeof css === 'undefined') return this._style;
+    _log.t(this.componentId, 'view:style', 'timer:view:start');
     if (css == null || css instanceof Element) {
 
         this._css = (css instanceof Element) ? css.innerText : css;
@@ -1561,6 +1574,7 @@ ComponentContext.prototype.style = function (css) {
 
     }
     // TODO: should throw error if ```css``` is not a valid type
+    _log.t(this.componentId, 'view:style', 'timer:view:stop');
     return this;
 };
 /**
@@ -1788,6 +1802,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.viewToModel = function() {
+    _log.t(this.componentId, 'view:model', 'timer:vm:start');
     var _t = this;
     this._model = {};
     // create data model from inline view fields
@@ -1811,6 +1826,7 @@ ComponentContext.prototype.viewToModel = function() {
             cur[path[path.length - 1]] = value;
         } else _t._model[name] = value;
     });
+    _log.t(this.componentId, 'view:model', 'timer:vm:stop');
     return this;
 };
 /**
@@ -1820,6 +1836,7 @@ ComponentContext.prototype.viewToModel = function() {
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.modelToView = function () {
+    _log.t(this.componentId, 'model:view', 'timer:mv:start');
     if (this._view != null && this._model != null) {
         var _t = this;
         z$(this._view).find('[data-ui-field]').each(function(i, el) {
@@ -1859,11 +1876,12 @@ ComponentContext.prototype.modelToView = function () {
             }
         });
     }
+    _log.t(this.componentId, 'model:view', 'timer:mv:stop');
     return this;
 };
 
 module.exports = ComponentContext;
-},{"../helpers/Logger":1,"../helpers/Util":4,"../helpers/ZxQuery":5}],8:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5}],8:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1895,14 +1913,21 @@ module.exports = ComponentContext;
 
 /**
  *
- * @param {Element|ZxQuery|undefined} [element]
+ * @param {Element|ZxQuery|undefined} [element] Scan and process loadable elements inside `element`.
+ * @param {Element|undefined} [child] Process only the specified `child` of `element`.
  * @return {Componentizer}
  */
-Componentizer.prototype.componentize = function(element) {
-    if (element == null)
-        element = document;
-    addRequest(element);
-    loadNext();
+Componentizer.prototype.componentize = function (element, child) {
+    zuix.trigger(this, 'componentize:begin');
+    if (child != null) {
+        var cache = getElementCache(element);
+        if (cache == null)
+            setElementCache(element, [child]);
+        else cache.push(child);
+    } else {
+        addRequest(element);
+    }
+    loadNext(element);
     return this;
 };
 
@@ -1910,7 +1935,7 @@ Componentizer.prototype.componentize = function(element) {
  *
  * @return {boolean}
  */
-Componentizer.prototype.willLoadMore = function() {
+Componentizer.prototype.willLoadMore = function () {
     return _componentizeQueue.length > 0 || _componentizeRequests.length > 0;
 };
 
@@ -1920,7 +1945,7 @@ Componentizer.prototype.willLoadMore = function() {
  * @param {boolean} [enable]
  * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Componentizer.prototype.lazyLoad = function(enable) {
+Componentizer.prototype.lazyLoad = function (enable) {
     return lazyLoad(enable);
 };
 
@@ -1929,12 +1954,12 @@ Componentizer.prototype.lazyLoad = function(enable) {
  * @param {Zuix} zuixInstance
  * @return {Componentizer}
  */
-Componentizer.prototype.setHost = function(zuixInstance) {
+Componentizer.prototype.setHost = function (zuixInstance) {
     zuix = zuixInstance;
     return this;
 };
 
-module.exports = function() {
+module.exports = function () {
     return new Componentizer();
 };
 
@@ -1949,6 +1974,9 @@ var util =
 var z$ =
     _dereq_('../helpers/ZxQuery');
 
+/** @type {Zuix} **/
+var zuix = null;
+
 /** @private */
 var _componentizeRequests = [];
 /** @private */
@@ -1958,14 +1986,6 @@ var _componentizeQueue = [],
     /** @private */
     _lazyElements = [],
     _lazyContainers = [];
-
-/** @private */
-var retryTimeout = null,
-    /** @private */
-    pause = false;
-
-/** @type {Zuix} **/
-var zuix = null;
 
 // Browser Agent / Bot detection
 /** @private */
@@ -1990,25 +2010,22 @@ var TaskItem = function () {
     }
 };
 
-// component loader thread pool
-var threadPool = _dereq_('../helpers/ThreadPool')({
 
-    doWork: function(item, callback) {
+// Components Loading Chain
+var loader = _dereq_('./../helpers/AsynChain')({
+
+    doWork: function (item, callback) {
         z$(item.element).one('component:ready', function () {
             callback();
         });
         return loadInline(item.element);
     },
-
-    status: function (status, data) {
+    willBreak: function () {
+        return false;
+    },
+    status: function (status) {
         switch (status) {
             case 'start':
-                break;
-            case 'stopped':
-                if (data.jobs.length > 0) {
-                    for(var j in data.jobs)
-                        _componentizeQueue.push(data.jobs[j].item);
-                }
                 break;
             case 'done':
                 loadNext();
@@ -2029,12 +2046,29 @@ function lazyLoad(enable) {
 }
 
 function addRequest(element) {
+    if (element == null)
+        element = document;
     if (!_componentizeRequests.indexOf(element))
         _componentizeRequests.push(element);
 }
 
-function processRequests(element) {
+var _elementCache = [];
+function setElementCache(element, waiting) {
+    _elementCache.push({
+        element: element,
+        waiting: waiting
+    });
+}
+function getElementCache(element) {
+    for (var i = 0; i < _elementCache.length; i++) {
+        var cache = _elementCache[i];
+        if (cache.element === element)
+            return cache.waiting;
+    }
+    return null;
+}
 
+function queueLoadables(element) {
 
     if (element == null && _componentizeRequests.length > 0)
         element = _componentizeRequests.unshift();
@@ -2043,98 +2077,86 @@ function processRequests(element) {
         element = element.get();
 
     // Select all loadable elements
-    var waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
+    var waitingLoad = getElementCache(element);
+//    if (waitingLoad == null || waitingLoad.length == 0) {
+    waitingLoad = z$(element).find('[data-ui-load]:not([data-ui-loaded=true]),[data-ui-include]:not([data-ui-loaded=true])');
     waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
+    setElementCache(element, waitingLoad);
+//    }
     var waitingTasks = [];
     for (var w = 0; w < waitingLoad.length; w++) {
         var pri = parseInt(waitingLoad[w].getAttribute('data-ui-priority'));
         if (isNaN(pri)) pri = 0;
         var task = new TaskItem();
         task.element = waitingLoad[w];
-        task.priority = pri; //w - ( 12 * ( w % 2 ) ) + ( pri * 73 );
+        task.priority = pri; //w - ( 12 * ( w % 2 ) ) + ( pri * 73 ); // fuzzy pri
         waitingTasks.push(task);
     }
-
+    var added = 0;
     // add selected elements to the requests queue
-    var processNext = false;
     for (var i = 0; i < waitingTasks.length; i++) {
         var alreadyAdded = false;
         for (var j = 0; j < _componentizeQueue.length; j++) {
             if (waitingTasks[i].element === _componentizeQueue[j].element) {
-                //_componentizeQueue[j].element.priority--;
                 alreadyAdded = true;
                 break;
             }
         }
         if (!alreadyAdded) {
             _componentizeQueue.push(waitingTasks[i]);
-            processNext = true;
+            added++;
         }
     }
-    processNext = true;
-    _log.t('componentize:count', _componentizeQueue.length);
+
+    _log.t('componentize:count', _componentizeQueue.length, added);
+
+    if (added == 0 || (_componentizeRequests.length == 0 && _componentizeQueue.length == 0))
+        zuix.trigger(this, 'componentize:end');
 }
 
-function getPoolTasks() {
+function getNextLoadable() {
 
-    // sort by priority (minor number gets higher priority)
+    // sort by priority (elements with lower pri number get processed first)
     _componentizeQueue.sort(function (a, b) {
         return a.priority - b.priority;
     });
-    var reinsert = []; var poolSize = 100; var jobs = [];
+    var job = null, reinsert = [];
     var item = _componentizeQueue.length > 0 ? _componentizeQueue.shift() : null;
-    while (item != null && item.element != null && poolSize > 0) {
-
+    while (item != null && item.element != null) {
         // defer element loading if lazy loading is enabled and the element is not in view
         var ls = lazyScrollCheck(item.element);
-        if (lazyLoad() && ls.scroller !== false) {
+        if (lazyLoad() && ls.scroller !== false && item.element.getAttribute('data-ui-lazyload') != 'false') {
             item.lazy = true;
             item.visible = z$.getPosition(item.element).visible;
-            //if (!item.visible) item.priority++;
         } else {
             item.lazy = false;
             item.visible = true;
         }
-
         // ...
         if (item.element != null && item.element.getAttribute('data-ui-loaded') == 'true' || !item.visible) {
-            if (!item.visible)
-                reinsert.push(item);
+            if (!item.visible) reinsert.push(item);
             item = null;
-        }
-
-        if (item != null && item.element != null && item.visible) {
-            jobs.push({
+        } else if (item != null && item.element != null && item.visible) {
+            job = {
                 item: item,
                 cancelable: item.lazy
-            });
-            poolSize--
+            };
+            break;
         }
-
-        if (poolSize > 0) {
-            if (_componentizeQueue.length > 0)
-                item = _componentizeQueue.shift();
-            else
-                item = null;
-        } else item = null;
+        if (_componentizeQueue.length > 0)
+            item = _componentizeQueue.shift();
+        else break;
     }
-
-    _componentizeQueue = _componentizeQueue.concat(reinsert);
-
-
-    return jobs;
+    Array.prototype.push.apply(_componentizeQueue, reinsert);
+    return job;
 }
 
 function loadNext(element) {
-    if (!threadPool.isReady()) {
-        return;
-    }
-    processRequests(element);
-    var jobs = getPoolTasks();
-    if (jobs.length > 0)
-        threadPool.setJobs(jobs);
+    queueLoadables(element);
+    var job = getNextLoadable();
+    if (job != null)
+        loader.append([job]);
 }
-
 
 /** @protected */
 function loadInline(element) {
@@ -2143,9 +2165,8 @@ function loadInline(element) {
     if (v.attr('data-ui-loaded') === 'true' || v.parent('pre,code').length() > 0) {
         //_log.w("Skipped", element);
         return false;
-    }
+    } else v.attr('data-ui-loaded', 'true');
 
-    v.attr('data-ui-loaded', 'true');
     /** @type {ContextOptions} */
     var options = v.attr('data-ui-options');
     if (!util.isNoU(options)) {
@@ -2182,16 +2203,16 @@ function loadInline(element) {
     if (!util.isNoU(contextId))
         options.contextId = contextId;
 
-    var priority = v.attr('data-ui-priority');
+    var priority = parseInt(v.attr('data-ui-priority'));
     if (!util.isNoU(priority))
         options.priority = priority;
-    //else
-    //    options.priority = _contextRoot.length;
 
-    // TODO: Behavior are also definable in "data-ui-behavior" attribute
-    // TODO: Events are also definable in "data-ui-on" attribute
-    // TODO: perhaps "data-ui-ready" and "data-ui-error" too
-    // util.propertyFromPath( ... )
+    var el = z$(element);
+    el.one('component:ready', function () {
+        addRequest(element);
+        loadNext(element);
+    });
+
     zuix.load(componentId, options);
 
     return true;
@@ -2237,31 +2258,25 @@ function addLazyContainer(el) {
 }
 
 function lazyScrollCheck(el) {
-
     // store a reference to its scroller container for lazy-loaded elements
     var ls = getLazyElement(el);
     if (ls == null) {
         ls = addLazyElement(el);
-        var lazyContainer = z$.getClosest(el, '[data-ui-lazyload=scroll]'); //el$.parent('[data-ui-lazyload=scroll]');
+        var lazyContainer = z$.getClosest(el, '[data-ui-lazyload=scroll]');
         // override lazy loading if 'lazyload' is set to 'false' for the current element
-        if (!(lazyContainer != null && lazyContainer.getAttribute('data-ui-lazyload') == 'force')
-            &&
-            (!lazyLoad() || el.getAttribute('data-ui-lazyload') == 'false')) {
-//...TODO: ...
-        } else if (lazyContainer != null) {
+        if (lazyContainer != null) {
             var lc = getLazyContainer(lazyContainer);
             if (lc == null) {
-                lc = addLazyContainer(lazyContainer)
+                lc = addLazyContainer(lazyContainer);
                 // attach 'scroll' event handler to lazy-scroller
                 var scrollWatcher = function (instance, lc) {
-                    var last = new Date().getTime();
+                    var lastScroll = new Date().getTime();
                     z$(lc).on('scroll', function () {
                         var now = new Date().getTime();
-                        var elapsed = now-last;
-                        if (elapsed < 30)
-                            return;
-                        last = now;
-                        threadPool.break();
+                        if (now - lastScroll > 100) {
+                            lastScroll = now;
+                            loadNext(lc);
+                        }
                     });
                 }(this, lazyContainer);
             }
@@ -2271,7 +2286,7 @@ function lazyScrollCheck(el) {
     return ls;
 }
 
-},{"../helpers/Logger":1,"../helpers/ThreadPool":3,"../helpers/Util":4,"../helpers/ZxQuery":5}],9:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./../helpers/AsynChain":1}],9:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -2467,7 +2482,9 @@ ContextController.prototype.view = function (filter) {
     // context view changed, dispose cached fields from previous attacched view
     if (this.context.view() != null || this._view !== this.context.view()) {
         this.clearCache();
+        // TODO: !!!!
         // TODO: dispose also events on view change (!!!)
+        // TODO: !!!!
         this._view = z$(this.context.view());
     }
     if (filter != null)
@@ -2752,6 +2769,8 @@ var taskQueue = function(tid) {
     }
     return _componentTask[tid];
 };
+/** @private **/
+var _pendingResourceTask = {};
 
 /**
  *  ZUIX, Javascript library for component-based development.
@@ -2878,26 +2897,20 @@ function load(componentId, options) {
     if (options.lazyLoad)
         return ctx;
 
-
     if (resourceLoadTask[componentId] == null) {
         resourceLoadTask[componentId] = true;
         return loadResources(ctx, options);
     } else {
-        var i = setInterval(function () {
-            if (resourceLoadTask[componentId] == null) {
-                resourceLoadTask[componentId] = true;
-                clearInterval(i);
-                loadResources(ctx, options);
-            }
-           // _log.e(ctx.componentId, resourceLoadTask);
-        }, 100);
+        if (_pendingResourceTask[componentId] == null)
+            _pendingResourceTask[componentId] = [];
+        _pendingResourceTask[componentId].push({ c: ctx, o: options});
     }
 
     return ctx; //loadResources(ctx, options);
 }
+
 /** @private */
 function loadResources(ctx, options) {
-
     // pick it from cache if found
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
@@ -2969,10 +2982,12 @@ function loadResources(ctx, options) {
     } else {
         ctx.view(options.view);
     }
-    taskQueue('resource-loader').queue(ctx.componentId+':js', function () {
-        resourceLoadTask[ctx.componentId] = this;
-        loadController(ctx, resourceLoadTask[ctx.componentId]);
-    }, _contextRoot.length);
+    if (ctx.controller() == null) {
+        taskQueue('resource-loader').queue(ctx.componentId + ':js', function () {
+            resourceLoadTask[ctx.componentId] = this;
+            loadController(ctx, resourceLoadTask[ctx.componentId]);
+        }, _contextRoot.length);
+    } else loadController(ctx);
 
     return ctx;
 }
@@ -3173,7 +3188,8 @@ function cacheComponent(context) {
 
 /***
  * @private
- * @param context {ComponentContext}
+ * @param {ComponentContext} context
+ * @param {TaskQueue} [task]
  */
 function createComponent(context, task) {
     resourceLoadTask[context.componentId] = null;
@@ -3286,6 +3302,8 @@ function createComponent(context, task) {
  */
 function initController(c) {
 
+    _log.t(c.context.componentId, 'controller:init', 'timer:init:start');
+
     // bind {ContextController}.field method
     c.field = function(fieldName) {
         var el = field(fieldName, c.view(), c);
@@ -3307,7 +3325,17 @@ function initController(c) {
 
     c.trigger('component:ready', c.view(), true);
 
+    _log.t(c.context.componentId, 'controller:init', 'timer:init:stop');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);
+
+    if (_pendingResourceTask[c.context.componentId] != null) {
+        var pendingRequests = _pendingResourceTask[c.context.componentId];
+        _pendingResourceTask[c.context.componentId] = null;
+        var ctx = null;
+        while (pendingRequests != null && (ctx = pendingRequests.shift()) != null)
+            loadResources(ctx.c, ctx.o);
+    }
+
 }
 
 /***
@@ -3679,6 +3707,6 @@ module.exports = function (root) {
 
 
 
-},{"../helpers/Logger":1,"../helpers/TaskQueue":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./ComponentContext":7,"./Componentizer":8,"./ContextController":9}]},{},[6])
+},{"../helpers/Logger":2,"../helpers/TaskQueue":3,"../helpers/Util":4,"../helpers/ZxQuery":5,"./ComponentContext":7,"./Componentizer":8,"./ContextController":9}]},{},[6])
 (6)
 });

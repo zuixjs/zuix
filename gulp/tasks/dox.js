@@ -14,6 +14,9 @@ module.exports = function () {
     gulp.src('./src/js/zuix/ContextController.js')
         .pipe(dox({ raw: true }))
         .pipe(gulp.dest('./docs/content/api/data'));
+    gulp.src('./src/js/zuix/Localizer.js')
+        .pipe(dox({ raw: true }))
+        .pipe(gulp.dest('./docs/content/api/data'));
     gulp.src('./src/js/helpers/ZxQuery.js')
         .pipe(dox({ raw: true }))
         .pipe(gulp.dest('./docs/content/api/data'));

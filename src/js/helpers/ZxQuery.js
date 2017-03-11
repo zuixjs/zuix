@@ -437,7 +437,8 @@ ZxQuery.prototype.append = function (el) {
  * Insert the given child element before the one at the
  * specified index.
  *
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to append.
+ * @param index Position where to insert `el` Element.
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.insert = function (index, el) {
@@ -458,6 +459,34 @@ ZxQuery.prototype.prepend = function (el) {
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
     else
         this._selection[0].insertBefore(el, this._selection[0].firstElementChild);
+    return this;
+};
+/**
+ * Re-attach element to its parent.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.attach = function () {
+    var el = this._selection[0];
+    if (el.parentNode == null && el.__zuix_oldParent != null) {
+        z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
+        el.__zuix_oldParent = null;
+        delete el.__zuix_oldParent;
+        delete el.__zuix_oldIndex;
+    }
+    return this;
+};
+/**
+ * Detach element from its parent.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.detach = function () {
+    var el = this._selection[0];
+    var parent = el.parentNode;
+    if (parent != null) {
+        el.__zuix_oldParent = parent;
+        el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
+        parent.removeChild(el);
+    }
     return this;
 };
 /**
@@ -594,7 +623,7 @@ z$.wrapCss = function (wrapperRule, css) {
     while (r = wrapReX.exec(css)) {
         if (result != null) {
             var rule = css.substring(result.index, r.index);
-            var splitReX = /(.*)\{([^\}]+)[\}]/g; // [^{]
+            var splitReX = /(.*)\{([^}]+)[}]/g; // [^{]
             var ruleParts = splitReX.exec(rule);
             if (ruleParts != null && ruleParts.length > 1) {
                 var classes = ruleParts[1].split(',');
