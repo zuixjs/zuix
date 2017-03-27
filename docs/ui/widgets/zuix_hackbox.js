@@ -53,6 +53,13 @@ zuix.controller(function (cp) {
     };
 
     cp.create = function () {
+        var userAgent = window.navigator.userAgent;
+        if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+            // hackbox currenly won't work properly on iPad or iPhone
+            cp.view().hide();
+            return;
+        }
+
         // the main toolbox fragment
         mainToolbox = cp.field('toolbox').hide();
         pageViewContainer = cp.field('paged-view').on('component:ready', function () {
