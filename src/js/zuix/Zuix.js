@@ -640,7 +640,7 @@ function initController(c) {
     c.trigger('view:create');
 
     if (util.isFunction(c.context.ready))
-        (c.context.ready).call(c.context);
+        (c.context.ready).call(c.context, c.context);
 
     c.trigger('component:ready', c.view(), true);
 

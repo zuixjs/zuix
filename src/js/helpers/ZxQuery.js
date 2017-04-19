@@ -449,10 +449,7 @@ ZxQuery.prototype.checked = function(check) {
         return (checked != null && checked != 'false' && (checked || checked == 'checked'));
     }
     this.each(function (k, el) {
-        if (check)
-            el.checked = 'checked';
-        else
-            el.removeAttribute('checked');
+        el.checked = check;
     });
     return this;
 

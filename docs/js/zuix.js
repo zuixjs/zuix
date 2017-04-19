@@ -946,10 +946,7 @@ ZxQuery.prototype.checked = function(check) {
         return (checked != null && checked != 'false' && (checked || checked == 'checked'));
     }
     this.each(function (k, el) {
-        if (check)
-            el.checked = 'checked';
-        else
-            el.removeAttribute('checked');
+        el.checked = check;
     });
     return this;
 
@@ -3375,7 +3372,7 @@ function initController(c) {
     c.trigger('view:create');
 
     if (util.isFunction(c.context.ready))
-        (c.context.ready).call(c.context);
+        (c.context.ready).call(c.context, c.context);
 
     c.trigger('component:ready', c.view(), true);
 
