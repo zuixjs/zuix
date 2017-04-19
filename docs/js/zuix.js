@@ -586,7 +586,14 @@ function triggerEventHandlers(el, path, evt) {
         }
     });
 }
-
+function removeAllEventHandlers(el) {
+    z$.each(_zuix_events_mapping, function () {
+        if (this.element === el) {
+            _log.t('Removing event handler', this.element, this.path, this.handler);
+            removeEventHandler(this.element, this.path, this.handler);
+        }
+    });
+}
 
 /**
  * ZxQuery, a very lite subset of jQuery-like functions
@@ -811,6 +818,16 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     return this;
 };
 /**
+ * Un-register all event handlers registered for selected elements.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.reset = function () {
+    this.each(function (k, el) {
+        removeAllEventHandlers(el);
+    });
+    return this;
+};
+/**
  * Returns *true* if the element is empty.
  * @return {boolean} *true* if the element is empty, *false* otherwise
  */
@@ -919,6 +936,39 @@ ZxQuery.prototype.html = function (htmlText) {
     return this;
 };
 /**
+ * Gets or sets the checked attribute.
+ * @param {boolean|undefined} [check] Value to assign to the 'checked' attribute.
+ * @return {ZxQuery|boolean}
+ */
+ZxQuery.prototype.checked = function(check) {
+    if (util.isNoU(check)) {
+        var checked = this._selection[0].checked;
+        return (checked != null && checked != 'false' && (checked || checked == 'checked'));
+    }
+    this.each(function (k, el) {
+        if (check)
+            el.checked = 'checked';
+        else
+            el.removeAttribute('checked');
+    });
+    return this;
+
+};
+/**
+ * Gets or sets the 'value' attribute.
+ * @param {string|undefined} [value] Value to assign to the 'value' attribute.
+ * @return {ZxQuery|string}
+ */
+ZxQuery.prototype.value = function(value) {
+    if (util.isNoU(value))
+        return this._selection[0].value;
+    this.each(function (k, el) {
+        el.value = value;
+    });
+    return this;
+
+};
+/**
  * Appends the given element/markup to the current element.
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
  * @return {ZxQuery} The *ZxQuery* object itself
@@ -983,6 +1033,7 @@ ZxQuery.prototype.detach = function () {
         el.__zuix_oldParent = parent;
         el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
         parent.removeChild(el);
+        _log.t('Detached from parent', parent, el);
     }
     return this;
 };
@@ -2371,8 +2422,7 @@ function ContextController(context) {
     };
 
     this.on = function (eventPath, handler_fn) {
-        this.addEvent(this.view(), eventPath, handler_fn);
-        // TODO: implement automatic event unbinding (off) in super().destroy()
+        this.addEvent(eventPath, handler_fn);
         return this;
     };
     /** @protected */
@@ -2399,16 +2449,14 @@ function ContextController(context) {
     if (options.on != null) {
         for (var ep in options.on) {
             handler = options.on[ep];
-            // TODO: should log.warn if k already exists
-            _t.addEvent(_t.view(), ep, handler);
+            _t.addEvent(ep, handler);
         }
     }
     // create behavior map from context options
     if (options.behavior != null) {
         for (var bp in options.behavior) {
             handler = options.behavior[bp];
-            // TODO: should log.warn if k already exists
-            _t.addBehavior(_t.view(), bp, handler);
+            _t.addBehavior(bp, handler);
         }
     }
 
@@ -2418,14 +2466,14 @@ function ContextController(context) {
 }
 
 // TODO: add jsDoc
-ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
-    this.mapEvent(this.context._eventMap, target, eventPath, handler_fn);
+ContextController.prototype.addEvent = function (eventPath, handler_fn) {
+    this.mapEvent(this.context._eventMap, this.view(), eventPath, handler_fn);
     return this;
 };
 
 // TODO: add jsDoc
-ContextController.prototype.addBehavior = function (target, eventPath, handler_fn) {
-    this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
+ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
+    this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler_fn);
     return this;
 };
 
@@ -2556,7 +2604,7 @@ zuix.context('my-slide-show')
  */
 ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
     if (this.context._eventMap[eventPath] == null && isHook !== true)
-        this.addEvent(this.view(), eventPath, null);
+        this.addEvent(eventPath, null);
     // TODO: ...
     if (isHook === true) {
         var target = this.context.container();
@@ -2999,13 +3047,19 @@ function loadResources(ctx, options) {
  */
 function unload(context) {
     if (!util.isNoU(context) && !util.isNoU(context._c)) {
-        if (!util.isNoU(context._c.view()))
+        if (!util.isNoU(context._c.view())) {
             context._c.view().attr('data-ui-component', null);
-
-        //context.unregisterEvents();
-        // TODO: unregister events and local context behavior
-        // TODO: detach view from parent if context.container is not null
-
+            // un-register event handlers associated to the view
+            context._c.view().reset();
+            // un-register event handlers for all cached fields accessed through cp.field(...) method
+            if (!util.isNoU(context._c._fieldCache)) {
+                z$.each(context._c._fieldCache, function (k, v) {
+                    v.reset();
+                });
+            }
+            // detach from parent
+            context._c.view().detach();
+        }
         if (util.isFunction(context._c.destroy))
             context._c.destroy();
     }

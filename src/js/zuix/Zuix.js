@@ -312,13 +312,19 @@ function loadResources(ctx, options) {
  */
 function unload(context) {
     if (!util.isNoU(context) && !util.isNoU(context._c)) {
-        if (!util.isNoU(context._c.view()))
+        if (!util.isNoU(context._c.view())) {
             context._c.view().attr('data-ui-component', null);
-
-        //context.unregisterEvents();
-        // TODO: unregister events and local context behavior
-        // TODO: detach view from parent if context.container is not null
-
+            // un-register event handlers associated to the view
+            context._c.view().reset();
+            // un-register event handlers for all cached fields accessed through cp.field(...) method
+            if (!util.isNoU(context._c._fieldCache)) {
+                z$.each(context._c._fieldCache, function (k, v) {
+                    v.reset();
+                });
+            }
+            // detach from parent
+            context._c.view().detach();
+        }
         if (util.isFunction(context._c.destroy))
             context._c.destroy();
     }

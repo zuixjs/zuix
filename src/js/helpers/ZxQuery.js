@@ -89,7 +89,14 @@ function triggerEventHandlers(el, path, evt) {
         }
     });
 }
-
+function removeAllEventHandlers(el) {
+    z$.each(_zuix_events_mapping, function () {
+        if (this.element === el) {
+            _log.t('Removing event handler', this.element, this.path, this.handler);
+            removeEventHandler(this.element, this.path, this.handler);
+        }
+    });
+}
 
 /**
  * ZxQuery, a very lite subset of jQuery-like functions
@@ -314,6 +321,16 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     return this;
 };
 /**
+ * Un-register all event handlers registered for selected elements.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.reset = function () {
+    this.each(function (k, el) {
+        removeAllEventHandlers(el);
+    });
+    return this;
+};
+/**
  * Returns *true* if the element is empty.
  * @return {boolean} *true* if the element is empty, *false* otherwise
  */
@@ -422,6 +439,39 @@ ZxQuery.prototype.html = function (htmlText) {
     return this;
 };
 /**
+ * Gets or sets the checked attribute.
+ * @param {boolean|undefined} [check] Value to assign to the 'checked' attribute.
+ * @return {ZxQuery|boolean}
+ */
+ZxQuery.prototype.checked = function(check) {
+    if (util.isNoU(check)) {
+        var checked = this._selection[0].checked;
+        return (checked != null && checked != 'false' && (checked || checked == 'checked'));
+    }
+    this.each(function (k, el) {
+        if (check)
+            el.checked = 'checked';
+        else
+            el.removeAttribute('checked');
+    });
+    return this;
+
+};
+/**
+ * Gets or sets the 'value' attribute.
+ * @param {string|undefined} [value] Value to assign to the 'value' attribute.
+ * @return {ZxQuery|string}
+ */
+ZxQuery.prototype.value = function(value) {
+    if (util.isNoU(value))
+        return this._selection[0].value;
+    this.each(function (k, el) {
+        el.value = value;
+    });
+    return this;
+
+};
+/**
  * Appends the given element/markup to the current element.
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
  * @return {ZxQuery} The *ZxQuery* object itself
@@ -486,6 +536,7 @@ ZxQuery.prototype.detach = function () {
         el.__zuix_oldParent = parent;
         el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
         parent.removeChild(el);
+        _log.t('Detached from parent', parent, el);
     }
     return this;
 };

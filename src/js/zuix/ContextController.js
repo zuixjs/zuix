@@ -82,8 +82,7 @@ function ContextController(context) {
     };
 
     this.on = function (eventPath, handler_fn) {
-        this.addEvent(this.view(), eventPath, handler_fn);
-        // TODO: implement automatic event unbinding (off) in super().destroy()
+        this.addEvent(eventPath, handler_fn);
         return this;
     };
     /** @protected */
@@ -110,16 +109,14 @@ function ContextController(context) {
     if (options.on != null) {
         for (var ep in options.on) {
             handler = options.on[ep];
-            // TODO: should log.warn if k already exists
-            _t.addEvent(_t.view(), ep, handler);
+            _t.addEvent(ep, handler);
         }
     }
     // create behavior map from context options
     if (options.behavior != null) {
         for (var bp in options.behavior) {
             handler = options.behavior[bp];
-            // TODO: should log.warn if k already exists
-            _t.addBehavior(_t.view(), bp, handler);
+            _t.addBehavior(bp, handler);
         }
     }
 
@@ -129,14 +126,14 @@ function ContextController(context) {
 }
 
 // TODO: add jsDoc
-ContextController.prototype.addEvent = function (target, eventPath, handler_fn) {
-    this.mapEvent(this.context._eventMap, target, eventPath, handler_fn);
+ContextController.prototype.addEvent = function (eventPath, handler_fn) {
+    this.mapEvent(this.context._eventMap, this.view(), eventPath, handler_fn);
     return this;
 };
 
 // TODO: add jsDoc
-ContextController.prototype.addBehavior = function (target, eventPath, handler_fn) {
-    this.mapEvent(this.context._behaviorMap, target, eventPath, handler_fn);
+ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
+    this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler_fn);
     return this;
 };
 
@@ -267,7 +264,7 @@ zuix.context('my-slide-show')
  */
 ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
     if (this.context._eventMap[eventPath] == null && isHook !== true)
-        this.addEvent(this.view(), eventPath, null);
+        this.addEvent(eventPath, null);
     // TODO: ...
     if (isHook === true) {
         var target = this.context.container();

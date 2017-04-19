@@ -19,7 +19,7 @@ zuix.controller(function (cp) {
 
         // toolbar view
         toolbar = cp.view();
-        toolbar.css('overflow', 'hidden');
+        //toolbar.css('overflow', 'hidden');
         // fab button
         fab = toolbar.find('.menu');
         fab.on('click', function () {
