@@ -257,6 +257,7 @@ function loadResources(ctx, options) {
                 resourceLoadTask[ctx.componentId] = this;
 
                 ctx.loadHtml({
+                    cext: options.cext,
                     caching: _enableHttpCaching,
                     success: function (html) {
                         if (cachedComponent == null)
@@ -582,6 +583,7 @@ function createComponent(context, task) {
                         if (cached.view == null) {
                             if (pending == -1) pending = 0; pending++;
                             context.loadHtml({
+                                cext: context.options().cext,
                                 caching: _enableHttpCaching,
                                 success: function(html) {
                                     // TODO: this is a work-around for 'componentize' overlapping issue

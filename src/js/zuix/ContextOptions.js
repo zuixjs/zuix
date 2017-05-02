@@ -34,6 +34,7 @@
  * @property {Array.<EventMapping>|EventCallback|undefined} on The events handling map.
  * @property {Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.
  * @property {Element|string|boolean|undefined} css The view style.
+ * @property {string|undefined} cext When loading view content, append the specified string instead of `.html`.
  * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enable or disable lazy-loading (**default:** false).
  * @property {number|undefined} priority Loading priority (**default:** 0).

@@ -166,6 +166,20 @@
       },
       {
         "type": "property",
+        "string": "{string|undefined} cext When loading view content, append the specified string instead of `.html`.",
+        "name": "cext",
+        "description": "When loading view content, append the specified string instead of `.html`.",
+        "types": [
+          "string"
+        ],
+        "typesDescription": "<code>string</code>|<code>undefined</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "property",
         "string": "{boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).",
         "name": "html",
         "description": "Enable or disable HTML auto-loading (**default:** true).",
@@ -246,6 +260,6 @@
     "isEvent": false,
     "ignore": false,
     "line": 26,
-    "codeStart": 43
+    "codeStart": 44
   }
 ]

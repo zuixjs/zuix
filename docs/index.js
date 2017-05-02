@@ -162,10 +162,10 @@ zuix
 }).hook('css:parse', function (data) {
     //console.log(data);
 
-}).hook('view:process', function (data) {
+}).hook('view:process', function (view) {
     // Prism code syntax highlighter
     if (this.options().prism && typeof Prism !== 'undefined') {
-        data.find('code').each(function (i, block) {
+        view.find('code').each(function (i, block) {
             this.addClass('language-javascript');
             Prism.highlightElement(block);
         });
@@ -174,9 +174,27 @@ zuix
     zuix.$('a[href*="://"]').attr('target','_blank');
     // Material Design Light integration - DOM upgrade
     if (/*this.options().mdl &&*/ typeof componentHandler !== 'undefined')
-        componentHandler.upgradeElements(data.get());
+        componentHandler.upgradeElements(view.get());
 })/*.hook('component:ready', function () {
 })*/;
+
+// url routing
+window.onhashchange = function () {
+    routeCurrentUrl(window.location.hash);
+};
+function routeCurrentUrl(path) {
+    switch (path) {
+        case '#/usage':
+            pagedView.setPage(1);
+            break;
+        case '#/api':
+            pagedView.setPage(2);
+            break;
+        case '#/':
+            pagedView.setPage(0, 0);
+            break;
+    }
+}
 
 function revealMainPage() {
     loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
@@ -200,6 +218,7 @@ function reveal() {
             function(){
                 s.hide();
             }).show();
+        routeCurrentUrl(window.location.hash);
     }
 }
 

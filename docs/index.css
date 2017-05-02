@@ -34,36 +34,11 @@ p code {
     font-size: 85%;
     opacity: 0.8;
 }
-
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Dosis', sans-serif !important;
     padding-top: 12px;
     padding-bottom: 12px;
     text-transform: none;
-}
-header {
-    position: fixed;
-    opacity:0.95;
-}
-header .mdl-layout-spacer {
-    overflow: hidden;
-}
-header .mdl-layout__header-row {
-    padding-left: 16px;
-}
-header .mdl-layout-spacer, header .mdl-navigation .mdl-button {
-    font-size: 90%;
-    font-weight: 700;
-    font-family: 'Dosis', sans-serif;
-    vertical-align: middle;
-    color: grey;
-}
-header .mdl-navigation .mdl-button i {
-    vertical-align:text-bottom;
-}
-header .mdl-menu--bottom-right {
-    padding: 8px;
-    margin-top: 14px;
 }
 h1 {
     font-size: 260%;
@@ -90,11 +65,35 @@ h6 {
 h3 {
     text-align: center;
 }
-
 ul, li {
     list-style-type: none;
     font-size: 100%;
     line-height: 200%;
+}
+
+header {
+    position: fixed;
+    opacity:0.95;
+}
+header .mdl-layout-spacer {
+    overflow: hidden;
+}
+header .mdl-layout__header-row {
+    padding-left: 16px;
+}
+header .mdl-layout-spacer, header .mdl-navigation .mdl-button {
+    font-size: 90%;
+    font-weight: 700;
+    font-family: 'Dosis', sans-serif;
+    vertical-align: middle;
+    color: grey;
+}
+header .mdl-navigation .mdl-button i {
+    vertical-align:text-bottom;
+}
+header .mdl-menu--bottom-right {
+    padding: 8px;
+    margin-top: 14px;
 }
 
 /* TODO: move this to the component css */

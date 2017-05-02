@@ -1075,6 +1075,7 @@ ZxQuery.prototype.hide = function () {
     return this.display('none');
 };
 
+// --- ZxQuery factory members --- //
 
 /**
  * Exported ZxQuery interface.
@@ -1821,8 +1822,9 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         if (util.isFunction(options.then))
             (options.then).call(context);
     } else {
+        var cext = util.isNoU(options.cext) ? '.html' : options.cext;
         if (htmlPath == context.componentId)
-            htmlPath +=  '.html' + (!enableCaching ? '?'+new Date().getTime() : '');
+            htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
         z$.ajax({
             url: htmlPath,
             success: function (viewHtml) {
@@ -2989,6 +2991,7 @@ function loadResources(ctx, options) {
                 resourceLoadTask[ctx.componentId] = this;
 
                 ctx.loadHtml({
+                    cext: options.cext,
                     caching: _enableHttpCaching,
                     success: function (html) {
                         if (cachedComponent == null)
@@ -3314,6 +3317,7 @@ function createComponent(context, task) {
                         if (cached.view == null) {
                             if (pending == -1) pending = 0; pending++;
                             context.loadHtml({
+                                cext: context.options().cext,
                                 caching: _enableHttpCaching,
                                 success: function(html) {
                                     // TODO: this is a work-around for 'componentize' overlapping issue

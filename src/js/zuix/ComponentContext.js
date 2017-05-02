@@ -442,8 +442,9 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         if (util.isFunction(options.then))
             (options.then).call(context);
     } else {
+        var cext = util.isNoU(options.cext) ? '.html' : options.cext;
         if (htmlPath == context.componentId)
-            htmlPath +=  '.html' + (!enableCaching ? '?'+new Date().getTime() : '');
+            htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
         z$.ajax({
             url: htmlPath,
             success: function (viewHtml) {

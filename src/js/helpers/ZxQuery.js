@@ -578,6 +578,7 @@ ZxQuery.prototype.hide = function () {
     return this.display('none');
 };
 
+// --- ZxQuery factory members --- //
 
 /**
  * Exported ZxQuery interface.
