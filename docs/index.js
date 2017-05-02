@@ -113,17 +113,6 @@ var actionsView = null;
 //zuix.lazyLoad(false);
 //zuix.httpCaching(false);
 
-zuix.$.find('nav li.mdl-menu__item').on('click', function () {
-    var url = this.attr('data-href');
-    var index = this.attr('data-index');
-    var el = this;
-    setTimeout(function () {
-        if (url != null && url.length > 0)
-            window.open(url);
-        else pagedView.setPage(index);
-    }, 200);
-});
-
 zuix
 .hook('load:begin', function(data){
     if (data.task.indexOf('zuix_hackbox') > 0) return;

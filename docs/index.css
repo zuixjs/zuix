@@ -96,6 +96,10 @@ header .mdl-menu--bottom-right {
     margin-top: 14px;
 }
 
+.app_menu_small a {
+    width: 100%;
+}
+
 /* TODO: move this to the component css */
 [data-ui-component="ui/layout/actions_view"] div {
     height: 72px;
