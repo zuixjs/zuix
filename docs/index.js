@@ -190,6 +190,7 @@ function routeCurrentUrl(path) {
         case '#/api':
             pagedView.setPage(2);
             break;
+        case '':
         case '#/':
             pagedView.setPage(0, 0);
             break;
