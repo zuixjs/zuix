@@ -7,24 +7,24 @@
         <!-- Colored FAB button with ripple -->
         <div layout="column center-right"
              class="options mdl-shadow--8dp">
-            <div class="menu-item" layout="row center-spread">
+            <a href="#/usage#Getting_Started--Usage" class="menu-item" layout="row center-spread">
                 <span>Usage</span>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/usage#Getting_Started--Quick_Start" class="menu-item" layout="row center-spread">
                 <span>Quick Start Guide</span>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/usage#Getting_Started--Content_Management" class="menu-item" layout="row center-spread">
                 <span>Content Management</span>
                 <i self="right" class="material-icons">dashboard</i>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/usage#Getting_Started--View_Templates" class="menu-item" layout="row center-spread">
                 <span>View Templates</span>
                 <i self="right" class="material-icons">settings_ethernet</i>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/usage#Getting_Started--Component_Management" class="menu-item" layout="row center-spread">
                 <span>Component Management</span>
                 <i self="right" class="material-icons">extension</i>
-            </div>
+            </a>
         </div>
         <div class="menu">
             <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--8dp">
@@ -38,32 +38,6 @@
         on: {
             'view:create': function () {
                 this.hide();
-            },
-            'item:click': function (e, i) {
-                var p = pagedView.getPage(1);
-                switch (parseInt(i)) {
-                    case 0:
-                        zuix.$.scrollTo(p.get(),
-                            p.position().y /*p.find('a[id=Getting_Started').position().y*/);
-                        break;
-                    case 1:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=Getting_Started--Quick_Start').position().y);
-                        break;
-                    case 2:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=Getting_Started--Content_Management').position().y);
-                        break;
-                    case 3:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=Getting_Started--View_Templates').position().y);
-                        break;
-                    case 4:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=Getting_Started--Component_Management').position().y);
-                        break;
-                }
-                e.preventDefault();
             }
         }
     };

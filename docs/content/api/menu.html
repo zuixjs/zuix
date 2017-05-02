@@ -10,26 +10,26 @@
             <div class="menu-item" layout="row center-spread">
                 <span>API</span>
             </div>
-            <div class="menu-item" layout="row center-spread">
+            <a href="#/api#ZUIX_API--Zuix" class="menu-item" layout="row center-spread">
                 <span>Zuix class</span>
                 <i self="right" class="material-icons">code</i>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/api#ZUIX_API--ContextOptions" class="menu-item" layout="row center-spread">
                 <span>ContextOptions object</span>
                 <i self="right" class="material-icons">radio_button_unchecked</i>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/api#ZUIX_API--ComponentContext" class="menu-item" layout="row center-spread">
                 <span>ComponentContext class</span>
                 <i self="right" class="material-icons">code</i>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/api#ZUIX_API--ContextController" class="menu-item" layout="row center-spread">
                 <span>ContextController class</span>
                 <i self="right" class="material-icons">code</i>
-            </div>
-            <div class="menu-item" layout="row center-spread">
+            </a>
+            <a href="#/api#ZUIX_API--ZxQuery" class="menu-item" layout="row center-spread">
                 <span>ZxQuery class</span>
                 <i self="right" class="material-icons">code</i>
-            </div>
+            </a>
         </div>
         <div class="menu">
             <a class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color--blue mdl-shadow--8dp">
@@ -43,36 +43,6 @@
         on: {
             'view:create': function () {
                 this.hide();
-            },
-            'item:click': function (e, i) {
-                var p = pagedView.getPage(2);
-                switch (parseInt(i)) {
-                    case 0:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=ZUIX_API').position().y);
-                        break;
-                    case 1:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=ZUIX_API--Zuix').position().y);
-                        break;
-                    case 2:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=ZUIX_API--ContextOptions').position().y);
-                        break;
-                    case 3:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=ZUIX_API--ComponentContext').position().y);
-                        break;
-                    case 4:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=ZUIX_API--ContextController').position().y);
-                        break;
-                    case 5:
-                        zuix.$.scrollTo(p.get(),
-                            p.find('a[id=ZUIX_API--ZxQuery').position().y);
-                        break;
-                }
-                e.preventDefault();
             }
         }
     };

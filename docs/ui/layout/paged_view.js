@@ -9,6 +9,7 @@ zuix.controller(function (cp) {
         cp.expose('setPage', setPage);
         cp.expose('getPage', getPage);
         cp.expose('getCurrent', getCurrent);
+        cp.expose('getCurrentPage', getCurrentPage);
         cp.view().children().each(function (i, el) {
             if (cp.view().attr('data-ui-relative') != 'true') {
                 el.style['position'] = 'absolute';
@@ -38,6 +39,10 @@ zuix.controller(function (cp) {
     function getPage(p) {
         var pages = cp.view().children();
         return pages.eq(p);
+    }
+
+    function getCurrentPage() {
+        return getPage(currentPage);
     }
 
     function getCurrent() {

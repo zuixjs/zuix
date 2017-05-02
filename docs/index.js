@@ -183,6 +183,12 @@ window.onhashchange = function () {
     routeCurrentUrl(window.location.hash);
 };
 function routeCurrentUrl(path) {
+    var anchorIndex = path.lastIndexOf('#');
+    var pageAnchor = null;
+    if (anchorIndex > 0) {
+        pageAnchor = path.substring(anchorIndex + 1);
+        path = path.substring(0, anchorIndex);
+    }
     switch (path) {
         case '#/usage':
             pagedView.setPage(1);
@@ -195,6 +201,15 @@ function routeCurrentUrl(path) {
             pagedView.setPage(0, 0);
             break;
     }
+    var p = pagedView.getCurrentPage();
+    if (pageAnchor !== null) {
+        var a = p.find('a[id='+pageAnchor);
+        if (a.length() > 0) {
+            setTimeout(function () {
+                zuix.$.scrollTo(p.get(), a.position().y);
+            }, 500);
+        }
+    } else p.get().scrollTop = 0;
 }
 
 function revealMainPage() {
