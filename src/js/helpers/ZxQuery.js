@@ -771,10 +771,13 @@ z$.isInView = function (el) {
     if (el.offsetParent === null)
         return false;
     var rect = el.getBoundingClientRect();
+    var area = {
+        width: (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */,
+        height: (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */
+    };
     return rect.bottom > 0 && rect.right > 0
-        && rect.left < (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
-        && rect.top < (window.innerHeight || document.documentElement.clientHeight);
-    /* or $(window).height() */
+        && rect.left < area.width
+        && rect.top < area.height;
 };
 z$.scrollTo = function(el, targetY) {
     if (targetY === 0 || targetY == null)
