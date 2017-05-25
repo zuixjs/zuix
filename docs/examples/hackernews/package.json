@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "dependencies": {
+    "zuix": "^0.4.9-6"
+  }
+}

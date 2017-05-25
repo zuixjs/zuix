@@ -1,6 +1,6 @@
-# ZUIX • TodoMVC
+# ZUIX • Hacker News reader
 
-The classic [TodoMVC](http://todomvc.com/) example implemented with ZUIX.
+...
 
 > ZUIX is a lite JavaScript framework (~11kB) for creating component-based web sites and applications.
 

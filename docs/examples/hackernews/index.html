@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hacker News Web</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Scope+One" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flex-layout-attribute/1.0.3/css/flex-layout-attribute.min.css">
+
+    <!-- Main app CSS -->
+    <link rel="stylesheet" href="css/app.css">
+
+</head>
+<body data-ui-lazyload="scroll">
+
+
+<header>
+    <h1>Hacker News Web</h1>
+</header>
+
+<main layout="column center-center">
+    <div data-ui-field="log-list"
+         data-ui-lazyload="false"
+         data-ui-load="http://www.zuix.it/ui/layout/list_view"
+         data-ui-options="newsListOptions"
+         self="size-large">
+
+        Loading news list...
+
+    </div>
+</main>
+
+<footer class="info" layout="column center-center">
+
+    <div self="size-large">
+        <h3>Source Code</h3>
+        <ul>
+            <li><a href="https://github.com/genielabs/zuix/tree/master/docs/examples/hackernews" target="_blank">Browse</a></li>
+            <li><a href="../zuix_hackernews_rev1.zip">Download</a> (46.4kB)</li>
+        </ul>
+    </div>
+
+</footer>
+
+<!-- Scripts here. Don't remove ↓ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<!-- Main app script -->
+<script src="js/app.js"></script>
+<!-- ZUIX library  -->
+<script src="node_modules/zuix/build/js/zuix.min.js"></script>
+
+</body>
+</html>

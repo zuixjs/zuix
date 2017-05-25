@@ -1,0 +1,42 @@
+. {
+    border-bottom: solid 1px whitesmoke;
+}
+
+h3 {
+    margin: 0;
+    font-weight: 600;
+}
+a {
+    text-decoration: none;
+}
+.single-line {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.number {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 84px;
+    line-height: 84px;
+    width: 48px;
+    text-align: center;
+    vertical-align: middle;
+    color: lightgray;
+    font-size: 120%;
+    font-weight: bold;
+    animation-duration: 0.8s;
+    -webkit-animation-duration: 0.8s;
+    -moz-animation-duration: 0.8s;
+    -o-animation-duration: 0.8s;
+}
+.content {
+    padding-top: 8px;
+    margin-left: 48px;
+    animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+    -moz-animation-duration: 0.3s;
+    -o-animation-duration: 0.3s;
+}
