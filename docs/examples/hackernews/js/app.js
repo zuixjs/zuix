@@ -1,28 +1,28 @@
 /*
-|| Hacker News Web - ZUIX implementation
-|| Framework official site and documentation:
-||     http://zuix.it
-*/
+ || Hacker News Web - ZUIX implementation
+ || Framework official site and documentation:
+ ||     http://zuix.it
+ */
 
 (function (window) {
-	'use strict';
+    'use strict';
 
     var newsList;
     window.newsListOptions = {
         ready: function (ctx) {
             newsList = ctx;
-			loadNewsList();
+            loadNewsList();
         }
     };
 
     if ('onhashchange' in window) {
         // custom url routing
-		window.onhashchange = function () {
-			// TODO: ..
-		};
-	}
+        window.onhashchange = function () {
+            // TODO: ..
+        };
+    }
 
-	function loadNewsList() {
+    function loadNewsList() {
         zuix.$.ajax({
             url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
             success: function (jsonText) {
@@ -76,4 +76,3 @@
     }
 
 })(window);
-
