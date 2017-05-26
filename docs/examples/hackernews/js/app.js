@@ -32,24 +32,28 @@
                     itemList: listData,
                     getItem: function (index, item) {
                         return {
-                            // unique identifier for this item
+                            // Unique identifier for this item.
                             itemId: index,
-                            // display item using "news_item" component
+                            // Display item using "news_item" component.
                             componentId: 'components/news_item',
-                            // component options
+                            // Component options.
                             options: {
-                                // set the item model's data
+                                // Set the item model's data.
                                 model: { index: index, id: item },
-                                // do not check for model refresh since
-                                // it does not change once created
+                                // Do not check for model refresh since
+                                // it does not change once created.
                                 static: true,
-                                // load the component only when
+                                // Load the component only when
                                 // it's about to come into view
                                 lazyLoad: true,
-                                // set the height of the item in the list
-                                // to prevent resize flickers after load
-                                height: '85px',
-                                // event handlers
+                                // The min-height of the item container
+                                // should be specified before its component
+                                // is loaded in order to prevent list resize
+                                // flickering after lazy-loading an item.
+                                // So we either define a responsive 'className'
+                                // or a fixed 'height' property.
+                                className: 'list-item',
+                                // Event handlers.
                                 on: {
                                     'item:enter': function (e, item) {
                                         item.view.addClass('active');

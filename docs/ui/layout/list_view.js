@@ -34,8 +34,14 @@ zuix.controller(function (cp) {
             if (typeof item === 'undefined') {
                 listItems[id] = zuix.createComponent(dataItem.componentId, dataItem.options);
                 var container = listItems[id].container();
-                // set a temporary height for the container (for lazy load to work properly)
-                container.style['min-height'] = dataItem.options.height || '48px';
+                // use a responsive CSS class if provided
+                if (dataItem.options.className != null) {
+                    // this class should set the min-height property
+                    container.classList.add(dataItem.options.className);
+                } else {
+                    // set a temporary height for the container (for lazy load to work properly)
+                    container.style['min-height'] = dataItem.options.height || '48px';
+                }
                 var listener = function (itemIndex, el) {
                     el.removeEventListener('component:ready', listener);
                     if (itemIndex == modelList.length-1 && listEndCallback != null) {

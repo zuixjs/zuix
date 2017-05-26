@@ -20,13 +20,48 @@ header {
     box-shadow:         0 3px 8px rgba(100, 100, 100, 0.49);
 }
 header h1 {
-    line-height: 64px;
     margin: 0;
     padding-left: 16px;
-    vertical-align: middle;
 }
+header .menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 120%;
+    margin-right: 8px;
+}
+header > div {
+    height: 64px;
+}
+
+footer {
+    padding-right: 24px;
+    padding-left: 24px;
+}
+
 main > div {
     background-color: white;
     border-left: solid 1px lightgray;
     border-right: solid 1px lightgray;
+}
+
+.list-item {
+    min-height: 85px;
+}
+
+@media screen and (max-width: 580px) {
+    body {
+        font-size: 14px;
+    }
+    .list-item {
+        min-height: 72px;
+    }
+}
+
+@media screen and (max-width: 460px) {
+    body {
+        font-size: 12px;
+    }
+    .list-item {
+        min-height: 64px;
+    }
 }

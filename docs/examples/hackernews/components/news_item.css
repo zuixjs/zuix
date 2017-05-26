@@ -21,11 +21,6 @@ a {
     margin: 0;
     padding: 8px 0 0;
     width: 48px;
-    height: 84px;
-    /*
-    line-height: 84px;
-    vertical-align: top;
-    */
     text-align: center;
     color: lightgray;
     font-size: 120%;
@@ -37,7 +32,6 @@ a {
 }
 .content {
     cursor: pointer;
-    height: 84px;
     padding-top: 8px;
     padding-left: 48px;
     animation-duration: 0.3s;
