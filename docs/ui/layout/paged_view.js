@@ -19,6 +19,7 @@ zuix.controller(function (cp) {
                 el.style['right'] = '0';
                 el.style['overflow'] = 'auto';
                 el.style['overflow-x'] = 'hidden';
+                el.style['-webkit-overflow-scrolling'] = 'touch';
             }
             this.hide();
         });

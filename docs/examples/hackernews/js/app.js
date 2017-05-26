@@ -24,6 +24,7 @@
 
     function loadNewsList() {
         zuix.$.ajax({
+            // Load item data using official Hacker News firebase API
             url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
             success: function (jsonText) {
                 var listData = JSON.parse(jsonText);
@@ -33,14 +34,22 @@
                         return {
                             // unique identifier for this item
                             itemId: index,
-                            // display as "bundle item"
+                            // display item using "news_item" component
                             componentId: 'components/news_item',
-                            // loading options
+                            // component options
                             options: {
+                                // set the item model's data
                                 model: { index: index, id: item },
-                                lazyLoad: true,
+                                // do not check for model refresh since
+                                // it does not change once created
                                 static: true,
-                                height: '84px',
+                                // load the component only when
+                                // it's about to come into view
+                                lazyLoad: true,
+                                // set the height of the item in the list
+                                // to prevent resize flickers after load
+                                height: '85px',
+                                // event handlers
                                 on: {
                                     'item:enter': function (e, item) {
                                         item.view.addClass('active');

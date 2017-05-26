@@ -192,7 +192,7 @@ function routeCurrentUrl(path) {
     }
     var p = pagedView.getCurrentPage();
     if (pageAnchor !== null) {
-        var a = p.find('a[id='+pageAnchor);
+        var a = p.find('a[id=' + pageAnchor+']');
         if (a.length() > 0) {
             setTimeout(function () {
                 zuix.$.scrollTo(p.get(), a.position().y);

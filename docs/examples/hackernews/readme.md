@@ -1,6 +1,8 @@
 # ZUIX • Hacker News Web
 
 Example of using **list_view** component with progressive/lazy loading.
+Each item in the list is loaded on-the-fly by using official
+HN firebase API https://github.com/HackerNews/API.
 
 #### About ZUIX
 

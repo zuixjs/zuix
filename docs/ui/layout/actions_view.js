@@ -7,7 +7,7 @@ zuix.controller(function (cp) {
                 setSelected(index);
             });
         });
-        setSelected(0)
+        setSelected(0);
 
         cp.expose('setSelected', setSelected);
 
