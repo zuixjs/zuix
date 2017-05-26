@@ -2,6 +2,8 @@
 
 The classic [TodoMVC](http://todomvc.com/) example implemented with ZUIX.
 
+#### About ZUIX
+
 > ZUIX is a lite JavaScript framework (~11kB) for creating component-based web sites and applications.
 
 Main features:
@@ -9,9 +11,10 @@ Main features:
 - Template Engine
 - Component Manager
 - Cross-domain content/component loading
+- Progressive/Lazy loading
 - Events, Behaviors and Hooks
-- Components and fields caching
 - Automatic events unbinding
+- Components and fields caching
 - Integrated resources loader
 - Integrated jQuery-like DOM helper
 - Integrated localization engine
@@ -29,7 +32,3 @@ Main features:
 ## Implementation
 
 Main component source code is placed into the `components` folder.
-
-## Credit
-
-This TodoMVC app was created by [Generoso Martello](https://github.com/genielabs).

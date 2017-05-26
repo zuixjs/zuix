@@ -19,12 +19,14 @@ a {
 .number {
     position: absolute;
     margin: 0;
-    padding: 0;
-    height: 84px;
-    line-height: 84px;
+    padding: 8px 0 0;
     width: 48px;
+    height: 84px;
+    /*
+    line-height: 84px;
+    vertical-align: top;
+    */
     text-align: center;
-    vertical-align: middle;
     color: lightgray;
     font-size: 120%;
     font-weight: bold;
@@ -34,10 +36,15 @@ a {
     -o-animation-duration: 0.8s;
 }
 .content {
+    cursor: pointer;
+    height: 84px;
     padding-top: 8px;
-    margin-left: 48px;
+    padding-left: 48px;
     animation-duration: 0.3s;
     -webkit-animation-duration: 0.3s;
     -moz-animation-duration: 0.3s;
     -o-animation-duration: 0.3s;
+}
+.active {
+    background-color: rgba(100, 100, 100, 0.1);
 }

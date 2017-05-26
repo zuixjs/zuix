@@ -1,5 +1,5 @@
 /*
-|| Hacker News reader - ZUIX implementation
+|| Hacker News Web - ZUIX implementation
 || Framework official site and documentation:
 ||     http://zuix.it
 */
@@ -12,10 +12,11 @@
         ready: function (ctx) {
             newsList = ctx;
 			loadNewsList();
-        },
+        }
     };
 
     if ('onhashchange' in window) {
+        // custom url routing
 		window.onhashchange = function () {
 			// TODO: ..
 		};
@@ -41,11 +42,20 @@
                                 static: true,
                                 height: '84px',
                                 on: {
-                                    'item:enter': function (e, sourceView) {
+                                    'item:enter': function (e, item) {
+                                        item.view.addClass('active');
                                     },
-                                    'item:leave': function (e, sourceView) {
+                                    'item:leave': function (e, item) {
+                                        item.view.removeClass('active');
                                     },
-                                    'item:click': function (e, sourceView) {
+                                    'item:click': function (e, item) {
+                                        if (item.data.url != null) {
+                                            item.view.removeClass('fadeIn')
+                                                .addClass('pulse');
+                                            setTimeout(function () {
+                                                location.href = item.data.url;
+                                            }, 300);
+                                        }
                                     }
                                 },
                                 ready: function () {
@@ -57,10 +67,10 @@
                 });
             },
             error: function () {
-
+                // TODO: ...
             },
             then: function () {
-
+                // TODO: ...
             }
         })
     }
