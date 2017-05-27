@@ -1,5 +1,5 @@
 zuix.controller(function (cp) {
-    var toolbar, fab, actions;
+    var toolbar, toolOptions, fab, actions;
     var open = false; // initial state
 
     cp.init = function () {
@@ -19,6 +19,7 @@ zuix.controller(function (cp) {
 
         // toolbar view
         toolbar = cp.view();
+        toolOptions = toolbar.find('.options');
         //toolbar.css('overflow', 'hidden');
         // fab button
         fab = toolbar.find('.menu');
@@ -49,14 +50,16 @@ zuix.controller(function (cp) {
 
     // Private Members
 
-    function showMenu() {
-        cp.view().show().animateCss('flipInY', { delay: '0.5s' });
+    function showMenu(anim) {
+        toolbar.show();
+        fab.animateCss(typeof anim === 'string' ? anim : 'flipInY', { delay: '0.3s', duration: '0.3s' }, function () {
+            toolbar.show();
+        });
     }
-    function hideMenu() {
+    function hideMenu(anim) {
         if (open) toolbarToggle();
-        fab.animateCss('flipOutY', function () {
-            if (!cp.view().hasClass('animated'))
-                cp.view().hide()
+        fab.show().animateCss(typeof anim === 'string' ? anim : 'flipOutY', { duration: '0.3s' }, function () {
+            toolbar.hide();
         });
     }
 
@@ -64,12 +67,12 @@ zuix.controller(function (cp) {
         var duration = 0.5;
         open = typeof doOpen !== 'undefined' ? doOpen : !open;
         if (open)
-            toolbar.find('.options').show().animateCss('bounceInUp', { duration: duration+'s' }, function () {
+            toolOptions.show().animateCss('bounceInUp', { duration: duration+'s' }, function () {
                 open = true;
             });
         else
-            toolbar.find('.options').animateCss('bounceOutDown', { duration: duration+'s' }, function () {
-                toolbar.find('.options').hide();
+            toolOptions.show().animateCss('bounceOutDown', { duration: duration+'s' }, function () {
+                this.hide();
                 open = false;
             });
         fab.animateCss('rubberBand', { duration: duration+'s' });

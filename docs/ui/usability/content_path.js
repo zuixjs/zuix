@@ -1,5 +1,5 @@
 zuix.controller(function (cp) {
-    var currentTitle = '', currentPos = 0;
+    var currentTitle = '', currentPos = 0, scrollOffset = 0;
     var offset = 200, items = [], title = null;
     var timeout = null;
 
@@ -10,6 +10,7 @@ zuix.controller(function (cp) {
 
     cp.create = function () {
         title = zuix.$(cp.options().target);
+        items = cp.view().find(cp.options().tags);
         cp.view().on('scroll', postUpdate);
         cp.expose('update', function () {
             title.attr('title', '');
@@ -18,16 +19,14 @@ zuix.controller(function (cp) {
         });
     };
 
-    function postUpdate() {
-        if (timeout != null)
-            clearTimeout(timeout);
+    function postUpdate(e) {
+        if (timeout !== null) return;
         timeout = setTimeout(update, 100);
     }
 
     function update() {
         var direction = '', top = 0;
         currentTitle = '';
-        items = cp.view().find(cp.options().tags);
         items.each(function (k, v) {
             var p = this.position();
             if (p.y < offset) {
@@ -52,7 +51,14 @@ zuix.controller(function (cp) {
             }
         }
         var callback = cp.options().callback;
-        if (typeof callback === 'function')
-            callback();
+        if (typeof callback === 'function') {
+            var cy = cp.view().position().y;
+            var dy = scrollOffset - cy;
+            //if (dy > 0) dy = 1;
+            //if (dy < 0) dy = -1;
+            callback(dy);
+            scrollOffset = cy;
+        }
+        timeout = null;
     }
 });

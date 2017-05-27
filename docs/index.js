@@ -284,10 +284,11 @@ var usageTitlePath = zuix.load('ui/usability/content_path', {
     view: usagePage,
     tags: 'h3,h4,h5',
     target: zxHeaderTitle,
-    callback: function () {
+    callback: function (direction) {
+        var menu = zuix.context('menu_getting_started');
         // close FAB menu on scroll if it's open
-        if (zuix.context('menu_getting_started').open())
-            zuix.context('menu_getting_started').open(false);
+        if (menu.open()) menu.open(false);
+        checkMenuOnScreen(menu, direction);
     }
 });
 // API section header title - on scroll
@@ -296,12 +297,28 @@ var apiTitlePath = zuix.load('ui/usability/content_path', {
     view: apiPage,
     tags: 'h3',
     target: zxHeaderTitle,
-    callback: function () {
+    callback: function (direction) {
+        var menu = zuix.context('menu_api');
         // close FAB menu on scroll if it's open
-        if (zuix.context('menu_api').open())
-            zuix.context('menu_api').open(false);
+        if (menu.open()) menu.open(false);
+        checkMenuOnScreen(menu, direction);
     }
 });
+
+function checkMenuOnScreen(menu, direction) {
+    var v = zuix.$(menu.view());
+    if (direction > 30) {
+        if (v.attr('aria-hidden') !== 'true') {
+            v.attr('aria-hidden', 'true');
+            menu.hideMenu('slideOutDown');
+        }
+    } else if (direction < -30) {
+        if (v.attr('aria-hidden') === 'true') {
+            v.attr('aria-hidden', 'false');
+            menu.showMenu('slideInUp');
+        }
+    }
+}
 
 function checkMenuVisibility() {
     var checkPosition = featuresBlock.position();
