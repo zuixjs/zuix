@@ -58,11 +58,12 @@ Componentizer.prototype.willLoadMore = function () {
 /**
  * Enable/Disable lazy-loading, or get current value.
  *
- * @param {boolean} [enable]
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
  * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Componentizer.prototype.lazyLoad = function (enable) {
-    return lazyLoad(enable);
+Componentizer.prototype.lazyLoad = function (enable, threshold) {
+    return lazyLoad(enable, threshold);
 };
 
 /**
@@ -99,6 +100,8 @@ var _componentizeRequests = [];
 var _componentizeQueue = [],
     /** @private */
     _disableLazyLoading = false,
+    /** @private */
+    _lazyLoadingThreshold = 1,
     /** @private */
     _lazyElements = [],
     _lazyContainers = [];
@@ -154,10 +157,17 @@ var loader = require('./../helpers/AsynChain')({
 function Componentizer() {
     // ...
 }
-
-function lazyLoad(enable) {
+/**
+ * Lazy Loading settings.
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Read ahead tolerance (default is 1.0 => 100% of view size).
+ * @return {boolean}
+ */
+function lazyLoad(enable, threshold) {
     if (enable != null)
         _disableLazyLoading = !enable;
+    if (threshold != null)
+        _lazyLoadingThreshold = threshold;
     return !_isCrawlerBotClient && !_disableLazyLoading;
 }
 
@@ -241,15 +251,15 @@ function getNextLoadable() {
     while (item != null && item.element != null) {
         // defer element loading if lazy loading is enabled and the element is not in view
         var ls = lazyScrollCheck(item.element);
-        if (lazyLoad() && ls.scroller !== false && item.element.getAttribute('data-ui-lazyload') != 'false') {
+        if (lazyLoad() && ls.scroller !== false && item.element.getAttribute('data-ui-lazyload') !== 'false') {
             item.lazy = true;
-            item.visible = z$.getPosition(item.element).visible;
+            item.visible = z$.isInView(item.element, _lazyLoadingThreshold);
         } else {
             item.lazy = false;
             item.visible = true;
         }
         // ...
-        if (item.element != null && item.element.getAttribute('data-ui-loaded') == 'true' || !item.visible) {
+        if (item.element != null && item.element.getAttribute('data-ui-loaded') === 'true' || !item.visible) {
             if (!item.visible) reinsert.push(item);
             item = null;
         } else if (item != null && item.element != null && item.visible) {

@@ -22,6 +22,13 @@
         };
     }
 
+    // force componentize on resize to process lazy-elements that might come into the view
+    window.addEventListener('resize', function () {
+        zuix.componentize();
+    });
+
+    zuix.lazyLoad(true, 2.5);
+
     function loadNewsList() {
         zuix.$.ajax({
             // Load item data using official Hacker News firebase API

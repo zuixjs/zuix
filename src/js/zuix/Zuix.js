@@ -926,12 +926,13 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
 /**
  * Enable/Disable lazy-loading, or get current setting.
  *
- * @param {boolean} [enable] Set lazy-load option.
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
  * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Zuix.prototype.lazyLoad = function (enable) {
+Zuix.prototype.lazyLoad = function (enable, threshold) {
     if (enable != null)
-        _componentizer.lazyLoad(enable);
+        _componentizer.lazyLoad(enable, threshold);
     else
         return _componentizer.lazyLoad();
     return this;

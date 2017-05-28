@@ -344,7 +344,7 @@ ZxQuery.prototype.isEmpty = function () {
  */
 ZxQuery.prototype.position = function () {
     if (this._selection[0] != null)
-        return z$.getPosition(this._selection[0])
+        return z$.getPosition(this._selection[0]);
     else // TODO: check this out; should prevent this from happening
         return { x: -1, y: -1, visible: false };
 };
@@ -767,7 +767,7 @@ z$.getPosition = function (el) {
         visible: visible
     };
 };
-z$.isInView = function (el) {
+z$.isInView = function (el, tolerance) {
     if (el.offsetParent === null)
         return false;
     var rect = el.getBoundingClientRect();
@@ -775,9 +775,14 @@ z$.isInView = function (el) {
         width: (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */,
         height: (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */
     };
-    return rect.bottom > 0 && rect.right > 0
-        && rect.left < area.width
-        && rect.top < area.height;
+    var xt = 0; var yt = 0;
+    if (!isNaN(tolerance)) {
+        xt = (area.width * tolerance) - area.width;
+        yt = (area.height * tolerance) - area.height;
+    }
+    return rect.bottom > -yt && rect.right > -xt
+        && rect.left < area.width + xt
+        && rect.top < area.height + yt;
 };
 z$.scrollTo = function(el, targetY) {
     if (targetY === 0 || targetY == null)

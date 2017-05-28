@@ -109,9 +109,17 @@ module.exports = {
             return obj;
         }
         // give temp the original obj's constructor
-        var temp = obj.constructor();
-        for (var key in obj)
-            temp[key] = cloneObject(obj[key]);
+        //var temp = obj.constructor();
+        //for (var key in obj)
+        //    temp[key] = cloneObject(obj[key]);
+        var temp = obj;
+        try {
+            temp = obj.constructor();
+            for (var key in obj)
+                temp[key] = cloneObject(obj[key]);
+        } catch (e) {
+            // TODO: should warn when clone is not possible
+        }
         return temp;
     }
 

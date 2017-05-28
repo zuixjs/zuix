@@ -487,9 +487,17 @@ module.exports = {
             return obj;
         }
         // give temp the original obj's constructor
-        var temp = obj.constructor();
-        for (var key in obj)
-            temp[key] = cloneObject(obj[key]);
+        //var temp = obj.constructor();
+        //for (var key in obj)
+        //    temp[key] = cloneObject(obj[key]);
+        var temp = obj;
+        try {
+            temp = obj.constructor();
+            for (var key in obj)
+                temp[key] = cloneObject(obj[key]);
+        } catch (e) {
+            // TODO: should warn when clone is not possible
+        }
         return temp;
     }
 
@@ -841,7 +849,7 @@ ZxQuery.prototype.isEmpty = function () {
  */
 ZxQuery.prototype.position = function () {
     if (this._selection[0] != null)
-        return z$.getPosition(this._selection[0])
+        return z$.getPosition(this._selection[0]);
     else // TODO: check this out; should prevent this from happening
         return { x: -1, y: -1, visible: false };
 };
@@ -1264,7 +1272,7 @@ z$.getPosition = function (el) {
         visible: visible
     };
 };
-z$.isInView = function (el) {
+z$.isInView = function (el, tolerance) {
     if (el.offsetParent === null)
         return false;
     var rect = el.getBoundingClientRect();
@@ -1272,9 +1280,14 @@ z$.isInView = function (el) {
         width: (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */,
         height: (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */
     };
-    return rect.bottom > 0 && rect.right > 0
-        && rect.left < area.width
-        && rect.top < area.height;
+    var xt = 0; var yt = 0;
+    if (!isNaN(tolerance)) {
+        xt = (area.width * tolerance) - area.width;
+        yt = (area.height * tolerance) - area.height;
+    }
+    return rect.bottom > -yt && rect.right > -xt
+        && rect.left < area.width + xt
+        && rect.top < area.height + yt;
 };
 z$.scrollTo = function(el, targetY) {
     if (targetY === 0 || targetY == null)
@@ -1995,11 +2008,12 @@ Componentizer.prototype.willLoadMore = function () {
 /**
  * Enable/Disable lazy-loading, or get current value.
  *
- * @param {boolean} [enable]
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
  * @return {boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Componentizer.prototype.lazyLoad = function (enable) {
-    return lazyLoad(enable);
+Componentizer.prototype.lazyLoad = function (enable, threshold) {
+    return lazyLoad(enable, threshold);
 };
 
 /**
@@ -2036,6 +2050,8 @@ var _componentizeRequests = [];
 var _componentizeQueue = [],
     /** @private */
     _disableLazyLoading = false,
+    /** @private */
+    _lazyLoadingThreshold = 1,
     /** @private */
     _lazyElements = [],
     _lazyContainers = [];
@@ -2091,10 +2107,17 @@ var loader = _dereq_('./../helpers/AsynChain')({
 function Componentizer() {
     // ...
 }
-
-function lazyLoad(enable) {
+/**
+ * Lazy Loading settings.
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Read ahead tolerance (default is 1.0 => 100% of view size).
+ * @return {boolean}
+ */
+function lazyLoad(enable, threshold) {
     if (enable != null)
         _disableLazyLoading = !enable;
+    if (threshold != null)
+        _lazyLoadingThreshold = threshold;
     return !_isCrawlerBotClient && !_disableLazyLoading;
 }
 
@@ -2178,15 +2201,15 @@ function getNextLoadable() {
     while (item != null && item.element != null) {
         // defer element loading if lazy loading is enabled and the element is not in view
         var ls = lazyScrollCheck(item.element);
-        if (lazyLoad() && ls.scroller !== false && item.element.getAttribute('data-ui-lazyload') != 'false') {
+        if (lazyLoad() && ls.scroller !== false && item.element.getAttribute('data-ui-lazyload') !== 'false') {
             item.lazy = true;
-            item.visible = z$.getPosition(item.element).visible;
+            item.visible = z$.isInView(item.element, _lazyLoadingThreshold);
         } else {
             item.lazy = false;
             item.visible = true;
         }
         // ...
-        if (item.element != null && item.element.getAttribute('data-ui-loaded') == 'true' || !item.visible) {
+        if (item.element != null && item.element.getAttribute('data-ui-loaded') === 'true' || !item.visible) {
             if (!item.visible) reinsert.push(item);
             item = null;
         } else if (item != null && item.element != null && item.visible) {
@@ -3663,12 +3686,13 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
 /**
  * Enable/Disable lazy-loading, or get current setting.
  *
- * @param {boolean} [enable] Set lazy-load option.
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
  * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
-Zuix.prototype.lazyLoad = function (enable) {
+Zuix.prototype.lazyLoad = function (enable, threshold) {
     if (enable != null)
-        _componentizer.lazyLoad(enable);
+        _componentizer.lazyLoad(enable, threshold);
     else
         return _componentizer.lazyLoad();
     return this;

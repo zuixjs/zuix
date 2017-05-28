@@ -1,6 +1,11 @@
+/*
+|| ZUIX - ListView component example
+|| this is an alternative implementation of the official list-view component
+|| that is located at http://www.zuix.it/ui/layout/list_view.js
+ */
 zuix.controller(function (cp) {
 
-    var listItems = [], listEndCallback = null;
+    var listItems = [], listEndCallback = null, itemOptions;
 
     cp.init = function () {
         cp.options().html = false;
@@ -9,6 +14,10 @@ zuix.controller(function (cp) {
 
     cp.create = function () {
         cp.view().html('');
+        // globally store list view item options
+        window.list_view_opts = {};
+        itemOptions = window.list_view_opts[cp.context.contextId.replace(/-/g, '_')] = {};
+        // expose method list_view.done(fn_callback)
         cp.expose('done', loadedCallback);
     };
 
@@ -21,17 +30,18 @@ zuix.controller(function (cp) {
         var modelList = cp.model().itemList;
         if (modelList == null) return;
 
-        // TODO: DOM is not really ready for dynamic views, so the current "polite"
-        // TODO: approach might seem a bit slow. The only way to improve this is by
-        // TODO: creating in memory the whole html string and then getting item instances
-        // TODO: with using zuix.load(...) method.
         for (var i = 0; i < modelList.length; i++) {
             var dataItem = cp.model().getItem(i, modelList[i]);
             var id = dataItem.itemId;
             var item = listItems[id];
             if (typeof item === 'undefined') {
-                listItems[id] = zuix.createComponent(dataItem.componentId, dataItem.options);
-                var container = listItems[id].container();
+                // create container for the list item
+                var container = document.createElement('div');
+                // set the component to load for this item
+                container.setAttribute('data-ui-load', dataItem.componentId);
+                // TODO: this is a work around, otherwise element won't load - not sure if this is a bug
+                dataItem.options.lazyLoad = false;
+                container.setAttribute('data-ui-options', setItemOptions(i, dataItem.options));
                 // use a responsive CSS class if provided
                 if (dataItem.options.className != null) {
                     // this class should set the min-height property
@@ -40,6 +50,9 @@ zuix.controller(function (cp) {
                     // set a temporary height for the container (for lazy load to work properly)
                     container.style['min-height'] = dataItem.options.height || '48px';
                 }
+                // add item container to the list-view, the component will be lazy-loaded later as needed
+                cp.view().insert(i, container);
+                // register a callback to know when the component is actually loaded
                 var listener = function (itemIndex, el) {
                     el.removeEventListener('component:ready', listener);
                     if (itemIndex == modelList.length-1 && listEndCallback != null) {
@@ -47,10 +60,11 @@ zuix.controller(function (cp) {
                     }
                 }(i, container);
                 container.addEventListener('component:ready', listener);
-                cp.view().insert(i, container);
+                // keep track of already created items
+                listItems[id] = container;
             } else if (!dataItem.options.static) {
                 // update item model's data
-                item.model(dataItem.options.model);
+                zuix.context(item).model(dataItem.options.model);
             }
         }
         // `componentize` is required to process lazy-loaded items (if any)
@@ -62,4 +76,8 @@ zuix.controller(function (cp) {
         listEndCallback = c;
     }
 
+    function setItemOptions(i, options){
+        itemOptions['opt_'+i] = options;
+        return 'list_view_opts.'+cp.context.contextId.replace(/-/g, '_')+'.opt_'+i;
+    }
 });

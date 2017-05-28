@@ -1992,13 +1992,27 @@
     "tags": [
       {
         "type": "param",
-        "string": "{boolean} [enable] Set lazy-load option.",
+        "string": "{boolean} [enable] Enable or disable lazy loading.",
         "name": "[enable]",
-        "description": "Set lazy-load option.",
+        "description": "Enable or disable lazy loading.",
         "types": [
           "boolean"
         ],
         "typesDescription": "<code>boolean</code>",
+        "optional": true,
+        "nullable": false,
+        "nonNullable": false,
+        "variable": false
+      },
+      {
+        "type": "param",
+        "string": "{number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).",
+        "name": "[threshold]",
+        "description": "Load-ahead threshold (default is 1.0 => 100% of view size).",
+        "types": [
+          "number"
+        ],
+        "typesDescription": "<code>number</code>",
         "optional": true,
         "nullable": false,
         "nonNullable": false,
@@ -2030,8 +2044,8 @@
     "isEvent": false,
     "ignore": false,
     "line": 926,
-    "codeStart": 932,
-    "code": "Zuix.prototype.lazyLoad = function (enable) {\n    if (enable != null)\n        _componentizer.lazyLoad(enable);\n    else\n        return _componentizer.lazyLoad();\n    return this;\n};",
+    "codeStart": 933,
+    "code": "Zuix.prototype.lazyLoad = function (enable, threshold) {\n    if (enable != null)\n        _componentizer.lazyLoad(enable, threshold);\n    else\n        return _componentizer.lazyLoad();\n    return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "Zuix",
@@ -2081,8 +2095,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 939,
-    "codeStart": 945,
+    "line": 940,
+    "codeStart": 946,
     "code": "Zuix.prototype.httpCaching = function(enable) {\n    if (enable != null)\n        httpCaching(enable);\n    else\n        return httpCaching();\n    return this;\n};",
     "ctx": {
       "type": "method",
@@ -2147,8 +2161,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 953,
-    "codeStart": 960,
+    "line": 954,
+    "codeStart": 961,
     "code": "Zuix.prototype.bundle = function(bundleData, callback) {\n    if (util.isNoU(bundleData))\n        return _componentCache;\n    else if (bundleData && typeof bundleData === 'boolean') {\n        _log.t('bundle:start');\n        var ll = _componentizer.lazyLoad();\n        _componentizer.lazyLoad(false);\n        _componentizer.componentize();\n        if (typeof callback === 'function') {\n            var waitLoop = function(w) {\n                setTimeout(function () {\n                    if (_componentizer.willLoadMore()) {\n                        _log.t('bundle:wait');\n                        w(w);\n                    } else {\n                        _log.t('bundle:end');\n                        _componentizer.lazyLoad(ll);\n                        callback();\n                    }\n                }, 1000);\n            };\n            waitLoop(waitLoop);\n        }\n    } else {\n        // reset css flag before importing bundle\n        for (var c = 0; c < bundleData.length; c++) {\n            if (bundleData[c].css_applied)\n                delete bundleData[c].css_applied;\n        }\n        _componentCache = bundleData;\n    }\n    return this;\n};\n\nZuix.prototype.$ = z$;\nZuix.prototype.TaskQueue = TaskQueue;\nZuix.prototype.ZxQuery = z$.ZxQuery;\n\nZuix.prototype.dumpCache = function () {\n    return _componentCache;\n};\nZuix.prototype.dumpContexts = function () {\n    return _contextRoot;\n};\n\n// TODO: add zuix.options to configure stuff like\n// TODO: the css/html/js lookup base path (each individually own prop)",
     "ctx": {
       "type": "method",
@@ -2196,8 +2210,8 @@
     "isClass": false,
     "isEvent": false,
     "ignore": false,
-    "line": 1008,
-    "codeStart": 1012,
+    "line": 1009,
+    "codeStart": 1013,
     "code": "module.exports = function (root) {\n    var zuix = new Zuix();\n    if (document.readyState != 'loading'){\n        zuix.componentize();\n    } else {\n        document.addEventListener('DOMContentLoaded', function () {\n            zuix.componentize();\n        });\n    }\n    // log messages monitor (one global listener)\n    _log.monitor(function (level, args) {\n        if (util.isFunction(zuix.monitor))\n            zuix.monitor(level, Array.prototype.slice.call(args));\n    });\n    return zuix;\n};",
     "ctx": {
       "type": "method",
