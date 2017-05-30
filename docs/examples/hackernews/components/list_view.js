@@ -5,7 +5,8 @@
  */
 zuix.controller(function (cp) {
 
-    var listItems = [], listEndCallback = null, itemOptions;
+    var listItems = [], itemOptions;
+    var currentPage = 0, itemsPerPage = 30, loadedCount = 0;
 
     cp.init = function () {
         cp.options().html = false;
@@ -13,16 +14,22 @@ zuix.controller(function (cp) {
     };
 
     cp.create = function () {
-        cp.view().html('');
-        // globally store list view item options
-        window.list_view_opts = {};
-        itemOptions = window.list_view_opts[cp.context.contextId.replace(/-/g, '_')] = {};
-        // expose method list_view.done(fn_callback)
-        cp.expose('done', loadedCallback);
+        // exposed methods
+        cp.expose('goto', function (page) {
+            currentPage = page;
+            cp.update();
+        });
+        cp.expose('more', function () {
+            currentPage++;
+            var children = cp.view().children();
+            for (var i = currentPage*itemsPerPage; i < ((currentPage+1)*itemsPerPage); i++)
+                children.eq(i).show();
+        });
+        cp.expose('clear', clear);
     };
 
     cp.destroy = function () {
-        // TODO: ...
+        clear();
     };
 
     cp.update = function() {
@@ -31,17 +38,19 @@ zuix.controller(function (cp) {
         if (modelList == null) return;
 
         for (var i = 0; i < modelList.length; i++) {
+
             var dataItem = cp.model().getItem(i, modelList[i]);
             var id = dataItem.itemId;
-            var item = listItems[id];
-            if (typeof item === 'undefined') {
-                // create container for the list item
+
+            if (typeof listItems[id] === 'undefined') {
+                // create container for the new list item
                 var container = document.createElement('div');
                 // set the component to load for this item
+                //container.innerHTML = '<div class="spinner"><div></div><div></div><div></div><div></div></div>';
                 container.setAttribute('data-ui-load', dataItem.componentId);
-                // TODO: this is a work around, otherwise element won't load - not sure if this is a bug
-                dataItem.options.lazyLoad = false;
                 container.setAttribute('data-ui-options', setItemOptions(i, dataItem.options));
+                // TODO: the next line is a work around, otherwise element won't load - not sure if this is a bug
+                dataItem.options.lazyLoad = false;
                 // use a responsive CSS class if provided
                 if (dataItem.options.className != null) {
                     // this class should set the min-height property
@@ -54,30 +63,53 @@ zuix.controller(function (cp) {
                 cp.view().insert(i, container);
                 // register a callback to know when the component is actually loaded
                 var listener = function (itemIndex, el) {
-                    el.removeEventListener('component:ready', listener);
-                    if (itemIndex == modelList.length-1 && listEndCallback != null) {
-                        listEndCallback();
-                    }
+                    var l = function () {
+                        el.removeEventListener('component:ready', l);
+                        cp.trigger('loaded', ++loadedCount);
+                        // if all components have been loaded, then trigger 'complete' event
+                        if (itemIndex === modelList.length-1)
+                            cp.trigger('complete');
+                    };
+                    container.addEventListener('component:ready', l);
                 }(i, container);
-                container.addEventListener('component:ready', listener);
                 // keep track of already created items
                 listItems[id] = container;
             } else if (!dataItem.options.static) {
-                // update item model's data
-                zuix.context(item).model(dataItem.options.model);
+                // update existing item model's data
+                // TODO: should check if the data in the model has changed before calling this
+                zuix.context(listItems[id]).model(dataItem.options.model);
             }
+
+            // Paging mode if currentPage > -1, otherwise full-list with scroll
+            if (currentPage !== -1) {
+                if (i < currentPage*itemsPerPage || i > ((currentPage+1)*itemsPerPage-1))
+                    listItems[id].style.display = 'none';
+                else
+                    listItems[id].style.display = '';
+            }
+
         }
+
         // `componentize` is required to process lazy-loaded items (if any)
         zuix.componentize(cp.view());
 
     };
 
-    function loadedCallback(c) {
-        listEndCallback = c;
-    }
-
     function setItemOptions(i, options){
         itemOptions['opt_'+i] = options;
         return 'list_view_opts.'+cp.context.contextId.replace(/-/g, '_')+'.opt_'+i;
+    }
+
+    function clear() {
+        // clear data and cache
+        cp.view().html('');
+        // globally store list view item options
+        window.list_view_opts = window.list_view_opts || {};
+        itemOptions = window.list_view_opts[cp.context.contextId.replace(/-/g, '_')] = {};
+        // dispose components
+        for (var i = 0; i < listItems.length; i++) {
+            zuix.unload(listItems[i]);
+        }
+        listItems.length = 0;
     }
 });

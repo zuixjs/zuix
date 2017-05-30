@@ -66,6 +66,18 @@ Componentizer.prototype.lazyLoad = function (enable, threshold) {
     return lazyLoad(enable, threshold);
 };
 
+
+Componentizer.prototype.dequeue = function (element) {
+    for(var i = 0; i < _componentizeQueue.length; i++) {
+        var item = _componentizeQueue[i];
+        if (item.element === element) {
+            _componentizeQueue.splice(i, 1);
+            break;
+        }
+    }
+};
+
+
 /**
  *
  * @param {Zuix} zuixInstance
@@ -404,6 +416,15 @@ function lazyScrollCheck(el) {
                             loadNext(lc);
                         }
                     });
+                    // TODO: optimize by using MutationObserver instead of constantly run zuix.find
+                    // TODO: with "loadNext(lc)" to determine lazy-elements for the *lc* container
+                    /*
+                    if (window.MutationObserver) {
+                        new MutationObserver(function (mutations) {
+                            console.log(mutations);
+                        }).observe(lazyContainer, { attributes: true, childList: true, subtree: true });
+                    }
+                    */
                 }(this, lazyContainer);
             }
             ls.scroller = (lc == null ? false : lc);

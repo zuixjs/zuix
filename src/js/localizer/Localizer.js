@@ -27,9 +27,7 @@
 "use strict";
 
 var _log =
-    require('../helpers/Logger')('ComponentContext.js');
-
-// TODO: implement with zero-deps and move this to a separate package/project 'localizer-js'
+    require('../helpers/Logger')('Localizer.js');
 
 function Localizer() {
 

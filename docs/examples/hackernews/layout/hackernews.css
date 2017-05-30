@@ -1,0 +1,15 @@
+.load-info {
+    color: white;
+    font-size: 120%;
+    font-weight:bold;
+}
+
+.load-more {
+    cursor: pointer;
+    color: white;
+    font-weight:bolder;
+    font-size: 160%;
+    max-height: 48px;
+    width: 120px;
+    overflow: hidden;
+}

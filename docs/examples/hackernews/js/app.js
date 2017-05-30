@@ -7,18 +7,28 @@
 (function (window) {
     'use strict';
 
-    var newsList;
-    window.newsListOptions = {
+    window.hackerNewsOptions = {
         ready: function (ctx) {
-            newsList = ctx;
-            loadNewsList();
+            var view = zuix.$(ctx.view());
+            var container = view.parent('[data-source]');
+            var counter = container.find('.load-count');
+            // updated loaded count each time a item is loaded
+            ctx.on('loaded', function (e, count) {
+                counter.html(count+' of '+ctx.model().itemList.length);
+            });
+            // hide the 'more' button when the list is fully loaded
+            ctx.on('complete', function () {
+                view.next().hide();
+            });
+            // fetch the news list from firebase API
+            loadList(ctx, container.attr('data-source'));
         }
     };
 
     if ('onhashchange' in window) {
         // custom url routing
         window.onhashchange = function () {
-            // TODO: ..
+            updateView();
         };
     }
 
@@ -27,15 +37,39 @@
         zuix.componentize();
     });
 
-    zuix.lazyLoad(true, 2.5);
+    zuix.lazyLoad(true, 1.5);
+    updateView();
 
-    function loadNewsList() {
+    function updateView() {
+        var hash = window.location.hash;
+        // update top menu
+        zuix.$.find('header .menu a').removeClass('is-active');
+        zuix.$.find('header .menu a[href="'+hash+'"]').addClass('is-active');
+        if (hash == null || hash.length < 3)
+            hash = 'top';
+        else
+            hash = hash.substring(2);
+        // hide all Hacker News lists
+        var hn_lists = zuix.$.find('.scrollable')
+            .removeClass('tab-visible')
+            .addClass('tab-hidden');
+        // show the current one
+        var hn_current = zuix.$.find('[data-source="'+hash+'stories"]');
+        hn_current
+            .removeClass('tab-hidden')
+            .addClass('tab-visible');
+        // run componentize to lazy-load elements
+        zuix.componentize(hn_current);
+    }
+
+    function loadList(listCtx, sourceId) {
+        listCtx.clear();
         zuix.$.ajax({
             // Load item data using official Hacker News firebase API
-            url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
+            url: 'https://hacker-news.firebaseio.com/v0/'+sourceId+'.json',
             success: function (jsonText) {
                 var listData = JSON.parse(jsonText);
-                newsList.model({
+                listCtx.model({
                     itemList: listData,
                     getItem: function (index, item) {
                         return {
@@ -95,4 +129,14 @@
         })
     }
 
+    window.loadMore = function(button) {
+        button = zuix.$(button);
+        // the list component is right before (prev) the 'load more' button
+        var ctx = zuix.context(button.parent().prev());
+        // call method 'more' to show more items
+        ctx.more();
+        // scroll down to show new items
+        var scroller = button.parent().parent().parent().get();
+        zuix.$.scrollTo(scroller, scroller.offsetHeight - 12)
+    }
 })(window);

@@ -179,11 +179,14 @@ function routeCurrentUrl(path) {
         path = path.substring(0, anchorIndex);
     }
     switch (path) {
-        case '#/usage':
+        case '#/start':
             pagedView.setPage(1);
             break;
-        case '#/api':
+        case '#/docs':
             pagedView.setPage(2);
+            break;
+        case '#/api':
+            pagedView.setPage(3);
             break;
         case '':
         case '#/':
@@ -278,10 +281,10 @@ zuix.$.find('section').eq(0).on('scroll', function (data) {
    checkMenuVisibility();
 });
 
-// USAGE section header title - on scroll
-var usagePage = zuix.field('page-usage');
-var usageTitlePath = zuix.load('ui/usability/content_path', {
-    view: usagePage,
+// DOCS section header title - on scroll
+var docsPage = zuix.field('page-docs');
+var docsTitlePath = zuix.load('ui/usability/content_path', {
+    view: docsPage,
     tags: 'h3,h4,h5',
     target: zxHeaderTitle,
     callback: function (direction) {
@@ -369,23 +372,23 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
     }
 
     // header title path
-    if (i.page == 1)
+    if (i.page == 2)
         setTimeout(function () {
-            usageTitlePath.update();
+            docsTitlePath.update();
         }, 1000);
-    else if (i.page == 2)
+    else if (i.page == 3)
         setTimeout(function () {
             apiTitlePath.update();
         }, 1000);
 
     // contextual FAB menu
-    if (i.old == 1)
+    if (i.old == 2)
         zuix.context('menu_getting_started').hideMenu();
-    else if (i.old == 2)
+    else if (i.old == 3)
         zuix.context('menu_api').hideMenu();
-    if (i.page == 1)
+    if (i.page == 2)
         zuix.context('menu_getting_started').showMenu();
-    else if (i.page == 2)
+    else if (i.page == 3)
         zuix.context('menu_api').showMenu();
 
     // 'page change' animation

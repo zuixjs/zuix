@@ -4,6 +4,8 @@ Example of using **list_view** component with progressive/lazy loading.
 Each item in the list is loaded on-the-fly by using official
 HN firebase API https://github.com/HackerNews/API.
 
+Download [zuix_hackernews_rev1.zip](https://genielabs.github.io/zuix/examples/zuix_hackernews_rev1.zip)
+
 #### About ZUIX
 
 > ZUIX is a lite JavaScript framework (~11kB) for creating component-based web sites and applications.

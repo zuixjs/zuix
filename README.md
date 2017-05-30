@@ -2,22 +2,25 @@
 
 ZUIX is a JavaScript library for creating component-based sites and web apps.
 
-### Usage
 
-###### Download
+### Getting Started
 
-Get **ZUIX** minified Javascript file and include it in the `head` section of the page.
+Install and include `zuix.min.js` library using one of the following methods.
+
+###### Local copy
+
+Download and copy the `.js` file to your project folder and include it in your HTML page:
 
 ```html
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **ZUIX v0.4.9-6**](https://genielabs.github.io/zuix/js/zuix.min.js)
-*~10 kB (gzipped)*
+[Download **ZUIX v0.4.9-8**](https://genielabs.github.io/zuix/js/zuix.min.js)
+*~11 kB (gzipped)*
 
 ###### Hosted
 
-Link the script as an external resource by adding the following line in the ```head``` section of the page:
+Link the `.js` file as an external resource from *GitHub* site:
 
 ```html
 <script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>
@@ -25,45 +28,50 @@ Link the script as an external resource by adding the following line in the ```h
 
 ###### NPM
 
-Install ZUIX for using in your project
+Install from *NPM* for using in your project
 
-```bash
     npm install zuix --save
-```
 
-Include from *node_modules* folder into your project
+This is currently same as development package (with full source code and docs included), in the future a production ready
+`zuix-dist` package will be added instead.
+
+Include the library from *node_modules* folder in your HTML project files:
 
 ```html
     <script src="node_modules/zuix/build/js/zuix.min.js"></script>
 ```
 
-Install as development package for contributing
 
-```bash
+### Examples
+
+The following online examples can also be downloaded as a **.zip** file
+containing everything is needed to get you started.
+
+- [**TodoMVC**](https://genielabs.github.io/zuix/examples/todomvc)
+*the classic To-Do MVC application implemented as a loadable component*
+- [**Hacker News Web**](https://genielabs.github.io/zuix/examples/hackernews)
+*example of using* **list_view** *component with progressive/lazy loading*
+
+
+### Contributing
+
+Clone [**ZUIX repository**](https://github.com/genielabs/zuix) or install
+`zuix` development package from *NPM*
+
     npm install zuix
-```
 
-Start local web server
+Start local web server (default on port 8080)
 
-```bash
-    npm start
-```
+    npm run start
 
 ###### Build
 
 Build source and create minified version in ```./build/js``` folder:
 
-```bash
     gulp browserify ; gulp compile ; gulp dox ; gulp dist
-```
 
-###### Bower
 
-```bash
-    bower install zuix --save
-```
-
-#### Quick Start Guide
+### Documentation and API
 
 [ZUIX Home](https://genielabs.github.io/zuix/)
 

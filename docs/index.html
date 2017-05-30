@@ -2,7 +2,7 @@
 <!--suppress JSCheckFunctionSignatures -->
 <html lang="en">
 <head>
-    <title>zuix.js - web app content and component manager</title>
+    <title>zuix.js - content and component manager for web and apps</title>
 
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <meta http-equiv="Content-Language" content="en-us" />
@@ -64,6 +64,7 @@
     <!-- ZUIX library  -->
     <script src="js/zuix.min.js"></script>
     <!-- app bundle -->
+    <!--script src="js/zuix-bundler.min.js"></script-->
     <script src="app.bundle.js"></script>
 
     <!-- Main Page includes -->
@@ -96,16 +97,20 @@
             </div>
             <!-- Navigation. We hide it in small screens. -->
             <nav class="mdl-navigation app_menu_large">
-                <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="#/usage">
+                <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="#/start">
+                    <i class="material-icons">file_download</i>
+                    Start
+                </a>
+                <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="#/docs">
                     <i class="material-icons">school</i>
-                    Usage
+                    Docs
                 </a>
                 <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="#/api">
                     <i class="material-icons">import_contacts</i>
                     API
                 </a>
                 <a class="mdl-color-text--grey-700 mdl-button mdl-js-button mdl-js-ripple-effect" href="https://github.com/genielabs/zuix">
-                    <i class="material-icons">link</i>
+                    <i class="material-icons">reorder</i>
                     Source
                 </a>
             </nav>
@@ -117,10 +122,16 @@
                 </button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                     for="app-menu-small-screen">
-                    <a href="#/usage" class="mdl-color-text--black">
+                    <a href="#/start" class="mdl-color-text--black">
+                        <li class="mdl-menu__item">
+                            <i class="material-icons">file_download</i>
+                            Start
+                        </li>
+                    </a>
+                    <a href="#/docs" class="mdl-color-text--black">
                         <li class="mdl-menu__item">
                             <i class="material-icons">school</i>
-                            Usage
+                            Docs
                         </li>
                     </a>
                     <a href="#/api" class="mdl-color-text--black">
@@ -144,7 +155,7 @@
         <!-- zuix "ui/layout/paged_view" layout -->
         <div data-ui-load="ui/layout/paged_view" data-ui-options="main.contentPager">
 
-            <!-- page 1 -->
+            <!-- page 0 -->
             <section>
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
@@ -158,14 +169,30 @@
                 </div>
             </section>
 
-            <!-- page 2 -->
-            <section data-ui-field="page-usage" data-ui-lazyload="scroll">
+            <!-- page 1 -->
+            <section data-ui-field="page-start" data-ui-lazyload="scroll">
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
                     <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
 
                         <!-- include content from local resource -->
-                        <div data-ui-include="content/get_started"
+                        <div data-ui-include="content/start"
+                             data-ui-options="main.options.content"
+                             data-ui-lazyload="false"
+                             class="progressive-content-container"></div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- page 2 -->
+            <section data-ui-field="page-docs" data-ui-lazyload="scroll">
+                <div layout="column top-center" self="size-x1" class="page-content">
+                    <!-- Your content goes here -->
+                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
+
+                        <!-- include content from local resource -->
+                        <div data-ui-include="content/docs"
                              data-ui-options="main.options.content"
                              data-ui-lazyload="false"
                              class="progressive-content-container"></div>
@@ -198,7 +225,7 @@
 <!-- absolute positioned elements -->
 
 <div data-ui-include="content/api/menu" data-ui-priority="-1"></div>
-<div data-ui-include="content/quick_start/menu" data-ui-priority="-1"></div>
+<div data-ui-include="content/docs/menu" data-ui-priority="-1"></div>
 
 <div data-ui-field="loaderMessage-c">
     <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp"
@@ -228,10 +255,12 @@
 </div>
 
 <!-- ZUIX Hack Box widget -->
+<!--
 <div data-ui-load="ui/widgets/zuix_hackbox"
      data-ui-priority="-10"
      class="hackbox"
      self="size-large lg-full"></div>
+-->
 
 </body>
 <script>

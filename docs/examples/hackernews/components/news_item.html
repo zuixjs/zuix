@@ -1,11 +1,18 @@
-<div class="number animated zoomIn" data-ui-field="number"></div>
-<div data-ui-field="card" class="content animated fadeIn">
-    <h3 data-ui-field="title" class="single-line">Loading</h3>
+<div class="number -animated -zoomIn" data-ui-field="number"></div>
+<div data-ui-field="card" class="content -animated -fadeIn">
+    <h3 data-ui-field="title" class="single-line">
+        <div class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </h3>
     <a data-ui-field="url" class="single-line"></a>
     <div data-ui-field="description" class="single-line">
-        <span data-ui-field="date">-</span>
-        by <span data-ui-field="user">?</span>
-        / <span data-ui-field="score">?</span> points
+        <span data-ui-field="date">...</span>
+        by <span data-ui-field="user">...</span>
+        / <span data-ui-field="score">...</span> points
         <span data-ui-field="descendants"></span>
     </div>
 </div>

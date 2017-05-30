@@ -1,0 +1,75 @@
+<a id="Getting_Started--Usage"></a>
+### Getting Started
+
+Install and include `zuix.min.js` library using one of the following methods.
+
+###### Local copy
+
+Download and copy the `.js` file to your project folder and include it in your HTML page:
+
+<pre><code class="language-html">
+    <script src="js/zuix.min.js"></script>
+</code></pre>
+
+<div align="center">
+    <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+       href="https://genielabs.github.io/zuix/js/zuix.min.js">
+        Download <strong>ZUIX v0.4.9-8</strong>
+    </a>
+</div>
+<div align="center"><small><em>~11 kB (gzipped)</em></small></div>
+
+###### Hosted
+
+Link the `.js` file as an external resource from *GitHub* site:
+
+<pre><code class="language-html">
+    <script src="https://genielabs.github.io/zuix/js/zuix.min.js"></script>
+</code></pre>
+
+###### NPM
+
+Install from *NPM* for using in your project
+
+    npm install zuix --save
+
+This is currently same as development package (with full source code and docs included), in the future a production ready
+`zuix-dist` package will be added instead.
+
+Include the library from *node_modules* folder in your HTML project files:
+
+<pre><code class="language-html">
+    <script src="node_modules/zuix/build/js/zuix.min.js"></script>
+</code></pre>
+
+#### Examples
+
+The following online examples can also be downloaded as a **.zip** file containing everything is needed to get you started.
+
+- <a href="examples/todomvc" target="_blank"><i class="material-icons">link</i> **TodoMVC**</a>
+*the classic To-Do MVC application implemented as a loadable component*
+- <a href="examples/hackernews" target="_blank"><i class="material-icons">link</i> **Hacker News Web**</a>
+*example of using* **list_view** *component with progressive/lazy loading*
+
+
+#### Contributing
+
+Clone [**ZUIX repository**](https://github.com/genielabs/zuix) or install `zuix` development package from *NPM*
+
+    npm install zuix
+
+Start local web server (default on port 8080)
+
+    npm run start
+
+###### Build
+
+Build source and create minified version in ```./build/js``` folder:
+
+    gulp browserify ; gulp compile ; gulp dox ; gulp dist
+
+<!--
+###### Bower
+
+    bower install zuix --save
+-->

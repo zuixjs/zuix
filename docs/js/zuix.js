@@ -2016,6 +2016,18 @@ Componentizer.prototype.lazyLoad = function (enable, threshold) {
     return lazyLoad(enable, threshold);
 };
 
+
+Componentizer.prototype.dequeue = function (element) {
+    for(var i = 0; i < _componentizeQueue.length; i++) {
+        var item = _componentizeQueue[i];
+        if (item.element === element) {
+            _componentizeQueue.splice(i, 1);
+            break;
+        }
+    }
+};
+
+
 /**
  *
  * @param {Zuix} zuixInstance
@@ -2354,6 +2366,15 @@ function lazyScrollCheck(el) {
                             loadNext(lc);
                         }
                     });
+                    // TODO: optimize by using MutationObserver instead of constantly run zuix.find
+                    // TODO: with "loadNext(lc)" to determine lazy-elements for the *lc* container
+                    /*
+                    if (window.MutationObserver) {
+                        new MutationObserver(function (mutations) {
+                            console.log(mutations);
+                        }).observe(lazyContainer, { attributes: true, childList: true, subtree: true });
+                    }
+                    */
                 }(this, lazyContainer);
             }
             ls.scroller = (lc == null ? false : lc);
@@ -3069,9 +3090,18 @@ function loadResources(ctx, options) {
  * Unload and dispose the component.
  *
  * @private
- * @param context {ComponentContext}
+ * @param context {ComponentContext|Element}
  */
 function unload(context) {
+    if (context instanceof Element) {
+        var el = context;
+        context = zuix.context(el);
+        // if the context is null, it could be
+        // a lazy-loadable element not yet loaded
+        // so we remove it from componentizer queue
+        if (context == null)
+            _componentizer.dequeue(el);
+    }
     if (!util.isNoU(context) && !util.isNoU(context._c)) {
         if (!util.isNoU(context._c.view())) {
             context._c.view().attr('data-ui-component', null);
@@ -3566,7 +3596,9 @@ Zuix.prototype.load = load;
 zuix.unload(ctx);
 ```
  *
- * @param {ComponentContext} context The `ComponentContext` instance of the component to be unloaded.
+ * @param {ComponentContext|Element} context The `ComponentContext` instance of the
+ * component to be unloaded or its container element. Pass *Element* type if the
+ * underlying component is lazy-loadable and the context might not have been loaded yet.
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.unload = function (context) {
