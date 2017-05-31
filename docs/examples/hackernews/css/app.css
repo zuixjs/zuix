@@ -82,6 +82,23 @@ footer {
     min-height: 85px;
 }
 
+footer .list-info {
+    color: white;
+    font-size: 120%;
+    font-weight:bold;
+}
+
+footer .page-nav {
+    cursor: pointer;
+    color: white;
+    font-weight:bolder;
+    font-size: 160%;
+    line-height: 48px;
+    min-height: 48px;
+    min-width: 64px;
+    vertical-align: middle;
+    overflow: hidden;
+}
 
 /* Responsive overloads */
 

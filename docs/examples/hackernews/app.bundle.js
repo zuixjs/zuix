@@ -1,4 +1,115 @@
-﻿zuix.bundle([{"componentId":"layout\u002Fhackernews","view":"\u003Cdiv self=\"size-x1\" layout=\"column center-center\"\u003E\n    \u003Cdiv data-ui-load=\"components\u002Flist_view\"\n         data-ui-options=\"hackerNewsOptions\"\n         self=\"size-large\"\u003E\n\n        Loading news list...\n\n    \u003C\u002Fdiv\u003E\n    \u003Cfooter layout=\"row center-spread\"\u003E\n\n        \u003Cdiv self=\"size-x1\" class=\"load-info\"\u003E\n            Loaded\n            \u003Cspan class=\"load-count\"\u003E0 of 0\u003C\u002Fspan\u003E\n        \u003C\u002Fdiv\u003E\n\n        \u003Cdiv align=\"center\" class=\"load-more\" onclick=\"loadPrev(this)\"\u003E\n            &lArr;\n        \u003C\u002Fdiv\u003E\n        \u003Cdiv align=\"center\" class=\"page-count\"\u003E\n            0 \u002F 0\n        \u003C\u002Fdiv\u003E\n        \u003Cdiv align=\"center\" class=\"load-more\" onclick=\"loadNext(this)\"\u003E\n            &rArr;\n        \u003C\u002Fdiv\u003E\n\n    \u003C\u002Ffooter\u003E\n\u003C\u002Fdiv\u003E\n","css":".load-info {\n    color: white;\n    font-size: 120%;\n    font-weight:bold;\n}\n\n.load-more {\n    cursor: pointer;\n    color: white;\n    font-weight:bolder;\n    font-size: 160%;\n    max-height: 48px;\n    min-width: 48px;\n    overflow: hidden;\n}","controller":function (){}},{"componentId":"components\u002Flist_view","controller":function (cp) {
+﻿zuix.bundle([{"componentId":"components\u002Fhn_list","view":"\u003Cdiv self=\"size-x1\" layout=\"column center-center\"\u003E\n\n    \u003Cdiv data-ui-load=\"components\u002Flist_view\"\n         data-ui-field=\"list-view\"\n         self=\"size-large\"\u003E\n\n        Loading news list...\n\n    \u003C\u002Fdiv\u003E\n\n\u003C\u002Fdiv\u003E\n","css":"","controller":function (cp) {
+    'use strict';
+
+    var listView, statusCallback, statusInfo;
+
+    cp.create = function () {
+        var dataSource = cp.view().attr('data-source');
+        // get a reference to the list_view component (async)
+        zuix.context(cp.field('list-view'), function(ctx){
+            listView = ctx;
+            // update counters each time a item is loaded
+            listView.on('loaded', function (e, loadedCount) {
+                statusInfo = {
+                    itemsLoaded: loadedCount,
+                    itemsCount: listView.model().itemList.length,
+                    pagesCurrent: listView.page(),
+                    pagesCount: listView.count()
+                };
+                if (statusCallback != null)
+                    statusCallback(statusInfo);
+            });
+            // fetch the news list from Hacker News FireBase API
+            loadList(listView, dataSource);
+        });
+        // public methods
+        cp.expose('next', function () {
+            listView.next();
+            statusInfo.pagesCurrent = listView.page();
+            statusCallback(statusInfo);
+        });
+        cp.expose('prev', function () {
+            listView.prev();
+            statusInfo.pagesCurrent = listView.page();
+            statusCallback(statusInfo);
+        });
+        cp.expose('callback', function(callback){
+            statusCallback = callback;
+        });
+    };
+
+    cp.destroy = function () {
+        cp.log.i('Element disposed... G\'bye!');
+    };
+
+    function loadList(listView, sourceId) {
+        listView.clear();
+        zuix.$.ajax({
+            // Load item data using official Hacker News firebase API
+            url: 'https://hacker-news.firebaseio.com/v0/'+sourceId+'.json',
+            success: function (jsonText) {
+                var listData = JSON.parse(jsonText);
+                listView.model({
+                    itemList: listData,
+                    getItem: function (index, item) {
+                        return {
+                            // Unique identifier for this item.
+                            itemId: index,
+                            // Display item using "news_item" component.
+                            componentId: 'components/news_item',
+                            // Component options.
+                            options: {
+                                // Set the item model's data.
+                                model: { index: index, id: item },
+                                // Do not check for model refresh since
+                                // it does not change once created.
+                                static: true,
+                                // Load the component only when
+                                // it's about to come into view
+                                lazyLoad: true,
+                                // The min-height of the item container
+                                // should be specified before its component
+                                // is loaded in order to prevent list resize
+                                // flickering after lazy-loading an item.
+                                // So we either define a responsive 'className'
+                                // or a fixed 'height' property.
+                                className: 'list-item',
+                                // Event handlers.
+                                on: {
+                                    'item:enter': function (e, item) {
+                                        item.view.addClass('active');
+                                    },
+                                    'item:leave': function (e, item) {
+                                        item.view.removeClass('active');
+                                    },
+                                    'item:click': function (e, item) {
+                                        if (item.data.url != null) {
+                                            item.view.removeClass('fadeIn')
+                                                .addClass('pulse');
+                                            setTimeout(function () {
+                                                location.href = item.data.url;
+                                            }, 300);
+                                        }
+                                    }
+                                },
+                                ready: function () {
+                                    // TODO: ...
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            error: function () {
+                // TODO: ...
+            },
+            then: function () {
+                // TODO: ...
+            }
+        })
+    }
+
+}},{"componentId":"components\u002Flist_view","controller":function (cp) {
 
     var listItems = [], itemOptions;
     var currentPage = 0, itemsPerPage = 20, loadedCount = 0;

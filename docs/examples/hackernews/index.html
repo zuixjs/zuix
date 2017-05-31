@@ -36,32 +36,54 @@
 
 <main>
 
-    <div data-ui-include="layout/hackernews"
+    <div data-ui-load="components/hn_list"
+         data-ui-options="hnListOptions"
          data-ui-lazyload="scroll"
          data-source="topstories"
          class="scrollable animated fadeIn"></div>
 
-    <div data-ui-include="layout/hackernews"
+    <div data-ui-load="components/hn_list"
+         data-ui-options="hnListOptions"
          data-ui-lazyload="scroll"
          data-source="newstories"
          class="scrollable animated fadeIn"></div>
 
-    <div data-ui-include="layout/hackernews"
+    <div data-ui-load="components/hn_list"
+         data-ui-options="hnListOptions"
          data-ui-lazyload="scroll"
          data-source="showstories"
          class="scrollable animated fadeIn"></div>
 
-    <div data-ui-include="layout/hackernews"
+    <div data-ui-load="components/hn_list"
+         data-ui-options="hnListOptions"
          data-ui-lazyload="scroll"
          data-source="askstories"
          class="scrollable animated fadeIn"></div>
 
-    <div data-ui-include="layout/hackernews"
+    <div data-ui-load="components/hn_list"
+         data-ui-options="hnListOptions"
          data-ui-lazyload="scroll"
          data-source="jobstories"
          class="scrollable animated fadeIn"></div>
 
 </main>
+
+<footer layout="row center-spread">
+
+    <div self="size-x1" class="list-info">
+        Loaded
+        <span data-ui-field="load-count">0 of 0</span>
+    </div>
+
+    <div align="center" class="page-nav" onclick="currentFeed.prev()">
+        &lArr;
+    </div>
+    <div data-ui-field="page-count" align="center">0 / 0</div>
+    <div align="center" class="page-nav" onclick="currentFeed.next()">
+        &rArr;
+    </div>
+
+</footer>
 
 <!-- Scripts here. Don't remove ↓ -->
 <!-- Moment.JS -->

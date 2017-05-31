@@ -3132,10 +3132,12 @@ function createContext(options) {
  * TODO: desc
  *
  * @private
- * @param {Element|ZxQuery|object} contextId
- * @return {ComponentContext}
+ * @param {Element|ZxQuery|object} contextId The `contextId` object
+ * (usually a string) or the component's container/view element.
+ * @param {function} [callback] The callback function that will pass the context object once it is ready.
+ * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
-function context(contextId) {
+function context(contextId, callback) {
     var context = null;
     if (contextId instanceof z$.ZxQuery)
         contextId = contextId.get();
@@ -3146,12 +3148,14 @@ function context(contextId) {
             return false;
         }
     });
+    if (typeof callback === 'function' && (contextId instanceof Element || contextId instanceof z$.ZxQuery)) {
+        if (context == null)
+            z$(contextId).one('component:ready', function () {
+                callback(zuix.context(this));
+            });
+        else callback(context);
+    }
     return context;
-}
-
-/** @private */
-function removeContext(contextId) {
-    // TODO: removeContext
 }
 
 /**
@@ -3624,11 +3628,20 @@ var ctx = zuix.context(slideShowDiv);
 var ctx = zuix.context('my-slide-show');
 // call component's exposed methods
 ctx.setSlide(1);
+// or
+var ctx;
+zuix.context('my-slide-show', function(c) {
+    // call component's methods
+    c.setSlide(1);
+    // eventually store a reference to the component for later use
+    ctx = c;
+});
 ```
  *
  * @param {Element|ZxQuery|object} contextId The `contextId` object
  * (usually a string) or the component's container/view element.
- * @return {ComponentContext} The matching component context.
+ * @param {function} [callback] The callback function that will pass the context object once it is ready.
+ * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
 Zuix.prototype.context = context;
 /**
