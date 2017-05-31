@@ -10,6 +10,6 @@
     font-weight:bolder;
     font-size: 160%;
     max-height: 48px;
-    width: 120px;
+    min-width: 48px;
     overflow: hidden;
 }

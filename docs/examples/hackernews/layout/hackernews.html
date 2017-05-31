@@ -8,15 +8,19 @@
     </div>
     <footer layout="row center-spread">
 
-        <div class="load-info">
-            Showing
+        <div self="size-x1" class="load-info">
+            Loaded
             <span class="load-count">0 of 0</span>
         </div>
 
-        <div align="right" class="load-more" onclick="loadMore(this)">
-            <div class="animated pulse infinite">
-                more &#8681;
-            </div>
+        <div align="center" class="load-more" onclick="loadPrev(this)">
+            &lArr;
+        </div>
+        <div align="center" class="page-count">
+            0 / 0
+        </div>
+        <div align="center" class="load-more" onclick="loadNext(this)">
+            &rArr;
         </div>
 
     </footer>

@@ -6,7 +6,7 @@ when we refer to that particular kind of content where some elements
 in it are bound to fields of a *data model* and, so, that dynamically
 change the shown data accordingly to it.
 
-The ```data-ui-field``` attribute, placed on elements of a view template,
+The `data-ui-field` attribute, placed on elements of a view template,
 is used to bind them to the associated fields in the model.
 
 <small><strong>EXAMPLE - HTML</strong> View Template</small>
@@ -49,12 +49,12 @@ Classic homemade pizza recipe, including pizza dough and toppings, step-by-step 
 </style>
 
 A *View* can be either implemented in a file, like already described for
-[loading content](#Getting_Started--Content_Loading), or as an **inline** View, that is so
+[loading content](#/docs#Getting_Started--Content_Loading), or as an **inline** View, that is so
 placed in the same page rather than on a its own file.
 
 ###### Inline View Template
 
-A view is declared inline by adding the ```data-ui-view``` attribute to its root element.
+A view is declared inline by adding the `data-ui-view` attribute to its root element.
 The value of this attribute is meant to be a unique identifier and shall not match the path
 of any other view placed in a file or inline in the same page, unless we want to *override* it.
 
@@ -84,7 +84,7 @@ Inclusion of the above view in the same page
 
 ##### Data Binding
 
-So, to bind elements of a view template to fields of a given data model, we set the ```data-ui-field``` attribute
+So, to bind elements of a view template to fields of a given data model, we set the `data-ui-field` attribute
 on these elements with the name of the model field that we want to bind to.
 
 <a id="Getting_Started--Basic_Binding"></a>
@@ -93,11 +93,11 @@ on these elements with the name of the model field that we want to bind to.
 When providing a simple data model like the one described in the previous example,
 the model's field is automatically mapped to a certain element's property
 depending on the type of the binding element.
-For instance, if the element is an ```img```, then the mapped property
-will be ```.src```, while for a ```div``` or a ```p``` it will be
-the ```.innerHTML``` property.
+For instance, if the element is an `img`, then the mapped property
+will be `.src`, while for a `div` or a `p` it will be
+the `.innerHTML` property.
 
-<small><strong>EXAMPLE - </strong> Inline View Template with ```data-ui-field``` fields.</small>
+<small><strong>EXAMPLE - </strong> Inline View Template with `data-ui-field` fields.</small>
 <pre data-line="4,7"><code class="language-html">
 <!-- definition of a inline view template -->
 <span data-ui-view="inline/common/contact_chip"
@@ -182,7 +182,7 @@ and the network is slow or JavaScript is disabled).
 <p>&nbsp;</p>
 
 Another way of using basic binding is by employing
-the ```data-bind-model``` attribute as shown below:
+the `data-bind-model` attribute as shown below:
 
 <pre data-line="4,7,11,15"><code class="language-html">
 <div layout="row center-spread">
@@ -241,17 +241,19 @@ var chip_adapter = function(element, field) {
 Sometimes it might be required to have more control over
 how the value of a model's field affects the view.
 For this purpose *Binding Adapters* can be used rather than
-*[Basic Binding](#Getting_Started--Basic_Binding)*.
+*[Basic Binding](#/docs#Getting_Started--Basic_Binding)*.
 
 A *binding adapter* is a function that gets called when the data model
 associated to a view is updated.
 
-    function vm_binding_adapter(element, field) {
-        // adapter code ...
-    }
+```javascript
+function vm_binding_adapter(element, field) {
+    // adapter code ...
+}
+```
 
-where ```element``` (`ZxQuery`) is the view element that needs to be updated,
-```field``` is the name of the bound field in the model and the
+where `element` (`ZxQuery`) is the view element that needs to be updated,
+`field` is the name of the bound field in the model and the
 context object **this**, is the view itself.
 
 <small><strong>EXAMPLE - </strong> Using a binding adapter</small>
@@ -340,7 +342,7 @@ See the next example for the result.
 
 ##### Events
 
-In a similar way to [Behaviors](#Getting-Started__Behaviors), a event
+In a similar way to [Behaviors](#/docs#Getting-Started__Behaviors), a event
 handler can be implemented to map events of a view to the expected action.
 For example by clicking a button, a link will open.
 

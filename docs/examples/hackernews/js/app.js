@@ -7,54 +7,67 @@
 (function (window) {
     'use strict';
 
+    var $ = zuix.$;
+
     window.hackerNewsOptions = {
-        ready: function (ctx) {
-            var view = zuix.$(ctx.view());
-            var container = view.parent('[data-source]');
-            var counter = container.find('.load-count');
-            // updated loaded count each time a item is loaded
-            ctx.on('loaded', function (e, count) {
-                counter.html(count+' of '+ctx.model().itemList.length);
+        // the list_view component is ready
+        ready: function (listView) {
+            var view = $(listView.view());
+            var container = view.parent('.scrollable');
+            // update counters each time a item is loaded
+            listView.on('loaded', function (e, count) {
+                container.find('.load-count')
+                    .html(count+' of '+listView.model().itemList.length);
+                container.find('.page-count')
+                    .html((listView.page()+1)+'/'+listView.count());
             });
-            // hide the 'more' button when the list is fully loaded
-            ctx.on('complete', function () {
-                view.next().hide();
-            });
-            // fetch the news list from firebase API
-            loadList(ctx, container.attr('data-source'));
+            // fetch the news list from Hacker News FireBase API
+            loadList(listView, container.attr('data-source'));
         }
     };
 
+    // Set lazy loading and show the current view
+    zuix.lazyLoad(true, 1.0);
+    showCurrentView();
+
+    // register event handler for URL routing
     if ('onhashchange' in window) {
         // custom url routing
         window.onhashchange = function () {
-            updateView();
+            showCurrentView(parseUrlPath(window.location.hash));
         };
     }
-
     // force componentize on resize to process lazy-elements that might come into the view
     window.addEventListener('resize', function () {
         zuix.componentize();
     });
 
-    zuix.lazyLoad(true, 1.5);
-    updateView();
-
-    function updateView() {
-        var hash = window.location.hash;
-        // update top menu
-        zuix.$.find('header .menu a').removeClass('is-active');
-        zuix.$.find('header .menu a[href="'+hash+'"]').addClass('is-active');
+    function parseUrlPath(hash) {
         if (hash == null || hash.length < 3)
-            hash = 'top';
-        else
-            hash = hash.substring(2);
+            hash = '#/top';
+        // get page number parameter
+        var page;
+        var i= hash.lastIndexOf('/');
+        if (i > 1) {
+            page = hash.substring(i+1);
+            hash = hash.substring(0, i);
+        }
+        hash = hash.substring(2);
+        return { path: hash, page: page };
+    }
+
+    function showCurrentView(pr) {
+        if (pr == null)
+            pr = parseUrlPath(window.location.hash);
+        // update top menu
+        $.find('header .menu a').removeClass('is-active');
+        $.find('header .menu a[href="#/'+pr.path+'"]').addClass('is-active');
         // hide all Hacker News lists
-        var hn_lists = zuix.$.find('.scrollable')
+        $.find('.scrollable')
             .removeClass('tab-visible')
             .addClass('tab-hidden');
         // show the current one
-        var hn_current = zuix.$.find('[data-source="'+hash+'stories"]');
+        var hn_current = $.find('[data-source="'+pr.path+'stories"]');
         hn_current
             .removeClass('tab-hidden')
             .addClass('tab-visible');
@@ -62,9 +75,11 @@
         zuix.componentize(hn_current);
     }
 
+    // local app's methods
+
     function loadList(listCtx, sourceId) {
         listCtx.clear();
-        zuix.$.ajax({
+        $.ajax({
             // Load item data using official Hacker News firebase API
             url: 'https://hacker-news.firebaseio.com/v0/'+sourceId+'.json',
             success: function (jsonText) {
@@ -129,14 +144,26 @@
         })
     }
 
-    window.loadMore = function(button) {
-        button = zuix.$(button);
-        // the list component is right before (prev) the 'load more' button
-        var ctx = zuix.context(button.parent().prev());
-        // call method 'more' to show more items
-        ctx.more();
-        // scroll down to show new items
-        var scroller = button.parent().parent().parent().get();
-        zuix.$.scrollTo(scroller, scroller.offsetHeight - 12)
+    // global app's methods
+
+    window.loadPrev = function(button) {
+        button = $(button);
+        var footer = button.parent();
+        // the list component is right before (prev) the footer
+        var listView = zuix.context(footer.prev());
+        footer.find('.page-count')
+            .html((listView.prev()+1)+'/'+listView.count());
+        button.parent('.scrollable').get().scrollTop = 0;
+    };
+
+    window.loadNext = function(button) {
+        button = $(button);
+        var footer = button.parent();
+        // the list component is right before (prev) the footer
+        var listView = zuix.context(footer.prev());
+        footer.find('.page-count')
+            .html((listView.next()+1)+'/'+listView.count());
+        button.parent('.scrollable').get().scrollTop = 0;
     }
+
 })(window);

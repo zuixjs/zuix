@@ -12,7 +12,7 @@ header {
     right: 0;
     top: 0;
     height: 64px;
-    background-color: #00acc1;
+    background-color: #1b6ab9;
     color:white;
     z-index: 1;
     -webkit-box-shadow: 0 4px 8px rgba(100, 100, 100, 0.49);
@@ -41,8 +41,10 @@ header > div {
 }
 
 footer {
+    position: fixed;
+    bottom: 0;
     height: 64px;
-    background-color: #00acc1;
+    background-color: #1b6ab9;
     color:white;
     z-index: 1;
     -webkit-box-shadow: 0 -4px 8px rgba(100, 100, 100, 0.49);
@@ -59,7 +61,7 @@ footer {
 
 .scrollable {
     position: absolute;
-    top: 64px; left: 0; right: 0; bottom: 0;
+    top: 64px; left: 0; right: 0; bottom: 64px;
     overflow-y: auto;
 }
 
@@ -78,34 +80,6 @@ footer {
 
 .list-item {
     min-height: 85px;
-}
-
-/* Loader animation */
-
-.spinner div {
-    width: 6px;
-    height: 6px;
-    position: absolute;
-    left: -20px;
-    top: 40px;
-    background-color: #FF3;
-    border: solid 2px #1da851;
-    border-radius: 50%;
-    animation: move 4s infinite cubic-bezier(.2,.64,.81,.23);
-}
-.spinner div:nth-child(2) {
-    animation-delay: 150ms;
-}
-.spinner div:nth-child(3) {
-    animation-delay: 300ms;
-}
-.spinner div:nth-child(4) {
-    animation-delay: 450ms;
-}
-@keyframes move {
-    0% {left: 0%;}
-    75% {left:100%;}
-    100% {left:100%;}
 }
 
 

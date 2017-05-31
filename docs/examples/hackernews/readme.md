@@ -15,7 +15,7 @@ Main features:
 - Template Engine
 - Component Manager
 - Cross-domain content/component loading
-- Progressive/Lazy loading
+- Lazy loading
 - Events, Behaviors and Hooks
 - Automatic events unbinding
 - Components and fields caching

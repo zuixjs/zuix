@@ -6,7 +6,7 @@
 zuix.controller(function (cp) {
 
     var listItems = [], itemOptions;
-    var currentPage = 0, itemsPerPage = 30, loadedCount = 0;
+    var currentPage = 0, itemsPerPage = 20, loadedCount = 0;
 
     cp.init = function () {
         cp.options().html = false;
@@ -15,9 +15,29 @@ zuix.controller(function (cp) {
 
     cp.create = function () {
         // exposed methods
-        cp.expose('goto', function (page) {
-            currentPage = page;
-            cp.update();
+        cp.expose('page', function (page) {
+            if (page != null && page >= 0 && page < pageCount()) {
+                currentPage = page;
+                cp.update();
+            }
+            return currentPage;
+        });
+        cp.expose('count', function () {
+            return pageCount();
+        });
+        cp.expose('next', function () {
+            if (currentPage < pageCount() - 1) {
+                currentPage++;
+                cp.update();
+            }
+            return currentPage;
+        });
+        cp.expose('prev', function () {
+            if (currentPage > 0) {
+                currentPage--;
+                cp.update();
+            }
+            return currentPage;
         });
         cp.expose('more', function () {
             currentPage++;
@@ -94,6 +114,10 @@ zuix.controller(function (cp) {
         zuix.componentize(cp.view());
 
     };
+
+    function pageCount() {
+        return Math.ceil(listItems.length / itemsPerPage);
+    }
 
     function setItemOptions(i, options){
         itemOptions['opt_'+i] = options;

@@ -25,16 +25,16 @@ could be implemented with the following files:
 - site/layout/footer.html
 - **index.html**
 
-where the ```index.html``` is the main page that will include the other files.
+where the `index.html` is the main page that will include the other files.
 
 <a id="Getting_Started--Content_Loading"></a>
 ##### Loading content
 
-To include a content, we just add a ```div``` (or any other tag supposed to be a container element)
-with the attribute ```data-ui-include``` with its value set to the path of the content that
+To include a content, we just add a `div` (or any other tag supposed to be a container element)
+with the attribute `data-ui-include` with its value set to the path of the content that
 you want to be loaded.
 
-<small><strong>EXAMPLE PAGE - </strong> **HTML** file ```index.html```</small>
+<small><strong>EXAMPLE PAGE - </strong> **HTML** file `index.html`</small>
 <pre data-line="9,11,13"><code class="language-html">
 <html>
     <head>
@@ -53,15 +53,15 @@ you want to be loaded.
 </html>
 </code></pre>
 
-The ```data-ui-include``` attribute shown at lines 9-11-13, will instruct *ZUIX*
-to load the specified content into each ```div``` element.
+The `data-ui-include` attribute shown at lines 9-11-13, will instruct *ZUIX*
+to load the specified content into each `div` element.
 
-Notice that the value of the ```data-ui-include``` attribute is the URL of the file to include
-<u>without</u> the ```.html``` extension. This value is the
+Notice that the value of the `data-ui-include` attribute is the URL of the file to include
+<u>without</u> the `.html` extension. This value is the
 *component identifier*.
 
-The following example shows how a ```div``` will looks like after
-the content ```site/common/links``` is included into it.
+The following example shows how a `div` will looks like after
+the content `site/common/links` is included into it.
 
 <small><strong>EXAMPLE</strong> - **HTML** file [site/common/links.html](https://genielabs.github.io/zuix/site/common/links.html)</small>
 <pre data-line="1"><code class="language-html">
@@ -80,7 +80,7 @@ Element including the above content
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong> - resulting ```div``` after content is loaded into it</small>
+<small><strong>PROCESSED OUTPUT</strong> - resulting `div` after content is loaded into it</small>
 <pre data-line="1,4"><code class="language-html">
     <!-- include common links -->
     <div data-ui-include="site/common/links"
@@ -116,14 +116,14 @@ loaded only when it actually comes into the user screen's view.
 This kind of *on-demand* content composition, is called
 *lazy loading*.
 
-To enable this feature, set the attribute ```data-ui-lazyload="true"```
+To enable this feature, set the attribute `data-ui-lazyload="true"`
 on the same element you want to enable lazy loading on, or on a container
 element so that all the "include" elements contained in it will inherit
 the option.
 In this last case, all container's children will be lazy-loaded.
 
 To force loading of a particular element that currently
-inherits lazy-loading, we set on it the attribute ```data-ui-lazyload="false"```.
+inherits lazy-loading, we set on it the attribute `data-ui-lazyload="false"`.
 
 <small><strong>EXAMPLE - </strong> Use of lazy loading option</small>
 <pre data-line="1,2,6"><code class="language-html">
@@ -151,8 +151,8 @@ specified on the container element.
 
 ##### Styling content
 
-When including a content, after loading the ```.html``` file,
-*ZUIX* will also try to load a ```.css``` style
+When including a content, after loading the `.html` file,
+*ZUIX* will also try to load a `.css` style
 file with the same location/basename.
 
 If the style file is found, all style definitions contained in it,
@@ -191,7 +191,7 @@ Container including the above:
     <div data-ui-include="site/common/links"></div>
 </code></pre>
 
-<small><strong>PROCESSED OUTPUT</strong> resulting ```div``` after content is loaded into it</small>
+<small><strong>PROCESSED OUTPUT</strong> resulting `div` after content is loaded into it</small>
 <pre data-line="12,20"><code class="language-html">
 <!-- include common links -->
 <div data-ui-include="site/common/links"  data-ui-loaded="true"
@@ -226,7 +226,7 @@ Container including the above:
 
 <p>&nbsp;</p>
 
-So, as shown in the processed output, the ```.css``` style definitions
-are applied only to the loaded content via the ```data-ui-component``` constraint,
+So, as shown in the processed output, the `.css` style definitions
+are applied only to the loaded content via the `data-ui-component` constraint,
 making possible to keep **global style** files separated from **content-local style** files
 (scoped CSS).

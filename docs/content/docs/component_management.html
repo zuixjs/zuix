@@ -2,7 +2,7 @@
 #### Component Management <i class="material-icons mdl-color-text--grey-500">extension</i>
 
 Exception made for handling of standard events and behaviors,
-a [view template](#Getting_Started--View_Templates) cannot implement a more complex UI logic.
+a [view template](#/docs#Getting_Started--View_Templates) cannot implement a more complex UI logic.
 
 This is where *components* are being used. In addition to all the features of
 a view template, a component has a piece of *JavaScript* code associated
@@ -15,15 +15,15 @@ interface methods: **create** and **destroy**, that are obviously
 called respectively at the start and the end of the component
 life-cycle.
 
-To declare a component controller the ```zuix.controller(...)``` method is
+To declare a component controller the `zuix.controller(...)` method is
 used. This will be described in next paragraph.
 
 ##### Loading a component
 
-In place of `data-ui-include` attribute, to load a component, the ```data-ui-load```
+In place of `data-ui-include` attribute, to load a component, the `data-ui-load`
 attribute is used. The value of this attribute is the *component identifier*.
-Also a ```data-ui-options``` attribute may be provided as for all other options/features
-already described for ```data-ui-include``` in [content loading](#Getting_Started--Content_Loading),
+Also a `data-ui-options` attribute may be provided as for all other options/features
+already described for `data-ui-include` in [content loading](#/docs#Getting_Started--Content_Loading),
 such as *lazy loading* and *data binding*.
 
 For example, consider the following "Summary Card" component, which
@@ -32,7 +32,7 @@ the full article.
 
 The component will consist of a view template and a controller.
 
-<small><strong>EXAMPLE</strong> Declaration of view template for the component ```site/components/summary_card```</small>
+<small><strong>EXAMPLE</strong> Declaration of view template for the component `site/components/summary_card`</small>
 <pre data-line="3,5,10,14"><code class="language-html">
 <div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
     <div class="mdl-card__title">
@@ -55,7 +55,7 @@ The component will consist of a view template and a controller.
 </div>
 </code></pre>
 
-<small><strong>PREVIEW</strong> Preview of view template ```site/components/summary_card```</small>
+<small><strong>PREVIEW</strong> Preview of view template `site/components/summary_card`</small>
 <div data-ui-view="site/components/summary_card" class="mdl-card mdl-shadow--2dp">
 <div class="mdl-card__title">
 <h2 data-ui-field="title" class="mdl-card__title-text">Title</h2>
@@ -118,10 +118,10 @@ zuix.controller(function(cp) {
 <p>&nbsp;</p>
 
 The view template declaration can be either placed in the same document (in-line) or
-in files (```site/components/summary_card.html``` - ```site/components/summary_card.css```),
-in which case the ```data-ui-view``` attribute can be omitted.
+in files (`site/components/summary_card.html` - `site/components/summary_card.css`),
+in which case the `data-ui-view` attribute can be omitted.
 
-<small><strong>EXAMPLE</strong> Controller for the component ```site/components/summary_card```</small>
+<small><strong>EXAMPLE</strong> Controller for the component `site/components/summary_card`</small>
 <pre><code>
 zuix.controller(function(cp) {
 
@@ -135,12 +135,12 @@ zuix.controller(function(cp) {
 </code></pre>
 
 Also the controller declaration can be placed in the same document or
-in its own file (```site/components/summary_card.js```),
-in which case the instruction ```.for('site/components/summary_card')``` can be omitted.
+in its own file (`site/components/summary_card.js`),
+in which case the instruction `.for('site/components/summary_card')` can be omitted.
 
-To actually create an instance of the component, the ```data-ui-load``` attribute is used.
+To actually create an instance of the component, the `data-ui-load` attribute is used.
 
-<small><strong>EXAMPLE</strong> Loading two instances of the component ```site/components/summary_card```</small>
+<small><strong>EXAMPLE</strong> Loading two instances of the component `site/components/summary_card`</small>
 <pre data-line="2,8"><code class="language-html">
 <!-- Card 1 -->
 <div data-ui-load="site/components/summary_card" data-id="0"
@@ -254,13 +254,13 @@ function animation_reveal () {
 ##### The Controller
 
 When all elements of a component are loaded (html, css, js) the
-controller method ```create()``` is called.
-When otherwise a component is requestd to unload, the ```destroy()```
+controller method `create()` is called.
+When otherwise a component is requestd to unload, the `destroy()`
 method is called.
 
 The following snippet shows the skelton of a controller declaration.
 
-<small><strong>EXAMPLE</strong> Declaration of a generic controller for ```path/to/component_name```</small>
+<small><strong>EXAMPLE</strong> Declaration of a generic controller for `path/to/component_name`</small>
 <pre data-line="2"><code class="language-js">
 // Controller of component 'path/to/component_name'
 zuix.controller(function(cp) {
@@ -274,46 +274,46 @@ zuix.controller(function(cp) {
 }).for('path/to/component_name');
 </code></pre>
 
-The ```cp``` object passed to the controller handler
+The `cp` object passed to the controller handler
 is the controller instance itself and exposes
 the following fields/methods.
 
 ###### Life-cycle handlers
 
-- ```cp.init = function() { ... }```
+- `cp.init = function() { ... }`
 <br>optional *handler* function that gets called after loading and before the component is created.
 
-- ```cp.create = function() { ... }```
+- `cp.create = function() { ... }`
 <br>optional *handler* function that gets called after loading, when the component is created.
 
-- ```cp.destroy = function() { ... }```
+- `cp.destroy = function() { ... }`
 <br>*optional *handler* function called when the component is destroyed
 
 ###### Helper methods
 
-- ```cp.view([selector])```
+- `cp.view([selector])`
 <br/>get the component's view or if a *selector* is specified, get
 the view's elements matching the *selector* criteria.
 The returned value is a *ZxQuery* object. To get the underlying
 DOM *Element* object, use  the *ZxQuery***.get()** method
-(eg. ```var el = cp.view().get();```).
+(eg. `var el = cp.view().get();`).
 
-- ```cp.field(fieldName)```
-<br/>get the view's element with matching ```data-ui-field``` attribute.
+- `cp.field(fieldName)`
+<br/>get the view's element with matching `data-ui-field` attribute.
 The returned value is a *ZxQuery* object. To get the underlying
 DOM *Element* object, use  the *ZxQuery***.get()** method
-(eg. <small>```var el = cp.view().get();```</small>).
+(eg. <small>`var el = cp.view().get();`</small>).
 
-- ```cp.model([mode])```
+- `cp.model([mode])`
 <br/><em>get/set the data model object.</em>
 
-- ```cp.trigger(eventPath, eventValue)```
+- `cp.trigger(eventPath, eventValue)`
 <br/><em>trigger a component event.</em>
 
-- ```cp.options([options])```
+- `cp.options([options])`
 <br/><em>get/set the component's options.</em>
 
-- ```cp.expose(methodName, handler)```
+- `cp.expose(methodName, handler)`
 <br/><em>expose a component's method.</em>
 
 ###### ZxQuery DOM helper class
@@ -332,10 +332,11 @@ will return a *ZxQuery* object.
 To access the DOM Element behind a *ZxQuery* object the method
 `.get()` is used.
 
-```
+```javascript
 var el = cp.view().get();
 console.log( el.innerHTML )
 ```
+
 So the `.get()` method can be used to interoperate with
 other libraries and frameworks used in a project.
 

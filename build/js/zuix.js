@@ -1289,10 +1289,10 @@ z$.isInView = function (el, tolerance) {
         && rect.left < area.width + xt
         && rect.top < area.height + yt;
 };
-z$.scrollTo = function(el, targetY) {
+z$.scrollTo = function(el, targetY, duration) {
     if (targetY === 0 || targetY == null)
         return;
-    var duration = 500;
+    if (duration == null) duration = 500;
     var scrollTop = el.scrollTop+targetY - 56;
     var scrollOffset = el.scrollTop-scrollTop;
     el.firstElementChild.style.transition = 'transform '+duration+'ms ease';
