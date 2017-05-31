@@ -24,11 +24,13 @@ zuix.controller(function (cp) {
         });
         // public methods
         cp.expose('next', function () {
+            cp.view().get().scrollTop = 0;
             listView.next();
             statusInfo.pagesCurrent = listView.page();
             statusCallback(statusInfo);
         });
         cp.expose('prev', function () {
+            cp.view().get().scrollTop = 0;
             listView.prev();
             statusInfo.pagesCurrent = listView.page();
             statusCallback(statusInfo);
