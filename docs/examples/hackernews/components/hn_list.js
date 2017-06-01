@@ -1,7 +1,12 @@
 zuix.controller(function (cp) {
     'use strict';
 
-    var listView, statusCallback, statusInfo;
+    var listView, statusCallback, statusInfo = {
+        itemsLoaded: 0,
+        itemsCount: 0,
+        pagesCurrent: 0,
+        pagesCount: 0
+    };
 
     cp.create = function () {
         var dataSource = cp.view().attr('data-source');
@@ -10,19 +15,19 @@ zuix.controller(function (cp) {
             listView = ctx;
             // update counters each time a item is loaded
             listView.on('loaded', function (e, loadedCount) {
-                statusInfo = {
-                    itemsLoaded: loadedCount,
-                    itemsCount: listView.model().itemList.length,
-                    pagesCurrent: listView.page(),
-                    pagesCount: listView.count()
-                };
-                if (statusCallback != null)
-                    statusCallback(statusInfo);
+                statusInfo.itemsLoaded = loadedCount;
+                statusCallback(statusInfo);
             });
             // fetch the news list from Hacker News FireBase API
-            loadList(listView, dataSource);
+            loadList(dataSource);
         });
         // public methods
+        cp.expose('page', function (p) {
+            statusInfo.pagesCurrent = p;
+            if (listView != null)
+                statusInfo.pagesCurrent = listView.page(p);
+            statusCallback(statusInfo);
+        });
         cp.expose('next', function () {
             cp.view().get().scrollTop = 0;
             listView.next();
@@ -44,7 +49,7 @@ zuix.controller(function (cp) {
         cp.log.i('Element disposed... G\'bye!');
     };
 
-    function loadList(listView, sourceId) {
+    function loadList(sourceId) {
         listView.clear();
         zuix.$.ajax({
             // Load item data using official Hacker News firebase API
@@ -101,6 +106,10 @@ zuix.controller(function (cp) {
                         }
                     }
                 });
+                statusInfo.itemsCount = listData.length;
+                statusInfo.pagesCount = listView.count();
+                if (statusInfo.pagesCurrent > 0)
+                    statusInfo.pagesCurrent = listView.page(statusInfo.pagesCurrent);
             },
             error: function () {
                 // TODO: ...

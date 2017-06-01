@@ -66,6 +66,8 @@
         // store a reference to the current hn_list component
         zuix.context(hn_current, function (ctx) {
             window.currentFeed = ctx;
+            if (!isNaN(pr.page))
+                ctx.page(parseInt(pr.page));
         });
         // run componentize to lazy-load elements
         zuix.componentize(hn_current);

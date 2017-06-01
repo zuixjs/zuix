@@ -17,7 +17,7 @@ zuix.controller(function (cp) {
         // exposed methods
         cp.expose('page', function (page) {
             if (page != null && page >= 0 && page < pageCount()) {
-                currentPage = page;
+                currentPage = parseInt(page);
                 cp.update();
             }
             return currentPage;
@@ -135,5 +135,6 @@ zuix.controller(function (cp) {
             zuix.unload(listItems[i]);
         }
         listItems.length = 0;
+        currentPage = 0;
     }
 });
