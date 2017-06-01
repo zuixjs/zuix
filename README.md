@@ -28,17 +28,26 @@ Link the `.js` file as an external resource from *GitHub* site:
 
 ###### NPM
 
-Install from *NPM* for using in your project
+Install from *NPM*
 
-    npm install zuix --save
-
-This is currently same as development package (with full source code and docs included), in the future a production ready
-`zuix-dist` package will be added instead.
+    npm install zuix-dist --save
 
 Include the library from *node_modules* folder in your HTML project files:
 
 ```html
-    <script src="node_modules/zuix/build/js/zuix.min.js"></script>
+    <script src="node_modules/zuix-dist/js/zuix.min.js"></script>
+```
+
+###### Bower
+
+Install from *Bower*
+
+    bower install zuix-dist --save
+
+Include the library from *bower_components* folder in your HTML project files:
+
+```html
+    <script src="bower_components/zuix-dist/js/zuix.min.js"></script>
 ```
 
 
@@ -66,10 +75,14 @@ Start local web server (default on port 8080)
 
 ###### Build
 
-Build source and create minified version in ```./build/js``` folder:
+Build source and create minified version in `./dist/js` folder:
 
-    gulp browserify ; gulp compile ; gulp dox ; gulp dist
+    gulp browserify ; gulp compile
 
+Build JSON documentation data file in `docs` folder
+(this is used for the web site in the `gh-pages` branch):
+
+    gulp dox
 
 ### Documentation and API
 

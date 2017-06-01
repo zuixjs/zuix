@@ -1,19 +1,8 @@
 {
-  "name": "zuix",
+  "name": "zuix-dist",
   "description": "ZUIX is a JavaScript library for creating component-based sites and web apps.",
-  "main": [
-    "build/js/zuix.js"
-  ],
   "dependencies": { },
-  "devDependencies": {
-    "gulp-browserify": "^0.5.1",
-    "gulp-closure-compiler": "^0.4.0",
-    "gulp-install": "^0.6.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-dox": "^0.1.6",
-   "http-server": "^0.9.0",
-    "npm-cli": "^0.1.0"
-  },
+  "devDependencies": { },
   "moduleType": [
     "amd",
     "globals",
@@ -31,18 +20,14 @@
     "web"
   ],
   "license": "Apache-2.0",
+  "homepage": "https://genielabs.github.io/zuix",
   "authors": [
+    "G-Labs",
     "Generoso Martello <generoso@martello.com>"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/genielabs/zuix"
   },
-  "ignore": [
-    "**/.*",
-    "out",
-    "node_modules",
-    "bower_components"
-  ],
   "private": false
 }
