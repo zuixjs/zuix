@@ -13,11 +13,12 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
     "gulp-closure-compiler": "^0.4.0",
+    "gulp-dox": "^0.1.6",
     "gulp-install": "^0.6.0",
     "gulp-rename": "^1.2.2",
-    "gulp-dox": "^0.1.6",
     "http-server": "^0.9.0",
     "npm-cli": "^0.1.0"
   },
