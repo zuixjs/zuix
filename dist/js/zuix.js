@@ -1070,10 +1070,11 @@ ZxQuery.prototype.visibility = function (mode) {
 };
 /**
  * Sets the css `display` property to ''.
+ * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..)
  * @return {ZxQuery} The *ZxQuery* object itself
  */
-ZxQuery.prototype.show = function () {
-    return this.display('');
+ZxQuery.prototype.show = function (mode) {
+    return this.display(mode == null ? '' : mode);
 };
 /**
  * Sets the css `display` property to 'none'.
@@ -3096,28 +3097,32 @@ function unload(context) {
     if (context instanceof Element) {
         var el = context;
         context = zuix.context(el);
-        // if the context is null, it could be
-        // a lazy-loadable element not yet loaded
-        // so we remove it from componentizer queue
-        if (context == null)
-            _componentizer.dequeue(el);
+        // remove element from componentizer queue if
+        // it's a lazy-loadable element not yet loaded
+        _componentizer.dequeue(el);
     }
-    if (!util.isNoU(context) && !util.isNoU(context._c)) {
-        if (!util.isNoU(context._c.view())) {
-            context._c.view().attr('data-ui-component', null);
-            // un-register event handlers associated to the view
-            context._c.view().reset();
-            // un-register event handlers for all cached fields accessed through cp.field(...) method
-            if (!util.isNoU(context._c._fieldCache)) {
-                z$.each(context._c._fieldCache, function (k, v) {
-                    v.reset();
-                });
+    if (!util.isNoU(context)) {
+        if (!util.isNoU(context._c)) {
+            if (!util.isNoU(context._c.view())) {
+                context._c.view().attr('data-ui-component', null);
+                // un-register event handlers associated to the view
+                context._c.view().reset();
+                // un-register event handlers for all cached fields accessed through cp.field(...) method
+                if (!util.isNoU(context._c._fieldCache)) {
+                    z$.each(context._c._fieldCache, function (k, v) {
+                        v.reset();
+                    });
+                }
+                // detach from parent
+                context._c.view().detach();
             }
-            // detach from parent
-            context._c.view().detach();
+            if (util.isFunction(context._c.destroy))
+                context._c.destroy();
         }
-        if (util.isFunction(context._c.destroy))
-            context._c.destroy();
+        // detach the container from the DOM as well
+        var cel = context.container();
+        if (cel != null && cel.parentNode != null)
+            cel.parentNode.removeChild(cel);
     }
 }
 
@@ -3180,14 +3185,9 @@ function hook(path, handler) {
  * @param data
  */
 function trigger(context, path, data) {
-
     // TODO: call all registered callback
     if (util.isFunction(_hooksCallbacks[path]))
         _hooksCallbacks[path].call(context, data);
-
-    // ZUIX Componentizer is the last executed hook (built-in)
-//    if (path == 'view:process')
-//        _componentizer.componentize(data);
 }
 
 /**

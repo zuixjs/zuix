@@ -565,10 +565,11 @@ ZxQuery.prototype.visibility = function (mode) {
 };
 /**
  * Sets the css `display` property to ''.
+ * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..)
  * @return {ZxQuery} The *ZxQuery* object itself
  */
-ZxQuery.prototype.show = function () {
-    return this.display('');
+ZxQuery.prototype.show = function (mode) {
+    return this.display(mode == null ? '' : mode);
 };
 /**
  * Sets the css `display` property to 'none'.
