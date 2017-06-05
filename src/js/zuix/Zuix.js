@@ -40,6 +40,8 @@ var ContextController =
 var _componentizer =
     require('./Componentizer')();
 
+require('./ComponentCache');
+
 /**
  * @const
  */
@@ -760,7 +762,7 @@ Zuix.prototype.field = field;
 zuix.componentize(document);
 ```
  *
- * @param {Element} [element] Container to use as starting node for the search (**default:** *document*).
+ * @param {Element|ZxQuery} [element] Container to use as starting node for the search (**default:** *document*).
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.componentize = function (element) {
@@ -1049,5 +1051,3 @@ module.exports = function (root) {
     });
     return zuix;
 };
-
-

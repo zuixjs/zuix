@@ -28,3 +28,9 @@
  * @callback ContextReadyCallback
  * @this {ComponentContext}
  */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};

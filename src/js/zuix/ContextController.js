@@ -29,6 +29,9 @@
 var z$ =
     require('../helpers/ZxQuery');
 
+// dummy module containing just JsDoc definitions
+require('./ContextControllerHandler');
+
 /**
  * TODO: complete JSDoc
  *

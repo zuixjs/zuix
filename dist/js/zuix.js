@@ -1,4 +1,4 @@
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+/** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1394,7 +1394,46 @@ module.exports =  z$;
     }
 }(this, _dereq_('./zuix/Zuix.js')));
 
-},{"./zuix/Zuix.js":10}],7:[function(_dereq_,module,exports){
+},{"./zuix/Zuix.js":13}],7:[function(_dereq_,module,exports){
+/**
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ *
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+/**
+ * Greeting person config
+ * @typedef {object} ComponentCache
+ * @property {string} componentId The id of the cached component.
+ * @property {Element} view The view element.
+ * @property {ContextControllerHandler} controller The controller handler function.
+ */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};
+},{}],8:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1429,6 +1468,8 @@ var z$ =
     _dereq_('../helpers/ZxQuery');
 var util =
     _dereq_('../helpers/Util');
+
+_dereq_('./EventCallback');
 
 /***
  * TODO: describe this class...
@@ -1948,7 +1989,7 @@ ComponentContext.prototype.modelToView = function () {
 };
 
 module.exports = ComponentContext;
-},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5}],8:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./EventCallback":12}],9:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -2384,7 +2425,7 @@ function lazyScrollCheck(el) {
     return ls;
 }
 
-},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./../helpers/AsynChain":1}],9:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./../helpers/AsynChain":1}],10:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -2415,6 +2456,9 @@ function lazyScrollCheck(el) {
 
 var z$ =
     _dereq_('../helpers/ZxQuery');
+
+// dummy module containing just JsDoc definitions
+_dereq_('./ContextControllerHandler');
 
 /**
  * TODO: complete JSDoc
@@ -2779,7 +2823,84 @@ var ctrl = zuix.controller(function(cp) {
 ContextController.prototype.for = function (componentId) { return this; };
 
 module.exports = ContextController;
-},{"../helpers/ZxQuery":5}],10:[function(_dereq_,module,exports){
+},{"../helpers/ZxQuery":5,"./ContextControllerHandler":11}],11:[function(_dereq_,module,exports){
+/**
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ *
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+/**
+ * TODO: describe
+ *
+ * @callback ContextControllerHandler
+ * @param {ContextController} cp The context controller instance.
+ * @this {ContextController}
+ */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};
+},{}],12:[function(_dereq_,module,exports){
+/**
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ *
+ *  ZUIX, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+/**
+ * @callback EventCallback
+ * @param {string} event Event name.
+ * @param {Object} data Event data.
+ * @this {ZxQuery}
+ */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};
+},{}],13:[function(_dereq_,module,exports){
 /**
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -2821,6 +2942,8 @@ var ContextController =
     _dereq_('./ContextController');
 var _componentizer =
     _dereq_('./Componentizer')();
+
+_dereq_('./ComponentCache');
 
 /**
  * @const
@@ -3542,7 +3665,7 @@ Zuix.prototype.field = field;
 zuix.componentize(document);
 ```
  *
- * @param {Element} [element] Container to use as starting node for the search (**default:** *document*).
+ * @param {Element|ZxQuery} [element] Container to use as starting node for the search (**default:** *document*).
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.componentize = function (element) {
@@ -3832,8 +3955,6 @@ module.exports = function (root) {
     return zuix;
 };
 
-
-
-},{"../helpers/Logger":2,"../helpers/TaskQueue":3,"../helpers/Util":4,"../helpers/ZxQuery":5,"./ComponentContext":7,"./Componentizer":8,"./ContextController":9}]},{},[6])
+},{"../helpers/Logger":2,"../helpers/TaskQueue":3,"../helpers/Util":4,"../helpers/ZxQuery":5,"./ComponentCache":7,"./ComponentContext":8,"./Componentizer":9,"./ContextController":10}]},{},[6])
 (6)
 });

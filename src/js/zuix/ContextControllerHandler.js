@@ -30,3 +30,9 @@
  * @param {ContextController} cp The context controller instance.
  * @this {ContextController}
  */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};

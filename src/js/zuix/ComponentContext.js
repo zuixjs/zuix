@@ -33,6 +33,8 @@ var z$ =
 var util =
     require('../helpers/Util');
 
+require('./EventCallback');
+
 /***
  * TODO: describe this class...
  *

@@ -1,6 +1,6 @@
 {
   "name": "zuix",
-  "version": "0.4.9-10",
+  "version": "0.4.9-11",
   "description": "ZUIX is a JavaScript library for creating component-based sites and web apps.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
@@ -17,6 +17,7 @@
     "gulp-browserify": "^0.5.1",
     "gulp-closure-compiler": "^0.4.0",
     "gulp-dox": "^0.1.6",
+    "gulp-header": "^1.8.8",
     "gulp-install": "^0.6.0",
     "gulp-rename": "^1.2.2",
     "http-server": "^0.9.0",

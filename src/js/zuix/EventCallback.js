@@ -29,3 +29,9 @@
  * @param {Object} data Event data.
  * @this {ZxQuery}
  */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};

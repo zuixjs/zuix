@@ -30,3 +30,9 @@
  * @property {Element} view The view element.
  * @property {ContextControllerHandler} controller The controller handler function.
  */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};

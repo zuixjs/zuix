@@ -23,6 +23,11 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
+require('./ContextErrorCallback');
+require('./ContextReadyCallback');
+require('./EventCallback');
+require('./EventMapping');
+
 /**
  * Component Context options object.
  * @typedef {object} ContextOptions
@@ -41,3 +46,9 @@
  * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
  * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
  */
+
+/** */
+module.exports = function (root) {
+    // dummy module for JsDocs/Closure Compiler
+    return null;
+};
