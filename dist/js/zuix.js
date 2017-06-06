@@ -1346,6 +1346,17 @@ if (!Element.prototype.matches) {
     CustomEvent.prototype = window.Event.prototype;
     window.CustomEvent = CustomEvent;
 })();
+// String.hashCode extension
+String.prototype.hashCode = function() {
+    var hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
 
 module.exports =  z$;
 
@@ -3878,6 +3889,106 @@ Zuix.prototype.httpCaching = function(enable) {
         return httpCaching();
     return this;
 };
+
+
+/**
+ * Load a CSS or Javascript resource. All CSS styles and Javascript scripts
+ * loaded with this method will be also included in the application bundle.
+ * If a resource is already loaded, the request will be ignored.
+ * This command is also meant to be used inside components' controller.
+ *
+ * @example
+ *
+ <small>**Example - JavaScript**</small>
+ <pre><code class="language-js">
+ // Controller of component 'path/to/component_name'
+ zuix.controller(function(cp) {
+    cp.init = function() {
+        zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
+            // can start using moment.js
+        });
+    };
+    cp.create = function() { ... };
+    cp.destroy = function() { ... }
+});
+ </code></pre>
+ *
+ *
+ * @param {string} resourceType Either `style` or `script`
+ * @param {string} resourcePath Relative or absolute resource url path
+ */
+Zuix.prototype.using = function(resourceType, resourcePath, callback) {
+    var hashId = resourceType+'-'+resourcePath.hashCode();
+    var isCss = (resourceType === 'style');
+
+    if (z$.find(resourceType+'[id="'+hashId+'"]').length() === 0) {
+
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var resource = document.createElement(resourceType);
+        if (isCss) {
+            resource.type = 'text/css';
+            resource.id = hashId;
+        } else {
+            resource.type = 'text/javascript';
+            resource.id = hashId;
+        }
+        head.appendChild(resource);
+
+        // TODO: add logging
+        var addResource = function(text) {
+            // TODO: add logging
+            if (isCss) {
+                if (resource.styleSheet)
+                    resource.styleSheet.cssText = text;
+                else
+                    resource.appendChild(document.createTextNode(text));
+            } else {
+                if (resource.innerText)
+                    resource.innerText = text;
+                else
+                    resource.appendChild(document.createTextNode(text));
+            }
+            if (callback)
+                callback(resourcePath, hashId);
+        };
+
+        var cid = '_res/'+resourceType+'/'+hashId;
+        var cached = getCachedComponent(cid);
+        if (cached != null) {
+            addResource(isCss ? cached.css : cached.controller);
+        } else {
+            z$.ajax({
+                url: resourcePath,
+                success: function (resText) {
+
+                    // TODO: add logging
+
+                    var cached = {
+                        componentId: cid,
+                        view: null,
+                        css: isCss ? resText : null,
+                        controller: !isCss ? resText : null
+                    };
+                    _componentCache.push(cached);
+
+                    addResource(resText);
+
+                },
+                error: function () {
+                    // TODO: add logging
+                    head.removeChild(resource);
+                    if (callback)
+                        callback(resourcePath);
+                }
+            });
+        }
+
+    } else {
+        // TODO: add logging
+        console.log('already added ' + hashId + '('+resourcePath+')');
+    }
+};
+
 
 /**
  * Gets/Sets the components data bundle.
