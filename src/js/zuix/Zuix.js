@@ -227,6 +227,7 @@ function load(componentId, options) {
 /** @private */
 function loadResources(ctx, options) {
     // pick it from cache if found
+    /** @type {ComponentCache} */
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
         ctx.controller(cachedComponent.controller);
@@ -437,6 +438,7 @@ function removeCachedComponent(componentId) {
  * @return {ComponentCache}
  */
 function getCachedComponent(componentId) {
+    /** @type {ComponentCache} */
     var cached = null;
     z$.each(_componentCache, function (k, v) {
         if (util.objectEquals(v.componentId, componentId)) {
@@ -509,6 +511,7 @@ function loadController(context, task) {
 function cacheComponent(context) {
     var html = context.view().innerHTML; //(context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
     var c = z$.wrapElement('div', html);
+    /** @type {ComponentCache} */
     var cached = {
         componentId: context.componentId,
         view: c.innerHTML,
@@ -1051,12 +1054,13 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
                 success: function (resText) {
 
                     // TODO: add logging
-
+                    /** @type {ComponentCache} */
                     var cached = {
                         componentId: cid,
                         view: null,
                         css: isCss ? resText : null,
-                        controller: !isCss ? resText : null
+                        controller: !isCss ? resText : null,
+                        using: resourcePath
                     };
                     _componentCache.push(cached);
 

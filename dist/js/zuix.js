@@ -1432,11 +1432,14 @@ module.exports =  z$;
  */
 
 /**
- * Greeting person config
+ * Component cache object interface.
  * @typedef {object} ComponentCache
  * @property {string} componentId The id of the cached component.
  * @property {Element} view The view element.
+ * @property {string} css The CSS style text.
+ * @property {boolean} css_applied Whether the CSS style has been applied to the view or not.
  * @property {ContextControllerHandler} controller The controller handler function.
+ * @property {string} using The url/path if this is a resource loaded with `zuix.using(..)` method.
  */
 
 /** */
@@ -3141,6 +3144,7 @@ function load(componentId, options) {
 /** @private */
 function loadResources(ctx, options) {
     // pick it from cache if found
+    /** @type {ComponentCache} */
     var cachedComponent = getCachedComponent(ctx.componentId);
     if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
         ctx.controller(cachedComponent.controller);
@@ -3351,6 +3355,7 @@ function removeCachedComponent(componentId) {
  * @return {ComponentCache}
  */
 function getCachedComponent(componentId) {
+    /** @type {ComponentCache} */
     var cached = null;
     z$.each(_componentCache, function (k, v) {
         if (util.objectEquals(v.componentId, componentId)) {
@@ -3423,6 +3428,7 @@ function loadController(context, task) {
 function cacheComponent(context) {
     var html = context.view().innerHTML; //(context.view() === context.container() ? context.view().innerHTML : context.view().outerHTML);
     var c = z$.wrapElement('div', html);
+    /** @type {ComponentCache} */
     var cached = {
         componentId: context.componentId,
         view: c.innerHTML,
@@ -3965,12 +3971,13 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
                 success: function (resText) {
 
                     // TODO: add logging
-
+                    /** @type {ComponentCache} */
                     var cached = {
                         componentId: cid,
                         view: null,
                         css: isCss ? resText : null,
-                        controller: !isCss ? resText : null
+                        controller: !isCss ? resText : null,
+                        using: resourcePath
                     };
                     _componentCache.push(cached);
 

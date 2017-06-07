@@ -24,11 +24,14 @@
  */
 
 /**
- * Greeting person config
+ * Component cache object interface.
  * @typedef {object} ComponentCache
  * @property {string} componentId The id of the cached component.
  * @property {Element} view The view element.
+ * @property {string} css The CSS style text.
+ * @property {boolean} css_applied Whether the CSS style has been applied to the view or not.
  * @property {ContextControllerHandler} controller The controller handler function.
+ * @property {string} using The url/path if this is a resource loaded with `zuix.using(..)` method.
  */
 
 /** */
