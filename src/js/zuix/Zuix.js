@@ -552,7 +552,10 @@ function createComponent(context, task) {
             if (typeof c.init === 'function')
                 c.init();
             if (!util.isNoU(c.view())) {
-                c.view().attr('data-ui-component', context.componentId);
+                // if it's not null, a controller was already loaded, so we preserve the base controller name
+                // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
+                if (c.view().attr('data-ui-component') == null)
+                    c.view().attr('data-ui-component', context.componentId);
                 // if no model is supplied, try auto-create from view fields
                 if (util.isNoU(context.model()) && !util.isNoU(context.view()))
                     context.viewToModel();
