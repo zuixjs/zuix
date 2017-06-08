@@ -1173,31 +1173,37 @@ z$.wrapElement = function (containerTag, element) {
     return container;
 };
 z$.wrapCss = function (wrapperRule, css) {
-    var wrapReX = /([.,\w])([^/{};]*)({)/g;
-    var r, result = null, wrappedCss = '';
-    while (r = wrapReX.exec(css)) {
-        if (result != null) {
-            var rule = css.substring(result.index, r.index);
-            var splitReX = /(.*)\{([^}]+)[}]/g; // [^{]
-            var ruleParts = splitReX.exec(rule);
-            if (ruleParts != null && ruleParts.length > 1) {
-                var classes = ruleParts[1].split(',');
+    var wrapReX = /((.*){([^{}]|((.*){([^}]+)[}]))*})/g;
+    var wrappedCss = '';
+    var ruleMatch;
+    do {
+        ruleMatch = wrapReX.exec(css);
+        if (ruleMatch && ruleMatch.length > 1) {
+            var ruleParts = ruleMatch[2];
+            if (ruleParts != null && ruleParts.length > 0) {
+                var classes = ruleParts.split(',');
                 z$.each(classes, function (k, v) {
-                    if (v.replace(' ', '') == '.') v = ''; // <-- `.` it means 'self' (the container itself)
-                    wrappedCss += '\n' + wrapperRule + '\n' + v;
+                    if (v.replace(' ', '') === '.') {
+                        // a single `.` means 'self' (the container itself)
+                        // so we just add the wrapperRule
+                        wrappedCss += '\n' + wrapperRule + ' '
+                    } else if (v.trim()[0] === '@') {
+                        // leave it as is if it's an animation rule
+                        wrappedCss += v + ' ';
+                    } else {
+                        // wrap the class name (v)
+                        wrappedCss += '\n' + wrapperRule + '\n' + v + ' ';
+                    }
                     if (k < classes.length - 1)
                         wrappedCss += ', ';
                 });
-                wrappedCss += ' {' + ruleParts[2] + '}\n';
+                wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
             } else {
-                _log.w('z$.wrapCss was unable to parse rule.', ruleParts, rule);
+                _log.w('z$.wrapCss was unable to parse rule.', ruleParts, ruleMatch);
             }
         }
-        result = r;
-    }
-    if (result != null)
-        wrappedCss += wrapperRule + ' ' + css.substring(result.index);
-    if (wrappedCss != '') {
+    } while (ruleMatch);
+    if (wrappedCss !== '') {
         css = wrappedCss;
     }
     return css;
