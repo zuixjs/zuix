@@ -1,6 +1,6 @@
 {
   "name": "zuix",
-  "version": "0.4.9-15",
+  "version": "0.4.9-16",
   "description": "ZUIX is a JavaScript library for creating component-based sites and web apps.",
   "author": "Generoso Martello <generoso@martello.com>",
   "contributors": [],
@@ -9,7 +9,6 @@
     "info": "echo 'ZUIX, the easy shift to component-based web development.'",
     "test": "echo \"Error: not implemented\" && exit 1",
     "build": "echo '=> running gulp' && gulp build",
-    "preversion:readme": "echo $npm_package_version && replace 'ZUIX v\\d+\\.\\d+\\.\\d+\\-\\d+' \"ZUIX v$npm_package_version\" ./README.md",
     "start": "http-server docs/"
   },
   "dependencies": {},
@@ -22,8 +21,7 @@
     "gulp-install": "^0.6.0",
     "gulp-rename": "^1.2.2",
     "http-server": "^0.9.0",
-    "npm-cli": "^0.1.0",
-    "replace": "^0.3.0"
+    "npm-cli": "^0.1.0"
   },
   "repository": {
     "type": "git",

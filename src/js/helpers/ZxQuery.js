@@ -646,8 +646,7 @@ z$.ajax = function ajax(opt) {
     xhr.onload = function () {
         if (xhr.status === 200) {
             if (util.isFunction(opt.success)) opt.success(xhr.responseText);
-        }
-        else {
+        } else {
             if (util.isFunction(opt.error)) opt.error(xhr);
         }
         if (util.isFunction(opt.then)) opt.then(xhr);
