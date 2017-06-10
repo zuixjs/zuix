@@ -41,6 +41,7 @@ var _componentizer =
     require('./Componentizer')();
 
 require('./ComponentCache');
+require('./ContextOptions');
 
 /**
  * @const

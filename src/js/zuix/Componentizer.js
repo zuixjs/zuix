@@ -258,23 +258,24 @@ function getNextLoadable() {
     _componentizeQueue.sort(function (a, b) {
         return a.priority - b.priority;
     });
-    var job = null, reinsert = [];
+    var job = null /*, reinsert = []*/;
     var item = _componentizeQueue.length > 0 ? _componentizeQueue.shift() : null;
     while (item != null && item.element != null) {
         // defer element loading if lazy loading is enabled and the element is not in view
-        var ls = lazyScrollCheck(item.element);
-        if (lazyLoad() && ls.scroller !== false && item.element.getAttribute('data-ui-lazyload') !== 'false') {
+        var isLazy = lazyElementCheck(item.element);
+        if (lazyLoad() && isLazy) {
             item.lazy = true;
             item.visible = z$.isInView(item.element, _lazyLoadingThreshold);
         } else {
             item.lazy = false;
             item.visible = true;
         }
-        // ...
+        /*
         if (item.element != null && item.element.getAttribute('data-ui-loaded') === 'true' || !item.visible) {
             if (!item.visible) reinsert.push(item);
             item = null;
-        } else if (item != null && item.element != null && item.visible) {
+        } else*/
+        if (item != null && item.element != null && item.visible) {
             job = {
                 item: item,
                 cancelable: item.lazy
@@ -285,7 +286,7 @@ function getNextLoadable() {
             item = _componentizeQueue.shift();
         else break;
     }
-    Array.prototype.push.apply(_componentizeQueue, reinsert);
+    //Array.prototype.push.apply(_componentizeQueue, reinsert);
     return job;
 }
 
@@ -370,8 +371,7 @@ function getLazyElement(el) {
 
 function addLazyElement(el) {
     var le = {
-        element: el,
-        scroller: false
+        element: el
     };
     _lazyElements.push(le);
     return le;
@@ -388,47 +388,47 @@ function getLazyContainer(el) {
 
 function addLazyContainer(el) {
     var lc = {
-        element: el,
-        handler: false
+        element: el
     };
     _lazyContainers.push(lc);
     return lc;
 }
 
-function lazyScrollCheck(el) {
-    // store a reference to its scroller container for lazy-loaded elements
-    var ls = getLazyElement(el);
-    if (ls == null) {
-        ls = addLazyElement(el);
-        var lazyContainer = z$.getClosest(el, '[data-ui-lazyload=scroll]');
-        // override lazy loading if 'lazyload' is set to 'false' for the current element
+function lazyElementCheck(element) {
+    // Check if element has explicit lazyLoad=false flag set
+    if (element.getAttribute('data-ui-lazyload') === 'false')
+        return false;
+    // Check if element is already added to Lazy-Element list
+    var le = getLazyElement(element);
+    if (le == null) {
+        // Check if element has explicit lazyLoad=true flag set
+        if (element.getAttribute('data-ui-lazyload') === 'true') {
+            le = addLazyElement(element);
+            return true;
+        }
+        // Check if element inherits lazy-loading from a lazy container/scroll
+        var lazyContainer = z$.getClosest(element, '[data-ui-lazyload=scroll],[data-ui-lazyload=true]');
         if (lazyContainer != null) {
+            le = addLazyElement(element);
+            // Check if the lazy container is already added to the lazy container list
             var lc = getLazyContainer(lazyContainer);
             if (lc == null) {
                 lc = addLazyContainer(lazyContainer);
-                // attach 'scroll' event handler to lazy-scroller
-                var scrollWatcher = function (instance, lc) {
-                    var lastScroll = new Date().getTime();
-                    z$(lc).on('scroll', function () {
-                        var now = new Date().getTime();
-                        if (now - lastScroll > 100) {
-                            lastScroll = now;
-                            loadNext(lc);
-                        }
-                    });
-                    // TODO: optimize by using MutationObserver instead of constantly run zuix.find
-                    // TODO: with "loadNext(lc)" to determine lazy-elements for the *lc* container
-                    /*
-                    if (window.MutationObserver) {
-                        new MutationObserver(function (mutations) {
-                            console.log(mutations);
-                        }).observe(lazyContainer, { attributes: true, childList: true, subtree: true });
-                    }
-                    */
-                }(this, lazyContainer);
+                // if it's of type 'scroll' attach 'scroll' event handler
+                if (lazyContainer.getAttribute('data-ui-lazyload') === 'scroll') {
+                    var scrollWatcher = function (instance, lc) {
+                        var lastScroll = new Date().getTime();
+                        z$(lc).on('scroll', function () {
+                            var now = new Date().getTime();
+                            if (now - lastScroll > 100) {
+                                lastScroll = now;
+                                loadNext(lc);
+                            }
+                        });
+                    }(this, lazyContainer);
+                }
             }
-            ls.scroller = (lc == null ? false : lc);
-        }
+        } else return false;
     }
-    return ls;
+    return true;
 }
