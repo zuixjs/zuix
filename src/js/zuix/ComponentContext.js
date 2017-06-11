@@ -317,12 +317,6 @@ ComponentContext.prototype.options = function (options) {
         this.style(o.css);
     this.controller(o.controller);
     this.model(o.model);
-    // map options to element's attributes
-    if (o.lazyLoad && this.container() != null) {
-        this.container().setAttribute('data-ui-context', this.contextId);
-        this.container().setAttribute('data-ui-load', this.componentId);
-        this.container().setAttribute('data-ui-lazyload', 'true');
-    }
     return this;
 };
 

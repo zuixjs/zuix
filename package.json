@@ -13,7 +13,6 @@
     "preupd": "echo $npm_package_version && replace 'ZUIX v\\d+\\.\\d+\\.\\d+\\-\\d+' \"ZUIX v$npm_package_version\" ./README.md",
     "start": "http-server docs/"
   },
-  "dependencies": {},
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
@@ -24,7 +23,15 @@
     "gulp-rename": "^1.2.2",
     "http-server": "^0.9.0",
     "npm-cli": "^0.1.0",
-    "replace": "^0.3.0"
+    "replace": "^0.3.0",
+
+
+    "brace-expansion": "^1.1.7",
+    "buffer-shims": "^1.0.0",
+    "inflight": "^1.0.6",
+    "natives": "^1.1.0",
+    "object-keys": "^1.0.11",
+    "path-is-absolute": "^1.0.1"
   },
   "repository": {
     "type": "git",
@@ -41,5 +48,6 @@
     "ui",
     "web"
   ],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "preferGlobal": true
 }

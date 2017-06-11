@@ -241,6 +241,20 @@ function queueLoadables(element) {
             }
         }
         if (!alreadyAdded) {
+            // Add attributes to element if data-ui-options was provided
+            var el = waitingTasks[i].element;
+            if (el != null)
+            {
+                var options = el.getAttribute('data-ui-options');
+                if (!util.isNoU(options)) {
+                    options = util.propertyFromPath(window, options);
+                    // TODO: should check if options object was found
+                    if (!util.isNoU(options.lazyLoad))
+                        el.setAttribute('data-ui-lazyload', options.lazyLoad.toString().toLowerCase());
+                    // TODO: eventually map other attributes from options
+                }
+            }
+            // Add task to the queue
             _componentizeQueue.push(waitingTasks[i]);
             added++;
         }
@@ -258,7 +272,7 @@ function getNextLoadable() {
     _componentizeQueue.sort(function (a, b) {
         return a.priority - b.priority;
     });
-    var job = null /*, reinsert = []*/;
+    var job = null;
     var item = _componentizeQueue.length > 0 ? _componentizeQueue.shift() : null;
     while (item != null && item.element != null) {
         // defer element loading if lazy loading is enabled and the element is not in view
@@ -270,11 +284,6 @@ function getNextLoadable() {
             item.lazy = false;
             item.visible = true;
         }
-        /*
-        if (item.element != null && item.element.getAttribute('data-ui-loaded') === 'true' || !item.visible) {
-            if (!item.visible) reinsert.push(item);
-            item = null;
-        } else*/
         if (item != null && item.element != null && item.visible) {
             job = {
                 item: item,
@@ -286,7 +295,6 @@ function getNextLoadable() {
             item = _componentizeQueue.shift();
         else break;
     }
-    //Array.prototype.push.apply(_componentizeQueue, reinsert);
     return job;
 }
 
@@ -342,9 +350,9 @@ function loadInline(element) {
     if (!util.isNoU(contextId))
         options.contextId = contextId;
 
-    var priority = parseInt(v.attr('data-ui-priority'));
+    var priority = v.attr('data-ui-priority');
     if (!util.isNoU(priority))
-        options.priority = priority;
+        options.priority = parseInt(priority);
 
     var el = z$(element);
     el.one('component:ready', function () {
@@ -401,13 +409,8 @@ function lazyElementCheck(element) {
     // Check if element is already added to Lazy-Element list
     var le = getLazyElement(element);
     if (le == null) {
-        // Check if element has explicit lazyLoad=true flag set
-        if (element.getAttribute('data-ui-lazyload') === 'true') {
-            le = addLazyElement(element);
-            return true;
-        }
-        // Check if element inherits lazy-loading from a lazy container/scroll
-        var lazyContainer = z$.getClosest(element, '[data-ui-lazyload=scroll],[data-ui-lazyload=true]');
+        // Check if element inherits lazy-loading from a parent lazy container/scroll
+        var lazyContainer = z$.getClosest(element.parentNode, '[data-ui-lazyload=scroll],[data-ui-lazyload=true]');
         if (lazyContainer != null) {
             le = addLazyElement(element);
             // Check if the lazy container is already added to the lazy container list
@@ -426,12 +429,14 @@ function lazyElementCheck(element) {
                             }
                         });
                     }(this, lazyContainer);
-                    // if the scroller is also component it
-                    // cannot be lazy-loaded, so we return false
-                    return false;
                 }
             }
-        } else return false;
-    }
-    return true;
+            return true;
+        } else if (element.getAttribute('data-ui-lazyload') === 'true') {
+            // element has explicit lazyLoad=true flag set
+            le = addLazyElement(element);
+            return true;
+        }
+    } else return true;
+    return false;
 }

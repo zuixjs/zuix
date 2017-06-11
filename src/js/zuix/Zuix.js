@@ -209,10 +209,6 @@ function load(componentId, options) {
     if (util.isFunction(options.error))
         ctx.error = options.error;
 
-    // if component is lazy-loaded, then defer associated resources loading
-    if (options.lazyLoad)
-        return ctx;
-
     if (resourceLoadTask[componentId] == null) {
         resourceLoadTask[componentId] = true;
         return loadResources(ctx, options);
