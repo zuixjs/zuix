@@ -2437,6 +2437,9 @@ function lazyElementCheck(element) {
                             }
                         });
                     }(this, lazyContainer);
+                    // if the scroller is also component it
+                    // cannot be lazy-loaded, so we return false
+                    return false;
                 }
             }
         } else return false;
