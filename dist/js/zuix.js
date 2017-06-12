@@ -2052,6 +2052,11 @@ Componentizer.prototype.componentize = function (element, child) {
     return this;
 };
 
+Componentizer.prototype.applyOptions = function(element, options) {
+    applyOptions(element, options);
+    return this;
+};
+
 /**
  *
  * @return {boolean}
@@ -2248,17 +2253,8 @@ function queueLoadables(element) {
         if (!alreadyAdded) {
             // Add attributes to element if data-ui-options was provided
             var el = waitingTasks[i].element;
-            if (el != null)
-            {
-                var options = el.getAttribute('data-ui-options');
-                if (!util.isNoU(options)) {
-                    options = util.propertyFromPath(window, options);
-                    // TODO: should check if options object was found
-                    if (!util.isNoU(options.lazyLoad))
-                        el.setAttribute('data-ui-lazyload', options.lazyLoad.toString().toLowerCase());
-                    // TODO: eventually map other attributes from options
-                }
-            }
+            var options = el.getAttribute('data-ui-options');
+            applyOptions(el, options);
             // Add task to the queue
             _componentizeQueue.push(waitingTasks[i]);
             added++;
@@ -2267,7 +2263,7 @@ function queueLoadables(element) {
 
     _log.t('componentize:count', _componentizeQueue.length, added);
 
-    if (added == 0 || (_componentizeRequests.length == 0 && _componentizeQueue.length == 0))
+    if (added === 0 || (_componentizeRequests.length === 0 && _componentizeQueue.length === 0))
         zuix.trigger(this, 'componentize:end');
 }
 
@@ -2325,7 +2321,19 @@ function loadInline(element) {
         options = util.propertyFromPath(window, options);
         // copy passed options
         options = util.cloneObject(options) || {};
-    } else options = {};
+    } else {
+        options = {};
+    }
+
+    var contextId = v.attr('data-ui-context');
+    if (!util.isNoU(contextId)) {
+        // inherit options from context if already exists
+        var ctx = zuix.context(contextId);
+        if (ctx !== null) {
+            options = ctx.options();
+        }
+        options.contextId = contextId;
+    }
 
     // Automatic view/container selection
     if (util.isNoU(options.view) && !v.isEmpty()) {
@@ -2351,10 +2359,6 @@ function loadInline(element) {
     if (!util.isNoU(model) && model.length > 0)
         options.model = util.propertyFromPath(window, model);
 
-    var contextId = v.attr('data-ui-context');
-    if (!util.isNoU(contextId))
-        options.contextId = contextId;
-
     var priority = v.attr('data-ui-priority');
     if (!util.isNoU(priority))
         options.priority = parseInt(priority);
@@ -2370,6 +2374,20 @@ function loadInline(element) {
     return true;
 }
 
+function applyOptions(element, options) {
+    if (element != null && !util.isNoU(options)) {
+        if (typeof options === 'string')
+            options = util.propertyFromPath(window, options);
+        // TODO: should check if options object is valid
+        if (!util.isNoU(options.lazyLoad))
+            element.setAttribute('data-ui-lazyload', options.lazyLoad.toString().toLowerCase());
+        if (!util.isNoU(options.contextId))
+            element.setAttribute('data-ui-context', options.contextId.toString().toLowerCase());
+        if (!util.isNoU(options.componentId))
+            element.setAttribute('data-ui-load', options.componentId.toString().toLowerCase());
+        // TODO: eventually map other attributes from options
+    }
+}
 
 // ------------ Lazy Loading
 
@@ -3309,7 +3327,7 @@ function load(componentId, options) {
         _pendingResourceTask[componentId].push({ c: ctx, o: options});
     }
 
-    return ctx; //loadResources(ctx, options);
+    return ctx;
 }
 
 /** @private */
@@ -3965,18 +3983,27 @@ zuix.context('my-slide-show', function(c) {
  */
 Zuix.prototype.context = context;
 /**
- * Create an instance of the component `componentId`
- * loading it asynchronously and immediately returning its
- * context object with associated container element (detached).
+ * Create the component `componentId` and return its `{ComponentContext}` object.
+ * The `{ComponentContext}.container()` element is detached from the DOM.
+ * After attaching it to the DOM, `zuix.componentize()` must be called in
+ * order to load and display the component.
  *
  * @param {string} componentId Identifier name of the component to create.
- * @param {ContextOptions|undefined} [options] Options.
+ * @param {ContextOptions|undefined} [options] Component context options.
  * @return {ComponentContext}
  */
 Zuix.prototype.createComponent = function(componentId, options) {
     if (options == null) options = {};
-    options.container = document.createElement('div');
-    return load(componentId, options);
+    if (util.isNoU(options.contextId))
+        options.contextId = 'zuix-ctx-' + (++_contextSeqNum);
+    if (context(options.contextId) != null) {
+        throw ('Context arelady exists.');
+    } else {
+        options.container = document.createElement('div');
+        options.componentId = componentId;
+        _componentizer.applyOptions(options.container, options);
+    }
+    return createContext(options);
 };
 /**
  * Triggers the event specified by `eventPath`.

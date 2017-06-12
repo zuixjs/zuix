@@ -218,7 +218,7 @@ function load(componentId, options) {
         _pendingResourceTask[componentId].push({ c: ctx, o: options});
     }
 
-    return ctx; //loadResources(ctx, options);
+    return ctx;
 }
 
 /** @private */
@@ -874,18 +874,27 @@ zuix.context('my-slide-show', function(c) {
  */
 Zuix.prototype.context = context;
 /**
- * Create an instance of the component `componentId`
- * loading it asynchronously and immediately returning its
- * context object with associated container element (detached).
+ * Create the component `componentId` and return its `{ComponentContext}` object.
+ * The `{ComponentContext}.container()` element is detached from the DOM.
+ * After attaching it to the DOM, `zuix.componentize()` must be called in
+ * order to load and display the component.
  *
  * @param {string} componentId Identifier name of the component to create.
- * @param {ContextOptions|undefined} [options] Options.
+ * @param {ContextOptions|undefined} [options] Component context options.
  * @return {ComponentContext}
  */
 Zuix.prototype.createComponent = function(componentId, options) {
     if (options == null) options = {};
-    options.container = document.createElement('div');
-    return load(componentId, options);
+    if (util.isNoU(options.contextId))
+        options.contextId = 'zuix-ctx-' + (++_contextSeqNum);
+    if (context(options.contextId) != null) {
+        throw ('Context arelady exists.');
+    } else {
+        options.container = document.createElement('div');
+        options.componentId = componentId;
+        _componentizer.applyOptions(options.container, options);
+    }
+    return createContext(options);
 };
 /**
  * Triggers the event specified by `eventPath`.
