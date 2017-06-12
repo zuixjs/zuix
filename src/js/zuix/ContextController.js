@@ -146,19 +146,19 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
  *
  * @example
  *
- <small>**Example - View's HTML**</small>
- ```html
- <h1 data-ui-field="title">...</h1>
- <p data-ui-field="description">...</p>
- ```
-
- <small>**Example - JavaScript**</small>
- ```js
- cp.field('title')
- .html('Hello World!');
- var desc = cp.field('description');
- desc.html('The spectacle before us was indeed sublime.');
- ```
+ * <small>**Example - View's HTML**</small>
+ * <pre><code class="language-html">
+ * <h1 data-ui-field="title">...</h1>
+ * <p data-ui-field="description">...</p>
+ * </code></pre>
+ *
+ * <small>**Example - JavaScript**</small>
+ * <pre><code class="language-js">
+ * cp.field('title')
+ *   .html('Hello World!');
+ * var desc = cp.field('description');
+ * desc.html('The spectacle before us was indeed sublime.');
+ * </code></pre>
  *
  *
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
