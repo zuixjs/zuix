@@ -635,7 +635,15 @@ z$.hasClass = function(el, className) {
     });
     return success;
 };
-z$.ajax = function ajax(opt) {
+z$.classExists = function (className) {
+    var classes = className.match(/\S+/g) || [];
+    var success = false;
+    z$.each(classes, function (k, cl) {
+        // TODO: perform global style check
+    });
+    return success;
+};
+z$.ajax = function (opt) {
     var url;
     if (!util.isNoU(opt) && !util.isNoU(opt.url))
         url = opt.url;
