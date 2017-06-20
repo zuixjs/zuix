@@ -1020,79 +1020,110 @@ Zuix.prototype.httpCaching = function(enable) {
  </code></pre>
  *
  *
- * @param {string} resourceType Either `style` or `script`
+ * @param {string} resourceType Either `style`, `script` or `component`.
  * @param {string} resourcePath Relative or absolute resource url path
+ * @param {function} [callback] Callback function to call once resource is loaded.
  */
 Zuix.prototype.using = function(resourceType, resourcePath, callback) {
+    resourceType = resourceType.toLowerCase();
     var hashId = resourceType+'-'+resourcePath.hashCode();
-    var isCss = (resourceType === 'style');
 
-    if (z$.find(resourceType+'[id="'+hashId+'"]').length() === 0) {
+    if (resourceType === 'component') {
 
-        var head = document.head || document.getElementsByTagName('head')[0];
-        var resource = document.createElement(resourceType);
-        if (isCss) {
-            resource.type = 'text/css';
-            resource.id = hashId;
-        } else {
-            resource.type = 'text/javascript';
-            resource.id = hashId;
-        }
-        head.appendChild(resource);
-
-        // TODO: add logging
-        var addResource = function(text) {
-            // TODO: add logging
-            if (isCss) {
-                if (resource.styleSheet)
-                    resource.styleSheet.cssText = text;
-                else
-                    resource.appendChild(document.createTextNode(text));
-            } else {
-                if (resource.innerText)
-                    resource.innerText = text;
-                else
-                    resource.appendChild(document.createTextNode(text));
-            }
-            if (callback)
-                callback(resourcePath, hashId);
-        };
-
-        var cid = '_res/'+resourceType+'/'+hashId;
-        var cached = getCachedComponent(cid);
-        if (cached != null) {
-            addResource(isCss ? cached.css : cached.controller);
-        } else {
-            z$.ajax({
-                url: resourcePath,
-                success: function (resText) {
-
-                    // TODO: add logging
-                    /** @type {ComponentCache} */
-                    var cached = {
-                        componentId: cid,
-                        view: null,
-                        css: isCss ? resText : null,
-                        controller: !isCss ? resText : null,
-                        using: resourcePath
-                    };
-                    _componentCache.push(cached);
-
-                    addResource(resText);
-
+        var c = context(hashId);
+        if (c == null) {
+            zuix.load(resourcePath, {
+                contextId: hashId,
+                view: '',
+                priority: -10,
+                ready: function (ctx) {
+                    if (typeof callback === 'function')
+                        callback(resourcePath, ctx);
                 },
                 error: function () {
-                    // TODO: add logging
-                    head.removeChild(resource);
-                    if (callback)
-                        callback(resourcePath);
+                    callback(resourcePath, null);
                 }
             });
+        } else if (typeof callback === 'function') {
+            // already loaded
+            callback(resourcePath, c);
         }
 
     } else {
-        // TODO: add logging
-        console.log('already added ' + hashId + '('+resourcePath+')');
+
+        var isCss = (resourceType === 'style');
+        if (z$.find(resourceType + '[id="' + hashId + '"]').length() === 0) {
+
+            var head = document.head || document.getElementsByTagName('head')[0];
+            var resource = document.createElement(resourceType);
+            if (isCss) {
+                resource.type = 'text/css';
+                resource.id = hashId;
+            } else {
+                resource.type = 'text/javascript';
+                resource.id = hashId;
+            }
+            head.appendChild(resource);
+
+            // TODO: add logging
+            var addResource = function (text) {
+                // TODO: add logging
+                if (isCss) {
+                    if (resource.styleSheet)
+                        resource.styleSheet.cssText = text;
+                    else
+                        resource.appendChild(document.createTextNode(text));
+                } else {
+                    if (resource.innerText)
+                        resource.innerText = text;
+                    else
+                        resource.appendChild(document.createTextNode(text));
+                }
+                if (callback)
+                    callback(resourcePath, hashId);
+            };
+
+            var cid = '_res/' + resourceType + '/' + hashId;
+            var cached = getCachedComponent(cid);
+            if (cached != null) {
+                addResource(isCss ? cached.css : cached.controller);
+            } else {
+                z$.ajax({
+                    url: resourcePath,
+                    success: function (resText) {
+
+                        // TODO: add logging
+                        /** @type {ComponentCache} */
+                        var cached = {
+                            componentId: cid,
+                            view: null,
+                            css: isCss ? resText : null,
+                            controller: !isCss ? resText : null,
+                            using: resourcePath
+                        };
+                        _componentCache.push(cached);
+
+                        addResource(resText);
+
+                    },
+                    error: function () {
+                        // TODO: add logging
+                        head.removeChild(resource);
+                        if (callback)
+                            callback(resourcePath);
+                    }
+                });
+            }
+
+        } else {
+
+            // TODO: add logging
+            console.log('Resource already added ' + hashId + '(' + resourcePath + ')');
+            if (callback)
+                callback(resourcePath, hashId);
+
+        }
+
     }
 };
 
