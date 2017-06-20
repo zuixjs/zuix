@@ -623,26 +623,6 @@ z$.each = function (items, iterationCallback) {
     }
     return this;
 };
-z$.hasClass = function(el, className) {
-    var classes = className.match(/\S+/g) || [];
-    var success = false;
-    z$.each(classes, function (k, cl) {
-        if (el.classList)
-            success = el.classList.contains(cl);
-        else
-            success = (new RegExp('(^| )' + cl + '( |$)', 'gi').test(el.className));
-        if (success) return false;
-    });
-    return success;
-};
-z$.classExists = function (className) {
-    var classes = className.match(/\S+/g) || [];
-    var success = false;
-    z$.each(classes, function (k, cl) {
-        // TODO: perform global style check
-    });
-    return success;
-};
 z$.ajax = function (opt) {
     var url;
     if (!util.isNoU(opt) && !util.isNoU(opt.url))
@@ -661,6 +641,40 @@ z$.ajax = function (opt) {
     };
     xhr.send();
     return this;
+};
+z$.hasClass = function(el, className) {
+    var classes = className.match(/\S+/g) || [];
+    var success = false;
+    z$.each(classes, function (k, cl) {
+        if (el.classList)
+            success = el.classList.contains(cl);
+        else
+            success = (new RegExp('(^| )' + cl + '( |$)', 'gi').test(el.className));
+        if (success) return false;
+    });
+    return success;
+};
+z$.classExists = function (className) {
+    var classes = className.match(/\S+/g) || [];
+    var success = false;
+    z$.each(classes, function (k, cl) {
+        // Perform global style check
+        var docStyles = document.styleSheets;
+        if (docStyles != null) {
+            for (var sx = 0; sx < docStyles.length; sx++) {
+                var classes = docStyles[sx].rules || docStyles[sx].cssRules;
+                if (classes != null) {
+                    for (var cx = 0; cx < classes.length; cx++) {
+                        if (classes[cx].selectorText === cl) {
+                            success = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    return success;
 };
 z$.wrapElement = function (containerTag, element) {
     //$(element).wrap($('<'+containerTag+'/>'));
