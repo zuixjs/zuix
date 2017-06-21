@@ -42,10 +42,11 @@ function deployWebSite {
     git config user.email "ci@travis-ci.org"
 
     # If there are no changes to the compiled out (e.g. this is a README update) then just bail.
-    if git diff --quiet; then
-        echo "No changes to the output on this push; exiting."
-        exit 0
-    fi
+    # TODO: this check it's not working!, so try push anyway for now
+    #if git diff --quiet; then
+    #    echo "No changes to the output on this push; exiting."
+    #    exit 0
+    #fi
 
     # Commit the "changes", i.e. the new version.
     # The delta will show diffs between new and old versions.
