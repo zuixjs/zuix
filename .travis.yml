@@ -15,16 +15,7 @@ before_install:
 before_script:
 script:
 - gulp
-- chmod 600 deploy_key
-- eval `ssh-agent -s`
-- ssh-add deploy_key
-- git config user.name "Automatic Publish"
-- git config user.email "ci@travis.org"
-- git checkout -b gh-pages
-- cp -rf docs/* .
-- ls -la ./content/api
-- git add .
-- git status
+- ls -la _docs
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then ./node_modules/.bin/git-update-ghpages -e; fi
