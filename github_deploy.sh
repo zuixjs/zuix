@@ -11,6 +11,7 @@ function doCompile {
 function publishPackages {
     echo "Publishing NPM packages (not implemented)"
     # TODO: should automatically increase version number
+    # TODO: also version number should be reported in .js files heading comment
     #npm publish  # publish zuix dev package
     #cd dist
     #npm publish  # publish zuix-dist package
