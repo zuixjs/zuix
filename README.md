@@ -1,7 +1,5 @@
  [![Build Status](https://travis-ci.org/genielabs/zuix.svg?branch=master)](https://travis-ci.org/genielabs/zuix)
  [![npm dist](https://badge.fury.io/js/zuix-dist.svg)](https://badge.fury.io/js/zuix-dist)
- [![npm dev](https://badge.fury.io/js/zuix.svg)](https://badge.fury.io/js/zuix)
-
 
 ## ZUIX.js - Content and Component Manager
 
