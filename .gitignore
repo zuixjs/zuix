@@ -2,5 +2,5 @@
 /node_modules
 /docs
 /_docs
-deploy_key
-deploy_key.pub
+deploy-key
+deploy-key.pub
