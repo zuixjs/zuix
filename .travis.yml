@@ -11,4 +11,8 @@ script:
 - ssh-add deploy_key
 - git config user.name "Automatic Publish"
 - git config user.email "ci@travis.org"
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then echo "Pushing to github"; git subtree push --prefix docs origin gh-pages; fi;
+- git checkout gh-pages
+- cp -rf docs/* .
+- ls -la ./content/api
+- git add .
+- git status
