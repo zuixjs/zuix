@@ -11,7 +11,7 @@ script:
 - ssh-add deploy_key
 - git config user.name "Automatic Publish"
 - git config user.email "ci@travis.org"
-- git checkout gh-pages
+- git checkout -b gh-pages
 - cp -rf docs/* .
 - ls -la ./content/api
 - git add .
