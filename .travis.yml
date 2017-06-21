@@ -7,7 +7,7 @@ env:
     - GIT_NAME: Travis CI
     - GIT_EMAIL: ci@travis-ci.org
     - GITHUB_REPO: genielabs/zuix
-    - GIT_SOURCE: docs
+    - GIT_SOURCE: _docs
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_3a594aa52544_key -iv $encrypted_3a594aa52544_iv -in deploy_key.enc -out deploy_key -d
@@ -16,6 +16,7 @@ before_script:
 script:
 - gulp
 - ls -la _docs
+- echo "$TRAVIS_BRANCH -- $TRAVIS_PULL_REQUEST"
 
 after_success:
-- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then ./node_modules/.bin/git-update-ghpages -e; fi
+- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then ./node_modules/.bin/git-update-ghpages -e -k; fi
