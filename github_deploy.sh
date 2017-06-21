@@ -38,6 +38,7 @@ cp -rf _docs/* out/
 cd out
 git config --global user.name "Travis CI"
 git config --global user.email "$COMMIT_AUTHOR_EMAIL"
+echo "Author set to '$COMMIT_AUTHOR_EMAIL'"
 
 # If there are no changes to the compiled out (e.g. this is a README update) then just bail.
 #if git diff --quiet; then
