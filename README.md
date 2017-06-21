@@ -2,8 +2,7 @@
 
 ZUIX is a JavaScript library for creating component-based sites and web apps.
 
-![Build Status](https://api.travis-ci.org/genielabs/zuix.svg?branch=master)
-
+[![Build Status](https://travis-ci.org/genielabs/zuix.svg?branch=master)](https://travis-ci.org/genielabs/zuix)
 
 ### Getting Started
 
