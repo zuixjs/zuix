@@ -3,3 +3,4 @@ var gulp = require('./gulp')([
     'compile',
     'dox'
 ]);
+gulp.task('default', ['browserify', 'compile']);
