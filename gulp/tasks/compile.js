@@ -4,10 +4,10 @@ module.exports = function() {
     // Compile/Minify zuix.js
     gulp.src('dist/js/zuix.js', {base: 'dist/js/'})
         .pipe(compiler({
-            fileName: 'dist/js/zuix.min.js',  // outputs single file
+            fileName: 'zuix.min.js',  // outputs single file
             compilerFlags: {
                 //debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
-                warning_level: 'DEFAULT',
+                warning_level: 'QUIET',
 //              useTypesForOptimization: true,
                 compilation_level: 'SIMPLE',
                 language_in: 'ECMASCRIPT5_STRICT',
@@ -23,10 +23,10 @@ module.exports = function() {
     // Compile/Minify zuix-bundler.js
     gulp.src('dist/js/zuix-bundler.js', {base: 'dist/js/'})
         .pipe(compiler({
-            fileName: 'dist/js/zuix-bundler.min.js',  // outputs single file
+            fileName: 'zuix-bundler.min.js',  // outputs single file
             compilerFlags: {
                 //debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
-                warning_level: 'DEFAULT',
+                warning_level: 'QUIET',
 //              useTypesForOptimization: true,
                 compilation_level: 'SIMPLE',
                 language_in: 'ECMASCRIPT5_STRICT',
