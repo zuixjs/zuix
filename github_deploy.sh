@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e # Exit with nonzero exit code if anything fails
 
-SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
 TARGET_DIR="_tmp"
 
@@ -61,17 +60,18 @@ function  deployWebSite {
 
 doCompile
 
-echo "\n"
+echo ""
 echo "TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST"
 echo "TRAVIS_BRANCH = $TRAVIS_BRANCH"
 echo "TRAVIS_TAG = $TRAVIS_TAG"
 echo "TRAVIS_BUILD_NUMBER = $TRAVIS_BUILD_NUMBER"
-echo "\n"
+echo ""
 
-# Pull requests and commits to other branches shouldn't try to deploy, just build to verify
-if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" -o "$TRAVIS_TAG" = "" ]; then
-    echo "Skipping deploy;"
-    exit 0
+# Verify conditions for deploy
+if [ "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then
+    echo "Deploying new release $TRAVIS_TAG to gh-pages..."
+    echo ""
+    deployWebSite;
+    echo ""
+    echo "... done!"
 fi
-
-deployWebSite
