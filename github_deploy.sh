@@ -34,9 +34,9 @@ function deployWebSite {
 
     # Now let's go have some fun with the cloned repo
     # Copy ZUIX API JSDocs data files (JSON)
-    cp -rf _docs/* ${TARGET_DIR}/
+    cp -rfv _docs/* ${TARGET_DIR}/
     # Copy ZUIX dist files
-    cp -rf dist/js ${TARGET_DIR}/
+    cp -rfv dist/js ${TARGET_DIR}/
     cd ${TARGET_DIR}
     git config user.name "Travis CI"
     git config user.email "ci@travis-ci.org"
