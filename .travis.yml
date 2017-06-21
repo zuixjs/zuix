@@ -9,11 +9,19 @@ env:
   - GIT_SOURCE: _docs
 before_install:
 - openssl aes-256-cbc -K $encrypted_3a594aa52544_key -iv $encrypted_3a594aa52544_iv -in deploy-key.enc -out deploy-key -d
-before_script: 
+- chmod 600 deploy-key
+- eval `ssh-agent -s`
+- ssh-add deploy-key
+- git config user.name "Automatic Publish"
+- git config user.email "ci@travis-ci.org"
+before_script:
 script:
 - gulp
 - ls -la _docs
 - echo "$TRAVIS_BRANCH -- $TRAVIS_PULL_REQUEST"
 - ./node_modules/.bin/git-update-ghpages -e -k
+- REPO=`git config remote.origin.url`
+- SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+- git push $SSH_REPO gh-pages
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then ./node_modules/.bin/git-update-ghpages -e -k; fi
