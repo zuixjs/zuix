@@ -60,12 +60,12 @@ function  deployWebSite {
 
 doCompile
 
-echo ""
+echo "---"
 echo "TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST"
 echo "TRAVIS_BRANCH = $TRAVIS_BRANCH"
 echo "TRAVIS_TAG = $TRAVIS_TAG"
 echo "TRAVIS_BUILD_NUMBER = $TRAVIS_BUILD_NUMBER"
-echo ""
+echo "---"
 
 # Verify conditions for deploy
 if [ "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then
