@@ -17,6 +17,7 @@ script:
 - gulp
 - ls -la _docs
 - echo "$TRAVIS_BRANCH -- $TRAVIS_PULL_REQUEST"
+- ./node_modules/.bin/git-update-ghpages -e -k
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then ./node_modules/.bin/git-update-ghpages -e -k; fi
