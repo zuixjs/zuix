@@ -8,7 +8,15 @@ function doCompile {
   gulp
 }
 
-function  deployWebSite {
+function publishPackages {
+    echo "Publishing NPM packages (not implemented)"
+    # TODO: should automatically increase version number
+    #npm publish  # publish zuix dev package
+    #cd dist
+    #npm publish  # publish zuix-dist package
+}
+
+function deployWebSite {
     # Save some useful information
     REPO=`git config remote.origin.url`
     SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
@@ -71,7 +79,8 @@ echo "-----"
 if [ "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then
     echo "Deploying new release $TRAVIS_TAG to gh-pages..."
     echo ""
-    deployWebSite;
+    publishPackages
+    deployWebSite
     echo ""
     echo "... done!"
 fi
