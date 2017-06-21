@@ -43,7 +43,7 @@ function deployWebSite {
     git config user.email "ci@travis-ci.org"
 
     # If there are no changes to the compiled out (e.g. this is a README update) then just bail.
-    if ! git diff-index --quiet HEAD --; then
+    if git diff-index --quiet HEAD --; then
         echo "No changes to the output on this push; exiting."
         exit 0
     fi
