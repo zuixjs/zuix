@@ -58,6 +58,7 @@ function deployWebSite {
     # The delta will show diffs between new and old versions.
     git config user.name "Travis CI"
     git config user.email "ci@travis-ci.org"
+    git status
     git add -A .
     git commit -m "Deploy to GitHub Pages (${TRAVIS_BUILD_NUMBER}): ${SHA}"
 
