@@ -62,10 +62,10 @@ sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.min.js
 
-# Add a new git tag and commit the new release
-git tag v${NEW_VERSION}
+# Commit the new release and add new git tag
 git add .
 git commit -a -m "${PACKAGE_NAME} v${NEW_VERSION}"
+git tag v${NEW_VERSION}
 
 echo ""
 echo "Release increment succeed, you can now"
