@@ -41,6 +41,7 @@ function deployWebSite {
     cd ${TARGET_DIR}
     git config user.name "Travis CI"
     git config user.email "ci@travis-ci.org"
+    git status
 
     # If there are no changes to the compiled out (e.g. this is a README update) then just bail.
     if git diff-index --quiet HEAD --; then
