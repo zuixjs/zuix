@@ -662,14 +662,21 @@ z$.classExists = function (className) {
         var docStyles = document.styleSheets;
         if (docStyles != null) {
             for (var sx = 0; sx < docStyles.length; sx++) {
-                var classes = docStyles[sx].rules || docStyles[sx].cssRules;
-                if (classes != null) {
-                    for (var cx = 0; cx < classes.length; cx++) {
-                        if (classes[cx].selectorText === cl) {
-                            success = true;
-                            break;
+                // the try statement is needed because on Firefox accessing CSS rules
+                // loaded from a remote source will raise a security exception
+                try {
+                    var classes = docStyles[sx].rules || docStyles[sx].cssRules;
+                    if (classes != null) {
+                        for (var cx = 0; cx < classes.length; cx++) {
+                            if (classes[cx].selectorText === cl) {
+                                success = true;
+                                break;
+                            }
                         }
                     }
+                } catch(e) {
+                    if(e.name !== "SecurityError")
+                        throw e;
                 }
             }
         }

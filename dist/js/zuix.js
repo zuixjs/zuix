@@ -1,5 +1,3 @@
-/* ZUIX v0.4.9-22 17.06.22 16:46:42 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1169,14 +1167,21 @@ z$.classExists = function (className) {
         var docStyles = document.styleSheets;
         if (docStyles != null) {
             for (var sx = 0; sx < docStyles.length; sx++) {
-                var classes = docStyles[sx].rules || docStyles[sx].cssRules;
-                if (classes != null) {
-                    for (var cx = 0; cx < classes.length; cx++) {
-                        if (classes[cx].selectorText === cl) {
-                            success = true;
-                            break;
+                // the try statement is needed because on Firefox accessing CSS rules
+                // loaded from a remote source will raise a security exception
+                try {
+                    var classes = docStyles[sx].rules || docStyles[sx].cssRules;
+                    if (classes != null) {
+                        for (var cx = 0; cx < classes.length; cx++) {
+                            if (classes[cx].selectorText === cl) {
+                                success = true;
+                                break;
+                            }
                         }
                     }
+                } catch(e) {
+                    if(e.name !== "SecurityError")
+                        throw e;
                 }
             }
         }
