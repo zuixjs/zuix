@@ -52,7 +52,7 @@ function deployWebSite {
 
     # Version number increment in the Download page
     node ../node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./content/start.html
-    node ../node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./app_bundle.js
+    node ../node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./app.bundle.js
 
     # Commit the "changes", i.e. the new version.
     # The delta will show diffs between new and old versions.
