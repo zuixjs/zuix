@@ -1,4 +1,4 @@
-var gulp = require('./gulp')([
+var gulp = require('./build/gulp')([
     'zuix/browserify',
     'zuix/compile',
     'zuix/dox',

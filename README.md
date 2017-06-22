@@ -18,7 +18,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **ZUIX v0.4.9-21**](https://genielabs.github.io/zuix/js/zuix.min.js)
+[Download **ZUIX v0.4.9-22**](https://genielabs.github.io/zuix/js/zuix.min.js)
 *~11 kB (gzipped)*
 
 ###### Hosted
@@ -80,12 +80,24 @@ Start local web server (default on port 8080)
 
 Build source and create minified version in `./dist/js` folder:
 
-    gulp browserify ; gulp compile
+    gulp
 
-Build JSON documentation data file in `docs` folder
-(this is used for the web site in the `gh-pages` branch):
+or
 
-    gulp dox
+    npm run build
+
+this will also generate JSON formatted JSDoc API files in *_docs* folder.
+
+To submit a new release
+
+    npm run release <newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease
+
+if passing *CI* tests this will also publish *npm packages* and update *ZUIX web site*
+files in *gh-pages* branch.
+The script run on the *CI* server side is
+
+    npm run deploy
+
 
 ### Documentation and API
 

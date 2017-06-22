@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
  *
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/**
+/*
  *
  *  ZUIX, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
