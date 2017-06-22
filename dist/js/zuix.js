@@ -3152,6 +3152,7 @@ module.exports = function (root) {
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
+ *
  */
 
 "use strict";

@@ -18,7 +18,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **ZUIX**](https://genielabs.github.io/zuix/js/zuix.min.js)
+[Download **ZUIX v0.4.9-21**](https://genielabs.github.io/zuix/js/zuix.min.js)
 *~11 kB (gzipped)*
 
 ###### Hosted
@@ -59,9 +59,9 @@ Include the library from *bower_components* folder in your HTML project files:
 The following online examples can also be downloaded as a **.zip** file
 containing everything is needed to get you started.
 
-- [**TodoMVC**](https://genielabs.github.io/zuix/examples/todomvc)
+- [**TodoMVC**](https://genielabs.github.io/zuix-todomvc)
 *the classic To-Do MVC application implemented as a loadable component*
-- [**Hacker News Web**](https://genielabs.github.io/zuix/examples/hackernews)
+- [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
 *example of using* **list_view** *component with progressive/lazy loading*
 
 

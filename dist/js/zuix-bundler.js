@@ -368,8 +368,8 @@ module.exports = function serialize(obj, options) {
 
 /**
  *
- *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  This file is part of ZUIX,
+ *    Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
