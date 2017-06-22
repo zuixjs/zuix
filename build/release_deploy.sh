@@ -12,7 +12,6 @@ function doCompile {
 }
 
 function publishPackages {
-    echo "Publishing NPM packages (not implemented)"
     # publish zuix dev package
     npm publish
     # publish zuix-dist package
@@ -89,8 +88,13 @@ echo "-----"
 if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then
     echo "Deploying new release $TRAVIS_TAG to gh-pages..."
     echo ""
-    publishPackages
     deployWebSite
     echo ""
     echo "... done!"
+    # npm publish disabled - TODO: to be fixed / tested
+    #publishPackages
+    echo "-----"
+    echo "Automatic NPM publishing is disabled, do not forget to"
+    echo "manually run 'npm publish' both from './' and './dist' folders"
+    echo "-----"
 fi
