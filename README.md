@@ -63,6 +63,8 @@ containing everything is needed to get you started.
 *the classic To-Do MVC application implemented as a loadable component*
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
 *example of using* **list_view** *component with progressive/lazy loading*
+- [**ZUIX on CodePen**](https://codepen.io/genielabs/)
+*more examples and tutorials on CodePen*
 
 
 ### Contributing
