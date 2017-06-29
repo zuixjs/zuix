@@ -30,9 +30,20 @@ var _log =
     require('./Logger')('TaskQueue.js');
 var util = require('./Util.js');
 
+
+// Types definitions
+
 /**
  *
- * @callback ZxQuery~iterationCallback
+ * @typedef {object} ElementPosition
+ * @property {number} x
+ * @property {number} y
+ * @property {boolean} visible
+ */
+
+/**
+ *
+ * @callback IterationCallback
  * @param {number} i Iteration count
  * @param {object} item Current element
  * @this {object}
@@ -40,7 +51,7 @@ var util = require('./Util.js');
 
 /**
  *
- * @callback ZxQuery~instanceIterationCallback
+ * @callback InstanceIterationCallback
  * @param {number} count Iteration count
  * @param {Element} item Current element
  * @this {ZxQuery}
@@ -51,7 +62,6 @@ var util = require('./Util.js');
 var _zuix_events_mapping = [];
 function routeEvent(e) {
     triggerEventHandlers(this, e.type, e);
-
 }
 function addEventHandler(el, path, handler) {
     var found = false;
@@ -218,7 +228,7 @@ ZxQuery.prototype.find = function (selector) {
  * instance wrapping the current `item`.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
- * @param {ZxQuery~instanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {InstanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.each = function (iterationCallback) {
@@ -340,7 +350,7 @@ ZxQuery.prototype.isEmpty = function () {
 /**
  * Gets coordinates and visibility status of the element.
  *
- * @return {{x, y, visible}}
+ * @return {ElementPosition}
  */
 ZxQuery.prototype.position = function () {
     if (this._selection[0] != null)
@@ -484,7 +494,7 @@ ZxQuery.prototype.append = function (el) {
  * Insert the given child element before the one at the
  * specified index.
  *
- * @param index Position where to insert `el` Element.
+ * @param {number} index Position where to insert `el` Element.
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
@@ -585,7 +595,7 @@ ZxQuery.prototype.hide = function () {
  * Exported ZxQuery interface.
  *
  * @param [what] {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined}
- * @returns {ZxQuery}
+ * @return {ZxQuery}
  */
 var z$ = function (what) {
     return new ZxQuery(what);
@@ -603,7 +613,7 @@ z$.find = function (filter) {
  * If the callback returns *false*, the iteration loop will interrupt.
  *
  * @param {Array<Object>|JSON} items Enumerable objects collection.
- * @param {ZxQuery~iterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {z$} `this`.
  */
 z$.each = function (items, iterationCallback) {

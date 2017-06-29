@@ -1,5 +1,3 @@
-/* ZUIX v0.4.9-23 17.06.22 23:28:43 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -537,9 +535,20 @@ var _log =
     _dereq_('./Logger')('TaskQueue.js');
 var util = _dereq_('./Util.js');
 
+
+// Types definitions
+
 /**
  *
- * @callback ZxQuery~iterationCallback
+ * @typedef {object} ElementPosition
+ * @property {number} x
+ * @property {number} y
+ * @property {boolean} visible
+ */
+
+/**
+ *
+ * @callback IterationCallback
  * @param {number} i Iteration count
  * @param {object} item Current element
  * @this {object}
@@ -547,7 +556,7 @@ var util = _dereq_('./Util.js');
 
 /**
  *
- * @callback ZxQuery~instanceIterationCallback
+ * @callback InstanceIterationCallback
  * @param {number} count Iteration count
  * @param {Element} item Current element
  * @this {ZxQuery}
@@ -558,7 +567,6 @@ var util = _dereq_('./Util.js');
 var _zuix_events_mapping = [];
 function routeEvent(e) {
     triggerEventHandlers(this, e.type, e);
-
 }
 function addEventHandler(el, path, handler) {
     var found = false;
@@ -725,7 +733,7 @@ ZxQuery.prototype.find = function (selector) {
  * instance wrapping the current `item`.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
- * @param {ZxQuery~instanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {InstanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.each = function (iterationCallback) {
@@ -847,7 +855,7 @@ ZxQuery.prototype.isEmpty = function () {
 /**
  * Gets coordinates and visibility status of the element.
  *
- * @return {{x, y, visible}}
+ * @return {ElementPosition}
  */
 ZxQuery.prototype.position = function () {
     if (this._selection[0] != null)
@@ -991,7 +999,7 @@ ZxQuery.prototype.append = function (el) {
  * Insert the given child element before the one at the
  * specified index.
  *
- * @param index Position where to insert `el` Element.
+ * @param {number} index Position where to insert `el` Element.
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
  * @return {ZxQuery} The *ZxQuery* object itself
  */
@@ -1092,7 +1100,7 @@ ZxQuery.prototype.hide = function () {
  * Exported ZxQuery interface.
  *
  * @param [what] {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined}
- * @returns {ZxQuery}
+ * @return {ZxQuery}
  */
 var z$ = function (what) {
     return new ZxQuery(what);
@@ -1110,7 +1118,7 @@ z$.find = function (filter) {
  * If the callback returns *false*, the iteration loop will interrupt.
  *
  * @param {Array<Object>|JSON} items Enumerable objects collection.
- * @param {ZxQuery~iterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {z$} `this`.
  */
 z$.each = function (items, iterationCallback) {
@@ -1441,7 +1449,7 @@ module.exports =  z$;
     }
 }(this, _dereq_('./zuix/Zuix.js')));
 
-},{"./zuix/Zuix.js":17}],7:[function(_dereq_,module,exports){
+},{"./zuix/Zuix.js":16}],7:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1476,6 +1484,14 @@ module.exports =  z$;
  * @property {boolean} css_applied Whether the CSS style has been applied to the view or not.
  * @property {ContextControllerHandler} controller The controller handler function.
  * @property {string} using The url/path if this is a resource loaded with `zuix.using(..)` method.
+ */
+
+/**
+ * Bundle item object.
+ * @typedef {object} BundleItem
+ * @property {Element} view
+ * @property {string} css
+ * @property {ContextControllerHandler} controller
  */
 
 /** */
@@ -1526,7 +1542,7 @@ _dereq_('./EventCallback');
  *
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.
- * @returns {ComponentContext} The component context instance.
+ * @return {ComponentContext} The component context instance.
  * @constructor
  */
 
@@ -1572,7 +1588,7 @@ function ComponentContext(options, eventCallback) {
     this._behaviorMap = [];
 
     /**
-     * --@-protected
+     * @protected
      * @type {ContextController}
      */
     this._c = null;
@@ -1588,7 +1604,7 @@ function ComponentContext(options, eventCallback) {
  * otherwise.
  *
  * @param {Element} [container] The container element.
- * @returns {ComponentContext|Element}
+ * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.container = function (container) {
     // TODO: should automatically re-attach view to the new parent?
@@ -1607,7 +1623,7 @@ ComponentContext.prototype.container = function (container) {
  * argument is passed, the {ComponentContext} itself otherwise.
  *
  * @param {Element|string|undefined} [view] The view *HTML* string or element.
- * @returns {ComponentContext|Element}
+ * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
     if (typeof view === 'undefined') return this._view;
@@ -1702,7 +1718,7 @@ ComponentContext.prototype.view = function (view) {
  * </code></pre>
  *
  * @param {string|Element|undefined} [css] The CSS string or element.
- * @returns {ComponentContext|Element}
+ * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.style = function (css) {
     if (typeof css === 'undefined') return this._style;
@@ -1747,7 +1763,7 @@ ComponentContext.prototype.style = function (css) {
  * </code></pre>
  *
  * @param {object|undefined} [model] The model object.
- * @returns {ComponentContext|object}
+ * @return {ComponentContext|object}
  */
 ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
@@ -1773,7 +1789,7 @@ ComponentContext.prototype.model = function (model) {
  * </code></pre>
  *
  * @param {ContextControllerHandler|undefined} [controller] The controller handler function.
- * @returns {ComponentContext|ContextControllerHandler}
+ * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function (controller) {
     if (typeof controller === 'undefined') return this._controller;
@@ -2531,10 +2547,18 @@ var z$ =
 _dereq_('./ContextControllerHandler');
 
 /**
- * TODO: complete JSDoc
- *
+ * ContextController user-defined handlers definition
+ * @typedef {Object} ContextController
+ * @property {function} init
+ * @property {function} create
+ * @property {function} update
+ * @property {function} destroy
+ */
+
+/**
+ * ContextController constructor.
  * @param {ComponentContext} context
- * @returns {ContextController}
+ * @return {ContextController}
  * @constructor
  */
 function ContextController(context) {
@@ -2543,10 +2567,6 @@ function ContextController(context) {
     this._view = null;
 
     this.context = context;
-    /** @type {function} */
-/*    this.behavior = function () {
-        return context.behavior;
-    };*/
 
     /**
      * @protected
@@ -2561,9 +2581,14 @@ function ContextController(context) {
     /** @type {function} */
     this.create = null;
     /** @type {function} */
+    this.update = null;
+    /** @type {function} */
     this.destroy = null;
 
-    /** @protected */
+    /**
+     * @protected
+     * @type {!Array.<Element>}
+     * */
     this._childNodes = [];
     /** @type {function} */
     this.saveView = function () {
@@ -2660,7 +2685,7 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
  *
  *
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
- * @returns {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
+ * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
 ContextController.prototype.field = function (fieldName) {
     // this method is "attacched" from Zuix.js on controller initialization
@@ -2999,7 +3024,6 @@ module.exports = function (root) {
 _dereq_('./ContextErrorCallback');
 _dereq_('./ContextReadyCallback');
 _dereq_('./EventCallback');
-_dereq_('./EventMapping');
 
 /**
  * Component Context options object.
@@ -3009,8 +3033,8 @@ _dereq_('./EventMapping');
  * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
  * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
  * @property {ContextControllerHandler|undefined} controller The controller handler.
- * @property {Array.<EventMapping>|EventCallback|undefined} on The events handling map.
- * @property {Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} on The events handling map.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The behaviors handling map.
  * @property {Element|string|boolean|undefined} css The view style.
  * @property {string|undefined} cext When loading view content, append the specified string instead of `.html`.
  * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
@@ -3025,7 +3049,7 @@ module.exports = function (root) {
     // dummy module for JsDocs/Closure Compiler
     return null;
 };
-},{"./ContextErrorCallback":12,"./ContextReadyCallback":14,"./EventCallback":15,"./EventMapping":16}],14:[function(_dereq_,module,exports){
+},{"./ContextErrorCallback":12,"./ContextReadyCallback":14,"./EventCallback":15}],14:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -3054,6 +3078,7 @@ module.exports = function (root) {
 /**
  *
  * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
  * @this {ComponentContext}
  */
 
@@ -3124,43 +3149,6 @@ module.exports = function (root) {
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
- */
-
-/**
- *
- * @typedef {!{string}, {EventCallback}} EventMapping
- * *
- */
-
-/** */
-module.exports = function (root) {
-    // dummy module for JsDocs/Closure Compiler
-    return null;
-};
-},{}],17:[function(_dereq_,module,exports){
-/*
- * Copyright 2015-2017 G-Labs. All Rights Reserved.
- *         https://genielabs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  ZUIX, Javascript library for component-based development.
- *        https://genielabs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
  *
  */
 
@@ -3199,7 +3187,7 @@ var _componentCache = [];
 var _contextSeqNum = 0;
 /**
  * @private
- * @type {!Array<ComponentContext>}
+ * @type {!Array.<ComponentContext>}
  */
 var _contextRoot = [];
 
@@ -3234,7 +3222,7 @@ var _pendingResourceTask = {};
  *
  * @class Zuix
  * @constructor
- * @returns {Zuix}
+ * @return {Zuix}
  */
 function Zuix() {
     _componentizer.setHost(this);
@@ -3826,7 +3814,7 @@ function initController(c) {
 /***
  * @private
  * @param javascriptCode string
- * @returns {ContextControllerHandler}
+ * @return {ContextControllerHandler}
  */
 // TODO: refactor this method name
 function getController(javascriptCode) {
@@ -3873,7 +3861,9 @@ var ctrl = zuix.controller(function(cp) {
  * is created.
  * @return {ContextControllerHandler} The initialized controller handler.
  */
-Zuix.prototype.controller = controller;
+Zuix.prototype.controller = function(handler) {
+    return controller(handler);
+};
 /**
  * Searches and returns elements with `data-ui-field`
  * attribute matching the given `fieldName`.
@@ -3897,7 +3887,9 @@ containerDiv.html('Hello World!');
  * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
  * @return {ZxQuery} The `{ZxQuery}`-wrapped elements with matching ```data-ui-field``` attribute.
  */
-Zuix.prototype.field = field;
+Zuix.prototype.field = function(fieldName, container) {
+    return field(fieldName, container);
+};
 /**
  * Searches inside the given element ```element```
  * for all ```data-ui-include``` and ```data-ui-load```
@@ -3959,7 +3951,9 @@ ctx.test();
  * @param {ContextOptions} [options] Options used to initialize the loaded component.
  * @return {ComponentContext} The component instance context.
  */
-Zuix.prototype.load = load;
+Zuix.prototype.load = function(componentId, options) {
+    return load(componentId, options);
+};
 /**
  * Unload and dispose the component.
  *
@@ -4013,7 +4007,9 @@ zuix.context('my-slide-show', function(c) {
  * @param {function} [callback] The callback function that will pass the context object once it is ready.
  * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
-Zuix.prototype.context = context;
+Zuix.prototype.context = function(contextId, callback) {
+    return context(contextId, callback);
+};
 /**
  * Create the component `componentId` and return its `{ComponentContext}` object.
  * The `{ComponentContext}.container()` element is detached from the DOM.
@@ -4164,6 +4160,7 @@ Zuix.prototype.httpCaching = function(enable) {
  * @param {string} resourceType Either `style`, `script` or `component`.
  * @param {string} resourcePath Relative or absolute resource url path
  * @param {function} [callback] Callback function to call once resource is loaded.
+ * @return {void}
  */
 Zuix.prototype.using = function(resourceType, resourcePath, callback) {
     resourceType = resourceType.toLowerCase();
@@ -4272,9 +4269,9 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
 /**
  * Gets/Sets the components data bundle.
  *
- * @param {Array.<{ view, css, controller }>} bundleData A bundle object holding in memory all components data (cache).
+ * @param {!Array.<BundleItem>} bundleData A bundle object holding in memory all components data (cache).
  * @param {function} [callback]
- * @return {Zuix|Array.<{ view, css, controller }>}
+ * @return {Zuix|Array.<BundleItem>}
  */
 Zuix.prototype.bundle = function(bundleData, callback) {
     if (util.isNoU(bundleData))

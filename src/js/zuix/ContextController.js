@@ -33,10 +33,18 @@ var z$ =
 require('./ContextControllerHandler');
 
 /**
- * TODO: complete JSDoc
- *
+ * ContextController user-defined handlers definition
+ * @typedef {Object} ContextController
+ * @property {function} init
+ * @property {function} create
+ * @property {function} update
+ * @property {function} destroy
+ */
+
+/**
+ * ContextController constructor.
  * @param {ComponentContext} context
- * @returns {ContextController}
+ * @return {ContextController}
  * @constructor
  */
 function ContextController(context) {
@@ -45,10 +53,6 @@ function ContextController(context) {
     this._view = null;
 
     this.context = context;
-    /** @type {function} */
-/*    this.behavior = function () {
-        return context.behavior;
-    };*/
 
     /**
      * @protected
@@ -63,9 +67,14 @@ function ContextController(context) {
     /** @type {function} */
     this.create = null;
     /** @type {function} */
+    this.update = null;
+    /** @type {function} */
     this.destroy = null;
 
-    /** @protected */
+    /**
+     * @protected
+     * @type {!Array.<Element>}
+     * */
     this._childNodes = [];
     /** @type {function} */
     this.saveView = function () {
@@ -162,7 +171,7 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
  *
  *
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
- * @returns {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
+ * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
 ContextController.prototype.field = function (fieldName) {
     // this method is "attacched" from Zuix.js on controller initialization

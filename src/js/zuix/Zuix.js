@@ -59,7 +59,7 @@ var _componentCache = [];
 var _contextSeqNum = 0;
 /**
  * @private
- * @type {!Array<ComponentContext>}
+ * @type {!Array.<ComponentContext>}
  */
 var _contextRoot = [];
 
@@ -94,7 +94,7 @@ var _pendingResourceTask = {};
  *
  * @class Zuix
  * @constructor
- * @returns {Zuix}
+ * @return {Zuix}
  */
 function Zuix() {
     _componentizer.setHost(this);
@@ -686,7 +686,7 @@ function initController(c) {
 /***
  * @private
  * @param javascriptCode string
- * @returns {ContextControllerHandler}
+ * @return {ContextControllerHandler}
  */
 // TODO: refactor this method name
 function getController(javascriptCode) {
@@ -733,7 +733,9 @@ var ctrl = zuix.controller(function(cp) {
  * is created.
  * @return {ContextControllerHandler} The initialized controller handler.
  */
-Zuix.prototype.controller = controller;
+Zuix.prototype.controller = function(handler) {
+    return controller(handler);
+};
 /**
  * Searches and returns elements with `data-ui-field`
  * attribute matching the given `fieldName`.
@@ -757,7 +759,9 @@ containerDiv.html('Hello World!');
  * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
  * @return {ZxQuery} The `{ZxQuery}`-wrapped elements with matching ```data-ui-field``` attribute.
  */
-Zuix.prototype.field = field;
+Zuix.prototype.field = function(fieldName, container) {
+    return field(fieldName, container);
+};
 /**
  * Searches inside the given element ```element```
  * for all ```data-ui-include``` and ```data-ui-load```
@@ -819,7 +823,9 @@ ctx.test();
  * @param {ContextOptions} [options] Options used to initialize the loaded component.
  * @return {ComponentContext} The component instance context.
  */
-Zuix.prototype.load = load;
+Zuix.prototype.load = function(componentId, options) {
+    return load(componentId, options);
+};
 /**
  * Unload and dispose the component.
  *
@@ -873,7 +879,9 @@ zuix.context('my-slide-show', function(c) {
  * @param {function} [callback] The callback function that will pass the context object once it is ready.
  * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
-Zuix.prototype.context = context;
+Zuix.prototype.context = function(contextId, callback) {
+    return context(contextId, callback);
+};
 /**
  * Create the component `componentId` and return its `{ComponentContext}` object.
  * The `{ComponentContext}.container()` element is detached from the DOM.
@@ -1024,6 +1032,7 @@ Zuix.prototype.httpCaching = function(enable) {
  * @param {string} resourceType Either `style`, `script` or `component`.
  * @param {string} resourcePath Relative or absolute resource url path
  * @param {function} [callback] Callback function to call once resource is loaded.
+ * @return {void}
  */
 Zuix.prototype.using = function(resourceType, resourcePath, callback) {
     resourceType = resourceType.toLowerCase();
@@ -1132,9 +1141,9 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
 /**
  * Gets/Sets the components data bundle.
  *
- * @param {Array.<{ view, css, controller }>} bundleData A bundle object holding in memory all components data (cache).
+ * @param {!Array.<BundleItem>} bundleData A bundle object holding in memory all components data (cache).
  * @param {function} [callback]
- * @return {Zuix|Array.<{ view, css, controller }>}
+ * @return {Zuix|Array.<BundleItem>}
  */
 Zuix.prototype.bundle = function(bundleData, callback) {
     if (util.isNoU(bundleData))

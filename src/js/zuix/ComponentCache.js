@@ -34,6 +34,14 @@
  * @property {string} using The url/path if this is a resource loaded with `zuix.using(..)` method.
  */
 
+/**
+ * Bundle item object.
+ * @typedef {object} BundleItem
+ * @property {Element} view
+ * @property {string} css
+ * @property {ContextControllerHandler} controller
+ */
+
 /** */
 module.exports = function (root) {
     // dummy module for JsDocs/Closure Compiler

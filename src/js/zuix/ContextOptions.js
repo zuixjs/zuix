@@ -26,7 +26,6 @@
 require('./ContextErrorCallback');
 require('./ContextReadyCallback');
 require('./EventCallback');
-require('./EventMapping');
 
 /**
  * Component Context options object.
@@ -36,8 +35,8 @@ require('./EventMapping');
  * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
  * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
  * @property {ContextControllerHandler|undefined} controller The controller handler.
- * @property {Array.<EventMapping>|EventCallback|undefined} on The events handling map.
- * @property {Array.<EventMapping>|EventCallback|undefined} behavior The behaviors handling map.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} on The events handling map.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The behaviors handling map.
  * @property {Element|string|boolean|undefined} css The view style.
  * @property {string|undefined} cext When loading view content, append the specified string instead of `.html`.
  * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).

@@ -26,6 +26,7 @@
 /**
  *
  * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
  * @this {ComponentContext}
  */
 

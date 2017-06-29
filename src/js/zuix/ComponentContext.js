@@ -40,7 +40,7 @@ require('./EventCallback');
  *
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.
- * @returns {ComponentContext} The component context instance.
+ * @return {ComponentContext} The component context instance.
  * @constructor
  */
 
@@ -86,7 +86,7 @@ function ComponentContext(options, eventCallback) {
     this._behaviorMap = [];
 
     /**
-     * --@-protected
+     * @protected
      * @type {ContextController}
      */
     this._c = null;
@@ -102,7 +102,7 @@ function ComponentContext(options, eventCallback) {
  * otherwise.
  *
  * @param {Element} [container] The container element.
- * @returns {ComponentContext|Element}
+ * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.container = function (container) {
     // TODO: should automatically re-attach view to the new parent?
@@ -121,7 +121,7 @@ ComponentContext.prototype.container = function (container) {
  * argument is passed, the {ComponentContext} itself otherwise.
  *
  * @param {Element|string|undefined} [view] The view *HTML* string or element.
- * @returns {ComponentContext|Element}
+ * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
     if (typeof view === 'undefined') return this._view;
@@ -216,7 +216,7 @@ ComponentContext.prototype.view = function (view) {
  * </code></pre>
  *
  * @param {string|Element|undefined} [css] The CSS string or element.
- * @returns {ComponentContext|Element}
+ * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.style = function (css) {
     if (typeof css === 'undefined') return this._style;
@@ -261,7 +261,7 @@ ComponentContext.prototype.style = function (css) {
  * </code></pre>
  *
  * @param {object|undefined} [model] The model object.
- * @returns {ComponentContext|object}
+ * @return {ComponentContext|object}
  */
 ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
@@ -287,7 +287,7 @@ ComponentContext.prototype.model = function (model) {
  * </code></pre>
  *
  * @param {ContextControllerHandler|undefined} [controller] The controller handler function.
- * @returns {ComponentContext|ContextControllerHandler}
+ * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function (controller) {
     if (typeof controller === 'undefined') return this._controller;
