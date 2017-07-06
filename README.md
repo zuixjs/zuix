@@ -69,36 +69,7 @@ containing everything is needed to get you started.
 
 ### Contributing
 
-Clone [**ZUIX repository**](https://github.com/genielabs/zuix) or install
-`zuix` development package from *NPM*
-
-    npm install zuix
-
-Start local web server (default on port 8080)
-
-    npm run start
-
-###### Build
-
-Build source and create minified version in `./dist/js` folder:
-
-    gulp
-
-or
-
-    npm run build
-
-this will also generate JSON formatted JSDoc API files in *_docs* folder.
-
-To submit a new release
-
-    npm run release <newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease
-
-if passing *CI* tests this will also publish *npm packages* and update *ZUIX web site*
-files in *gh-pages* branch.
-The script run on the *CI* server side is
-
-    npm run deploy
+Please read the [CONTRIBUTING.md](https://github.com/genielabs/zuix/blob/master/CONTRIBUTING.md) document.
 
 
 ### Documentation and API
