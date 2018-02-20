@@ -132,7 +132,7 @@ function ZxQuery(element) {
         return element;
     else if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))
         this._selection = element;
-    else if (element instanceof HTMLElement || element instanceof Node)
+    else if (element === window || element instanceof HTMLElement || element instanceof Node)
         this._selection = [element];
     else if (typeof element === 'string')
         this._selection = document.documentElement.querySelectorAll(element);
@@ -304,9 +304,6 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, el) {
         z$.each(events, function (k, ev) {
-            // TODO: verify if this case apply to all events
-            if (el.tagName.toLowerCase() === 'body')
-                el = document;
             addEventHandler(el, ev, eventHandler);
         });
     });
@@ -322,9 +319,6 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
     this.each(function (k, el) {
         z$.each(events, function (k, ev) {
-            // TODO: verify if this case apply to all events
-            if (el.tagName.toLowerCase() === 'body')
-                el = document;
             removeEventHandler(el, ev, eventHandler);
         });
     });
@@ -715,14 +709,17 @@ z$.wrapCss = function (wrapperRule, css) {
             var ruleParts = ruleMatch[2];
             if (ruleParts != null && ruleParts.length > 0) {
                 var classes = ruleParts.split(',');
+                var isMediaQuery = false;
                 z$.each(classes, function (k, v) {
                     if (v.replace(' ', '') === '.') {
                         // a single `.` means 'self' (the container itself)
                         // so we just add the wrapperRule
                         wrappedCss += '\n' + wrapperRule + ' '
                     } else if (v.trim()[0] === '@') {
-                        // leave it as is if it's an animation rule
+                        // leave it as is if it's an animation or media rule
                         wrappedCss += v + ' ';
+                        if (v.trim().toLowerCase().startsWith('@media'))
+                            isMediaQuery = true;
                     } else {
                         // wrap the class name (v)
                         wrappedCss += '\n' + wrapperRule + '\n' + v + ' ';
@@ -730,22 +727,35 @@ z$.wrapCss = function (wrapperRule, css) {
                     if (k < classes.length - 1)
                         wrappedCss += ', ';
                 });
-                wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
+                if (isMediaQuery) {
+                    var wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/,'$1'));
+                    wrappedCss += '{\n  '+wrappedMediaQuery+'\n}';
+                } else {
+                    wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
+                }
             } else {
                 _log.w('z$.wrapCss was unable to parse rule.', ruleParts, ruleMatch);
             }
         }
     } while (ruleMatch);
-    if (wrappedCss !== '') {
+    if (wrappedCss !== '')
         css = wrappedCss;
-    }
     return css;
 };
 z$.appendCss = function (css, target, cssId) {
-    var style = null, head;
+    var style = null;
+    var head = document.head || document.getElementsByTagName('head')[0];
+    // remove old style if already defined
+    if (!util.isNoU(target)) {
+        head.removeChild(target);
+    } else {
+        var oldStyle = document.getElementById(cssId);
+        if (oldStyle != null) {
+            head.removeChild(oldStyle);
+        }
+    }
     if (typeof css === 'string') {
         // output css
-        head = document.head || document.getElementsByTagName('head')[0];
         style = document.createElement('style');
         style.type = 'text/css';
         style.id = cssId;
@@ -754,9 +764,7 @@ z$.appendCss = function (css, target, cssId) {
         else
             style.appendChild(document.createTextNode(css));
     } else if (css instanceof Element) style = css;
-    // remove previous style node
-    if (!util.isNoU(target))
-        head.removeChild(target);
+    // Append new CSS
     if (!util.isNoU(style))
         head.appendChild(style);
     return style;
@@ -781,6 +789,7 @@ z$.replaceBraces = function (html, callback) {
         outHtml += html.substr(currentIndex);
         return outHtml;
     }
+    return null;
 };
 z$.getClosest = function (elem, selector) {
     // Get closest match
@@ -793,7 +802,7 @@ z$.getPosition = function (el) {
     var visible = z$.isInView(el);
     var x = 0, y = 0;
     while (el) {
-        if (el.tagName == "BODY") {
+        if (el.tagName.toLowerCase() === "body") {
             // deal with browser quirks with body/window/document and page scroll
             var scrollX = el.scrollLeft || document.documentElement.scrollLeft;
             var scrollY = el.scrollTop || document.documentElement.scrollTop;
@@ -833,26 +842,36 @@ z$.scrollTo = function(el, targetY, duration) {
     if (targetY === 0 || targetY == null)
         return;
     if (duration == null) duration = 500;
-    var scrollTop = el.scrollTop+targetY - 56;
-    var scrollOffset = el.scrollTop-scrollTop;
-    el.firstElementChild.style.transition = 'transform '+duration+'ms ease';
-    if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
-        el.firstElementChild.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
-    else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
-        el.firstElementChild.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
+    var scrollParent = z$.getScrollParent(el);
+    var scrollTop = scrollParent.scrollTop+targetY;
+    var scrollOffset = el.scrollTop-targetY;
+    scrollParent.style.transition = 'transform '+duration+'ms ease';
+    if (typeof scrollParent.style.WebkitTransform !== 'undefined')
+        scrollParent.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
+    else if (typeof scrollParent.style.MozTransform !== 'undefined')
+        scrollParent.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
     else
-        el.firstElementChild.style.transform = "translate(0, " + (scrollOffset) + "px)";
+        scrollParent.style.transform = "translate(0, " + (scrollOffset) + "px)";
     window.setTimeout(function () {
         // TODO: should backup and restore old value
-        if (typeof el.firstElementChild.style.WebkitTransform !== 'undefined')
-            el.firstElementChild.style.WebkitTransform = "";
-        else if (typeof el.firstElementChild.style.MozTransform !== 'undefined')
-            el.firstElementChild.style.MozTransform= "";
+        if (typeof scrollParent.style.WebkitTransform !== 'undefined')
+            scrollParent.style.WebkitTransform = "";
+        else if (typeof scrollParent.style.MozTransform !== 'undefined')
+            scrollParent.style.MozTransform= "";
         else
-            el.firstElementChild.style.transform = "";
-        el.firstElementChild.style.transition = '';
-        el.scrollTop = scrollTop;
+            scrollParent.style.transform = "";
+        scrollParent.style.transition = '';
+        scrollParent.scrollTop = scrollTop;
     }, duration);
+    return this;
+};
+z$.getScrollParent = function(node) {
+    if (node == null)
+        return null;
+    if (node.scrollHeight > node.clientHeight)
+        return node;
+    else
+        return z$.getScrollParent(node.parentNode);
 };
 
 z$.ZxQuery = ZxQuery;
@@ -896,5 +915,11 @@ String.prototype.hashCode = function() {
     }
     return hash;
 };
+// String.startsWith polyfill
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function(search, pos) {
+        return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+    };
+}
 
 module.exports =  z$;

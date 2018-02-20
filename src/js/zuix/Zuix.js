@@ -734,7 +734,7 @@ var ctrl = zuix.controller(function(cp) {
  * @return {ContextControllerHandler} The initialized controller handler.
  */
 Zuix.prototype.controller = function(handler) {
-    return controller(handler);
+    return controller.call(this, handler);
 };
 /**
  * Searches and returns elements with `data-ui-field`
@@ -760,7 +760,7 @@ containerDiv.html('Hello World!');
  * @return {ZxQuery} The `{ZxQuery}`-wrapped elements with matching ```data-ui-field``` attribute.
  */
 Zuix.prototype.field = function(fieldName, container) {
-    return field(fieldName, container);
+    return field.call(this, fieldName, container);
 };
 /**
  * Searches inside the given element ```element```
@@ -824,7 +824,7 @@ ctx.test();
  * @return {ComponentContext} The component instance context.
  */
 Zuix.prototype.load = function(componentId, options) {
-    return load(componentId, options);
+    return load.call(this, componentId, options);
 };
 /**
  * Unload and dispose the component.
@@ -880,7 +880,7 @@ zuix.context('my-slide-show', function(c) {
  * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
 Zuix.prototype.context = function(contextId, callback) {
-    return context(contextId, callback);
+    return context.call(this, contextId, callback);
 };
 /**
  * Create the component `componentId` and return its `{ComponentContext}` object.
