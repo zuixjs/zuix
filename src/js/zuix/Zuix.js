@@ -106,7 +106,6 @@ function Zuix() {
 }
 
 /**
- * Initializes a controller ```handler```.
  *
  * @private
  * @param handler {ContextControllerHandler}
@@ -122,8 +121,6 @@ function controller(handler) {
 }
 
 /**
- * Gets elements with `data-ui-field`
- * attribute matching the given `fieldName`.
  *
  * @private
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
@@ -148,7 +145,6 @@ function field(fieldName, container, context) {
 }
 
 /**
- * Loads a component with the given options.
  *
  * @private
  * @param {!string} componentId The id/name of the component we want to load.
@@ -306,7 +302,6 @@ function loadResources(ctx, options) {
     return ctx;
 }
 /**
- * Unload and dispose the component.
  *
  * @private
  * @param context {ComponentContext|Element}
@@ -352,7 +347,6 @@ function createContext(options) {
 }
 
 /**
- * TODO: desc
  *
  * @private
  * @param {Element|ZxQuery|object} contextId The `contextId` object
@@ -382,9 +376,6 @@ function context(contextId, callback) {
 }
 
 /**
- * Register a callback for ZUIX global event (hook).
- * There can be only one callback for each kind of event.
- * Pass null as <handler> to unregister a previously registered callback.
  *
  * @private
  * @param {string} path
@@ -712,7 +703,7 @@ function replaceCache(c) {
 
 /**
  * Allocates a component's controller. The provided `handler` function will be called
- * to initialize the {ContextController} once the component has been loaded.
+ * to initialize the controller object (ContextController) once the component has been loaded.
  *
  * @example
  *
@@ -726,18 +717,14 @@ var componentContext = zuix.controller(function(cp) {
 }).for('path/to/component_name');
 </code></pre>
  *
- * @param {ContextControllerHandler} handler Function called to initialize the component's controller.
- * function ```function(cp){ ... } ```,
- * where `cp` is the [`{ContextController}`](#ZUIX_API--ContextController)
- * object that is passed to the handler once the component
- * is created.
+ * @param {ContextControllerHandler} handler Function called to initialize the component's controller that will be passed as argument of this function.
  * @return {ContextControllerHandler} The initialized controller handler.
  */
 Zuix.prototype.controller = function(handler) {
     return controller.call(this, handler);
 };
 /**
- * Searches in the document or in the provided `container` for elements with `data-ui-field`
+ * Searches in the document or inside the provided `container` for elements with `data-ui-field`
  * attribute matching the given `fieldName`.
  *
  * @example
@@ -755,9 +742,9 @@ var containerDiv = zuix.field('container-div');
 containerDiv.html('Hello World!');
 ```
  *
- * @param {!string} fieldName The class to check for.
+ * @param {!string} fieldName Value of `data-ui-field` to look for.
  * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
- * @return {ZxQuery} The `{ZxQuery}`-wrapped elements with matching ```data-ui-field``` attribute.
+ * @return {ZxQuery} Elements with matching ```data-ui-field``` attribute.
  */
 Zuix.prototype.field = function(fieldName, container) {
     return field.call(this, fieldName, container);

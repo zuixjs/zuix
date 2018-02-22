@@ -13,22 +13,6 @@ interface Zuix {
     using(resourceType: String, resourcePath: String, callback?: Function): void;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
 }
-interface ContextOptions {
-    contextId?: Object;
-    container?: Element;
-    model?: JSON;
-    view?: Element;
-    controller?: ContextControllerHandler;
-    on?: { [k: string]: EventCallback };
-    behavior?: { [k: string]: EventCallback };
-    css?: Element | String | Boolean;
-    cext?: String;
-    html?: Boolean;
-    lazyLoad?: Boolean;
-    priority?: Number;
-    ready?: ContextReadyCallback;
-    error?: ContextErrorCallback;
-}
 interface ContextReadyCallback {
     (ctx: ComponentContext): void;
 }

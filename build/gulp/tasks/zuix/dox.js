@@ -14,12 +14,6 @@ module.exports = function () {
                 .on('end', resolve);
         }),
         new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ContextOptions.js')
-                .pipe(dox({ raw: true }))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
             gulp.src(srcFolder+'/zuix/ComponentContext.js')
                 .pipe(dox({ raw: true }))
                 .pipe(gulp.dest(jsonApiFolder))
@@ -78,7 +72,6 @@ module.exports = function () {
         // Generate ZUIX TypeScript Definition file
         console.log('\nGenerating TypeScript definitions file...');
         var tsDefs = generateTypescriptDefs('Zuix');
-            tsDefs += generateTypescriptDefs('ContextOptions');
             tsDefs += generateTypescriptDefs('ContextReadyCallback');
             tsDefs += generateTypescriptDefs('ContextErrorCallback');
             tsDefs += generateTypescriptDefs('EventCallback');
