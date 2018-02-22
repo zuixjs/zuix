@@ -2993,7 +2993,8 @@ module.exports = ContextController;
  */
 
 /**
- * TODO: describe
+ * This callback function is called after a component is loaded
+ * and it is used to initialize the component's controller.
  *
  * @callback ContextControllerHandler
  * @param {ContextController} cp The context controller instance.
@@ -3748,14 +3749,14 @@ function replaceCache(c) {
 
 
 /**
- * Allocates a component's controller. The provided `handler` function will be called
- * to initialize the controller object (ContextController) once the component has been loaded.
+ * Allocates a component's controller handler. The provided `handler` function will be called
+ * to initialize the controller object once the component has been loaded.
  *
  * @example
  *
 <small>**Example - JavaScript**</small>
 <pre data-line="2"><code class="language-js">
-// Allocates the controller to be used for the component 'path/to/component_name'
+// Allocates the controller handler to be used for the component 'path/to/component_name'
 var componentContext = zuix.controller(function(cp) {
     // `cp` is the {ContextController}
     cp.create = function() { ... };
@@ -3764,7 +3765,7 @@ var componentContext = zuix.controller(function(cp) {
 </code></pre>
  *
  * @param {ContextControllerHandler} handler Function called to initialize the component's controller that will be passed as argument of this function.
- * @return {ContextControllerHandler} The initialized controller handler.
+ * @return {ContextControllerHandler} The allocated controller handler.
  */
 Zuix.prototype.controller = function(handler) {
     return controller.call(this, handler);

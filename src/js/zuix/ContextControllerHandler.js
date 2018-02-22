@@ -24,7 +24,8 @@
  */
 
 /**
- * TODO: describe
+ * This callback function is called after a component is loaded
+ * and it is used to initialize the component's controller.
  *
  * @callback ContextControllerHandler
  * @param {ContextController} cp The context controller instance.
