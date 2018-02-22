@@ -53,7 +53,7 @@ Include the library from *bower_components* folder in your HTML project files:
     <script src="bower_components/zuix-dist/js/zuix.min.js"></script>
 ```
 
-#### Using with TypesScript
+#### Using with TypeScript
 
 To use ZUIX in a TypeScript project you can download and use the auto-generated
 [module definition file](https://raw.githubusercontent.com/genielabs/zuix/master/dist/ts/zuix.d.ts)

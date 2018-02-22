@@ -34,7 +34,7 @@ var z$ =
  * and it is used to initialize the component's controller.
  *
  * @callback ContextControllerHandler
- * @param {ContextController} cp The context controller instance.
+ * @param {ContextController} cp The context controller object.
  * @this {ContextController}
  */
 

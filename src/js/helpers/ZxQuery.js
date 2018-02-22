@@ -842,41 +842,6 @@ z$.isInView = function (el, tolerance) {
         && rect.left < area.width + xt
         && rect.top < area.height + yt;
 };
-z$.scrollTo = function(el, targetY, duration) {
-    if (targetY === 0 || targetY == null)
-        return;
-    if (duration == null) duration = 500;
-    var scrollParent = z$.getScrollParent(el);
-    var scrollTop = scrollParent.scrollTop+targetY;
-    var scrollOffset = el.scrollTop-targetY;
-    scrollParent.style.transition = 'transform '+duration+'ms ease';
-    if (typeof scrollParent.style.WebkitTransform !== 'undefined')
-        scrollParent.style.WebkitTransform = "translate(0, " + (scrollOffset) + "px)";
-    else if (typeof scrollParent.style.MozTransform !== 'undefined')
-        scrollParent.style.MozTransform= "translate(0, " + (scrollOffset) + "px)";
-    else
-        scrollParent.style.transform = "translate(0, " + (scrollOffset) + "px)";
-    window.setTimeout(function () {
-        // TODO: should backup and restore old value
-        if (typeof scrollParent.style.WebkitTransform !== 'undefined')
-            scrollParent.style.WebkitTransform = "";
-        else if (typeof scrollParent.style.MozTransform !== 'undefined')
-            scrollParent.style.MozTransform= "";
-        else
-            scrollParent.style.transform = "";
-        scrollParent.style.transition = '';
-        scrollParent.scrollTop = scrollTop;
-    }, duration);
-    return this;
-};
-z$.getScrollParent = function(node) {
-    if (node == null)
-        return null;
-    if (node.scrollHeight > node.clientHeight)
-        return node;
-    else
-        return z$.getScrollParent(node.parentNode);
-};
 
 z$.ZxQuery = ZxQuery;
 
