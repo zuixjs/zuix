@@ -13,15 +13,6 @@ interface Zuix {
     using(resourceType: String, resourcePath: String, callback?: Function): void;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
 }
-interface ContextErrorCallback {
-    (error: Object): void;
-}
-interface ContextReadyCallback {
-    (ctx: ComponentContext): void;
-}
-interface EventCallback {
-    (event: String, data: Object): void;
-}
 interface ContextOptions {
     contextId?: Object;
     container?: Element;
@@ -37,6 +28,15 @@ interface ContextOptions {
     priority?: Number;
     ready?: ContextReadyCallback;
     error?: ContextErrorCallback;
+}
+interface ContextErrorCallback {
+    (error: Object): void;
+}
+interface ContextReadyCallback {
+    (ctx: ComponentContext): void;
+}
+interface EventCallback {
+    (event: String, data: Object): void;
 }
 interface ComponentContext {
     container(container?: Element): ComponentContext | Element;
@@ -89,10 +89,7 @@ interface ElementPosition {
     y: Number;
     visible: Boolean;
 }
-interface IterationCallback {
-    (i: Number, item: Object): void;
-}
-interface InstanceIterationCallback {
+interface ElementsIterationCallback {
     (count: Number, item: Element): void;
 }
 interface ZxQuery {
@@ -103,7 +100,7 @@ interface ZxQuery {
     get(i?: Number): Node | Element;
     eq(i: Number): ZxQuery;
     find(selector: String): ZxQuery;
-    each(iterationCallback: InstanceIterationCallback): ZxQuery;
+    each(iterationCallback: ElementsIterationCallback): ZxQuery;
     attr(attr: String | JSON, val?: String): String | ZxQuery;
     trigger(eventPath: String, eventData: Object): ZxQuery;
     one(eventPath: String, eventHandler: Function): ZxQuery;

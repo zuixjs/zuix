@@ -710,7 +710,7 @@ function replaceCache(c) {
 <small>**Example - JavaScript**</small>
 <pre data-line="2"><code class="language-js">
 // Allocates the controller handler to be used for the component 'path/to/component_name'
-var componentContext = zuix.controller(function(cp) {
+var ctrl = zuix.controller(function(cp) {
     // `cp` is the {ContextController}
     cp.create = function() { ... };
     cp.destroy = function() { ... }
@@ -726,6 +726,8 @@ Zuix.prototype.controller = function(handler) {
 /**
  * Searches in the document or inside the provided `container` for elements with `data-ui-field`
  * attribute matching the given `fieldName`.
+ * This method implements a caching mechanism and automatic
+ * disposal of allocated objects and events.
  *
  * @example
  *
@@ -752,7 +754,7 @@ Zuix.prototype.field = function(fieldName, container) {
 /**
  * Searches in the document or inside the given element ```element```
  * for all ```data-ui-include``` and ```data-ui-load``` directives
- * and process them by loading the requested components.
+ * and process these by loading the requested components.
  * This is a service function that should only be called if dynamically
  * adding content with elements that contain *load* or *include* directives.
  *
@@ -835,6 +837,7 @@ Zuix.prototype.unload = function (context) {
  * The `contextId` is the one specified by the `ContextOptions` object or by using the HTML attribute `data-ui-context`.
  *
  * @example
+ *
 <small>**Example - HTML**</small>
 ```html
 <div data-ui-load="site/components/slideshow"
@@ -905,6 +908,8 @@ Zuix.prototype.trigger = function (context, eventPath, eventData) {
  * Register a callback for a ZUIX global event (AKA hook).
  * There can be only one callback for each different type of global event.
  * Pass null as <eventHandler> to unregister a previously registered callback.
+ *
+ * @example
  *
 <small>**Example - JavaScript**</small>
 ```js

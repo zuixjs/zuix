@@ -53,6 +53,11 @@ Include the library from *bower_components* folder in your HTML project files:
     <script src="bower_components/zuix-dist/js/zuix.min.js"></script>
 ```
 
+#### Using with TypesScript
+
+To use ZUIX in a TypeScript project you can download and use the auto-generated
+[module definition file](https://raw.githubusercontent.com/genielabs/zuix/master/dist/ts/zuix.d.ts)
+located in the distribution folder of the master repo.
 
 ### Examples
 
@@ -63,6 +68,7 @@ containing everything is needed to get you started.
 *the classic To-Do MVC application implemented as a loadable component*
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
 *example of using* **list_view** *component with progressive/lazy loading*
+- [**G-Labs web site**](https://genielabs.github.io/glabs.it) presentation website
 - [**ZUIX on CodePen**](https://codepen.io/genielabs/)
 *more examples and tutorials on CodePen*
 

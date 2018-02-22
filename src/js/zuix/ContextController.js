@@ -158,6 +158,8 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
 /**
  * Gets elements in the component's view with `data-ui-field`
  * matching the given `fieldName`.
+ * This method implements a caching mechanism and automatic
+ * disposal of allocated objects and events.
  *
  * @example
  *
@@ -192,6 +194,7 @@ ContextController.prototype.clearCache = function () {
  * `cp.view().find(filter)`.
  *
  * @example
+ *
  * <small>Example - JavaScript</small>
  * <pre><code class="language-js">
  * // get all `checkbox` elements with `.checked` class.
@@ -227,6 +230,7 @@ ContextController.prototype.view = function (filter) {
  * Gets/Sets the component's data model.
  *
  * @example
+ *
  * <small>Example - JavaScript</small>
  * <pre><code class="language-js">
  * var m = {
@@ -263,6 +267,7 @@ ContextController.prototype.options = function () {
  * `zuix.hook(eventPath, handler)` method.
  *
  * @example
+ *
  * <small>Example - JavaScript</small>
  * <pre><code class="language-js">
 // somewhere inside the slide-show component controller
@@ -300,6 +305,7 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
  *  defined in the controller.
  *
  * @example
+ *
  * <small>Example - JavaScript</small>
  * <pre data-line="5"><code class="language-js">
  * // somewhere in the `create` method of the {ContextController}
@@ -339,6 +345,7 @@ ContextController.prototype.expose = function (methodName, handler) {
  * the file with the same base-name as the `componentId`.
  *
  * @example
+ *
  * <small>Example - JavaScript</small>
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.css' by default
@@ -365,6 +372,7 @@ ContextController.prototype.loadCss = function(options) {
  * file with the same base-name as the `componentId`.
  *
  * @example
+ *
  * <small>Example - JavaScript</small>
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.html' by default
@@ -394,6 +402,7 @@ ContextController.prototype.log = {};
  * Register as default controller for the given component type.
  *
  * @example
+ *
 <small>**Example - JavaScript**</small>
 <pre data-line="6"><code class="language-js">
 // Controller of component 'path/to/component_name'

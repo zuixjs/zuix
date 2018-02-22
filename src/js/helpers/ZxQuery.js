@@ -35,6 +35,7 @@ var util = require('./Util.js');
 
 /**
  * The `ElementPosition` object returned by the `position()` method.
+ *
  * @typedef {object} ElementPosition
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
@@ -43,6 +44,8 @@ var util = require('./Util.js');
 
 /**
  * The `IterationCallback` function.
+ *
+ * @private
  * @callback IterationCallback
  * @param {number} i Iteration count.
  * @param {object} item Current element.
@@ -50,8 +53,9 @@ var util = require('./Util.js');
  */
 
 /**
- * The `InstanceIterationCallback` function.
- * @callback InstanceIterationCallback
+ * Callback function used with the `each(..)` method.
+ *
+ * @callback ElementsIterationCallback
  * @param {number} count Iteration count.
  * @param {Element} item Current element.
  * @this {ZxQuery}
@@ -228,7 +232,7 @@ ZxQuery.prototype.find = function (selector) {
  * instance wrapping the current `item`.
  *
  * If the callback returns *false*, the iteration loop will interrupt.
- * @param {InstanceIterationCallback} iterationCallback The callback *fn* to call at each iteration
+ * @param {ElementsIterationCallback} iterationCallback The callback *fn* to call for each element in the selection
  * @return {ZxQuery} The *ZxQuery* object itself
  */
 ZxQuery.prototype.each = function (iterationCallback) {

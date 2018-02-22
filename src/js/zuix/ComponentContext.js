@@ -36,31 +36,6 @@ var util =
 // Custom objects definition used to generate JsDoc
 
 /**
- * TODO: describe this...
- *
- * @callback ContextErrorCallback
- * @param {Object} error
- * @this {ComponentContext}
- */
-
-/**
- * TODO: describe this...
- *
- * @callback ContextReadyCallback
- * @param {ComponentContext} ctx The component context.
- * @this {ComponentContext}
- */
-
-/**
- * TODO: describe this...
- *
- * @callback EventCallback
- * @param {string} event Event name.
- * @param {Object} data Event data.
- * @this {ZxQuery}
- */
-
-/**
  * The `ContextOptions` object can be supplied when loading a component. It can be either used as argument for the
  * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the component's container
  * HTML code.
@@ -80,6 +55,31 @@ var util =
  * @property {number|undefined} priority Loading priority (**default:** 0).
  * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
  * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
+ */
+
+/**
+ * Callback function called if an error occurs when loading a component.
+ *
+ * @callback ContextErrorCallback
+ * @param {Object} error
+ * @this {ComponentContext}
+ */
+
+/**
+ * Callback function called when a component has been successfully loaded.
+ *
+ * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
+ * @this {ComponentContext}
+ */
+
+/**
+ * Callback function called when an event registered with the `on` method occurs.
+ *
+ * @callback EventCallback
+ * @param {string} event Event name.
+ * @param {Object} data Event data.
+ * @this {ZxQuery}
  */
 
 /***
