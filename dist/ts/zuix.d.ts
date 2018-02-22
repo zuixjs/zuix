@@ -1,16 +1,16 @@
 interface Zuix {
-    controller(handler: ContextControllerHandler): ContextControllerHandler;
     field(fieldName: String, container?: Element): ZxQuery;
-    componentize(element?: Element | ZxQuery): Zuix;
     load(componentId: String, options?: ContextOptions): ComponentContext;
     unload(context: ComponentContext | Element): Zuix;
+    controller(handler: ContextControllerHandler): ContextControllerHandler;
     context(contextId: Element | ZxQuery | Object, callback?: Function): ComponentContext;
     createComponent(componentId: String, options?: ContextOptions): ComponentContext;
     trigger(context: Object, eventPath: String, eventData?: Object): Zuix;
     hook(eventPath: String, eventHandler: Function): Zuix;
+    using(resourceType: String, resourcePath: String, callback?: Function): void;
     lazyLoad(enable?: Boolean, threshold?: Number): Zuix | Boolean;
     httpCaching(enable?: Boolean): Zuix | Boolean;
-    using(resourceType: String, resourcePath: String, callback?: Function): void;
+    componentize(element?: Element | ZxQuery): Zuix;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
 }
 interface ContextOptions {

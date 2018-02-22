@@ -3682,28 +3682,6 @@ function replaceCache(c) {
 
 
 /**
- * Allocates a component's controller handler. The provided `handler` function will be called
- * to initialize the controller object once the component has been loaded.
- *
- * @example
- *
-<small>**Example - JavaScript**</small>
-<pre data-line="2"><code class="language-js">
-// Allocates the controller handler to be used for the component 'path/to/component_name'
-var ctrl = zuix.controller(function(cp) {
-    // `cp` is the {ContextController}
-    cp.create = function() { ... };
-    cp.destroy = function() { ... }
-}).for('path/to/component_name');
-</code></pre>
- *
- * @param {ContextControllerHandler} handler Function called to initialize the component's controller that will be passed as argument of this function.
- * @return {ContextControllerHandler} The allocated controller handler.
- */
-Zuix.prototype.controller = function(handler) {
-    return controller.call(this, handler);
-};
-/**
  * Searches in the document or inside the provided `container` for elements with `data-ui-field`
  * attribute matching the given `fieldName`.
  * This method implements a caching mechanism and automatic
@@ -3730,27 +3708,6 @@ containerDiv.html('Hello World!');
  */
 Zuix.prototype.field = function(fieldName, container) {
     return field.call(this, fieldName, container);
-};
-/**
- * Searches in the document or inside the given element ```element```
- * for all ```data-ui-include``` and ```data-ui-load``` directives
- * and process these by loading the requested components.
- * This is a service function that should only be called if dynamically
- * adding content with elements that contain *load* or *include* directives.
- *
- * @example
- *
-<small>**Example - JavaScript**</small>
-```js
-zuix.componentize(document);
-```
- *
- * @param {Element|ZxQuery} [element] Container to use as starting node for the search (**default:** *document*).
- * @return {Zuix} The ```{Zuix}``` object itself.
- */
-Zuix.prototype.componentize = function (element) {
-    _componentizer.componentize(element);
-    return this;
 };
 /**
  * Loads a component with the given options.
@@ -3811,6 +3768,28 @@ zuix.unload(ctx);
 Zuix.prototype.unload = function (context) {
     unload(context);
     return this;
+};
+/**
+ * Allocates a component's controller handler. The provided `handler` function will be called
+ * to initialize the controller object once the component has been loaded.
+ *
+ * @example
+ *
+ <small>**Example - JavaScript**</small>
+ <pre data-line="2"><code class="language-js">
+ // Allocates the controller handler to be used for the component 'path/to/component_name'
+ var ctrl = zuix.controller(function(cp) {
+    // `cp` is the {ContextController}
+    cp.create = function() { ... };
+    cp.destroy = function() { ... }
+}).for('path/to/component_name');
+ </code></pre>
+ *
+ * @param {ContextControllerHandler} handler Function called to initialize the component's controller that will be passed as argument of this function.
+ * @return {ContextControllerHandler} The allocated controller handler.
+ */
+Zuix.prototype.controller = function(handler) {
+    return controller.call(this, handler);
 };
 /**
  * Get a `ComponentContext` object, given its `contextId` or its container/view element.
@@ -3947,35 +3926,6 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Enable/Disable lazy-loading or get current setting.
- *
- * @param {boolean} [enable] Enable or disable lazy loading.
- * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
- * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
- */
-Zuix.prototype.lazyLoad = function (enable, threshold) {
-    if (enable != null)
-        _componentizer.lazyLoad(enable, threshold);
-    else
-        return _componentizer.lazyLoad();
-    return this;
-};
-/**
- * Enable/Disable HTTP caching or get current settings.
- *
- * @param {boolean} [enable]
- * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
- */
-Zuix.prototype.httpCaching = function(enable) {
-    if (enable != null)
-        httpCaching(enable);
-    else
-        return httpCaching();
-    return this;
-};
-
-
-/**
  * Load a CSS or Javascript resource. All CSS styles and Javascript scripts
  * loaded with this method will be also included in the application bundle.
  * If a resource is already loaded, the request will be ignored.
@@ -4107,8 +4057,54 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
 
     }
 };
-
-
+/**
+ * Enable/Disable lazy-loading or get current setting.
+ *
+ * @param {boolean} [enable] Enable or disable lazy loading.
+ * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
+ * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
+ */
+Zuix.prototype.lazyLoad = function (enable, threshold) {
+    if (enable != null)
+        _componentizer.lazyLoad(enable, threshold);
+    else
+        return _componentizer.lazyLoad();
+    return this;
+};
+/**
+ * Enable/Disable HTTP caching or get current settings.
+ *
+ * @param {boolean} [enable]
+ * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
+ */
+Zuix.prototype.httpCaching = function(enable) {
+    if (enable != null)
+        httpCaching(enable);
+    else
+        return httpCaching();
+    return this;
+};
+/**
+ * Searches in the document or inside the given element ```element```
+ * for all ```data-ui-include``` and ```data-ui-load``` directives
+ * and process these by loading the requested components.
+ * This is a service function that should only be called if dynamically
+ * adding content with elements that contain *load* or *include* directives.
+ *
+ * @example
+ *
+ <small>**Example - JavaScript**</small>
+ ```js
+ zuix.componentize(document);
+ ```
+ *
+ * @param {Element|ZxQuery} [element] Container to use as starting node for the search (**default:** *document*).
+ * @return {Zuix} The ```{Zuix}``` object itself.
+ */
+Zuix.prototype.componentize = function (element) {
+    _componentizer.componentize(element);
+    return this;
+};
 /**
  * Gets/Sets the components data bundle.
  *
