@@ -31,29 +31,29 @@ var _log =
 var util = require('./Util.js');
 
 
-// Types definitions
+// Types definitions for JsDoc
 
 /**
- *
+ * The `ElementPosition` object.
  * @typedef {object} ElementPosition
- * @property {number} x
- * @property {number} y
- * @property {boolean} visible
+ * @property {number} x X coordinate of the element in the viewport.
+ * @property {number} y Y coordinate of the element in the viewport.
+ * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
  */
 
 /**
- *
+ * The `IterationCallback` function.
  * @callback IterationCallback
- * @param {number} i Iteration count
- * @param {object} item Current element
+ * @param {number} i Iteration count.
+ * @param {object} item Current element.
  * @this {object}
  */
 
 /**
- *
+ * The `InstanceIterationCallback` function.
  * @callback InstanceIterationCallback
- * @param {number} count Iteration count
- * @param {Element} item Current element
+ * @param {number} count Iteration count.
+ * @param {Element} item Current element.
  * @this {ZxQuery}
  */
 

@@ -38,6 +38,22 @@ interface ContextErrorCallback {
 interface EventCallback {
     (event: String, data: Object): void;
 }
+interface ContextOptions {
+    contextId?: Object;
+    container?: Element;
+    model?: JSON;
+    view?: Element;
+    controller?: ContextControllerHandler;
+    on?: { [k: string]: EventCallback };
+    behavior?: { [k: string]: EventCallback };
+    css?: Element | String | Boolean;
+    cext?: String;
+    html?: Boolean;
+    lazyLoad?: Boolean;
+    priority?: Number;
+    ready?: ContextReadyCallback;
+    error?: ContextErrorCallback;
+}
 interface ComponentContext {
     container(container?: Element): ComponentContext | Element;
     view(view?: Element | String): ComponentContext | Element;

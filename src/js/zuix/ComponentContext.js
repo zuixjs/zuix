@@ -35,6 +35,29 @@ var util =
 
 require('./EventCallback');
 
+// Custom objects definition used to generate JsDoc
+
+/**
+ * The `ContextOptions` object can be supplied when loading a component. It can be either used as argument for the
+ * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the component's container
+ * HTML code.
+ * @typedef {object} ContextOptions
+ * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
+ * @property {Element|undefined} container The container element,
+ * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
+ * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
+ * @property {ContextControllerHandler|undefined} controller The controller handler.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} on The events handling map.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The behaviors handling map.
+ * @property {Element|string|boolean|undefined} css The view style.
+ * @property {string|undefined} cext When loading view content, append the specified string instead of `.html`.
+ * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
+ * @property {boolean|undefined} lazyLoad Enable or disable lazy-loading (**default:** false).
+ * @property {number|undefined} priority Loading priority (**default:** 0).
+ * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
+ * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
+ */
+
 /***
  * TODO: describe this class...
  *

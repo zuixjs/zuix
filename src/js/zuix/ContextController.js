@@ -35,10 +35,10 @@ require('./ContextControllerHandler');
 /**
  * ContextController user-defined handlers definition
  * @typedef {Object} ContextController
- * @property {function} init
- * @property {function} create
- * @property {function} update
- * @property {function} destroy
+ * @property {function} init Function that gets called after loading and before the component is created.
+ * @property {function} create Function that gets called after loading, when the component is created.
+ * @property {function} update Function called when the component is destroyed.
+ * @property {function} destroy Function called when the component's data model is updated.
  */
 
 /**
