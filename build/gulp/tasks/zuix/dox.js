@@ -26,30 +26,6 @@ module.exports = function () {
                 .on('end', resolve);
         }),
         new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ContextControllerHandler.js')
-                .pipe(dox({ raw: true }))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ContextReadyCallback.js')
-                .pipe(dox({ raw: true }))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ContextErrorCallback.js')
-                .pipe(dox({ raw: true }))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/EventCallback.js')
-                .pipe(dox({ raw: true }))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
             gulp.src(srcFolder+'/zuix/ComponentCache.js')
                 .pipe(dox({ raw: true }))
                 .pipe(gulp.dest(jsonApiFolder))
@@ -72,12 +48,8 @@ module.exports = function () {
         // Generate ZUIX TypeScript Definition file
         console.log('\nGenerating TypeScript definitions file...');
         var tsDefs = generateTypescriptDefs('Zuix');
-            tsDefs += generateTypescriptDefs('ContextReadyCallback');
-            tsDefs += generateTypescriptDefs('ContextErrorCallback');
-            tsDefs += generateTypescriptDefs('EventCallback');
             tsDefs += generateTypescriptDefs('ComponentContext');
             tsDefs += generateTypescriptDefs('ContextController');
-            tsDefs += generateTypescriptDefs('ContextControllerHandler');
             tsDefs += generateTypescriptDefs('ComponentCache');
             tsDefs += generateTypescriptDefs('ZxQuery');
             tsDefs += '\ndeclare const zuix: Zuix;\n';

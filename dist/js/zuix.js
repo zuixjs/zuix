@@ -539,7 +539,7 @@ var util = _dereq_('./Util.js');
 // Types definitions for JsDoc
 
 /**
- * The `ElementPosition` object.
+ * The `ElementPosition` object returned by the `position()` method.
  * @typedef {object} ElementPosition
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
@@ -1474,7 +1474,7 @@ module.exports =  z$;
     }
 }(this, _dereq_('./zuix/Zuix.js')));
 
-},{"./zuix/Zuix.js":13}],7:[function(_dereq_,module,exports){
+},{"./zuix/Zuix.js":11}],7:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -1502,6 +1502,7 @@ module.exports =  z$;
 
 /**
  * Component cache object interface.
+ *
  * @typedef {object} ComponentCache
  * @property {string} componentId The id of the cached component.
  * @property {Element} view The view element.
@@ -1513,6 +1514,7 @@ module.exports =  z$;
 
 /**
  * Bundle item object.
+ *
  * @typedef {object} BundleItem
  * @property {Element} view
  * @property {string} css
@@ -1560,14 +1562,38 @@ var z$ =
 var util =
     _dereq_('../helpers/Util');
 
-_dereq_('./EventCallback');
-
 // Custom objects definition used to generate JsDoc
+
+/**
+ * TODO: describe this...
+ *
+ * @callback ContextErrorCallback
+ * @param {Object} error
+ * @this {ComponentContext}
+ */
+
+/**
+ * TODO: describe this...
+ *
+ * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
+ * @this {ComponentContext}
+ */
+
+/**
+ * TODO: describe this...
+ *
+ * @callback EventCallback
+ * @param {string} event Event name.
+ * @param {Object} data Event data.
+ * @this {ZxQuery}
+ */
 
 /**
  * The `ContextOptions` object can be supplied when loading a component. It can be either used as argument for the
  * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the component's container
  * HTML code.
+ *
  * @typedef {object} ContextOptions
  * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
  * @property {Element|undefined} container The container element,
@@ -1586,7 +1612,7 @@ _dereq_('./EventCallback');
  */
 
 /***
- * TODO: describe this class...
+ * The component's context object.
  *
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.
@@ -2097,7 +2123,7 @@ ComponentContext.prototype.modelToView = function () {
 };
 
 module.exports = ComponentContext;
-},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./EventCallback":12}],9:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5}],9:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
@@ -2128,6 +2154,7 @@ module.exports = ComponentContext;
 
 
 /**
+ * TODO: describe this...
  *
  * @param {Element|ZxQuery|undefined} [element] Scan and process loadable elements inside `element`.
  * @param {Element|undefined} [child] Process only the specified `child` of `element`.
@@ -2591,8 +2618,14 @@ function lazyElementCheck(element) {
 var z$ =
     _dereq_('../helpers/ZxQuery');
 
-// dummy module containing just JsDoc definitions
-_dereq_('./ContextControllerHandler');
+/**
+ * This callback function is called after a component is loaded
+ * and it is used to initialize the component's controller.
+ *
+ * @callback ContextControllerHandler
+ * @param {ContextController} cp The context controller instance.
+ * @this {ContextController}
+ */
 
 /**
  * ContextController user-defined handlers definition
@@ -2966,85 +2999,7 @@ var ctrl = zuix.controller(function(cp) {
 ContextController.prototype.for = function (componentId) { return this; };
 
 module.exports = ContextController;
-},{"../helpers/ZxQuery":5,"./ContextControllerHandler":11}],11:[function(_dereq_,module,exports){
-/*
- * Copyright 2015-2017 G-Labs. All Rights Reserved.
- *         https://genielabs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  ZUIX, Javascript library for component-based development.
- *        https://genielabs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-/**
- * This callback function is called after a component is loaded
- * and it is used to initialize the component's controller.
- *
- * @callback ContextControllerHandler
- * @param {ContextController} cp The context controller instance.
- * @this {ContextController}
- */
-
-/** */
-module.exports = function (root) {
-    // dummy module for JsDocs/Closure Compiler
-    return null;
-};
-},{}],12:[function(_dereq_,module,exports){
-/*
- * Copyright 2015-2017 G-Labs. All Rights Reserved.
- *         https://genielabs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  ZUIX, Javascript library for component-based development.
- *        https://genielabs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-/**
- * @callback EventCallback
- * @param {string} event Event name.
- * @param {Object} data Event data.
- * @this {ZxQuery}
- */
-
-/** */
-module.exports = function (root) {
-    // dummy module for JsDocs/Closure Compiler
-    return null;
-};
-},{}],13:[function(_dereq_,module,exports){
+},{"../helpers/ZxQuery":5}],11:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix

@@ -13,11 +13,11 @@ interface Zuix {
     using(resourceType: String, resourcePath: String, callback?: Function): void;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
 }
-interface ContextReadyCallback {
-    (ctx: ComponentContext): void;
-}
 interface ContextErrorCallback {
     (error: Object): void;
+}
+interface ContextReadyCallback {
+    (ctx: ComponentContext): void;
 }
 interface EventCallback {
     (event: String, data: Object): void;
@@ -51,6 +51,9 @@ interface ComponentContext {
     viewToModel(): ComponentContext;
     modelToView(): ComponentContext;
 }
+interface ContextControllerHandler {
+    (cp: ContextController): void;
+}
 interface ContextController {
     init: Function;
     create: Function;
@@ -67,9 +70,6 @@ interface ContextController {
     loadCss(options?: Object): ContextController;
     loadHtml(options?: Object): ContextController;
     for(componentId: String): ContextController;
-}
-interface ContextControllerHandler {
-    (cp: ContextController): void;
 }
 interface ComponentCache {
     componentId: String;

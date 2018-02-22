@@ -25,6 +25,7 @@
 
 /**
  * Component cache object interface.
+ *
  * @typedef {object} ComponentCache
  * @property {string} componentId The id of the cached component.
  * @property {Element} view The view element.
@@ -36,6 +37,7 @@
 
 /**
  * Bundle item object.
+ *
  * @typedef {object} BundleItem
  * @property {Element} view
  * @property {string} css

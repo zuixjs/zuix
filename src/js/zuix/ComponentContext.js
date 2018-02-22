@@ -33,14 +33,38 @@ var z$ =
 var util =
     require('../helpers/Util');
 
-require('./EventCallback');
-
 // Custom objects definition used to generate JsDoc
+
+/**
+ * TODO: describe this...
+ *
+ * @callback ContextErrorCallback
+ * @param {Object} error
+ * @this {ComponentContext}
+ */
+
+/**
+ * TODO: describe this...
+ *
+ * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
+ * @this {ComponentContext}
+ */
+
+/**
+ * TODO: describe this...
+ *
+ * @callback EventCallback
+ * @param {string} event Event name.
+ * @param {Object} data Event data.
+ * @this {ZxQuery}
+ */
 
 /**
  * The `ContextOptions` object can be supplied when loading a component. It can be either used as argument for the
  * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the component's container
  * HTML code.
+ *
  * @typedef {object} ContextOptions
  * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
  * @property {Element|undefined} container The container element,
@@ -59,7 +83,7 @@ require('./EventCallback');
  */
 
 /***
- * TODO: describe this class...
+ * The component's context object.
  *
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.

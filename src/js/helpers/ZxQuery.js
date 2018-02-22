@@ -34,7 +34,7 @@ var util = require('./Util.js');
 // Types definitions for JsDoc
 
 /**
- * The `ElementPosition` object.
+ * The `ElementPosition` object returned by the `position()` method.
  * @typedef {object} ElementPosition
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.

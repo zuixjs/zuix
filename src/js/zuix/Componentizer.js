@@ -28,6 +28,7 @@
 
 
 /**
+ * TODO: describe this...
  *
  * @param {Element|ZxQuery|undefined} [element] Scan and process loadable elements inside `element`.
  * @param {Element|undefined} [child] Process only the specified `child` of `element`.
