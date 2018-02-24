@@ -43,6 +43,47 @@ var _componentizer =
 
 require('./ComponentCache');
 
+// Custom objects definition used to generate JsDoc
+
+/**
+ * This object can be supplied when loading a component. It can be either passed as argument for the
+ * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the HTML code
+ * of the component container.
+ *
+ * @typedef {object} ContextOptions
+ * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
+ * @property {Element|undefined} container The container element.
+ * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
+ * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
+ * @property {ContextControllerHandler|undefined} controller The controller handler.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
+ * @property {Element|string|boolean|undefined} css The stylesheet of the view.
+ * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
+ * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
+ * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
+ * @property {number|undefined} priority Loading priority (**default:** 0).
+ * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once the component is succesfully loaded.
+ * @property {ContextErrorCallback|undefined} error The error callback, triggered when an error occurs.
+ */
+
+/**
+ * Callback function triggered if an error occurs when loading a component.
+ *
+ * @callback ContextErrorCallback
+ * @param {Object} error
+ * @this {ComponentContext}
+ */
+
+/**
+ * Callback function triggered when a component has been successfully loaded.
+ *
+ * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
+ * @this {ComponentContext}
+ */
+
+
 /**
  * @const
  */
@@ -350,7 +391,7 @@ function createContext(options) {
  *
  * @private
  * @param {Element|ZxQuery|object} contextId The `contextId` object
- * (usually a string) or the component's container/view element.
+ * (usually a string) or the container/view element of the component.
  * @param {function} [callback] The callback function that will pass the context object once it is ready.
  * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
@@ -702,8 +743,8 @@ function replaceCache(c) {
 
 
 /**
- * Searches in the document or inside the provided `container` for elements with `data-ui-field`
- * attribute matching the given `fieldName`.
+ * Search the document or inside the given `container` for elements
+ * with `data-ui-field` attribute matching the provided `fieldName`.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
@@ -731,8 +772,8 @@ Zuix.prototype.field = function(fieldName, container) {
 };
 /**
  * Loads a component with the given options.
- * This is the programmatic equivalent of
- * `data-ui-include` or `data-ui-load` attributes used to
+ * This is the programmatic equivalent of `data-ui-include`
+ * or `data-ui-load` attributes used to
  * include content or load components from the HTML code.
  *
  * @example
@@ -745,7 +786,7 @@ var exampleController = zuix.controller(function(cp){
         cp.view().html('Helllo World!');
     }
     function testMethod() {
-        console.log("Method's exposing test");
+        console.log("Method exposing test");
         cp.view().html('A simple test.');
     }
 });
@@ -754,7 +795,7 @@ var componentOptions = {
     controller: exampleController,
     ready: function () {
         console.log("Loading complete.");
-        console.log("Component's instance context", this);
+        console.log("Component instance context", this);
     },
     error: function(error) {
         console.log("Loading error!", error);
@@ -766,13 +807,13 @@ ctx.test();
  *
  * @param {!string} componentId The identifier name of the component to be loaded.
  * @param {ContextOptions} [options] Options used to initialize the loaded component.
- * @return {ComponentContext} The component's instance context.
+ * @return {ComponentContext} The component context.
  */
 Zuix.prototype.load = function(componentId, options) {
     return load.call(this, componentId, options);
 };
 /**
- * Unload and dispose a component's context.
+ * Unloads the given component context releasing all allocated resources.
  *
  * @example
  *
@@ -790,7 +831,7 @@ Zuix.prototype.unload = function (context) {
     return this;
 };
 /**
- * Allocates a component's controller handler. The provided `handler` function will be called
+ * Allocates the handler for the component controller. The provided `handler` function will be called
  * to initialize the controller object once the component has been loaded.
  *
  * @example
@@ -805,14 +846,14 @@ Zuix.prototype.unload = function (context) {
 }).for('path/to/component_name');
  </code></pre>
  *
- * @param {ContextControllerHandler} handler Function called to initialize the component's controller that will be passed as argument of this function.
+ * @param {ContextControllerHandler} handler Function called to initialize the component controller that will be passed as argument of this function.
  * @return {ContextControllerHandler} The allocated controller handler.
  */
 Zuix.prototype.controller = function(handler) {
     return controller.call(this, handler);
 };
 /**
- * Get a `ComponentContext` object, given its `contextId` or its container/view element.
+ * Gets a `ComponentContext` object, given its `contextId` or its container/view element.
  * The `contextId` is the one specified by the `ContextOptions` object or by using the HTML attribute `data-ui-context`.
  *
  * @example
@@ -828,12 +869,12 @@ var slideShowDiv = zuix.$.find('[data-ui-context="my-slide-show"]');
 var ctx = zuix.context(slideShowDiv);
 // or
 var ctx = zuix.context('my-slide-show');
-// call component's exposed methods
+// call exposed component methods
 ctx.setSlide(1);
 // or
 var ctx;
 zuix.context('my-slide-show', function(c) {
-    // call component's methods
+    // call component methods
     c.setSlide(1);
     // eventually store a reference to the component for later use
     ctx = c;
@@ -841,7 +882,7 @@ zuix.context('my-slide-show', function(c) {
 ```
  *
  * @param {Element|ZxQuery|object} contextId The `contextId` object
- * (usually a string) or the component's container/view element.
+ * (usually a string) or the container/view element of the component.
  * @param {function} [callback] The callback function that will be called once the component is loaded. The {ComponentContext} object will be passed as argument of this callback.
  * @return {ComponentContext} The matching component context or `null` if the component does not exists or it is not yet loaded.
  */
@@ -849,8 +890,8 @@ Zuix.prototype.context = function(contextId, callback) {
     return context.call(this, contextId, callback);
 };
 /**
- * Create the component specified by `componentId` and return its `{ComponentContext}` object.
- * The returned component is unloaded and detached from the DOM and it must be explicitly attached.
+ * Creates the component specified by `componentId` and returns its `{ComponentContext}` object.
+ * The returned component it's unloaded and detached from the DOM and it must be explicitly attached.
  * After attaching it to the DOM, `zuix.componentize()` must be called in
  * order to actually load and display the component.
  *
@@ -884,9 +925,9 @@ Zuix.prototype.trigger = function (context, eventPath, eventData) {
     return this;
 };
 /**
- * Register a callback for a ZUIX global event (AKA hook).
- * There can be only one callback for each different type of global event.
- * Pass null as <eventHandler> to unregister a previously registered callback.
+ * Registers a callback for a global ZUIX event.
+ * There can only be one callback for each kind of global hook event.
+ * Pass null as <eventHandler> to stop listening to a previously registered callback.
  *
  * @example
  *
@@ -946,7 +987,7 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Load a CSS or Javascript resource. All CSS styles and Javascript scripts
+ * Loads a CSS or Javascript resource. All CSS styles and Javascript scripts
  * loaded with this method will be also included in the application bundle.
  * If a resource is already loaded, the request will be ignored.
  * This command is also meant to be used inside a components' controller.
@@ -1078,7 +1119,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
     }
 };
 /**
- * Enable/Disable lazy-loading or get current setting.
+ * Enables/Disables lazy-loading or gets the current setting.
  *
  * @param {boolean} [enable] Enable or disable lazy loading.
  * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
@@ -1092,7 +1133,7 @@ Zuix.prototype.lazyLoad = function (enable, threshold) {
     return this;
 };
 /**
- * Enable/Disable HTTP caching or get current settings.
+ * Enables/Disables HTTP caching or gets the current settings.
  *
  * @param {boolean} [enable]
  * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
@@ -1105,9 +1146,9 @@ Zuix.prototype.httpCaching = function(enable) {
     return this;
 };
 /**
- * Searches in the document or inside the given element ```element```
- * for all ```data-ui-include``` and ```data-ui-load``` directives
- * and process these by loading the requested components.
+ * Searches the document, or inside the given ```element```,
+ * for all ```data-ui-include``` and ```data-ui-load``` attributes
+ * and processes these by loading the requested components.
  * This is a service function that should only be called if dynamically
  * adding content with elements that contain *load* or *include* directives.
  *

@@ -619,15 +619,16 @@ function removeAllEventHandlers(el) {
 
 /**
  * ZxQuery, a very lite subset of jQuery-like functions
- * internally used in Zuix.
+ * internally used in Zuix for DOM operations.
  *
  * The constructor takes one optional argument that can be
  * a DOM element, a node list or a valid DOM query selector string expression.
- * If no parameter is given, the ZxQuery will wrap the root *document* element.
+ * If no parameter is given, the resulting ZxQuery object will wrap the
+ * root *document* element.
  *
  * @class ZxQuery
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element]
- * @return {ZxQuery} The *ZxQuery* instance object.
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element] Element or list of elements to include in the ZxQuery object.
+ * @return {ZxQuery} The *ZxQuery* object containing the given element(s).
  * @constructor
  */
 function ZxQuery(element) {
@@ -654,16 +655,19 @@ function ZxQuery(element) {
 
 
 /**
- * Number of elements in current DOM selection.
- * @return {Number} Number of DOM elements in the current selection.
+ * Gets the number of elements in the ZxQuery object.
+ *
+ * @return {Number} Number of DOM elements.
  */
 ZxQuery.prototype.length = function () {
     return this._selection.length;
 };
 /**
- * Get the closest parent matching the selector filter.
+ * Gets the closest parent matching the given selector filter.
+ * This only applies to the first element in the ZxQuery object.
+ *
  * @param {string} [filter] A valid DOM query selector filter (**default:** *first parent*).
- * @return {ZxQuery} A new *ZxQuery* object with the *parent* selection.
+ * @return {ZxQuery} A new *ZxQuery* object containing the matching parent element.
  */
 ZxQuery.prototype.parent = function (filter) {
     if (!util.isNoU(filter))
@@ -671,9 +675,11 @@ ZxQuery.prototype.parent = function (filter) {
     return new ZxQuery(this._selection[0].parentNode);
 };
 /**
- * Get the children matching the given selector filter.
+ * Gets the children matching the given selector filter.
+ * This only applies to the first element in the ZxQuery object.
+ *
  * @param {string} [filter] A valid DOM query selector filter (**default:** *all children*).
- * @return {ZxQuery}  A new *ZxQuery* object with the *children* selection.
+ * @return {ZxQuery}  A new *ZxQuery* object containing the selected *children*.
  */
 ZxQuery.prototype.children = function (filter) {
     // TODO: implement filtering
@@ -682,8 +688,9 @@ ZxQuery.prototype.children = function (filter) {
     return new ZxQuery(this._selection[0].children);
 };
 /**
- * Reverse the order of elements in current selection.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Reverses order of the elements in the current set.
+ *
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.reverse = function () {
     var elements = (Array.prototype.slice).call(this._selection, 0);
@@ -691,21 +698,22 @@ ZxQuery.prototype.reverse = function () {
     return this;
 };
 /**
- * Get the DOM element at given position in the current selection.
+ * Gets the DOM Element located at the given position in the ZxQuery object.
  * If no index is provided, the default element will be returned.
  *
- * @param {number} [i] Position of element (**default:** 0)
- * @return {Node|Element} The *DOM* element
+ * @param {number} [i] Position of element (**default:** 0).
+ * @return {Node|Element} The *DOM* element.
  */
 ZxQuery.prototype.get = function (i) {
     if (util.isNoU(i)) i = 0;
     return this._selection[i];
 };
 /**
- * Get the ZxQuery object for then element at the given
- * position in the current selection.
- * @param {number} i Position of element
- * @return {ZxQuery} A new *ZxQuery* object
+ * Gets a new ZxQuery object containing the element
+ * located at the given position in the current ZxQuery object.
+ *
+ * @param {number} i Position of element.
+ * @return {ZxQuery} A new *ZxQuery* object containing the selected element.
  */
 ZxQuery.prototype.eq = function (i) {
     var selection = this._selection;
@@ -720,35 +728,40 @@ ZxQuery.prototype.eq = function (i) {
     return new ZxQuery(resultSet);
 };
 /**
- * Select all descendants matching the given *DOM* query selector filter.
- * @param {string} selector A valid *DOM* query selector
- * @return {ZxQuery} A new *ZxQuery* object
+ * Selects all descendants matching the given *DOM* query selector filter.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @param {string} selector A valid *DOM* query selector.
+ * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
  */
 ZxQuery.prototype.find = function (selector) {
     return new ZxQuery(this._selection[0].querySelectorAll(selector));
 };
 /**
- * Iterate through all *DOM* elements in the selection.
+ * Iterates through all *DOM* elements in the selection.
  * The context object *this*, passed to the
- * *iterationCallback*`(index, item)`, will be the
+ * *iterationCallback*`(index, item)` function, will be the
  * *DOM* element corresponding the current iteration.
  * `index` will be the iteration count, and `item`
- * the current Element. The context `this` will be a `{ZxQuery}`
- * instance wrapping the current `item`.
+ * the current Element. The function context `this` will be a
+ * `{ZxQuery}` instance containing the current `item`.
+ * To interrupt the iteration loop, return `false` in the callback
+ * function or return `true` to continue to the next iteration.
  *
- * If the callback returns *false*, the iteration loop will interrupt.
- * @param {ElementsIterationCallback} iterationCallback The callback *fn* to call for each element in the selection
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @param {ElementsIterationCallback} iterationCallback The callback function to call for each element in the ZxQuery object.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.each = function (iterationCallback) {
     z$.each(this._selection, iterationCallback);
     return this;
 };
 /**
- * Gets or sets the given element attribute.
- * @param {string|JSON} attr The attribute name
- * @param {string|undefined} [val] The attribute value
- * @return {string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself
+ * Gets the value of an attribute for the first element in the ZxQuery object,
+ * or sets one or more attributes for all elements in the ZxQuery object.
+ *
+ * @param {string|JSON} attr The attribute name.
+ * @param {string|undefined} [val] The attribute value.
+ * @return {string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.attr = function (attr, val) {
     var _t = this;
@@ -769,10 +782,11 @@ ZxQuery.prototype.attr = function (attr, val) {
     return this;
 };
 /**
- * Trigger a component event.
+ * Triggers the given event for all elements in the ZxQuery object.
+ *
  * @param {string} eventPath Path of the event to trigger.
  * @param {object} eventData Value of the event.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.trigger = function (eventPath, eventData) {
     var event;
@@ -788,10 +802,11 @@ ZxQuery.prototype.trigger = function (eventPath, eventData) {
     return this;
 };
 /**
- * Listen once for the given event.
- * @param {string} eventPath Event path
- * @param {function} eventHandler Event handler
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Listens once to the given event for all elements in the ZxQuery object.
+ *
+ * @param {string} eventPath Event path.
+ * @param {function} eventHandler Event handler.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.one = function (eventPath, eventHandler) {
     var fired = false;
@@ -804,10 +819,11 @@ ZxQuery.prototype.one = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Listen for the given event.
- * @param {string} eventPath Event path
- * @param {function} eventHandler Event handler
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Listens to the given event for all elements in the ZxQuery object.
+ *
+ * @param {string} eventPath Event path.
+ * @param {function} eventHandler Event handler.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
@@ -819,10 +835,10 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Stop listening for the given event.
- * @param {string} eventPath Event path
- * @param {function} eventHandler Event handler
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Stops listening for the given event.
+ * @param {string} eventPath Event path.
+ * @param {function} eventHandler Event handler.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
@@ -834,8 +850,9 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Un-register all event handlers registered for selected elements.
- * @return {ZxQuery}
+ * De-register all event handlers of all elements in the ZxQuery object.
+ *
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.reset = function () {
     this.each(function (k, el) {
@@ -844,14 +861,15 @@ ZxQuery.prototype.reset = function () {
     return this;
 };
 /**
- * Returns *true* if the element is empty.
- * @return {boolean} *true* if the element is empty, *false* otherwise
+ * Returns *true* if the first element markup code is empty.
+ *
+ * @return {boolean} *true* if the element is empty, *false* otherwise.
  */
 ZxQuery.prototype.isEmpty = function () {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 /**
- * Gets coordinates and visibility status of the element.
+ * Gets coordinates and visibility status of the first element.
  *
  * @return {ElementPosition}
  */
@@ -863,31 +881,34 @@ ZxQuery.prototype.position = function () {
 };
 
 /**
- * Sets or gets the given css property.
- * @param {string|JSON} attr The CSS property name or JSON list of properties/values.
- * @param {string|undefined} [val] The attribute value.
- * @return {string|ZxQuery} The *attr* css value when no *val* specified, otherwise the *ZxQuery* object itself
+ * Gets the value of a CSS property for the first element in the ZxQuery object,
+ * or sets one or more CSS property for all elements in the ZxQuery object.
+ *
+ * @param {string|JSON} prop The CSS property name or JSON list of property/value pairs.
+ * @param {string|undefined} [val] The CSS property value.
+ * @return {string|ZxQuery} The CSS property value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
-ZxQuery.prototype.css = function (attr, val) {
+ZxQuery.prototype.css = function (prop, val) {
     var _t = this;
-    if (typeof attr === 'object') {
-        z$.each(attr, function (i, v) {
+    if (typeof prop === 'object') {
+        z$.each(prop, function (i, v) {
             _t.each(function (k, el) {
                 el.style[i] = v;
             });
         });
     } else if (util.isNoU(val))
-        return this._selection[0].style[attr];
+        return this._selection[0].style[prop];
     else
         _t.each(function (k, el) {
-            el.style[attr] = val;
+            el.style[prop] = val;
         });
     return this;
 };
 /**
- * Adds the given css class to the element class list.
- * @param {string} className The css class name.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Adds the given CSS class to the class list of all elements in the ZxQuery object.
+ *
+ * @param {string} className The CSS class name.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.addClass = function (className) {
     var classes = className.match(/\S+/g) || [];
@@ -901,17 +922,19 @@ ZxQuery.prototype.addClass = function (className) {
     return this;
 };
 /**
- * Returns *true* if the element contains the given css class.
- * @param {string} className The css class name.
- * @return {boolean} *true* if the element has the *className* css class, *false* otherwise
+ * Returns *true* if the first element in the ZxQuery object contains the given CSS class.
+ *
+ * @param {string} className The CSS class name.
+ * @return {boolean} *true* if the element contains the given CSS class, *false* otherwise.
  */
 ZxQuery.prototype.hasClass = function (className) {
     return z$.hasClass(this._selection[0], className);
 };
 /**
- * Removes the given css class to the element class list.
- * @param {string} className The css class name.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Removes the given CSS class from all elements in the ZxQuery object.
+ *
+ * @param {string} className The CSS class name.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.removeClass = function (className) {
     var classes = className.match(/\S+/g) || [];
@@ -926,21 +949,27 @@ ZxQuery.prototype.removeClass = function (className) {
 };
 /**
  * Moves to the previous sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object with the previous sibling element.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
  */
 ZxQuery.prototype.prev = function () {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
 /**
  * Moves to the next sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object with the next sibling element.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery} A new *ZxQuery* object containing the next sibling element.
  */
 ZxQuery.prototype.next = function () {
     return new ZxQuery(this._selection[0].nextElementSibling);
 };
 /**
- * Gets or sets the HTML markup.
- * @param {string|undefined} [htmlText] HTML markup text.
+ * Gets the HTML string of the first element in the ZxQuery object,
+ * or sets the HTML string for all elements in the ZxQuery object.
+ *
+ * @param {string|undefined} [htmlText] HTML text.
  * @return {ZxQuery|string}
  */
 ZxQuery.prototype.html = function (htmlText) {
@@ -952,7 +981,9 @@ ZxQuery.prototype.html = function (htmlText) {
     return this;
 };
 /**
- * Gets or sets the checked attribute.
+ * Gets the `checked` attribute of the first element in the ZxQuery object,
+ * or sets the `checked` attribute value for all elements in the ZxQuery object.
+ *
  * @param {boolean|undefined} [check] Value to assign to the 'checked' attribute.
  * @return {ZxQuery|boolean}
  */
@@ -968,7 +999,9 @@ ZxQuery.prototype.checked = function(check) {
 
 };
 /**
- * Gets or sets the 'value' attribute.
+ * Gets the `value` attribute of the first element in the ZxQuery object,
+ * or sets the `value` attribute value for all elements in the ZxQuery object.
+ *
  * @param {string|undefined} [value] Value to assign to the 'value' attribute.
  * @return {ZxQuery|string}
  */
@@ -982,9 +1015,10 @@ ZxQuery.prototype.value = function(value) {
 
 };
 /**
- * Appends the given element/markup to the current element.
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Appends the given element or HTML string to the first element in the ZxQuery object.
+ *
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element or HTML to append.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.append = function (el) {
     if (typeof el === 'string')
@@ -994,12 +1028,12 @@ ZxQuery.prototype.append = function (el) {
     return this;
 };
 /**
- * Insert the given child element before the one at the
- * specified index.
+ * Inserts the given child element before the one located at the specified index
+ * to the first element in the ZxQuery object.
  *
  * @param {number} index Position where to insert `el` Element.
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.insert = function (index, el) {
     var target = this.children().get(index);
@@ -1010,9 +1044,10 @@ ZxQuery.prototype.insert = function (index, el) {
     return this;
 };
 /**
- * Prepends the given element/markup to the current element.
+ * Prepends the given element or HTML string to the first element in the ZxQuery object.
+ *
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.prepend = function (el) {
     if (typeof el === 'string')
@@ -1022,21 +1057,8 @@ ZxQuery.prototype.prepend = function (el) {
     return this;
 };
 /**
- * Re-attach element to its parent.
- * @return {ZxQuery}
- */
-ZxQuery.prototype.attach = function () {
-    var el = this._selection[0];
-    if (el.parentNode == null && el.__zuix_oldParent != null) {
-        z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
-        el.__zuix_oldParent = null;
-        delete el.__zuix_oldParent;
-        delete el.__zuix_oldIndex;
-    }
-    return this;
-};
-/**
- * Detach element from its parent.
+ * Detach from its parent the first element in the ZxQuery object.
+ *
  * @return {ZxQuery}
  */
 ZxQuery.prototype.detach = function () {
@@ -1051,9 +1073,26 @@ ZxQuery.prototype.detach = function () {
     return this;
 };
 /**
- * Gets or sets the css `display` property.
+ * Re-attach to its parent the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.attach = function () {
+    var el = this._selection[0];
+    if (el.parentNode == null && el.__zuix_oldParent != null) {
+        z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
+        el.__zuix_oldParent = null;
+        delete el.__zuix_oldParent;
+        delete el.__zuix_oldIndex;
+    }
+    return this;
+};
+/**
+ * Gets the CSS `display` property of the first element in the ZxQuery object,
+ * or sets the `display` property value for all elements in the ZxQuery object.
+ *
  * @param {string|undefined} [mode] The display value.
- * @return {string|ZxQuery} The *display* css value when no *mode* specified, otherwise the *ZxQuery* object itself
+ * @return {string|ZxQuery} The *display* value when no *mode* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.display = function (mode) {
     if (util.isNoU(mode))
@@ -1064,9 +1103,11 @@ ZxQuery.prototype.display = function (mode) {
     return this;
 };
 /**
- * Gets or sets the css `visibility` property.
+ * Gets the CSS `visibility` property of the first element in the ZxQuery object,
+ * or sets the `visibility` property value for all elements in the ZxQuery object.
+ *
  * @param {string|undefined} [mode] The visibility value.
- * @return {string|ZxQuery} The *visibility* css value when no *mode* specified, otherwise the *ZxQuery* object itself
+ * @return {string|ZxQuery} The *visibility* value when no *mode* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.visibility = function (mode) {
     if (util.isNoU(mode))
@@ -1077,16 +1118,18 @@ ZxQuery.prototype.visibility = function (mode) {
     return this;
 };
 /**
- * Sets the css `display` property to ''.
- * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..)
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Sets the CSS `display` property to '' if no argument value is provided, otherwise set it to the given value.
+ *
+ * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..).
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.show = function (mode) {
     return this.display(mode == null ? '' : mode);
 };
 /**
- * Sets the css `display` property to 'none'.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Sets the CSS `display` property to 'none'.
+ *
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.hide = function () {
     return this.display('none');
@@ -1534,45 +1577,16 @@ var util =
 // Custom objects definition used to generate JsDoc
 
 /**
- * The `ContextOptions` object can be supplied when loading a component. It can be either used as argument for the
- * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the component's container
- * HTML code.
+ * This function is called after the component is loaded
+ * and it is used to initialize its controller.
  *
- * @typedef {object} ContextOptions
- * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
- * @property {Element|undefined} container The container element,
- * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
- * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
- * @property {ContextControllerHandler|undefined} controller The controller handler.
- * @property {Array.<Object.<string, EventCallback>>|undefined} on The events handling map.
- * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The behaviors handling map.
- * @property {Element|string|boolean|undefined} css The view style.
- * @property {string|undefined} cext When loading view content, append the specified string instead of `.html`.
- * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
- * @property {boolean|undefined} lazyLoad Enable or disable lazy-loading (**default:** false).
- * @property {number|undefined} priority Loading priority (**default:** 0).
- * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
- * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
+ * @callback ContextControllerHandler
+ * @param {ContextController} cp The component controller object.
+ * @this {ContextController}
  */
 
 /**
- * Callback function called if an error occurs when loading a component.
- *
- * @callback ContextErrorCallback
- * @param {Object} error
- * @this {ComponentContext}
- */
-
-/**
- * Callback function called when a component has been successfully loaded.
- *
- * @callback ContextReadyCallback
- * @param {ComponentContext} ctx The component context.
- * @this {ComponentContext}
- */
-
-/**
- * Callback function called when an event registered with the `on` method occurs.
+ * Callback function triggered when an event registered with the `on` method occurs.
  *
  * @callback EventCallback
  * @param {string} event Event name.
@@ -1581,7 +1595,7 @@ var util =
  */
 
 /***
- * The component's context object.
+ * The component context object.
  *
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.
@@ -1641,8 +1655,8 @@ function ComponentContext(options, eventCallback) {
     return this;
 }
 /**
- * Gets/Sets the component's container element.
- * Returns the current component element if no
+ * Gets/Sets the container element of the component.
+ * Returns the current container element if no
  * argument is passed, the {ComponentContext} itself
  * otherwise.
  *
@@ -1659,13 +1673,13 @@ ComponentContext.prototype.container = function (container) {
 };
 
 /**
- * Gets/Sets the component's view element.
- * If an *HTML* string is passed, the the view element
+ * Gets/Sets the view element of the component.
+ * If an *HTML* string is passed, then the view element
  * will be a new `div` wrapping the given markup.
  * Returns the current view element if no
  * argument is passed, the {ComponentContext} itself otherwise.
  *
- * @param {Element|string|undefined} [view] The view *HTML* string or element.
+ * @param {Element|string|undefined} [view] The *HTML* string or element of the view.
  * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
@@ -1744,7 +1758,7 @@ ComponentContext.prototype.view = function (view) {
 };
 
 /**
- * Gets/Sets the component's view style.
+ * Gets/Sets the view style of the component.
  * The `css` argument can be a string containing all
  * styles definitions or a reference to a style
  * element. When a string is passed the css
@@ -1794,7 +1808,7 @@ ComponentContext.prototype.style = function (css) {
     return this;
 };
 /**
- * Gets/Sets the component's data model.
+ * Gets/Sets the data model of the component.
  *
  * @example
  * <small>Example - JavaScript</small>
@@ -1812,13 +1826,13 @@ ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
     else this._model = model; // model can be set to null
     this.modelToView();
-    // call controller's `update` method when model is updated
+    // call controller `update` method when model is updated
     if (this._c != null && util.isFunction(this._c.update))
         this._c.update.call(this._c);
     return this;
 };
 /**
- * Gets/Sets the controller handler function.
+ * Gets/Sets the handler function of the controller.
  *
  * @example
  * <small>Example - JavaScript</small>
@@ -1831,7 +1845,7 @@ ComponentContext.prototype.model = function (model) {
  *  });
  * </code></pre>
  *
- * @param {ContextControllerHandler|undefined} [controller] The controller handler function.
+ * @param {ContextControllerHandler|undefined} [controller] The handler function of the controller.
  * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function (controller) {
@@ -1866,7 +1880,7 @@ ComponentContext.prototype.options = function (options) {
 };
 
 /**
- * Listen for a component event.
+ * Listens for a component event.
  *
  * @example
  * <small>Example - JavaScript</small>
@@ -1875,7 +1889,7 @@ ComponentContext.prototype.options = function (options) {
  * </code></pre>
  *
  * @param {string} eventPath The event path.
- * @param {EventCallback} eventHandler The event handler function.
+ * @param {EventCallback} eventHandler The event handling function.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.on = function (eventPath, eventHandler) {
@@ -1884,7 +1898,7 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Load the `.css` file and replace the component's view style.
+ * Loads the `.css` file and replace the view style of the component.
  * If no `options.path` is specified, it will try to load
  * the file with the same base-name as the `componentId`.
  *
@@ -1893,7 +1907,7 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.css' by default
  * ctx.loadCss();
- * // or loads the view's css with options
+ * // or loads the view css with options
  * ctx.loadCss({
  *     path: 'url/of/style/file.css',
  *     success: function() { ... },
@@ -1937,7 +1951,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
     return this;
 };
 /**
- * Load the `.html` file and replace the component's view markup.
+ * Loads the `.html` file and replace the view markup code of the component.
  * If no `options.path` is specified, it will try to load the
  * file with the same base-name as the `componentId`.
  *
@@ -1946,7 +1960,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.html' by default
  * ctx.loadHtml();
- * // or loads the view's html with options
+ * // or loads the view html with options
  * ctx.loadHtml({
  *     path: 'url/of/view/file.html',
  *     success: function() { ... },
@@ -2007,8 +2021,8 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     return this;
 };
 /**
- * Create the data model starting from ```data-ui-field```
- * elements declared in the component's view.
+ * Creates the data model starting from ```data-ui-field```
+ * elements declared in the component view.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
@@ -2041,8 +2055,8 @@ ComponentContext.prototype.viewToModel = function() {
     return this;
 };
 /**
- * Copy values from the data model to the ```data-ui-field``
- * elements declared in the component's view.
+ * Copies values from the data model to the ```data-ui-field```
+ * elements declared in the component view.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
@@ -2588,25 +2602,18 @@ var z$ =
     _dereq_('../helpers/ZxQuery');
 
 /**
- * This callback function is called after a component is loaded
- * and it is used to initialize the component's controller.
- *
- * @callback ContextControllerHandler
- * @param {ContextController} cp The context controller object.
- * @this {ContextController}
- */
-
-/**
  * ContextController user-defined handlers definition
+ *
  * @typedef {Object} ContextController
  * @property {function} init Function that gets called after loading and before the component is created.
- * @property {function} create Function that gets called after loading, when the component is created.
- * @property {function} update Function called when the component is destroyed.
- * @property {function} destroy Function called when the component's data model is updated.
+ * @property {function} create Function that gets called after loading, when the component is actually created and ready.
+ * @property {function} update Function called when the data model of the component is updated.
+ * @property {function} destroy Function called when the component is destroyed.
  */
 
 /**
  * ContextController constructor.
+ *
  * @param {ComponentContext} context
  * @return {ContextController}
  * @constructor
@@ -2714,14 +2721,14 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
 };
 
 /**
- * Gets elements in the component's view with `data-ui-field`
+ * Gets elements in the component view with `data-ui-field`
  * matching the given `fieldName`.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
  * @example
  *
- * <small>**Example - View's HTML**</small>
+ * <small>**Example - HTML code of the view**</small>
  * <pre><code class="language-html">
  * <h1 data-ui-field="title">...</h1>
  * <p data-ui-field="description">...</p>
@@ -2747,9 +2754,9 @@ ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;
 };
 /**
- * Gets the component's view or the view elements matching
- * the given `filter` in which case acts as a shorthand for
- * `cp.view().find(filter)`.
+ * Gets the component view or if `filter` argument is passed,
+ * gets the view elements matching the given `filter`
+ * (shorthand for `cp.view().find(filter)`).
  *
  * @example
  *
@@ -2785,7 +2792,7 @@ ContextController.prototype.view = function (filter) {
         });
 };
 /**
- * Gets/Sets the component's data model.
+ * Gets/Sets the data model of the component.
  *
  * @example
  *
@@ -2822,7 +2829,7 @@ ContextController.prototype.options = function () {
  * `eventData` object. To listen to a component event use the
  * `{ComponentContext}.on(eventPath, handler)` method or
  * in case `isHook` is set to true, use the
- * `zuix.hook(eventPath, handler)` method.
+ * `zuix.hook(eventPath, handler)` method (global hook event).
  *
  * @example
  *
@@ -2832,7 +2839,7 @@ ContextController.prototype.options = function () {
 cp.trigger('slide:change', slideIndex);
 
 // somewhere in a page hosting the slide-show component
-// set component's event listeners
+// set component event listeners
 zuix.context('my-slide-show')
   .on('slide:change', function(slideIndex) { ... })
   .on(...);
@@ -2859,8 +2866,9 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
     return this;
 };
 /**
- *  Expose in the component context a property or method
- *  defined in the controller.
+ * Exposes a method or property declared in the private
+ * scope of the controller as a public member of the
+ * component context object.
  *
  * @example
  *
@@ -2877,14 +2885,13 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
  *   // ...
  * });
  * // ...
- * // calling the exposed method from the instance of
- * // the component.
+ * // calling the exposed method
+ * // from the component context
  * var ctx = zuix.context('my-slide-show');
  * ctx.setSlide(2);
  * </code></pre>
  *
- *
- * @param {string|JSON} methodName Name of the exposed function, or list of method names/functions.
+ * @param {string|JSON} methodName Name of the exposed function, or list of method-name/function pairs.
  * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
@@ -2898,7 +2905,7 @@ ContextController.prototype.expose = function (methodName, handler) {
     return this;
 };
 /**
- * Load the `.css` file and replace the component's view style.
+ * Loads the `.css` file and replace the current view style of the component.
  * If no `options.path` is specified, it will try to load
  * the file with the same base-name as the `componentId`.
  *
@@ -2908,7 +2915,7 @@ ContextController.prototype.expose = function (methodName, handler) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.css' by default
  * cp.loadCss();
- * // or loads the view's css with options
+ * // or loads the view css with provided options
  * cp.loadCss({
  *     path: 'url/of/style/file.css',
  *     success: function() { ... },
@@ -2925,7 +2932,7 @@ ContextController.prototype.loadCss = function(options) {
     return this;
 };
 /**
- * Load the `.html` file and replace the component's view markup.
+ * Loads the `.html` file and replace the view markup of the component.
  * If no `options.path` is specified, it will try to load the
  * file with the same base-name as the `componentId`.
  *
@@ -2935,7 +2942,7 @@ ContextController.prototype.loadCss = function(options) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.html' by default
  * cp.loadHtml();
- * // or loads the view's html with options
+ * // or loads the view html with provided options
  * cp.loadHtml({
  *     path: 'url/of/view/file.html',
  *     success: function() { ... },
@@ -2953,11 +2960,28 @@ ContextController.prototype.loadHtml = function(options) {
     return this;
 };
 /**
- * this member is "attacched" from Zuix.js on controller initialization
- * @type {Logger} */
+ * The logger object is "attached" upon controller initialization.
+ *
+ * @example
+ *
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // same as log.info (...)
+ * log.i('Component view', ctx.view());
+ * // same as log.error(...)
+ * log.e('Error loading data', dataUrl);
+ * // other methods are:
+ * // log.w(...) / log.warn (...)
+ * // log.d(...) / log.debug(...)
+ * // log.t(...) / log.trace(...)
+ * </code></pre>
+ *
+ * @type {Logger}
+ */
 ContextController.prototype.log = {};
 /**
- * Register as default controller for the given component type.
+ * Register this one as the default controller
+ * for the given component type.
  *
  * @example
  *
@@ -3022,6 +3046,47 @@ var _componentizer =
     _dereq_('./Componentizer')();
 
 _dereq_('./ComponentCache');
+
+// Custom objects definition used to generate JsDoc
+
+/**
+ * This object can be supplied when loading a component. It can be either passed as argument for the
+ * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the HTML code
+ * of the component container.
+ *
+ * @typedef {object} ContextOptions
+ * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
+ * @property {Element|undefined} container The container element.
+ * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
+ * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
+ * @property {ContextControllerHandler|undefined} controller The controller handler.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
+ * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
+ * @property {Element|string|boolean|undefined} css The stylesheet of the view.
+ * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
+ * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
+ * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
+ * @property {number|undefined} priority Loading priority (**default:** 0).
+ * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once the component is succesfully loaded.
+ * @property {ContextErrorCallback|undefined} error The error callback, triggered when an error occurs.
+ */
+
+/**
+ * Callback function triggered if an error occurs when loading a component.
+ *
+ * @callback ContextErrorCallback
+ * @param {Object} error
+ * @this {ComponentContext}
+ */
+
+/**
+ * Callback function triggered when a component has been successfully loaded.
+ *
+ * @callback ContextReadyCallback
+ * @param {ComponentContext} ctx The component context.
+ * @this {ComponentContext}
+ */
+
 
 /**
  * @const
@@ -3330,7 +3395,7 @@ function createContext(options) {
  *
  * @private
  * @param {Element|ZxQuery|object} contextId The `contextId` object
- * (usually a string) or the component's container/view element.
+ * (usually a string) or the container/view element of the component.
  * @param {function} [callback] The callback function that will pass the context object once it is ready.
  * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
@@ -3682,8 +3747,8 @@ function replaceCache(c) {
 
 
 /**
- * Searches in the document or inside the provided `container` for elements with `data-ui-field`
- * attribute matching the given `fieldName`.
+ * Search the document or inside the given `container` for elements
+ * with `data-ui-field` attribute matching the provided `fieldName`.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
@@ -3711,8 +3776,8 @@ Zuix.prototype.field = function(fieldName, container) {
 };
 /**
  * Loads a component with the given options.
- * This is the programmatic equivalent of
- * `data-ui-include` or `data-ui-load` attributes used to
+ * This is the programmatic equivalent of `data-ui-include`
+ * or `data-ui-load` attributes used to
  * include content or load components from the HTML code.
  *
  * @example
@@ -3725,7 +3790,7 @@ var exampleController = zuix.controller(function(cp){
         cp.view().html('Helllo World!');
     }
     function testMethod() {
-        console.log("Method's exposing test");
+        console.log("Method exposing test");
         cp.view().html('A simple test.');
     }
 });
@@ -3734,7 +3799,7 @@ var componentOptions = {
     controller: exampleController,
     ready: function () {
         console.log("Loading complete.");
-        console.log("Component's instance context", this);
+        console.log("Component instance context", this);
     },
     error: function(error) {
         console.log("Loading error!", error);
@@ -3746,13 +3811,13 @@ ctx.test();
  *
  * @param {!string} componentId The identifier name of the component to be loaded.
  * @param {ContextOptions} [options] Options used to initialize the loaded component.
- * @return {ComponentContext} The component's instance context.
+ * @return {ComponentContext} The component context.
  */
 Zuix.prototype.load = function(componentId, options) {
     return load.call(this, componentId, options);
 };
 /**
- * Unload and dispose a component's context.
+ * Unloads the given component context releasing all allocated resources.
  *
  * @example
  *
@@ -3770,7 +3835,7 @@ Zuix.prototype.unload = function (context) {
     return this;
 };
 /**
- * Allocates a component's controller handler. The provided `handler` function will be called
+ * Allocates the handler for the component controller. The provided `handler` function will be called
  * to initialize the controller object once the component has been loaded.
  *
  * @example
@@ -3785,14 +3850,14 @@ Zuix.prototype.unload = function (context) {
 }).for('path/to/component_name');
  </code></pre>
  *
- * @param {ContextControllerHandler} handler Function called to initialize the component's controller that will be passed as argument of this function.
+ * @param {ContextControllerHandler} handler Function called to initialize the component controller that will be passed as argument of this function.
  * @return {ContextControllerHandler} The allocated controller handler.
  */
 Zuix.prototype.controller = function(handler) {
     return controller.call(this, handler);
 };
 /**
- * Get a `ComponentContext` object, given its `contextId` or its container/view element.
+ * Gets a `ComponentContext` object, given its `contextId` or its container/view element.
  * The `contextId` is the one specified by the `ContextOptions` object or by using the HTML attribute `data-ui-context`.
  *
  * @example
@@ -3808,12 +3873,12 @@ var slideShowDiv = zuix.$.find('[data-ui-context="my-slide-show"]');
 var ctx = zuix.context(slideShowDiv);
 // or
 var ctx = zuix.context('my-slide-show');
-// call component's exposed methods
+// call exposed component methods
 ctx.setSlide(1);
 // or
 var ctx;
 zuix.context('my-slide-show', function(c) {
-    // call component's methods
+    // call component methods
     c.setSlide(1);
     // eventually store a reference to the component for later use
     ctx = c;
@@ -3821,7 +3886,7 @@ zuix.context('my-slide-show', function(c) {
 ```
  *
  * @param {Element|ZxQuery|object} contextId The `contextId` object
- * (usually a string) or the component's container/view element.
+ * (usually a string) or the container/view element of the component.
  * @param {function} [callback] The callback function that will be called once the component is loaded. The {ComponentContext} object will be passed as argument of this callback.
  * @return {ComponentContext} The matching component context or `null` if the component does not exists or it is not yet loaded.
  */
@@ -3829,8 +3894,8 @@ Zuix.prototype.context = function(contextId, callback) {
     return context.call(this, contextId, callback);
 };
 /**
- * Create the component specified by `componentId` and return its `{ComponentContext}` object.
- * The returned component is unloaded and detached from the DOM and it must be explicitly attached.
+ * Creates the component specified by `componentId` and returns its `{ComponentContext}` object.
+ * The returned component it's unloaded and detached from the DOM and it must be explicitly attached.
  * After attaching it to the DOM, `zuix.componentize()` must be called in
  * order to actually load and display the component.
  *
@@ -3864,9 +3929,9 @@ Zuix.prototype.trigger = function (context, eventPath, eventData) {
     return this;
 };
 /**
- * Register a callback for a ZUIX global event (AKA hook).
- * There can be only one callback for each different type of global event.
- * Pass null as <eventHandler> to unregister a previously registered callback.
+ * Registers a callback for a global ZUIX event.
+ * There can only be one callback for each kind of global hook event.
+ * Pass null as <eventHandler> to stop listening to a previously registered callback.
  *
  * @example
  *
@@ -3926,7 +3991,7 @@ Zuix.prototype.hook = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Load a CSS or Javascript resource. All CSS styles and Javascript scripts
+ * Loads a CSS or Javascript resource. All CSS styles and Javascript scripts
  * loaded with this method will be also included in the application bundle.
  * If a resource is already loaded, the request will be ignored.
  * This command is also meant to be used inside a components' controller.
@@ -4058,7 +4123,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
     }
 };
 /**
- * Enable/Disable lazy-loading or get current setting.
+ * Enables/Disables lazy-loading or gets the current setting.
  *
  * @param {boolean} [enable] Enable or disable lazy loading.
  * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
@@ -4072,7 +4137,7 @@ Zuix.prototype.lazyLoad = function (enable, threshold) {
     return this;
 };
 /**
- * Enable/Disable HTTP caching or get current settings.
+ * Enables/Disables HTTP caching or gets the current settings.
  *
  * @param {boolean} [enable]
  * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
@@ -4085,9 +4150,9 @@ Zuix.prototype.httpCaching = function(enable) {
     return this;
 };
 /**
- * Searches in the document or inside the given element ```element```
- * for all ```data-ui-include``` and ```data-ui-load``` directives
- * and process these by loading the requested components.
+ * Searches the document, or inside the given ```element```,
+ * for all ```data-ui-include``` and ```data-ui-load``` attributes
+ * and processes these by loading the requested components.
  * This is a service function that should only be called if dynamically
  * adding content with elements that contain *load* or *include* directives.
  *

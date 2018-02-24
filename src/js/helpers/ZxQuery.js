@@ -114,15 +114,16 @@ function removeAllEventHandlers(el) {
 
 /**
  * ZxQuery, a very lite subset of jQuery-like functions
- * internally used in Zuix.
+ * internally used in Zuix for DOM operations.
  *
  * The constructor takes one optional argument that can be
  * a DOM element, a node list or a valid DOM query selector string expression.
- * If no parameter is given, the ZxQuery will wrap the root *document* element.
+ * If no parameter is given, the resulting ZxQuery object will wrap the
+ * root *document* element.
  *
  * @class ZxQuery
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element]
- * @return {ZxQuery} The *ZxQuery* instance object.
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element] Element or list of elements to include in the ZxQuery object.
+ * @return {ZxQuery} The *ZxQuery* object containing the given element(s).
  * @constructor
  */
 function ZxQuery(element) {
@@ -149,16 +150,19 @@ function ZxQuery(element) {
 
 
 /**
- * Number of elements in current DOM selection.
- * @return {Number} Number of DOM elements in the current selection.
+ * Gets the number of elements in the ZxQuery object.
+ *
+ * @return {Number} Number of DOM elements.
  */
 ZxQuery.prototype.length = function () {
     return this._selection.length;
 };
 /**
- * Get the closest parent matching the selector filter.
+ * Gets the closest parent matching the given selector filter.
+ * This only applies to the first element in the ZxQuery object.
+ *
  * @param {string} [filter] A valid DOM query selector filter (**default:** *first parent*).
- * @return {ZxQuery} A new *ZxQuery* object with the *parent* selection.
+ * @return {ZxQuery} A new *ZxQuery* object containing the matching parent element.
  */
 ZxQuery.prototype.parent = function (filter) {
     if (!util.isNoU(filter))
@@ -166,9 +170,11 @@ ZxQuery.prototype.parent = function (filter) {
     return new ZxQuery(this._selection[0].parentNode);
 };
 /**
- * Get the children matching the given selector filter.
+ * Gets the children matching the given selector filter.
+ * This only applies to the first element in the ZxQuery object.
+ *
  * @param {string} [filter] A valid DOM query selector filter (**default:** *all children*).
- * @return {ZxQuery}  A new *ZxQuery* object with the *children* selection.
+ * @return {ZxQuery}  A new *ZxQuery* object containing the selected *children*.
  */
 ZxQuery.prototype.children = function (filter) {
     // TODO: implement filtering
@@ -177,8 +183,9 @@ ZxQuery.prototype.children = function (filter) {
     return new ZxQuery(this._selection[0].children);
 };
 /**
- * Reverse the order of elements in current selection.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Reverses order of the elements in the current set.
+ *
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.reverse = function () {
     var elements = (Array.prototype.slice).call(this._selection, 0);
@@ -186,21 +193,22 @@ ZxQuery.prototype.reverse = function () {
     return this;
 };
 /**
- * Get the DOM element at given position in the current selection.
+ * Gets the DOM Element located at the given position in the ZxQuery object.
  * If no index is provided, the default element will be returned.
  *
- * @param {number} [i] Position of element (**default:** 0)
- * @return {Node|Element} The *DOM* element
+ * @param {number} [i] Position of element (**default:** 0).
+ * @return {Node|Element} The *DOM* element.
  */
 ZxQuery.prototype.get = function (i) {
     if (util.isNoU(i)) i = 0;
     return this._selection[i];
 };
 /**
- * Get the ZxQuery object for then element at the given
- * position in the current selection.
- * @param {number} i Position of element
- * @return {ZxQuery} A new *ZxQuery* object
+ * Gets a new ZxQuery object containing the element
+ * located at the given position in the current ZxQuery object.
+ *
+ * @param {number} i Position of element.
+ * @return {ZxQuery} A new *ZxQuery* object containing the selected element.
  */
 ZxQuery.prototype.eq = function (i) {
     var selection = this._selection;
@@ -215,35 +223,40 @@ ZxQuery.prototype.eq = function (i) {
     return new ZxQuery(resultSet);
 };
 /**
- * Select all descendants matching the given *DOM* query selector filter.
- * @param {string} selector A valid *DOM* query selector
- * @return {ZxQuery} A new *ZxQuery* object
+ * Selects all descendants matching the given *DOM* query selector filter.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @param {string} selector A valid *DOM* query selector.
+ * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
  */
 ZxQuery.prototype.find = function (selector) {
     return new ZxQuery(this._selection[0].querySelectorAll(selector));
 };
 /**
- * Iterate through all *DOM* elements in the selection.
+ * Iterates through all *DOM* elements in the selection.
  * The context object *this*, passed to the
- * *iterationCallback*`(index, item)`, will be the
+ * *iterationCallback*`(index, item)` function, will be the
  * *DOM* element corresponding the current iteration.
  * `index` will be the iteration count, and `item`
- * the current Element. The context `this` will be a `{ZxQuery}`
- * instance wrapping the current `item`.
+ * the current Element. The function context `this` will be a
+ * `{ZxQuery}` instance containing the current `item`.
+ * To interrupt the iteration loop, return `false` in the callback
+ * function or return `true` to continue to the next iteration.
  *
- * If the callback returns *false*, the iteration loop will interrupt.
- * @param {ElementsIterationCallback} iterationCallback The callback *fn* to call for each element in the selection
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @param {ElementsIterationCallback} iterationCallback The callback function to call for each element in the ZxQuery object.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.each = function (iterationCallback) {
     z$.each(this._selection, iterationCallback);
     return this;
 };
 /**
- * Gets or sets the given element attribute.
- * @param {string|JSON} attr The attribute name
- * @param {string|undefined} [val] The attribute value
- * @return {string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself
+ * Gets the value of an attribute for the first element in the ZxQuery object,
+ * or sets one or more attributes for all elements in the ZxQuery object.
+ *
+ * @param {string|JSON} attr The attribute name.
+ * @param {string|undefined} [val] The attribute value.
+ * @return {string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.attr = function (attr, val) {
     var _t = this;
@@ -264,10 +277,11 @@ ZxQuery.prototype.attr = function (attr, val) {
     return this;
 };
 /**
- * Trigger a component event.
+ * Triggers the given event for all elements in the ZxQuery object.
+ *
  * @param {string} eventPath Path of the event to trigger.
  * @param {object} eventData Value of the event.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.trigger = function (eventPath, eventData) {
     var event;
@@ -283,10 +297,11 @@ ZxQuery.prototype.trigger = function (eventPath, eventData) {
     return this;
 };
 /**
- * Listen once for the given event.
- * @param {string} eventPath Event path
- * @param {function} eventHandler Event handler
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Listens once to the given event for all elements in the ZxQuery object.
+ *
+ * @param {string} eventPath Event path.
+ * @param {function} eventHandler Event handler.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.one = function (eventPath, eventHandler) {
     var fired = false;
@@ -299,10 +314,11 @@ ZxQuery.prototype.one = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Listen for the given event.
- * @param {string} eventPath Event path
- * @param {function} eventHandler Event handler
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Listens to the given event for all elements in the ZxQuery object.
+ *
+ * @param {string} eventPath Event path.
+ * @param {function} eventHandler Event handler.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.on = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
@@ -314,10 +330,10 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Stop listening for the given event.
- * @param {string} eventPath Event path
- * @param {function} eventHandler Event handler
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Stops listening for the given event.
+ * @param {string} eventPath Event path.
+ * @param {function} eventHandler Event handler.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.off = function (eventPath, eventHandler) {
     var events = eventPath.match(/\S+/g) || [];
@@ -329,8 +345,9 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Un-register all event handlers registered for selected elements.
- * @return {ZxQuery}
+ * De-register all event handlers of all elements in the ZxQuery object.
+ *
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.reset = function () {
     this.each(function (k, el) {
@@ -339,14 +356,15 @@ ZxQuery.prototype.reset = function () {
     return this;
 };
 /**
- * Returns *true* if the element is empty.
- * @return {boolean} *true* if the element is empty, *false* otherwise
+ * Returns *true* if the first element markup code is empty.
+ *
+ * @return {boolean} *true* if the element is empty, *false* otherwise.
  */
 ZxQuery.prototype.isEmpty = function () {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 /**
- * Gets coordinates and visibility status of the element.
+ * Gets coordinates and visibility status of the first element.
  *
  * @return {ElementPosition}
  */
@@ -358,31 +376,34 @@ ZxQuery.prototype.position = function () {
 };
 
 /**
- * Sets or gets the given css property.
- * @param {string|JSON} attr The CSS property name or JSON list of properties/values.
- * @param {string|undefined} [val] The attribute value.
- * @return {string|ZxQuery} The *attr* css value when no *val* specified, otherwise the *ZxQuery* object itself
+ * Gets the value of a CSS property for the first element in the ZxQuery object,
+ * or sets one or more CSS property for all elements in the ZxQuery object.
+ *
+ * @param {string|JSON} prop The CSS property name or JSON list of property/value pairs.
+ * @param {string|undefined} [val] The CSS property value.
+ * @return {string|ZxQuery} The CSS property value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
-ZxQuery.prototype.css = function (attr, val) {
+ZxQuery.prototype.css = function (prop, val) {
     var _t = this;
-    if (typeof attr === 'object') {
-        z$.each(attr, function (i, v) {
+    if (typeof prop === 'object') {
+        z$.each(prop, function (i, v) {
             _t.each(function (k, el) {
                 el.style[i] = v;
             });
         });
     } else if (util.isNoU(val))
-        return this._selection[0].style[attr];
+        return this._selection[0].style[prop];
     else
         _t.each(function (k, el) {
-            el.style[attr] = val;
+            el.style[prop] = val;
         });
     return this;
 };
 /**
- * Adds the given css class to the element class list.
- * @param {string} className The css class name.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Adds the given CSS class to the class list of all elements in the ZxQuery object.
+ *
+ * @param {string} className The CSS class name.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.addClass = function (className) {
     var classes = className.match(/\S+/g) || [];
@@ -396,17 +417,19 @@ ZxQuery.prototype.addClass = function (className) {
     return this;
 };
 /**
- * Returns *true* if the element contains the given css class.
- * @param {string} className The css class name.
- * @return {boolean} *true* if the element has the *className* css class, *false* otherwise
+ * Returns *true* if the first element in the ZxQuery object contains the given CSS class.
+ *
+ * @param {string} className The CSS class name.
+ * @return {boolean} *true* if the element contains the given CSS class, *false* otherwise.
  */
 ZxQuery.prototype.hasClass = function (className) {
     return z$.hasClass(this._selection[0], className);
 };
 /**
- * Removes the given css class to the element class list.
- * @param {string} className The css class name.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Removes the given CSS class from all elements in the ZxQuery object.
+ *
+ * @param {string} className The CSS class name.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.removeClass = function (className) {
     var classes = className.match(/\S+/g) || [];
@@ -421,21 +444,27 @@ ZxQuery.prototype.removeClass = function (className) {
 };
 /**
  * Moves to the previous sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object with the previous sibling element.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
  */
 ZxQuery.prototype.prev = function () {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
 /**
  * Moves to the next sibling in the DOM.
- * @return {ZxQuery} A new *ZxQuery* object with the next sibling element.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery} A new *ZxQuery* object containing the next sibling element.
  */
 ZxQuery.prototype.next = function () {
     return new ZxQuery(this._selection[0].nextElementSibling);
 };
 /**
- * Gets or sets the HTML markup.
- * @param {string|undefined} [htmlText] HTML markup text.
+ * Gets the HTML string of the first element in the ZxQuery object,
+ * or sets the HTML string for all elements in the ZxQuery object.
+ *
+ * @param {string|undefined} [htmlText] HTML text.
  * @return {ZxQuery|string}
  */
 ZxQuery.prototype.html = function (htmlText) {
@@ -447,7 +476,9 @@ ZxQuery.prototype.html = function (htmlText) {
     return this;
 };
 /**
- * Gets or sets the checked attribute.
+ * Gets the `checked` attribute of the first element in the ZxQuery object,
+ * or sets the `checked` attribute value for all elements in the ZxQuery object.
+ *
  * @param {boolean|undefined} [check] Value to assign to the 'checked' attribute.
  * @return {ZxQuery|boolean}
  */
@@ -463,7 +494,9 @@ ZxQuery.prototype.checked = function(check) {
 
 };
 /**
- * Gets or sets the 'value' attribute.
+ * Gets the `value` attribute of the first element in the ZxQuery object,
+ * or sets the `value` attribute value for all elements in the ZxQuery object.
+ *
  * @param {string|undefined} [value] Value to assign to the 'value' attribute.
  * @return {ZxQuery|string}
  */
@@ -477,9 +510,10 @@ ZxQuery.prototype.value = function(value) {
 
 };
 /**
- * Appends the given element/markup to the current element.
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Appends the given element or HTML string to the first element in the ZxQuery object.
+ *
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element or HTML to append.
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.append = function (el) {
     if (typeof el === 'string')
@@ -489,12 +523,12 @@ ZxQuery.prototype.append = function (el) {
     return this;
 };
 /**
- * Insert the given child element before the one at the
- * specified index.
+ * Inserts the given child element before the one located at the specified index
+ * to the first element in the ZxQuery object.
  *
  * @param {number} index Position where to insert `el` Element.
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.insert = function (index, el) {
     var target = this.children().get(index);
@@ -505,9 +539,10 @@ ZxQuery.prototype.insert = function (index, el) {
     return this;
 };
 /**
- * Prepends the given element/markup to the current element.
+ * Prepends the given element or HTML string to the first element in the ZxQuery object.
+ *
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.prepend = function (el) {
     if (typeof el === 'string')
@@ -517,21 +552,8 @@ ZxQuery.prototype.prepend = function (el) {
     return this;
 };
 /**
- * Re-attach element to its parent.
- * @return {ZxQuery}
- */
-ZxQuery.prototype.attach = function () {
-    var el = this._selection[0];
-    if (el.parentNode == null && el.__zuix_oldParent != null) {
-        z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
-        el.__zuix_oldParent = null;
-        delete el.__zuix_oldParent;
-        delete el.__zuix_oldIndex;
-    }
-    return this;
-};
-/**
- * Detach element from its parent.
+ * Detach from its parent the first element in the ZxQuery object.
+ *
  * @return {ZxQuery}
  */
 ZxQuery.prototype.detach = function () {
@@ -546,9 +568,26 @@ ZxQuery.prototype.detach = function () {
     return this;
 };
 /**
- * Gets or sets the css `display` property.
+ * Re-attach to its parent the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.attach = function () {
+    var el = this._selection[0];
+    if (el.parentNode == null && el.__zuix_oldParent != null) {
+        z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
+        el.__zuix_oldParent = null;
+        delete el.__zuix_oldParent;
+        delete el.__zuix_oldIndex;
+    }
+    return this;
+};
+/**
+ * Gets the CSS `display` property of the first element in the ZxQuery object,
+ * or sets the `display` property value for all elements in the ZxQuery object.
+ *
  * @param {string|undefined} [mode] The display value.
- * @return {string|ZxQuery} The *display* css value when no *mode* specified, otherwise the *ZxQuery* object itself
+ * @return {string|ZxQuery} The *display* value when no *mode* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.display = function (mode) {
     if (util.isNoU(mode))
@@ -559,9 +598,11 @@ ZxQuery.prototype.display = function (mode) {
     return this;
 };
 /**
- * Gets or sets the css `visibility` property.
+ * Gets the CSS `visibility` property of the first element in the ZxQuery object,
+ * or sets the `visibility` property value for all elements in the ZxQuery object.
+ *
  * @param {string|undefined} [mode] The visibility value.
- * @return {string|ZxQuery} The *visibility* css value when no *mode* specified, otherwise the *ZxQuery* object itself
+ * @return {string|ZxQuery} The *visibility* value when no *mode* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.visibility = function (mode) {
     if (util.isNoU(mode))
@@ -572,16 +613,18 @@ ZxQuery.prototype.visibility = function (mode) {
     return this;
 };
 /**
- * Sets the css `display` property to ''.
- * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..)
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Sets the CSS `display` property to '' if no argument value is provided, otherwise set it to the given value.
+ *
+ * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..).
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.show = function (mode) {
     return this.display(mode == null ? '' : mode);
 };
 /**
- * Sets the css `display` property to 'none'.
- * @return {ZxQuery} The *ZxQuery* object itself
+ * Sets the CSS `display` property to 'none'.
+ *
+ * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.hide = function () {
     return this.display('none');

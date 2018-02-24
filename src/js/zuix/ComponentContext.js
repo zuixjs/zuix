@@ -36,45 +36,16 @@ var util =
 // Custom objects definition used to generate JsDoc
 
 /**
- * The `ContextOptions` object can be supplied when loading a component. It can be either used as argument for the
- * `zuix.load(...)` method in the javascript code, or in the `data-ui-options` attribute of the component's container
- * HTML code.
+ * This function is called after the component is loaded
+ * and it is used to initialize its controller.
  *
- * @typedef {object} ContextOptions
- * @property {Object|undefined} contextId The context id. HTML attribute equivalent: `data-ui-context`.
- * @property {Element|undefined} container The container element,
- * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
- * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
- * @property {ContextControllerHandler|undefined} controller The controller handler.
- * @property {Array.<Object.<string, EventCallback>>|undefined} on The events handling map.
- * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The behaviors handling map.
- * @property {Element|string|boolean|undefined} css The view style.
- * @property {string|undefined} cext When loading view content, append the specified string instead of `.html`.
- * @property {boolean|undefined} html Enable or disable HTML auto-loading (**default:** true).
- * @property {boolean|undefined} lazyLoad Enable or disable lazy-loading (**default:** false).
- * @property {number|undefined} priority Loading priority (**default:** 0).
- * @property {ContextReadyCallback|undefined} ready The ready callback, called once the component is succesfully loaded.
- * @property {ContextErrorCallback|undefined} error The error callback, called when error occurs.
+ * @callback ContextControllerHandler
+ * @param {ContextController} cp The component controller object.
+ * @this {ContextController}
  */
 
 /**
- * Callback function called if an error occurs when loading a component.
- *
- * @callback ContextErrorCallback
- * @param {Object} error
- * @this {ComponentContext}
- */
-
-/**
- * Callback function called when a component has been successfully loaded.
- *
- * @callback ContextReadyCallback
- * @param {ComponentContext} ctx The component context.
- * @this {ComponentContext}
- */
-
-/**
- * Callback function called when an event registered with the `on` method occurs.
+ * Callback function triggered when an event registered with the `on` method occurs.
  *
  * @callback EventCallback
  * @param {string} event Event name.
@@ -83,7 +54,7 @@ var util =
  */
 
 /***
- * The component's context object.
+ * The component context object.
  *
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.
@@ -143,8 +114,8 @@ function ComponentContext(options, eventCallback) {
     return this;
 }
 /**
- * Gets/Sets the component's container element.
- * Returns the current component element if no
+ * Gets/Sets the container element of the component.
+ * Returns the current container element if no
  * argument is passed, the {ComponentContext} itself
  * otherwise.
  *
@@ -161,13 +132,13 @@ ComponentContext.prototype.container = function (container) {
 };
 
 /**
- * Gets/Sets the component's view element.
- * If an *HTML* string is passed, the the view element
+ * Gets/Sets the view element of the component.
+ * If an *HTML* string is passed, then the view element
  * will be a new `div` wrapping the given markup.
  * Returns the current view element if no
  * argument is passed, the {ComponentContext} itself otherwise.
  *
- * @param {Element|string|undefined} [view] The view *HTML* string or element.
+ * @param {Element|string|undefined} [view] The *HTML* string or element of the view.
  * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function (view) {
@@ -246,7 +217,7 @@ ComponentContext.prototype.view = function (view) {
 };
 
 /**
- * Gets/Sets the component's view style.
+ * Gets/Sets the view style of the component.
  * The `css` argument can be a string containing all
  * styles definitions or a reference to a style
  * element. When a string is passed the css
@@ -296,7 +267,7 @@ ComponentContext.prototype.style = function (css) {
     return this;
 };
 /**
- * Gets/Sets the component's data model.
+ * Gets/Sets the data model of the component.
  *
  * @example
  * <small>Example - JavaScript</small>
@@ -314,13 +285,13 @@ ComponentContext.prototype.model = function (model) {
     if (typeof model === 'undefined') return this._model;
     else this._model = model; // model can be set to null
     this.modelToView();
-    // call controller's `update` method when model is updated
+    // call controller `update` method when model is updated
     if (this._c != null && util.isFunction(this._c.update))
         this._c.update.call(this._c);
     return this;
 };
 /**
- * Gets/Sets the controller handler function.
+ * Gets/Sets the handler function of the controller.
  *
  * @example
  * <small>Example - JavaScript</small>
@@ -333,7 +304,7 @@ ComponentContext.prototype.model = function (model) {
  *  });
  * </code></pre>
  *
- * @param {ContextControllerHandler|undefined} [controller] The controller handler function.
+ * @param {ContextControllerHandler|undefined} [controller] The handler function of the controller.
  * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function (controller) {
@@ -368,7 +339,7 @@ ComponentContext.prototype.options = function (options) {
 };
 
 /**
- * Listen for a component event.
+ * Listens for a component event.
  *
  * @example
  * <small>Example - JavaScript</small>
@@ -377,7 +348,7 @@ ComponentContext.prototype.options = function (options) {
  * </code></pre>
  *
  * @param {string} eventPath The event path.
- * @param {EventCallback} eventHandler The event handler function.
+ * @param {EventCallback} eventHandler The event handling function.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.on = function (eventPath, eventHandler) {
@@ -386,7 +357,7 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
     return this;
 };
 /**
- * Load the `.css` file and replace the component's view style.
+ * Loads the `.css` file and replace the view style of the component.
  * If no `options.path` is specified, it will try to load
  * the file with the same base-name as the `componentId`.
  *
@@ -395,7 +366,7 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.css' by default
  * ctx.loadCss();
- * // or loads the view's css with options
+ * // or loads the view css with options
  * ctx.loadCss({
  *     path: 'url/of/style/file.css',
  *     success: function() { ... },
@@ -439,7 +410,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
     return this;
 };
 /**
- * Load the `.html` file and replace the component's view markup.
+ * Loads the `.html` file and replace the view markup code of the component.
  * If no `options.path` is specified, it will try to load the
  * file with the same base-name as the `componentId`.
  *
@@ -448,7 +419,7 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.html' by default
  * ctx.loadHtml();
- * // or loads the view's html with options
+ * // or loads the view html with options
  * ctx.loadHtml({
  *     path: 'url/of/view/file.html',
  *     success: function() { ... },
@@ -509,8 +480,8 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     return this;
 };
 /**
- * Create the data model starting from ```data-ui-field```
- * elements declared in the component's view.
+ * Creates the data model starting from ```data-ui-field```
+ * elements declared in the component view.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
@@ -543,8 +514,8 @@ ComponentContext.prototype.viewToModel = function() {
     return this;
 };
 /**
- * Copy values from the data model to the ```data-ui-field``
- * elements declared in the component's view.
+ * Copies values from the data model to the ```data-ui-field```
+ * elements declared in the component view.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */

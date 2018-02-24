@@ -30,25 +30,18 @@ var z$ =
     require('../helpers/ZxQuery');
 
 /**
- * This callback function is called after a component is loaded
- * and it is used to initialize the component's controller.
- *
- * @callback ContextControllerHandler
- * @param {ContextController} cp The context controller object.
- * @this {ContextController}
- */
-
-/**
  * ContextController user-defined handlers definition
+ *
  * @typedef {Object} ContextController
  * @property {function} init Function that gets called after loading and before the component is created.
- * @property {function} create Function that gets called after loading, when the component is created.
- * @property {function} update Function called when the component is destroyed.
- * @property {function} destroy Function called when the component's data model is updated.
+ * @property {function} create Function that gets called after loading, when the component is actually created and ready.
+ * @property {function} update Function called when the data model of the component is updated.
+ * @property {function} destroy Function called when the component is destroyed.
  */
 
 /**
  * ContextController constructor.
+ *
  * @param {ComponentContext} context
  * @return {ContextController}
  * @constructor
@@ -156,14 +149,14 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
 };
 
 /**
- * Gets elements in the component's view with `data-ui-field`
+ * Gets elements in the component view with `data-ui-field`
  * matching the given `fieldName`.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
  * @example
  *
- * <small>**Example - View's HTML**</small>
+ * <small>**Example - HTML code of the view**</small>
  * <pre><code class="language-html">
  * <h1 data-ui-field="title">...</h1>
  * <p data-ui-field="description">...</p>
@@ -189,9 +182,9 @@ ContextController.prototype.clearCache = function () {
     this._fieldCache.length = 0;
 };
 /**
- * Gets the component's view or the view elements matching
- * the given `filter` in which case acts as a shorthand for
- * `cp.view().find(filter)`.
+ * Gets the component view or if `filter` argument is passed,
+ * gets the view elements matching the given `filter`
+ * (shorthand for `cp.view().find(filter)`).
  *
  * @example
  *
@@ -227,7 +220,7 @@ ContextController.prototype.view = function (filter) {
         });
 };
 /**
- * Gets/Sets the component's data model.
+ * Gets/Sets the data model of the component.
  *
  * @example
  *
@@ -264,7 +257,7 @@ ContextController.prototype.options = function () {
  * `eventData` object. To listen to a component event use the
  * `{ComponentContext}.on(eventPath, handler)` method or
  * in case `isHook` is set to true, use the
- * `zuix.hook(eventPath, handler)` method.
+ * `zuix.hook(eventPath, handler)` method (global hook event).
  *
  * @example
  *
@@ -274,7 +267,7 @@ ContextController.prototype.options = function () {
 cp.trigger('slide:change', slideIndex);
 
 // somewhere in a page hosting the slide-show component
-// set component's event listeners
+// set component event listeners
 zuix.context('my-slide-show')
   .on('slide:change', function(slideIndex) { ... })
   .on(...);
@@ -301,8 +294,9 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
     return this;
 };
 /**
- *  Expose in the component context a property or method
- *  defined in the controller.
+ * Exposes a method or property declared in the private
+ * scope of the controller as a public member of the
+ * component context object.
  *
  * @example
  *
@@ -319,14 +313,13 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
  *   // ...
  * });
  * // ...
- * // calling the exposed method from the instance of
- * // the component.
+ * // calling the exposed method
+ * // from the component context
  * var ctx = zuix.context('my-slide-show');
  * ctx.setSlide(2);
  * </code></pre>
  *
- *
- * @param {string|JSON} methodName Name of the exposed function, or list of method names/functions.
+ * @param {string|JSON} methodName Name of the exposed function, or list of method-name/function pairs.
  * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
@@ -340,7 +333,7 @@ ContextController.prototype.expose = function (methodName, handler) {
     return this;
 };
 /**
- * Load the `.css` file and replace the component's view style.
+ * Loads the `.css` file and replace the current view style of the component.
  * If no `options.path` is specified, it will try to load
  * the file with the same base-name as the `componentId`.
  *
@@ -350,7 +343,7 @@ ContextController.prototype.expose = function (methodName, handler) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.css' by default
  * cp.loadCss();
- * // or loads the view's css with options
+ * // or loads the view css with provided options
  * cp.loadCss({
  *     path: 'url/of/style/file.css',
  *     success: function() { ... },
@@ -367,7 +360,7 @@ ContextController.prototype.loadCss = function(options) {
     return this;
 };
 /**
- * Load the `.html` file and replace the component's view markup.
+ * Loads the `.html` file and replace the view markup of the component.
  * If no `options.path` is specified, it will try to load the
  * file with the same base-name as the `componentId`.
  *
@@ -377,7 +370,7 @@ ContextController.prototype.loadCss = function(options) {
  * <pre><code class="language-js">
  * // loads 'path/to/component_name.html' by default
  * cp.loadHtml();
- * // or loads the view's html with options
+ * // or loads the view html with provided options
  * cp.loadHtml({
  *     path: 'url/of/view/file.html',
  *     success: function() { ... },
@@ -395,11 +388,28 @@ ContextController.prototype.loadHtml = function(options) {
     return this;
 };
 /**
- * this member is "attacched" from Zuix.js on controller initialization
- * @type {Logger} */
+ * The logger object is "attached" upon controller initialization.
+ *
+ * @example
+ *
+ * <small>Example - JavaScript</small>
+ * <pre><code class="language-js">
+ * // same as log.info (...)
+ * log.i('Component view', ctx.view());
+ * // same as log.error(...)
+ * log.e('Error loading data', dataUrl);
+ * // other methods are:
+ * // log.w(...) / log.warn (...)
+ * // log.d(...) / log.debug(...)
+ * // log.t(...) / log.trace(...)
+ * </code></pre>
+ *
+ * @type {Logger}
+ */
 ContextController.prototype.log = {};
 /**
- * Register as default controller for the given component type.
+ * Register this one as the default controller
+ * for the given component type.
  *
  * @example
  *

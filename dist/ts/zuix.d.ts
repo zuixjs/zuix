@@ -1,18 +1,3 @@
-interface Zuix {
-    field(fieldName: String, container?: Element): ZxQuery;
-    load(componentId: String, options?: ContextOptions): ComponentContext;
-    unload(context: ComponentContext | Element): Zuix;
-    controller(handler: ContextControllerHandler): ContextControllerHandler;
-    context(contextId: Element | ZxQuery | Object, callback?: Function): ComponentContext;
-    createComponent(componentId: String, options?: ContextOptions): ComponentContext;
-    trigger(context: Object, eventPath: String, eventData?: Object): Zuix;
-    hook(eventPath: String, eventHandler: Function): Zuix;
-    using(resourceType: String, resourcePath: String, callback?: Function): void;
-    lazyLoad(enable?: Boolean, threshold?: Number): Zuix | Boolean;
-    httpCaching(enable?: Boolean): Zuix | Boolean;
-    componentize(element?: Element | ZxQuery): Zuix;
-    bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
-}
 interface ContextOptions {
     contextId?: Object;
     container?: Element;
@@ -35,6 +20,24 @@ interface ContextErrorCallback {
 interface ContextReadyCallback {
     (ctx: ComponentContext): void;
 }
+interface Zuix {
+    field(fieldName: String, container?: Element): ZxQuery;
+    load(componentId: String, options?: ContextOptions): ComponentContext;
+    unload(context: ComponentContext | Element): Zuix;
+    controller(handler: ContextControllerHandler): ContextControllerHandler;
+    context(contextId: Element | ZxQuery | Object, callback?: Function): ComponentContext;
+    createComponent(componentId: String, options?: ContextOptions): ComponentContext;
+    trigger(context: Object, eventPath: String, eventData?: Object): Zuix;
+    hook(eventPath: String, eventHandler: Function): Zuix;
+    using(resourceType: String, resourcePath: String, callback?: Function): void;
+    lazyLoad(enable?: Boolean, threshold?: Number): Zuix | Boolean;
+    httpCaching(enable?: Boolean): Zuix | Boolean;
+    componentize(element?: Element | ZxQuery): Zuix;
+    bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
+}
+interface ContextControllerHandler {
+    (cp: ContextController): void;
+}
 interface EventCallback {
     (event: String, data: Object): void;
 }
@@ -50,9 +53,6 @@ interface ComponentContext {
     loadHtml(options?: Object, enableCaching?: Boolean): ComponentContext;
     viewToModel(): ComponentContext;
     modelToView(): ComponentContext;
-}
-interface ContextControllerHandler {
-    (cp: ContextController): void;
 }
 interface ContextController {
     init: Function;
@@ -109,7 +109,7 @@ interface ZxQuery {
     reset(): ZxQuery;
     isEmpty(): Boolean;
     position(): ElementPosition;
-    css(attr: String | JSON, val?: String): String | ZxQuery;
+    css(prop: String | JSON, val?: String): String | ZxQuery;
     addClass(className: String): ZxQuery;
     hasClass(className: String): Boolean;
     removeClass(className: String): ZxQuery;
@@ -121,8 +121,8 @@ interface ZxQuery {
     append(el: Object | ZxQuery | Node[] | Node | NodeList | String): ZxQuery;
     insert(index: Number, el: Object | ZxQuery | Node[] | Node | NodeList): ZxQuery;
     prepend(el: Object | ZxQuery | Node[] | Node | NodeList | String): ZxQuery;
-    attach(): ZxQuery;
     detach(): ZxQuery;
+    attach(): ZxQuery;
     display(mode?: String): String | ZxQuery;
     visibility(mode?: String): String | ZxQuery;
     show(mode?: String): ZxQuery;
