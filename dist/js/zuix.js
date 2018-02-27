@@ -3182,7 +3182,7 @@ function field(fieldName, container, context) {
     var el = null;
     if (typeof context._fieldCache[fieldName] === 'undefined') {
         el = z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]');
-        if (el != null)
+        if (el != null && el.length() > 0)
             context._fieldCache[fieldName] = el;
     } else el = context._fieldCache[fieldName];
 
