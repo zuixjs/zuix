@@ -548,6 +548,8 @@ ComponentContext.prototype.modelToView = function () {
                             el.href = (!util.isNoU(boundData.href) ? boundData.href :
                                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             if (boundData.title) el.title = boundData.title;
+                            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '')
+                                el.innerHTML = boundData.innerHTML;
                             break;
                         case 'input':
                             el.value = (!util.isNoU(boundData.value) ? boundData.value :
