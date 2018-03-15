@@ -8,7 +8,8 @@ ZUIX is a JavaScript library for creating component-based sites and web apps.
 
 ### Getting Started
 
-Install and include `zuix.min.js` library using one of the following methods.
+Start using zUIx with the demo [website template](https://github.com/genielabs/zuix-web-template)
+or start from scratch by including it in your project using one of the following methods.
 
 ###### Local copy
 
@@ -64,6 +65,8 @@ located in the distribution folder of the master repo.
 The following online examples can also be downloaded as a **.zip** file
 containing everything is needed to get you started.
 
+- [**Website Template**](https://genielabs.github.io/zuix-web-template/)
+*a free responsive website template with file based content management, markdown support and more...*
 - [**TodoMVC**](https://genielabs.github.io/zuix-todomvc)
 *the classic To-Do MVC application implemented as a loadable component*
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
