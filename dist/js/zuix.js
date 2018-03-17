@@ -1,5 +1,3 @@
-/* ZUIX v0.4.9-24 18.03.15 22:01:20 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1323,6 +1321,41 @@ z$.appendCss = function (css, target, cssId) {
         head.appendChild(style);
     return style;
 };
+z$.replaceCssVars = function(css, model) {
+    var outCss = '', matched = 0, currentIndex = 0;
+    var vars = new RegExp(/\B\$model\[(.*[^\[\]])]/g),
+        result;
+    while (result = vars.exec(css)) {
+        var value = result[0];
+        if (result.length > 1) {
+            var name = result[1];
+            // resolve dotted field path
+            var cur = model;
+            if (name.indexOf('.') > 0) {
+                var path = name.split('.');
+                for (var p = 0; p < path.length - 1; p++) {
+                    cur = cur[path[p]];
+                    if (typeof cur === 'undefined')
+                        break;
+                }
+                if (typeof cur !== 'undefined') {
+                    value = cur[path[path.length - 1]];
+                    matched++;
+                }
+            } else if (typeof cur[name] !== 'undefined') {
+                value = cur[name];
+                matched++;
+            }
+        }
+        outCss += css.substr(currentIndex, result.index-currentIndex)+value;
+        currentIndex = result.index+result[0].length;
+    }
+    if (matched > 0) {
+        outCss += css.substr(currentIndex);
+        css = outCss;
+    }
+    return css;
+};
 z$.replaceBraces = function (html, callback) {
     var outHtml = '', matched = 0, currentIndex = 0;
     var tags = new RegExp(/[^{}]+(?=})/g),
@@ -1797,6 +1830,9 @@ ComponentContext.prototype.style = function (css) {
 
         // store original unparsed css (might be useful for debugging)
         this._css = css;
+
+        // map CSS '$model[<var_prop>]' variables
+        css = z$.replaceCssVars(css, this._model);
 
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type

@@ -1,9 +1,9 @@
  [![Build Status](https://travis-ci.org/genielabs/zuix.svg?branch=master)](https://travis-ci.org/genielabs/zuix)
  [![npm dist](https://badge.fury.io/js/zuix-dist.svg)](https://badge.fury.io/js/zuix-dist)
 
-## ZUIX.js - Content and Component Manager
+## zUIx
 
-ZUIX is a JavaScript library for creating component-based sites and web apps.
+##### Create amazing component-based websites and web applications.
 
 
 ### Getting Started

@@ -816,6 +816,41 @@ z$.appendCss = function (css, target, cssId) {
         head.appendChild(style);
     return style;
 };
+z$.replaceCssVars = function(css, model) {
+    var outCss = '', matched = 0, currentIndex = 0;
+    var vars = new RegExp(/\B\$model\[(.*[^\[\]])]/g),
+        result;
+    while (result = vars.exec(css)) {
+        var value = result[0];
+        if (result.length > 1) {
+            var name = result[1];
+            // resolve dotted field path
+            var cur = model;
+            if (name.indexOf('.') > 0) {
+                var path = name.split('.');
+                for (var p = 0; p < path.length - 1; p++) {
+                    cur = cur[path[p]];
+                    if (typeof cur === 'undefined')
+                        break;
+                }
+                if (typeof cur !== 'undefined') {
+                    value = cur[path[path.length - 1]];
+                    matched++;
+                }
+            } else if (typeof cur[name] !== 'undefined') {
+                value = cur[name];
+                matched++;
+            }
+        }
+        outCss += css.substr(currentIndex, result.index-currentIndex)+value;
+        currentIndex = result.index+result[0].length;
+    }
+    if (matched > 0) {
+        outCss += css.substr(currentIndex);
+        css = outCss;
+    }
+    return css;
+};
 z$.replaceBraces = function (html, callback) {
     var outHtml = '', matched = 0, currentIndex = 0;
     var tags = new RegExp(/[^{}]+(?=})/g),

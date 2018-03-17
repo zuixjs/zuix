@@ -249,6 +249,9 @@ ComponentContext.prototype.style = function (css) {
         // store original unparsed css (might be useful for debugging)
         this._css = css;
 
+        // map CSS '$model[<var_prop>]' variables
+        css = z$.replaceCssVars(css, this._model);
+
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type
         css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
