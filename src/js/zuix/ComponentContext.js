@@ -249,9 +249,6 @@ ComponentContext.prototype.style = function (css) {
         // store original unparsed css (might be useful for debugging)
         this._css = css;
 
-        // map CSS '$model[<var_prop>]' variables
-        css = z$.replaceCssVars(css, this._model);
-
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type
         css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
@@ -548,7 +545,7 @@ ComponentContext.prototype.modelToView = function () {
                             if (boundData.alt) el.alt = boundData.alt;
                             break;
                         case 'a':
-                            el.href = (!util.isNoU(boundData.href) ? boundData.href :
+                            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
                                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             if (boundData.title) el.title = boundData.title;
                             if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '')

@@ -818,7 +818,7 @@ z$.appendCss = function (css, target, cssId) {
 };
 z$.replaceCssVars = function(css, model) {
     var outCss = '', matched = 0, currentIndex = 0;
-    var vars = new RegExp(/\B\$model\[(.*[^\[\]])]/g),
+    var vars = new RegExp(/\B\$var\[(.*[^\[\]])]/g),
         result;
     while (result = vars.exec(css)) {
         var value = result[0];
