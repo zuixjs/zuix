@@ -135,7 +135,12 @@ function ZxQuery(element) {
 
     if (element instanceof ZxQuery)
         return element;
-    else if (element instanceof HTMLCollection || element instanceof NodeList || Array.isArray(element))
+    else if (element instanceof HTMLCollection || element instanceof NodeList) {
+        var list = this._selection = [];
+        z$.each(element, function (i,el) {
+            list.push(el);
+        });
+    } else if (Array.isArray(element))
         this._selection = element;
     else if (element === window || element instanceof HTMLElement || element instanceof Node)
         this._selection = [element];
