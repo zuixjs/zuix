@@ -423,10 +423,10 @@ function context(contextId, callback) {
     });
     if (typeof callback === 'function' && (contextId instanceof Element || contextId instanceof z$.ZxQuery)) {
         if (context == null)
-            z$(contextId).one('component:ready', function () {
-                callback(zuix.context(this));
+            z$(contextId).one('component:ready', function (ctx) {
+                callback.call(ctx, ctx);
             });
-        else callback(context);
+        else callback.call(context, context);
     }
     return context;
 }
