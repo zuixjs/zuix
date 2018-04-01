@@ -1,4 +1,4 @@
-/* ZUIX v0.4.9-26 18.03.27 00:30:24 */
+/* ZUIX v0.4.9-27 18.04.01 17:19:58 */
 
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
@@ -3462,8 +3462,12 @@ function createContext(options) {
  */
 function context(contextId, callback) {
     var context = null;
-    if (contextId instanceof z$.ZxQuery)
+    if (contextId instanceof z$.ZxQuery) {
         contextId = contextId.get();
+    } else if (typeof contextId === 'string') {
+        var ctx = z$.find('[data-ui-context="'+contextId+'"]');
+        if (ctx.length() > 0) contextId = ctx.get();
+    }
     z$.each(_contextRoot, function (k, v) {
         if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId))
             || util.objectEquals(v.contextId, contextId)) {

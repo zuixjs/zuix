@@ -408,8 +408,12 @@ function createContext(options) {
  */
 function context(contextId, callback) {
     var context = null;
-    if (contextId instanceof z$.ZxQuery)
+    if (contextId instanceof z$.ZxQuery) {
         contextId = contextId.get();
+    } else if (typeof contextId === 'string') {
+        var ctx = z$.find('[data-ui-context="'+contextId+'"]');
+        if (ctx.length() > 0) contextId = ctx.get();
+    }
     z$.each(_contextRoot, function (k, v) {
         if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId))
             || util.objectEquals(v.contextId, contextId)) {
