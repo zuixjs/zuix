@@ -755,6 +755,8 @@ z$.wrapCss = function (wrapperRule, css) {
     var wrapReX = /((.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     var wrappedCss = '';
     var ruleMatch;
+    // remove comments
+    css = css.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '');
     do {
         ruleMatch = wrapReX.exec(css);
         if (ruleMatch && ruleMatch.length > 1) {
