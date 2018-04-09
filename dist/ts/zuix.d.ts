@@ -130,3 +130,5 @@ interface ZxQuery {
 }
 
 declare const zuix: Zuix;
+
+declare const zuix.$: ZxQuery;

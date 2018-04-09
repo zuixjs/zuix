@@ -7,19 +7,19 @@
 
  */
 
-var isRegExp = function (re) {
+const isRegExp = function(re) {
     return Object.prototype.toString.call(re) === '[object RegExp]';
 };
 
-var UID = Math.floor(Math.random() * 0x10000000000).toString(16);
-var PLACE_HOLDER_REGEXP = new RegExp('"@__(F|R)-' + UID + '-(\\d+)__@"', 'g');
+const UID = Math.floor(Math.random() * 0x10000000000).toString(16);
+const PLACE_HOLDER_REGEXP = new RegExp('"@__(F|R)-' + UID + '-(\\d+)__@"', 'g');
 
-var IS_NATIVE_CODE_REGEXP = /\{\s*\[native code\]\s*\}/g;
-var UNSAFE_CHARS_REGEXP = /[<>\/\u2028\u2029]/g;
+const IS_NATIVE_CODE_REGEXP = /\{\s*\[native code\]\s*\}/g;
+const UNSAFE_CHARS_REGEXP = /[<>\/\u2028\u2029]/g;
 
 // Mapping of unsafe HTML and invalid JavaScript line terminator chars to their
 // Unicode char counterparts which are safe to use in JavaScript strings.
-var ESCAPED_CHARS = {
+const ESCAPED_CHARS = {
     '<': '\\u003C',
     '>': '\\u003E',
     '/': '\\u002F',
@@ -41,8 +41,8 @@ module.exports = function serialize(obj, options) {
         options = {space: options};
     }
 
-    var functions = [];
-    var regexps = [];
+    const functions = [];
+    const regexps = [];
 
     // Returns placeholders for functions and regexps (identified by index)
     // which are later replaced by their string representation.
@@ -51,7 +51,7 @@ module.exports = function serialize(obj, options) {
             return value;
         }
 
-        var type = typeof value;
+        const type = typeof value;
 
         if (type === 'object') {
             if (isRegExp(value)) {
@@ -68,7 +68,7 @@ module.exports = function serialize(obj, options) {
         return value;
     }
 
-    var str;
+    let str;
 
     // Creates a JSON string representation of the value.
     // NOTE: Node 0.12 goes into slow mode with extra JSON.stringify() args.
@@ -96,13 +96,13 @@ module.exports = function serialize(obj, options) {
     // Replaces all occurrences of function and regexp placeholders in the JSON
     // string with their string representations. If the original value can not
     // be found, then `undefined` is used.
-    return str.replace(PLACE_HOLDER_REGEXP, function (match, type, valueIndex) {
+    return str.replace(PLACE_HOLDER_REGEXP, function(match, type, valueIndex) {
         if (type === 'R') {
             return regexps[valueIndex].toString();
         }
 
-        var fn = functions[valueIndex];
-        var serializedFn = fn.toString();
+        const fn = functions[valueIndex];
+        const serializedFn = fn.toString();
 
         if (IS_NATIVE_CODE_REGEXP.test(serializedFn)) {
             throw new TypeError('Serializing native function: ' + fn.name);

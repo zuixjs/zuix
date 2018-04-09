@@ -1,0 +1,24 @@
+{
+  "extends": "google",
+  "rules": {
+    "max-len": [1, {
+      "code": 160,
+      "comments": 200
+    }],
+    "valid-jsdoc": 0,
+    "comma-dangle": ["error", "never"],
+    "require-jsdoc": [1, {
+      "require": {
+        "FunctionDeclaration": true,
+        "MethodDefinition": false,
+        "ClassDeclaration": false,
+        "ArrowFunctionExpression": false,
+        "FunctionExpression": false
+      }
+    }],
+    "no-invalid-this": 0
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  }
+}

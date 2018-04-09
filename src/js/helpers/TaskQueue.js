@@ -24,9 +24,9 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
+'use strict';
 
-var _log =
+const _log =
     require('./Logger')('TaskQueue.js');
 
 /**
@@ -36,44 +36,46 @@ var _log =
  * @constructor
  */
 function TaskQueue(listener) {
-    var _t = this;
+    const _t = this;
     _t._worker = null;
     _t._taskList = [];
     _t._requests = [];
-    if (listener == null)
-        listener = function () { };
-    _t.taskQueue = function (tid, fn, pri) {
+    if (listener == null) {
+        listener = function() { };
+    }
+    _t.taskQueue = function(tid, fn, pri) {
         _t._taskList.push({
             tid: tid,
             fn: fn,
             status: 0,
-            priority:  pri,
-            step: function (tid) {
-                //var _h = this;
-                //_h.tid = tid;
+            priority: pri,
+            step: function(tid) {
+                // var _h = this;
+                // _h.tid = tid;
                 _log.t(tid, 'load:step');
                 listener(_t, 'load:step', {
                     task: tid
                 });
             },
-            end: function () {
+            end: function() {
                 this.status = 2;
-                var _h = this;
+                let _h = this;
                 _log.t(_h.tid, 'load:next', 'timer:task:stop');
                 listener(_t, 'load:next', {
                     task: _h.tid
                 });
                 _t._taskList.splice(this.index, 1);
                 _t.taskCheck();
-                if (this._callback != null)
+                if (this._callback != null) {
                     this._callback.call(this);
+                }
             },
-            callback: function (callback) {
+            callback: function(callback) {
                 this._callback = callback;
             }
         });
         _log.t(tid, 'task added', pri, 'priority');
-        _t._taskList.sort(function(a,b) {
+        _t._taskList.sort(function(a, b) {
             return (a.priority > b.priority) ?
                 1 :
                 ((b.priority > a.priority)
@@ -81,8 +83,8 @@ function TaskQueue(listener) {
         } );
         _t.taskCheck();
     };
-    _t.taskCheck = function () {
-        for (var i = 0; i < _t._taskList.length; i++) {
+    _t.taskCheck = function() {
+        for (let i = 0; i < _t._taskList.length; i++) {
             if (_t._taskList[i].status == 0) {
                 _t._taskList[i].status = 1;
                 _log.t(_t._taskList[i].tid, 'load:begin', 'timer:task:start');
@@ -92,18 +94,17 @@ function TaskQueue(listener) {
                 _t._taskList[i].index = i;
                 (_t._taskList[i].fn).call(_t._taskList[i]);
                 return;
-            }  else if (_t._taskList[i].status == 1) {
+            } else if (_t._taskList[i].status == 1) {
                 // currently running
                 return;
-            }
-            else if (_t._taskList[i].status == 2) {
+            } else if (_t._taskList[i].status == 2) {
                 // TODO: _!!!-!
                 return;
             }
         }
         _log.t('load:end');
         listener(_t, 'load:end');
-    }
+    };
 }
 TaskQueue.prototype.queue = function(tid, fn, pri) {
     return this.taskQueue(tid, fn, pri);

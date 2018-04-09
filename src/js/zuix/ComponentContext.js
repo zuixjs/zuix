@@ -24,13 +24,13 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
+'use strict';
 
-var _log =
+const _log =
     require('../helpers/Logger')('ComponentContext.js');
-var z$ =
+const z$ =
     require('../helpers/ZxQuery');
-var util =
+const util =
     require('../helpers/Util');
 
 // Custom objects definition used to generate JsDoc
@@ -53,7 +53,7 @@ var util =
  * @this {ZxQuery}
  */
 
-/***
+/**
  * The component context object.
  *
  * @param {ContextOptions} options The context options.
@@ -63,13 +63,13 @@ var util =
  */
 
 function ComponentContext(options, eventCallback) {
-
     this._options = null;
     this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
     this.componentId = null;
     this.trigger = function(context, eventPath, eventValue) {
-        if (typeof eventCallback === 'function')
+        if (typeof eventCallback === 'function') {
             eventCallback(context, eventPath, eventValue);
+        }
     };
 
     /** @protected */
@@ -122,11 +122,12 @@ function ComponentContext(options, eventCallback) {
  * @param {Element} [container] The container element.
  * @return {ComponentContext|Element}
  */
-ComponentContext.prototype.container = function (container) {
+ComponentContext.prototype.container = function(container) {
     // TODO: should automatically re-attach view to the new parent?
     if (container == null) return this._container;
-    else if (container instanceof z$.ZxQuery)
+    else if (container instanceof z$.ZxQuery) {
         container = container.get();
+    }
     this._container = container;
     return this;
 };
@@ -141,17 +142,18 @@ ComponentContext.prototype.container = function (container) {
  * @param {Element|string|undefined} [view] The *HTML* string or element of the view.
  * @return {ComponentContext|Element}
  */
-ComponentContext.prototype.view = function (view) {
+ComponentContext.prototype.view = function(view) {
     if (typeof view === 'undefined') return this._view;
-    else if (view instanceof z$.ZxQuery)
+    else if (view instanceof z$.ZxQuery) {
         view = view.get();
+    }
 
     _log.t(this.componentId, 'view:attach', 'timer:view:start');
     if (typeof view === 'string') {
         // load view from HTML source
 
         // trigger `html:parse` hook before assigning content to the view
-        var hookData = {content: view};
+        const hookData = {content: view};
         this.trigger(this, 'html:parse', hookData);
         view = hookData.content;
 
@@ -160,16 +162,16 @@ ComponentContext.prototype.view = function (view) {
             this._view = this._container;
             this._view.innerHTML += view;
         } else {
-            var viewDiv = z$.wrapElement('div', view);
-            if (this._view != null)
+            const viewDiv = z$.wrapElement('div', view);
+            if (this._view != null) {
                 this._view.innerHTML = viewDiv.innerHTML;
-            else this._view = viewDiv;
+            } else this._view = viewDiv;
         }
 
-        z$(this._view).find('script').each(function (i, el) {
+        z$(this._view).find('script').each(function(i, el) {
             if (this.attr('zuix-loaded') !== 'true') {
                 this.attr('zuix-loaded', 'true');
-                /*if (el.src != null && el.src.length > 0) {
+                /* if (el.src != null && el.src.length > 0) {
                     var clonedScript = document.createElement('script');
                     clonedScript.setAttribute('zuix-loaded', 'true');
                     clonedScript.onload = function () {
@@ -189,10 +191,10 @@ ComponentContext.prototype.view = function (view) {
 
         // trigger `view:process` hook when the view is ready to be processed
         this.trigger(this, 'view:process', z$(this._view));
-
     } else {
-        if (view instanceof z$.ZxQuery)
+        if (view instanceof z$.ZxQuery) {
             view = view.get();
+        }
         // load inline view
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
@@ -202,13 +204,14 @@ ComponentContext.prototype.view = function (view) {
         } else this._view = view;
     }
 
-    var v = z$(this._view);
-    if (this._options.css === false)
-    // disable local css styling for this instance
+    const v = z$(this._view);
+    if (this._options.css === false) {
+        // disable local css styling for this instance
         v.addClass('zuix-css-ignore');
-    else
-    // enable local css styling
+    } else {
+        // enable local css styling
         v.removeClass('zuix-css-ignore');
+    }
 
     this.modelToView();
 
@@ -236,16 +239,13 @@ ComponentContext.prototype.view = function (view) {
  * @param {string|Element|undefined} [css] The CSS string or element.
  * @return {ComponentContext|Element}
  */
-ComponentContext.prototype.style = function (css) {
+ComponentContext.prototype.style = function(css) {
     if (typeof css === 'undefined') return this._style;
     _log.t(this.componentId, 'view:style', 'timer:view:start');
     if (css == null || css instanceof Element) {
-
         this._css = (css instanceof Element) ? css.innerText : css;
         this._style = z$.appendCss(css, this._style, this.componentId);
-
     } else if (typeof css === 'string') {
-
         // store original unparsed css (might be useful for debugging)
         this._css = css;
 
@@ -254,13 +254,12 @@ ComponentContext.prototype.style = function (css) {
         css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
 
         // trigger `css:parse` hook before assigning content to the view
-        var hookData = { content: css };
+        const hookData = {content: css};
         this.trigger(this, 'css:parse', hookData);
         css = hookData.content;
 
         // output css
         this._style = z$.appendCss(css, this._style, this.componentId);
-
     }
     // TODO: should throw error if ```css``` is not a valid type
     _log.t(this.componentId, 'view:style', 'timer:view:stop');
@@ -281,13 +280,14 @@ ComponentContext.prototype.style = function (css) {
  * @param {object|undefined} [model] The model object.
  * @return {ComponentContext|object}
  */
-ComponentContext.prototype.model = function (model) {
+ComponentContext.prototype.model = function(model) {
     if (typeof model === 'undefined') return this._model;
     else this._model = model; // model can be set to null
     this.modelToView();
     // call controller `update` method when model is updated
-    if (this._c != null && util.isFunction(this._c.update))
+    if (this._c != null && util.isFunction(this._c.update)) {
         this._c.update.call(this._c);
+    }
     return this;
 };
 /**
@@ -307,7 +307,7 @@ ComponentContext.prototype.model = function (model) {
  * @param {ContextControllerHandler|undefined} [controller] The handler function of the controller.
  * @return {ComponentContext|ContextControllerHandler}
  */
-ComponentContext.prototype.controller = function (controller) {
+ComponentContext.prototype.controller = function(controller) {
     if (typeof controller === 'undefined') return this._controller;
     // TODO: should dispose previous context controller first
     else this._controller = controller; // can be null
@@ -320,19 +320,22 @@ ComponentContext.prototype.controller = function (controller) {
  * @param {ContextOptions|undefined} options The JSON options object.
  * @return {ComponentContext|object}
  */
-ComponentContext.prototype.options = function (options) {
-    if (options == null)
+ComponentContext.prototype.options = function(options) {
+    if (options == null) {
         return this._options;
-    var o = this._options = this._options || {};
-    z$.each(options, function (k, v) {
+    }
+    const o = this._options = this._options || {};
+    z$.each(options, function(k, v) {
         o[k] = v;
     });
-    if (o.componentId != null)
+    if (o.componentId != null) {
         this.componentId = o.componentId;
+    }
     this.container(o.container);
     this.view(o.view);
-    if (typeof o.css !== 'undefined')
+    if (typeof o.css !== 'undefined') {
         this.style(o.css);
+    }
     this.controller(o.controller);
     this.model(o.model);
     return this;
@@ -351,7 +354,7 @@ ComponentContext.prototype.options = function (options) {
  * @param {EventCallback} eventHandler The event handling function.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.on = function (eventPath, eventHandler) {
+ComponentContext.prototype.on = function(eventPath, eventHandler) {
     // TODO: throw error if _c (controller instance) is not yet ready
     this._c.on(eventPath, eventHandler);
     return this;
@@ -380,31 +383,37 @@ ComponentContext.prototype.on = function (eventPath, eventHandler) {
  * @param {boolean} [enableCaching] Enable HTTP
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadCss = function (options, enableCaching) {
-    var context = this;
+ComponentContext.prototype.loadCss = function(options, enableCaching) {
+    const context = this;
     if (util.isNoU(options)) options = {};
-    if (!util.isNoU(options.caching))
+    if (!util.isNoU(options.caching)) {
         enableCaching = options.caching;
-    var cssPath = context.componentId + '.css';
-    if (!util.isNoU(options.path))
+    }
+    let cssPath = context.componentId + '.css';
+    if (!util.isNoU(options.path)) {
         cssPath = options.path;
-    if (!enableCaching)
+    }
+    if (!enableCaching) {
         cssPath += '?'+new Date().getTime();
+    }
     z$.ajax({
         url: cssPath,
-        success: function (viewCss) {
+        success: function(viewCss) {
             context.style(viewCss);
-            if (util.isFunction(options.success))
+            if (util.isFunction(options.success)) {
                 (options.success).call(context, viewCss);
+            }
         },
-        error: function (err) {
+        error: function(err) {
             _log.e(err, context);
-            if (util.isFunction(options.error))
+            if (util.isFunction(options.error)) {
                 (options.error).call(context, err);
+            }
         },
-        then: function () {
-            if (util.isFunction(options.then))
+        then: function() {
+            if (util.isFunction(options.then)) {
                 (options.then).call(context);
+            }
         }
     });
     return this;
@@ -434,46 +443,55 @@ ComponentContext.prototype.loadCss = function (options, enableCaching) {
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.loadHtml = function(options, enableCaching) {
-    var context = this;
-    var htmlPath = context.componentId;
+    const context = this;
+    let htmlPath = context.componentId;
     if (util.isNoU(options)) options = {};
-    if (!util.isNoU(options.caching))
+    if (!util.isNoU(options.caching)) {
         enableCaching = options.caching;
-    if (!util.isNoU(options.path))
+    }
+    if (!util.isNoU(options.path)) {
         htmlPath = options.path;
+    }
     // TODO: check if view caching is working in this case too
-    var inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
+    const inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
     if (inlineView.length() > 0) {
-        var inlineElement = inlineView.get(0);
-        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement)))
+        const inlineElement = inlineView.get(0);
+        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
             // TODO: test this case
             context.view(inlineElement);
-        else
+        } else {
             context.view(inlineElement.outerHTML);
-        var html = context.view().innerHTML;
-        if (util.isFunction(options.success))
+        }
+        const html = context.view().innerHTML;
+        if (util.isFunction(options.success)) {
             (options.success).call(context, html);
-        if (util.isFunction(options.then))
+        }
+        if (util.isFunction(options.then)) {
             (options.then).call(context);
+        }
     } else {
-        var cext = util.isNoU(options.cext) ? '.html' : options.cext;
-        if (htmlPath == context.componentId)
+        const cext = util.isNoU(options.cext) ? '.html' : options.cext;
+        if (htmlPath == context.componentId) {
             htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
+        }
         z$.ajax({
             url: htmlPath,
-            success: function (viewHtml) {
+            success: function(viewHtml) {
                 context.view(viewHtml);
-                if (util.isFunction(options.success))
+                if (util.isFunction(options.success)) {
                     (options.success).call(context, viewHtml);
+                }
             },
-            error: function (err) {
+            error: function(err) {
                 _log.e(err, context);
-                if (util.isFunction(options.error))
+                if (util.isFunction(options.error)) {
                     (options.error).call(context, err);
+                }
             },
-            then: function () {
-                if (util.isFunction(options.then))
+            then: function() {
+                if (util.isFunction(options.then)) {
                     (options.then).call(context);
+                }
             }
         });
     }
@@ -487,24 +505,26 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
  */
 ComponentContext.prototype.viewToModel = function() {
     _log.t(this.componentId, 'view:model', 'timer:vm:start');
-    var _t = this;
+    const _t = this;
     this._model = {};
     // create data model from inline view fields
     z$(this._view).find('[data-ui-field]').each(function(i, el) {
-        if (this.parent('pre,code').length() > 0)
+        if (this.parent('pre,code').length() > 0) {
             return true;
-        var name = this.attr('data-ui-field');
-        var value =
+        }
+        const name = this.attr('data-ui-field');
+        const value =
             // TODO: this is a work around for IE where "el.innerHTML" is lost after view replacing
             (!util.isNoU(el.innerHTML) && util.isIE())
                 ? el.cloneNode(true) : el;
         // dotted field path
         if (name.indexOf('.')>0) {
-            var path = name.split('.');
-            var cur = _t._model;
-            for (var p = 0; p < path.length - 1; p++) {
-                if (typeof cur[path[p]] === 'undefined')
+            const path = name.split('.');
+            let cur = _t._model;
+            for (let p = 0; p < path.length - 1; p++) {
+                if (typeof cur[path[p]] === 'undefined') {
                     cur[path[p]] = {};
+                }
                 cur = cur[path[p]];
             }
             cur[path[path.length - 1]] = value;
@@ -519,20 +539,22 @@ ComponentContext.prototype.viewToModel = function() {
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.modelToView = function () {
+ComponentContext.prototype.modelToView = function() {
     _log.t(this.componentId, 'model:view', 'timer:mv:start');
     if (this._view != null && this._model != null) {
-        var _t = this;
+        const _t = this;
         z$(this._view).find('[data-ui-field]').each(function(i, el) {
-            if (this.parent('pre,code').length() > 0)
+            if (this.parent('pre,code').length() > 0) {
                 return true;
-            var boundField = this.attr('data-bind-to');
-            if (boundField == null)
+            }
+            let boundField = this.attr('data-bind-to');
+            if (boundField == null) {
                 boundField = this.attr('data-ui-field');
-            if (typeof _t._model === 'function')
+            }
+            if (typeof _t._model === 'function') {
                 (_t._model).call(z$(_t._view), this, boundField);
-            else {
-                var boundData = util.propertyFromPath(_t._model, boundField);
+            } else {
+                const boundData = util.propertyFromPath(_t._model, boundField);
                 if (typeof boundData === 'function') {
                     (boundData).call(z$(_t._view), this, boundField);
                 } else if (boundData != null) {
@@ -540,7 +562,7 @@ ComponentContext.prototype.modelToView = function () {
                     switch (el.tagName.toLowerCase()) {
                         // TODO: complete binding cases
                         case 'img':
-                            el.src = (!util.isNoU(boundData.src) ?  boundData.src :
+                            el.src = (!util.isNoU(boundData.src) ? boundData.src :
                                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             if (boundData.alt) el.alt = boundData.alt;
                             break;
@@ -548,8 +570,9 @@ ComponentContext.prototype.modelToView = function () {
                             el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
                                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
                             if (boundData.title) el.title = boundData.title;
-                            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '')
+                            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
                                 el.innerHTML = boundData.innerHTML;
+                            }
                             break;
                         case 'input':
                             el.value = (!util.isNoU(boundData.value) ? boundData.value :

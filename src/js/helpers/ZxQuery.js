@@ -24,11 +24,11 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
+'use strict';
 
-var _log =
+const _log =
     require('./Logger')('TaskQueue.js');
-var util = require('./Util.js');
+const util = require('./Util.js');
 
 
 // Types definitions for JsDoc
@@ -63,48 +63,51 @@ var util = require('./Util.js');
 
 
 /** @private */
-var _zuix_events_mapping = [];
+const _zuix_events_mapping = [];
 function routeEvent(e) {
     triggerEventHandlers(this, e.type, e);
 }
 function addEventHandler(el, path, handler) {
-    var found = false;
-    z$.each(_zuix_events_mapping, function () {
-        if (this.element === el && this.path === path && this.handler == handler) {
+    let found = false;
+    z$.each(_zuix_events_mapping, function() {
+        if (this.element === el && this.path === path && this.handler === handler) {
             _log.w('Handler already registered', el, path, handler);
             found = true;
             return false;
         }
     });
     if (!found) {
-        _zuix_events_mapping.push({ element: el, path: path, handler: handler });
+        _zuix_events_mapping.push({element: el, path: path, handler: handler});
         el.addEventListener(path, routeEvent, false);
     }
 }
 function removeEventHandler(el, path, handler) {
-    var left = 1, index = -1;
-    z$.each(_zuix_events_mapping, function (i) {
-        if (this.element === el && this.path === path && this.handler == handler) {
+    let left = 1;
+    let index = -1;
+    z$.each(_zuix_events_mapping, function(i) {
+        if (this.element === el && this.path === path && this.handler === handler) {
             left--;
             index = i;
         }
     });
-    if (index !== -1)
+    if (index !== -1) {
         _zuix_events_mapping.splice(index, 1);
+    }
     // unregister event handler since it was the last one
-    if (left == 0)
+    if (left === 0) {
         el.removeEventListener(path, routeEvent);
+    }
 }
 function triggerEventHandlers(el, path, evt) {
-    var element = z$(el);
-    z$.each(_zuix_events_mapping, function () {
+    const element = z$(el);
+    z$.each(_zuix_events_mapping, function() {
         if (this.element === el && this.path === path) {
             this.handler.call(element, evt);
         }
     });
 }
 function removeAllEventHandlers(el) {
-    z$.each(_zuix_events_mapping, function () {
+    z$.each(_zuix_events_mapping, function() {
         if (this.element === el) {
             _log.t('Removing event handler', this.element, this.path, this.handler);
             removeEventHandler(this.element, this.path, this.handler);
@@ -130,25 +133,26 @@ function ZxQuery(element) {
     /** @protected */
     this._selection = [];
 
-    if (typeof element === 'undefined')
+    if (typeof element === 'undefined') {
         element = document.documentElement;
+    }
 
-    if (element instanceof ZxQuery)
+    if (element instanceof ZxQuery) {
         return element;
-    else if (element instanceof HTMLCollection || element instanceof NodeList) {
-        var list = this._selection = [];
-        z$.each(element, function (i,el) {
+    } else if (element instanceof HTMLCollection || element instanceof NodeList) {
+        const list = this._selection = [];
+        z$.each(element, function(i, el) {
             list.push(el);
         });
-    } else if (Array.isArray(element))
+    } else if (Array.isArray(element)) {
         this._selection = element;
-    else if (element === window || element instanceof HTMLElement || element instanceof Node)
+    } else if (element === window || element instanceof HTMLElement || element instanceof Node) {
         this._selection = [element];
-    else if (typeof element === 'string')
+    } else if (typeof element === 'string') {
         this._selection = document.documentElement.querySelectorAll(element);
-    else if (element !== null) { //if (typeof element === 'string') {
+    } else if (element !== null) { // if (typeof element === 'string') {
         _log.e('ZxQuery cannot wrap object of this type.', (typeof element), element);
-        throw(new Error(), element);
+        throw new Error('ZxQuery cannot wrap object of this type.');
     }
     return this;
 }
@@ -159,7 +163,7 @@ function ZxQuery(element) {
  *
  * @return {Number} Number of DOM elements.
  */
-ZxQuery.prototype.length = function () {
+ZxQuery.prototype.length = function() {
     return this._selection.length;
 };
 /**
@@ -169,9 +173,10 @@ ZxQuery.prototype.length = function () {
  * @param {string} [filter] A valid DOM query selector filter (**default:** *first parent*).
  * @return {ZxQuery} A new *ZxQuery* object containing the matching parent element.
  */
-ZxQuery.prototype.parent = function (filter) {
-    if (!util.isNoU(filter))
+ZxQuery.prototype.parent = function(filter) {
+    if (!util.isNoU(filter)) {
         return new ZxQuery(z$.getClosest(this._selection[0], filter));
+    }
     return new ZxQuery(this._selection[0].parentNode);
 };
 /**
@@ -181,10 +186,11 @@ ZxQuery.prototype.parent = function (filter) {
  * @param {string} [filter] A valid DOM query selector filter (**default:** *all children*).
  * @return {ZxQuery}  A new *ZxQuery* object containing the selected *children*.
  */
-ZxQuery.prototype.children = function (filter) {
+ZxQuery.prototype.children = function(filter) {
     // TODO: implement filtering
-    if (!util.isNoU(filter))
+    if (!util.isNoU(filter)) {
         return new ZxQuery(this._selection[0].querySelectorAll(filter));
+    }
     return new ZxQuery(this._selection[0].children);
 };
 /**
@@ -192,8 +198,8 @@ ZxQuery.prototype.children = function (filter) {
  *
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.reverse = function () {
-    var elements = (Array.prototype.slice).call(this._selection, 0);
+ZxQuery.prototype.reverse = function() {
+    const elements = (Array.prototype.slice).call(this._selection, 0);
     this._selection = elements.reverse();
     return this;
 };
@@ -204,7 +210,7 @@ ZxQuery.prototype.reverse = function () {
  * @param {number} [i] Position of element (**default:** 0).
  * @return {Node|Element} The *DOM* element.
  */
-ZxQuery.prototype.get = function (i) {
+ZxQuery.prototype.get = function(i) {
     if (util.isNoU(i)) i = 0;
     return this._selection[i];
 };
@@ -215,14 +221,15 @@ ZxQuery.prototype.get = function (i) {
  * @param {number} i Position of element.
  * @return {ZxQuery} A new *ZxQuery* object containing the selected element.
  */
-ZxQuery.prototype.eq = function (i) {
-    var selection = this._selection;
-    var resultSet = selection[i];
+ZxQuery.prototype.eq = function(i) {
+    const selection = this._selection;
+    let resultSet = selection[i];
     if (arguments.length > 1) {
         resultSet = [];
         z$.each(arguments, function (k, v) {
-            if (selection[v] != null)
-                resultSet.push(selection[v])
+            if (selection[v] != null) {
+                resultSet.push(selection[v]);
+            }
         });
     }
     return new ZxQuery(resultSet);
@@ -234,7 +241,7 @@ ZxQuery.prototype.eq = function (i) {
  * @param {string} selector A valid *DOM* query selector.
  * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
  */
-ZxQuery.prototype.find = function (selector) {
+ZxQuery.prototype.find = function(selector) {
     return new ZxQuery(this._selection[0].querySelectorAll(selector));
 };
 /**
@@ -251,7 +258,7 @@ ZxQuery.prototype.find = function (selector) {
  * @param {ElementsIterationCallback} iterationCallback The callback function to call for each element in the ZxQuery object.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.each = function (iterationCallback) {
+ZxQuery.prototype.each = function(iterationCallback) {
     z$.each(this._selection, iterationCallback);
     return this;
 };
@@ -263,22 +270,23 @@ ZxQuery.prototype.each = function (iterationCallback) {
  * @param {string|undefined} [val] The attribute value.
  * @return {string|ZxQuery} The *attr* attribute value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
-ZxQuery.prototype.attr = function (attr, val) {
-    var _t = this;
+ZxQuery.prototype.attr = function(attr, val) {
+    const _t = this;
     if (typeof attr === 'object') {
-        z$.each(attr, function (i, v) {
-            _t.each(function (k, el) {
+        z$.each(attr, function(i, v) {
+            _t.each(function(k, el) {
                 el.setAttribute(i, v);
             });
         });
-    } else if (typeof val == 'undefined')
+    } else if (typeof val == 'undefined') {
         return this._selection[0].getAttribute(attr);
-    else if (val === null)
+    } else if (val === null) {
         this._selection[0].removeAttribute(attr);
-    else
-        this.each(function (k, v) {
+    } else {
+        this.each(function(k, v) {
             this.get().setAttribute(attr, val);
         });
+    }
     return this;
 };
 /**
@@ -288,15 +296,15 @@ ZxQuery.prototype.attr = function (attr, val) {
  * @param {object} eventData Value of the event.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.trigger = function (eventPath, eventData) {
-    var event;
+ZxQuery.prototype.trigger = function(eventPath, eventData) {
+    let event;
     if (window.CustomEvent) {
         event = new CustomEvent(eventPath, {detail: eventData});
     } else {
         event = document.createEvent('CustomEvent');
         event.initCustomEvent(eventPath, true, true, eventData);
     }
-    this.each(function (k, el) {
+    this.each(function(k, el) {
         el.dispatchEvent(event);
     });
     return this;
@@ -308,9 +316,9 @@ ZxQuery.prototype.trigger = function (eventPath, eventData) {
  * @param {function} eventHandler Event handler.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.one = function (eventPath, eventHandler) {
-    var fired = false;
-    this.on(eventPath, function (a, b) {
+ZxQuery.prototype.one = function(eventPath, eventHandler) {
+    let fired = false;
+    this.on(eventPath, function(a, b) {
         if (fired) return;
         fired = true;
         z$(this).off(eventPath, eventHandler);
@@ -325,10 +333,10 @@ ZxQuery.prototype.one = function (eventPath, eventHandler) {
  * @param {function} eventHandler Event handler.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.on = function (eventPath, eventHandler) {
-    var events = eventPath.match(/\S+/g) || [];
-    this.each(function (k, el) {
-        z$.each(events, function (k, ev) {
+ZxQuery.prototype.on = function(eventPath, eventHandler) {
+    const events = eventPath.match(/\S+/g) || [];
+    this.each(function(k, el) {
+        z$.each(events, function(k, ev) {
             addEventHandler(el, ev, eventHandler);
         });
     });
@@ -340,10 +348,10 @@ ZxQuery.prototype.on = function (eventPath, eventHandler) {
  * @param {function} eventHandler Event handler.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.off = function (eventPath, eventHandler) {
-    var events = eventPath.match(/\S+/g) || [];
-    this.each(function (k, el) {
-        z$.each(events, function (k, ev) {
+ZxQuery.prototype.off = function(eventPath, eventHandler) {
+    const events = eventPath.match(/\S+/g) || [];
+    this.each(function(k, el) {
+        z$.each(events, function(k, ev) {
             removeEventHandler(el, ev, eventHandler);
         });
     });
@@ -354,8 +362,8 @@ ZxQuery.prototype.off = function (eventPath, eventHandler) {
  *
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.reset = function () {
-    this.each(function (k, el) {
+ZxQuery.prototype.reset = function() {
+    this.each(function(k, el) {
         removeAllEventHandlers(el);
     });
     return this;
@@ -365,7 +373,7 @@ ZxQuery.prototype.reset = function () {
  *
  * @return {boolean} *true* if the element is empty, *false* otherwise.
  */
-ZxQuery.prototype.isEmpty = function () {
+ZxQuery.prototype.isEmpty = function() {
     return (this._selection[0].innerHTML.replace(/\s/g, '').length === 0);
 };
 /**
@@ -373,11 +381,13 @@ ZxQuery.prototype.isEmpty = function () {
  *
  * @return {ElementPosition}
  */
-ZxQuery.prototype.position = function () {
-    if (this._selection[0] != null)
+ZxQuery.prototype.position = function() {
+    if (this._selection[0] != null) {
         return z$.getPosition(this._selection[0]);
-    else // TODO: check this out; should prevent this from happening
-        return { x: -1, y: -1, visible: false };
+    } else {
+        // TODO: check this out; should prevent this from happening
+        return {x: -1, y: -1, visible: false};
+    }
 };
 
 /**
@@ -388,20 +398,21 @@ ZxQuery.prototype.position = function () {
  * @param {string|undefined} [val] The CSS property value.
  * @return {string|ZxQuery} The CSS property value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
-ZxQuery.prototype.css = function (prop, val) {
-    var _t = this;
+ZxQuery.prototype.css = function(prop, val) {
+    const _t = this;
     if (typeof prop === 'object') {
-        z$.each(prop, function (i, v) {
-            _t.each(function (k, el) {
+        z$.each(prop, function(i, v) {
+            _t.each(function(k, el) {
                 el.style[i] = v;
             });
         });
-    } else if (util.isNoU(val))
+    } else if (util.isNoU(val)) {
         return this._selection[0].style[prop];
-    else
-        _t.each(function (k, el) {
+    } else {
+        _t.each(function(k, el) {
             el.style[prop] = val;
         });
+    }
     return this;
 };
 /**
@@ -410,11 +421,11 @@ ZxQuery.prototype.css = function (prop, val) {
  * @param {string} className The CSS class name.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.addClass = function (className) {
-    var classes = className.match(/\S+/g) || [];
-    z$.each(this._selection, function (k, el) {
+ZxQuery.prototype.addClass = function(className) {
+    const classes = className.match(/\S+/g) || [];
+    z$.each(this._selection, function(k, el) {
         if (el.classList) {
-            z$.each(classes, function (k, cl) {
+            z$.each(classes, function(k, cl) {
                 el.classList.add(cl);
             });
         } else el.className += ' ' + className;
@@ -427,7 +438,7 @@ ZxQuery.prototype.addClass = function (className) {
  * @param {string} className The CSS class name.
  * @return {boolean} *true* if the element contains the given CSS class, *false* otherwise.
  */
-ZxQuery.prototype.hasClass = function (className) {
+ZxQuery.prototype.hasClass = function(className) {
     return z$.hasClass(this._selection[0], className);
 };
 /**
@@ -436,11 +447,11 @@ ZxQuery.prototype.hasClass = function (className) {
  * @param {string} className The CSS class name.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.removeClass = function (className) {
-    var classes = className.match(/\S+/g) || [];
-    z$.each(this._selection, function (k, el) {
+ZxQuery.prototype.removeClass = function(className) {
+    const classes = className.match(/\S+/g) || [];
+    z$.each(this._selection, function(k, el) {
         if (el.classList) {
-            z$.each(classes, function (k, cl) {
+            z$.each(classes, function(k, cl) {
                 el.classList.remove(cl);
             });
         } else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
@@ -453,7 +464,7 @@ ZxQuery.prototype.removeClass = function (className) {
  *
  * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
  */
-ZxQuery.prototype.prev = function () {
+ZxQuery.prototype.prev = function() {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
 /**
@@ -462,7 +473,7 @@ ZxQuery.prototype.prev = function () {
  *
  * @return {ZxQuery} A new *ZxQuery* object containing the next sibling element.
  */
-ZxQuery.prototype.next = function () {
+ZxQuery.prototype.next = function() {
     return new ZxQuery(this._selection[0].nextElementSibling);
 };
 /**
@@ -472,10 +483,11 @@ ZxQuery.prototype.next = function () {
  * @param {string|undefined} [htmlText] HTML text.
  * @return {ZxQuery|string}
  */
-ZxQuery.prototype.html = function (htmlText) {
-    if (util.isNoU(htmlText))
+ZxQuery.prototype.html = function(htmlText) {
+    if (util.isNoU(htmlText)) {
         return this._selection[0].innerHTML;
-    this.each(function (k, el) {
+    }
+    this.each(function(k, el) {
         el.innerHTML = htmlText;
     });
     return this;
@@ -489,14 +501,13 @@ ZxQuery.prototype.html = function (htmlText) {
  */
 ZxQuery.prototype.checked = function(check) {
     if (util.isNoU(check)) {
-        var checked = this._selection[0].checked;
+        const checked = this._selection[0].checked;
         return (checked != null && checked != 'false' && (checked || checked == 'checked'));
     }
-    this.each(function (k, el) {
+    this.each(function(k, el) {
         el.checked = check;
     });
     return this;
-
 };
 /**
  * Gets the `value` attribute of the first element in the ZxQuery object,
@@ -506,13 +517,13 @@ ZxQuery.prototype.checked = function(check) {
  * @return {ZxQuery|string}
  */
 ZxQuery.prototype.value = function(value) {
-    if (util.isNoU(value))
+    if (util.isNoU(value)) {
         return this._selection[0].value;
-    this.each(function (k, el) {
+    }
+    this.each(function(k, el) {
         el.value = value;
     });
     return this;
-
 };
 /**
  * Appends the given element or HTML string to the first element in the ZxQuery object.
@@ -520,11 +531,12 @@ ZxQuery.prototype.value = function(value) {
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element or HTML to append.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.append = function (el) {
-    if (typeof el === 'string')
+ZxQuery.prototype.append = function(el) {
+    if (typeof el === 'string') {
         this._selection[0].innerHTML += el;
-    else
+    } else {
         this._selection[0].appendChild(el);
+    }
     return this;
 };
 /**
@@ -535,12 +547,13 @@ ZxQuery.prototype.append = function (el) {
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList} el Element to insert.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.insert = function (index, el) {
-    var target = this.children().get(index);
-    if (target !== null)
+ZxQuery.prototype.insert = function(index, el) {
+    const target = this.children().get(index);
+    if (target !== null) {
         this._selection[0].insertBefore(el, target);
-    else
+    } else {
         this._selection[0].appendChild(el);
+    }
     return this;
 };
 /**
@@ -549,11 +562,12 @@ ZxQuery.prototype.insert = function (index, el) {
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.prepend = function (el) {
-    if (typeof el === 'string')
+ZxQuery.prototype.prepend = function(el) {
+    if (typeof el === 'string') {
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
-    else
+    } else {
         this._selection[0].insertBefore(el, this._selection[0].firstElementChild);
+    }
     return this;
 };
 /**
@@ -561,9 +575,9 @@ ZxQuery.prototype.prepend = function (el) {
  *
  * @return {ZxQuery}
  */
-ZxQuery.prototype.detach = function () {
-    var el = this._selection[0];
-    var parent = el.parentNode;
+ZxQuery.prototype.detach = function() {
+    const el = this._selection[0];
+    const parent = el.parentNode;
     if (parent != null) {
         el.__zuix_oldParent = parent;
         el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
@@ -577,8 +591,8 @@ ZxQuery.prototype.detach = function () {
  *
  * @return {ZxQuery}
  */
-ZxQuery.prototype.attach = function () {
-    var el = this._selection[0];
+ZxQuery.prototype.attach = function() {
+    const el = this._selection[0];
     if (el.parentNode == null && el.__zuix_oldParent != null) {
         z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
         el.__zuix_oldParent = null;
@@ -594,10 +608,11 @@ ZxQuery.prototype.attach = function () {
  * @param {string|undefined} [mode] The display value.
  * @return {string|ZxQuery} The *display* value when no *mode* specified, otherwise the *ZxQuery* object itself.
  */
-ZxQuery.prototype.display = function (mode) {
-    if (util.isNoU(mode))
+ZxQuery.prototype.display = function(mode) {
+    if (util.isNoU(mode)) {
         return this._selection[0].style.display;
-    z$.each(this._selection, function (k, el) {
+    }
+    z$.each(this._selection, function(k, el) {
         el.style.display = mode;
     });
     return this;
@@ -609,10 +624,11 @@ ZxQuery.prototype.display = function (mode) {
  * @param {string|undefined} [mode] The visibility value.
  * @return {string|ZxQuery} The *visibility* value when no *mode* specified, otherwise the *ZxQuery* object itself.
  */
-ZxQuery.prototype.visibility = function (mode) {
-    if (util.isNoU(mode))
+ZxQuery.prototype.visibility = function(mode) {
+    if (util.isNoU(mode)) {
         return this._selection[0].style.visibility;
-    z$.each(this._selection, function (k, el) {
+    }
+    z$.each(this._selection, function(k, el) {
         el.style.visibility = mode;
     });
     return this;
@@ -623,7 +639,7 @@ ZxQuery.prototype.visibility = function (mode) {
  * @param {string} [mode] Set the display mode to be used to show element (eg. block, inline, etc..).
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.show = function (mode) {
+ZxQuery.prototype.show = function(mode) {
     return this.display(mode == null ? '' : mode);
 };
 /**
@@ -631,7 +647,7 @@ ZxQuery.prototype.show = function (mode) {
  *
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-ZxQuery.prototype.hide = function () {
+ZxQuery.prototype.hide = function() {
     return this.display('none');
 };
 
@@ -643,10 +659,10 @@ ZxQuery.prototype.hide = function () {
  * @param [what] {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined}
  * @return {ZxQuery}
  */
-var z$ = function (what) {
+const z$ = function(what) {
     return new ZxQuery(what);
 };
-z$.find = function (filter) {
+z$.find = function(filter) {
     return z$().find(filter);
 };
 /**
@@ -662,32 +678,36 @@ z$.find = function (filter) {
  * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {z$} `this`.
  */
-z$.each = function (items, iterationCallback) {
-    var len = (items == null ? 0 : Object.keys(items).length);
+z$.each = function(items, iterationCallback) {
+    const len = (items == null ? 0 : Object.keys(items).length);
     if (len > 0) {
-        var count = 0;
-        for (var i in items) {
-            var item = items[i];
-            if (item instanceof Element)
+        let count = 0;
+        for (let i in items) {
+            let item = items[i];
+            if (item instanceof Element) {
                 item = z$(item);
-            if (iterationCallback.call(item, i, items[i]) === false)
+            }
+            if (iterationCallback.call(item, i, items[i]) === false) {
                 break;
+            }
             count++;
-            if (count >= len)
+            if (count >= len) {
                 break;
+            }
         }
     }
     return this;
 };
-z$.ajax = function (opt) {
-    var url;
-    if (!util.isNoU(opt) && !util.isNoU(opt.url))
+z$.ajax = function(opt) {
+    let url;
+    if (!util.isNoU(opt) && !util.isNoU(opt.url)) {
         url = opt.url;
-    else
+    } else {
         url = opt;
-    var xhr = new XMLHttpRequest();
+    }
+    const xhr = new XMLHttpRequest();
     xhr.open('GET', url);
-    xhr.onload = function () {
+    xhr.onload = function() {
         if (xhr.status === 200) {
             if (util.isFunction(opt.success)) opt.success(xhr.responseText);
         } else {
@@ -699,90 +719,95 @@ z$.ajax = function (opt) {
     return this;
 };
 z$.hasClass = function(el, className) {
-    var classes = className.match(/\S+/g) || [];
-    var success = false;
-    z$.each(classes, function (k, cl) {
-        if (el.classList)
+    const classes = className.match(/\S+/g) || [];
+    let success = false;
+    z$.each(classes, function(k, cl) {
+        if (el.classList) {
             success = el.classList.contains(cl);
-        else
+        } else {
             success = (new RegExp('(^| )' + cl + '( |$)', 'gi').test(el.className));
+        }
         if (success) return false;
     });
     return success;
 };
-z$.classExists = function (className) {
-    var classes = className.match(/\S+/g) || [];
-    var success = false;
-    z$.each(classes, function (k, cl) {
+z$.classExists = function(className) {
+    const classes = className.match(/\S+/g) || [];
+    let success = false;
+    z$.each(classes, function(k, cl) {
         // Perform global style check
-        var docStyles = document.styleSheets;
+        const docStyles = document.styleSheets;
         if (docStyles != null) {
-            for (var sx = 0; sx < docStyles.length; sx++) {
+            for (let sx = 0; sx < docStyles.length; sx++) {
                 // the try statement is needed because on Firefox accessing CSS rules
                 // loaded from a remote source will raise a security exception
                 try {
-                    var classes = docStyles[sx].rules || docStyles[sx].cssRules;
+                    const classes = docStyles[sx].rules || docStyles[sx].cssRules;
                     if (classes != null) {
-                        for (var cx = 0; cx < classes.length; cx++) {
+                        for (let cx = 0; cx < classes.length; cx++) {
                             if (classes[cx].selectorText === cl) {
                                 success = true;
                                 break;
                             }
                         }
                     }
-                } catch(e) {
-                    if(e.name !== "SecurityError")
+                } catch (e) {
+                    if (e.name !== 'SecurityError') {
                         throw e;
+                    }
                 }
             }
         }
     });
     return success;
 };
-z$.wrapElement = function (containerTag, element) {
-    //$(element).wrap($('<'+containerTag+'/>'));
-    //return element;
+z$.wrapElement = function(containerTag, element) {
+    // $(element).wrap($('<'+containerTag+'/>'));
+    // return element;
     /** @type Element */
-    var container = document.createElement(containerTag);
-    if (typeof element === 'string')
+    const container = document.createElement(containerTag);
+    if (typeof element === 'string') {
         container.innerHTML = element;
-    else
-    // TODO: test this, it may not work
+    } else {
+        // TODO: test this, it may not work
         container.appendChild(element);
+    }
     return container;
 };
-z$.wrapCss = function (wrapperRule, css) {
-    var wrapReX = /((.*){([^{}]|((.*){([^}]+)[}]))*})/g;
-    var wrappedCss = '';
-    var ruleMatch;
+z$.wrapCss = function(wrapperRule, css) {
+    const wrapReX = /((.*){([^{}]|((.*){([^}]+)[}]))*})/g;
+    let wrappedCss = '';
+    let ruleMatch;
     // remove comments
     css = css.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '');
     do {
         ruleMatch = wrapReX.exec(css);
         if (ruleMatch && ruleMatch.length > 1) {
-            var ruleParts = ruleMatch[2];
+            const ruleParts = ruleMatch[2];
             if (ruleParts != null && ruleParts.length > 0) {
-                var classes = ruleParts.split(',');
-                var isMediaQuery = false;
-                z$.each(classes, function (k, v) {
+                const classes = ruleParts.split(',');
+                let isMediaQuery = false;
+                z$.each(classes, function(k, v) {
                     if (v.replace(' ', '') === '.') {
                         // a single `.` means 'self' (the container itself)
                         // so we just add the wrapperRule
-                        wrappedCss += '\n' + wrapperRule + ' '
+                        wrappedCss += '\n' + wrapperRule + ' ';
                     } else if (v.trim()[0] === '@') {
                         // leave it as is if it's an animation or media rule
                         wrappedCss += v + ' ';
-                        if (v.trim().toLowerCase().startsWith('@media'))
+                        if (v.trim().toLowerCase().startsWith('@media')) {
                             isMediaQuery = true;
+                        }
                     } else {
                         // wrap the class name (v)
                         wrappedCss += '\n' + wrapperRule + '\n' + v + ' ';
                     }
-                    if (k < classes.length - 1)
+                    if (k < classes.length - 1) {
                         wrappedCss += ', ';
+                    }
                 });
                 if (isMediaQuery) {
-                    var wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/,'$1'));
+                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'));
                     wrappedCss += '{\n  '+wrappedMediaQuery+'\n}';
                 } else {
                     wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
@@ -792,18 +817,19 @@ z$.wrapCss = function (wrapperRule, css) {
             }
         }
     } while (ruleMatch);
-    if (wrappedCss !== '')
+    if (wrappedCss !== '') {
         css = wrappedCss;
+    }
     return css;
 };
-z$.appendCss = function (css, target, cssId) {
-    var style = null;
-    var head = document.head || document.getElementsByTagName('head')[0];
+z$.appendCss = function(css, target, cssId) {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    let style = null;
     // remove old style if already defined
     if (!util.isNoU(target)) {
         head.removeChild(target);
     } else {
-        var oldStyle = document.getElementById(cssId);
+        const oldStyle = document.getElementById(cssId);
         if (oldStyle != null) {
             head.removeChild(oldStyle);
         }
@@ -813,32 +839,37 @@ z$.appendCss = function (css, target, cssId) {
         style = document.createElement('style');
         style.type = 'text/css';
         style.id = cssId;
-        if (style.styleSheet)
+        if (style.styleSheet) {
             style.styleSheet.cssText = css;
-        else
+        } else {
             style.appendChild(document.createTextNode(css));
+        }
     } else if (css instanceof Element) style = css;
     // Append new CSS
-    if (!util.isNoU(style))
+    if (!util.isNoU(style)) {
         head.appendChild(style);
+    }
     return style;
 };
 z$.replaceCssVars = function(css, model) {
-    var outCss = '', matched = 0, currentIndex = 0;
-    var vars = new RegExp(/\B\$var\[(.*[^\[\]])]/g),
-        result;
+    const vars = new RegExp(/\B\$var\[(.*[^\[\]])]/g);
+    let outCss = '';
+    let matched = 0;
+    let currentIndex = 0;
+    let result;
     while (result = vars.exec(css)) {
-        var value = result[0];
+        let value = result[0];
         if (result.length > 1) {
-            var name = result[1];
+            const name = result[1];
             // resolve dotted field path
-            var cur = model;
+            let cur = model;
             if (name.indexOf('.') > 0) {
-                var path = name.split('.');
-                for (var p = 0; p < path.length - 1; p++) {
+                const path = name.split('.');
+                for (let p = 0; p < path.length - 1; p++) {
                     cur = cur[path[p]];
-                    if (typeof cur === 'undefined')
+                    if (typeof cur === 'undefined') {
                         break;
+                    }
                 }
                 if (typeof cur !== 'undefined') {
                     value = cur[path[path.length - 1]];
@@ -858,20 +889,22 @@ z$.replaceCssVars = function(css, model) {
     }
     return css;
 };
-z$.replaceBraces = function (html, callback) {
-    var outHtml = '', matched = 0, currentIndex = 0;
-    var tags = new RegExp(/[^{}]+(?=})/g),
-        result;
+z$.replaceBraces = function(html, callback) {
+    const tags = new RegExp(/[^{}]+(?=})/g);
+    let outHtml = '';
+    let matched = 0;
+    let currentIndex = 0;
+    let result;
     while (result = tags.exec(html)) {
         if (typeof result[0] === 'string' && (result[0].trim().length === 0 || result[0].indexOf('\n') >= 0)) {
-            var nv = html.substr(currentIndex, result.index-currentIndex)+result[0]+'}';
+            const nv = html.substr(currentIndex, result.index-currentIndex)+result[0]+'}';
             outHtml += nv;
             currentIndex += nv.length;
             continue;
         }
-        var value = '{'+result[0]+'}';
+        let value = '{'+result[0]+'}';
         if (typeof callback === 'function') {
-            var r = callback(result[0]);
+            const r = callback(result[0]);
             if (!util.isNoU(r)) {
                 value = r;
                 matched++;
@@ -886,21 +919,22 @@ z$.replaceBraces = function (html, callback) {
     }
     return null;
 };
-z$.getClosest = function (elem, selector) {
+z$.getClosest = function(elem, selector) {
     // Get closest match
     for (; elem && elem !== document; elem = elem.parentNode) {
         if (elem.matches(selector)) return elem;
     }
     return null;
 };
-z$.getPosition = function (el) {
-    var visible = z$.isInView(el);
-    var x = 0, y = 0;
+z$.getPosition = function(el) {
+    const visible = z$.isInView(el);
+    let x = 0;
+    let y = 0;
     while (el) {
-        if (el.tagName.toLowerCase() === "body") {
+        if (el.tagName.toLowerCase() === 'body') {
             // deal with browser quirks with body/window/document and page scroll
-            var scrollX = el.scrollLeft || document.documentElement.scrollLeft;
-            var scrollY = el.scrollTop || document.documentElement.scrollTop;
+            const scrollX = el.scrollLeft || document.documentElement.scrollLeft;
+            const scrollY = el.scrollTop || document.documentElement.scrollTop;
             x += (el.offsetLeft - scrollX + el.clientLeft);
             y += (el.offsetTop - scrollY + el.clientTop);
         } else {
@@ -916,15 +950,17 @@ z$.getPosition = function (el) {
         visible: visible
     };
 };
-z$.isInView = function (el, tolerance) {
-    if (el.offsetParent === null)
+z$.isInView = function(el, tolerance) {
+    if (el.offsetParent === null) {
         return false;
-    var rect = el.getBoundingClientRect();
-    var area = {
+    }
+    const rect = el.getBoundingClientRect();
+    const area = {
         width: (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */,
         height: (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */
     };
-    var xt = 0; var yt = 0;
+    let xt = 0;
+    let yt = 0;
     if (!isNaN(tolerance)) {
         xt = (area.width * tolerance) - area.width;
         yt = (area.height * tolerance) - area.height;
@@ -944,20 +980,20 @@ if (!Element.prototype.matches) {
         Element.prototype.msMatchesSelector ||
         Element.prototype.oMatchesSelector ||
         Element.prototype.webkitMatchesSelector ||
-        function (s) {
-            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                i = matches.length;
+        function(s) {
+            const matches = (this.document || this.ownerDocument).querySelectorAll(s);
+            let i = matches.length;
             while (--i >= 0 && matches.item(i) !== this) {
             }
             return i > -1;
         };
 }
 // window.CustomEvent polyfill for IE>=9
-(function () {
-    if ( typeof window.CustomEvent === "function" ) return false;
-    function CustomEvent ( event, params ) {
-        params = params || { bubbles: false, cancelable: false, detail: undefined };
-        var evt = document.createEvent( 'CustomEvent' );
+(function() {
+    if (typeof window.CustomEvent === 'function') return false;
+    function CustomEvent(event, params) {
+        params = params || {bubbles: false, cancelable: false, detail: undefined};
+        const evt = document.createEvent( 'CustomEvent' );
         evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
         return evt;
     }
@@ -966,11 +1002,11 @@ if (!Element.prototype.matches) {
 })();
 // String.hashCode extension
 String.prototype.hashCode = function() {
-    var hash = 0, i, chr;
+    let hash = 0;
     if (this.length === 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        chr   = this.charCodeAt(i);
-        hash  = ((hash << 5) - hash) + chr;
+    for (let i = 0; i < this.length; i++) {
+        let chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
@@ -982,4 +1018,4 @@ if (!String.prototype.startsWith) {
     };
 }
 
-module.exports =  z$;
+module.exports = z$;

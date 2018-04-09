@@ -24,7 +24,7 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
+'use strict';
 
 // Generic utility class
 module.exports = {
@@ -33,15 +33,15 @@ module.exports = {
         return (window.navigator.userAgent.indexOf('Trident') > 0);
     },
 
-    isNoU: function (obj) {
+    isNoU: function(obj) {
         return (typeof obj === 'undefined' || obj === null);
     },
 
-    isFunction: function (f) {
+    isFunction: function(f) {
         return typeof f === 'function';
     },
 
-    objectEquals: function (x, y) {
+    objectEquals: function(x, y) {
         if (x === null || x === undefined || y === null || y === undefined) {
             return x === y;
         }
@@ -78,23 +78,25 @@ module.exports = {
         }
 
         // recursive object equality check
-        var p = Object.keys(x);
-        return Object.keys(y).every(function (i) {
+        const p = Object.keys(x);
+        return Object.keys(y).every(function(i) {
                 return p.indexOf(i) !== -1;
             }) &&
-            p.every(function (i) {
+            p.every(function(i) {
                 return util.objectEquals(x[i], y[i]);
             });
     },
 
-    propertyFromPath: function (o, s) {
-        if (typeof s !== 'string') return;
-        s = s.replace(/\[(\w+)]/g, '.$1'); // convert indexes to properties
+    propertyFromPath: function(o, s) {
+        if (typeof s !== 'string') {
+            return;
+        }
+        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
         s = s.replace(/^\./, '');           // strip a leading dot
-        var a = s.split('.');
-        var ref = o;
-        for (var i = 0, n = a.length; i < n; ++i) {
-            var k = a[i];
+        const a = s.split('.');
+        let ref = o;
+        for (let i = 0; i < a.length; ++i) {
+            const k = a[i];
             if (typeof ref[k] !== 'undefined') {
                 ref = ref[k];
             } else {
@@ -108,15 +110,16 @@ module.exports = {
         if (obj === null || typeof obj !== 'object') {
             return obj;
         }
-        // give temp the original obj's constructor
-        //var temp = obj.constructor();
-        //for (var key in obj)
+        // Give temp the original obj's constructor
+        // var temp = obj.constructor();
+        // for (var key in obj)
         //    temp[key] = cloneObject(obj[key]);
-        var temp = obj;
+        let temp = obj;
         try {
             temp = obj.constructor();
-            for (var key in obj)
+            for (let key in obj) {
                 temp[key] = cloneObject(obj[key]);
+            }
         } catch (e) {
             // TODO: should warn when clone is not possible
         }

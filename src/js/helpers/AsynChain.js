@@ -24,16 +24,16 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
+'use strict';
 
 function AsynChain(callback) {
     listener = callback;
 }
 
-AsynChain.prototype.isReady = function () {
+AsynChain.prototype.isReady = function() {
     return jobsList.length == 0 || currentIndex == -1;
 };
-AsynChain.prototype.getJobs = function () {
+AsynChain.prototype.getJobs = function() {
     return jobsList;
 };
 AsynChain.prototype.setJobs = function(list) {
@@ -41,7 +41,7 @@ AsynChain.prototype.setJobs = function(list) {
         // TODO: this case should never happen
         currentIndex = -1;
         jobsList.length = 0;
-        //done();
+        // done();
         return;
     }
     jobsList = list.slice();
@@ -50,18 +50,19 @@ AsynChain.prototype.setJobs = function(list) {
 };
 AsynChain.prototype.append = function(list) {
     // TODO: this is causing stack-overflow
-    if (this.isReady())
+    if (this.isReady()) {
         this.setJobs(list);
-    else
+    } else {
         Array.prototype.push.apply(jobsList, list);
+    }
 };
 
 // --------------------------------------------
 
-var jobsList = [];
-var currentIndex = -1;
-var listener = null;
-var lazyThread = null;
+let jobsList = [];
+let currentIndex = -1;
+let listener = null;
+let lazyThread = null;
 
 function next() {
     resetAsynCallback();
@@ -69,8 +70,10 @@ function next() {
     if (currentIndex < jobsList.length && !listener.willBreak()) {
         worker();
         return true;
-    } else if (currentIndex >= jobsList.length || listener.willBreak())
+    }
+    if (currentIndex >= jobsList.length || listener.willBreak()) {
         done();
+    }
     return false;
 }
 function done(reason) {
@@ -81,32 +84,39 @@ function done(reason) {
 }
 
 function worker() {
-    var job = jobsList[currentIndex];
-    if (job == null) return false;
-    var doWork = function () {
+    const job = jobsList[currentIndex];
+    if (job == null) {
+        return false;
+    }
+    const doWork = function() {
         resetAsynCallback();
-        if (!listener.doWork(job.item, function () {
+        if (!listener.doWork(job.item, function() {
             lazyThread = requestAnimationFrame(next);
-        })) next();
+        })) {
+            next();
+        }
     };
     if (job.cancelable) {
-        if (listener.willBreak())
+        if (listener.willBreak()) {
             done('stopped');
-        else if (lazyThread == null)
+        } else if (lazyThread == null) {
             lazyThread = requestAnimationFrame(doWork);
-        //else next();
-        else return false;
-    } else doWork();
+        } else {
+            return false;
+        }
+    } else {
+        doWork();
+    }
     return true;
 }
 
 function resetAsynCallback() {
-    if (lazyThread != null) {
+    if (lazyThread !== null) {
         cancelAnimationFrame(lazyThread);
         lazyThread = null;
     }
 }
 
-module.exports = function (callback) {
+module.exports = function(callback) {
     return new AsynChain(callback);
 };

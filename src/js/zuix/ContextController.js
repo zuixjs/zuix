@@ -24,9 +24,9 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
-"use strict";
+'use strict';
 
-var z$ =
+const z$ =
     require('../helpers/ZxQuery');
 
 /**
@@ -47,7 +47,7 @@ var z$ =
  * @constructor
  */
 function ContextController(context) {
-    var _t = this;
+    const _t = this;
 
     this._view = null;
 
@@ -76,56 +76,59 @@ function ContextController(context) {
      * */
     this._childNodes = [];
     /** @type {function} */
-    this.saveView = function () {
+    this.saveView = function() {
         this.restoreView();
-        this.view().children().each(function (i, el) {
+        this.view().children().each(function(i, el) {
             _t._childNodes.push(el);
         });
     };
     this.restoreView = function() {
         if (this._childNodes.length > 0) {
             _t.view().html('');
-            z$.each(_t._childNodes, function (i, el) {
+            z$.each(_t._childNodes, function(i, el) {
                 _t.view().append(el);
             });
             this._childNodes.length = 0;
         }
     };
 
-    this.on = function (eventPath, handler_fn) {
-        this.addEvent(eventPath, handler_fn);
+    this.on = function(eventPath, handler) {
+        this.addEvent(eventPath, handler);
         return this;
     };
     /** @protected */
-    this.mapEvent = function (eventMap, target, eventPath, handler_fn) {
+    this.mapEvent = function(eventMap, target, eventPath, handler) {
         if (target != null) {
             target.off(eventPath, this.eventRouter);
-            eventMap[eventPath] = handler_fn;
+            eventMap[eventPath] = handler;
             target.on(eventPath, this.eventRouter);
         } else {
             // TODO: should report missing target
         }
     };
     /** @protected */
-    this.eventRouter = function (e) {
-        if (typeof context._behaviorMap[e.type] === 'function')
+    this.eventRouter = function(e) {
+        if (typeof context._behaviorMap[e.type] === 'function') {
             context._behaviorMap[e.type].call(_t.view(), e, e.detail);
-        if (typeof context._eventMap[e.type] === 'function')
+        }
+        if (typeof context._eventMap[e.type] === 'function') {
             context._eventMap[e.type].call(_t.view(), e, e.detail);
+        }
         // TODO: else-> should report anomaly
     };
 
     // create event map from context options
-    var options = context.options(), handler = null;
+    const options = context.options();
+    let handler = null;
     if (options.on != null) {
-        for (var ep in options.on) {
+        for (let ep in options.on) {
             handler = options.on[ep];
             _t.addEvent(ep, handler);
         }
     }
     // create behavior map from context options
     if (options.behavior != null) {
-        for (var bp in options.behavior) {
+        for (let bp in options.behavior) {
             handler = options.behavior[bp];
             _t.addBehavior(bp, handler);
         }
@@ -137,14 +140,14 @@ function ContextController(context) {
 }
 
 // TODO: add jsDoc
-ContextController.prototype.addEvent = function (eventPath, handler_fn) {
-    this.mapEvent(this.context._eventMap, this.view(), eventPath, handler_fn);
+ContextController.prototype.addEvent = function(eventPath, handler) {
+    this.mapEvent(this.context._eventMap, this.view(), eventPath, handler);
     return this;
 };
 
 // TODO: add jsDoc
-ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
-    this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler_fn);
+ContextController.prototype.addBehavior = function(eventPath, handler) {
+    this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler);
     return this;
 };
 
@@ -174,11 +177,11 @@ ContextController.prototype.addBehavior = function (eventPath, handler_fn) {
  * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
-ContextController.prototype.field = function (fieldName) {
+ContextController.prototype.field = function(fieldName) {
     // this method is "attacched" from Zuix.js on controller initialization
     return null;
 };
-ContextController.prototype.clearCache = function () {
+ContextController.prototype.clearCache = function() {
     this._fieldCache.length = 0;
 };
 /**
@@ -200,7 +203,7 @@ ContextController.prototype.clearCache = function () {
  * @param {(string|undefined)} [filter]
  * @return {ZxQuery}
  */
-ContextController.prototype.view = function (filter) {
+ContextController.prototype.view = function(filter) {
     // context view changed, dispose cached fields from previous attacched view
     if (this.context.view() != null || this._view !== this.context.view()) {
         this.clearCache();
@@ -209,15 +212,13 @@ ContextController.prototype.view = function (filter) {
         // TODO: !!!!
         this._view = z$(this.context.view());
     }
-    if (filter != null)
+    if (filter != null) {
         return this._view.find(filter);
-    else if (this._view !== null)
+    } else if (this._view !== null) {
         return this._view;
-    else
-        throw({
-            message: 'Not attacched to a view yet.',
-            source: this
-        });
+    } else {
+        throw new Error('Not attached to a view yet.');
+    }
 };
 /**
  * Gets/Sets the data model of the component.
@@ -238,10 +239,10 @@ ContextController.prototype.view = function (filter) {
  * @param {object|undefined} [model] The model object.
  * @return {ContextController|object}
  */
-ContextController.prototype.model = function (model) {
-    if (model == null)
+ContextController.prototype.model = function(model) {
+    if (model == null) {
         return this.context.model();
-    else this.context.model(model);
+    } else this.context.model(model);
     return this;
 };
 /**
@@ -249,7 +250,7 @@ ContextController.prototype.model = function (model) {
  *
  * @return {object} The component options.
  */
-ContextController.prototype.options = function () {
+ContextController.prototype.options = function() {
     return this.context.options();
 };
 /**
@@ -278,19 +279,22 @@ zuix.context('my-slide-show')
  * @param {boolean} [isHook] Trigger as global hook event.
  * @return {ContextController}
  */
-ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
-    if (this.context._eventMap[eventPath] == null && isHook !== true)
+ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
+    if (this.context._eventMap[eventPath] == null && isHook !== true) {
         this.addEvent(eventPath, null);
+    }
     // TODO: ...
     if (isHook === true) {
-        var target = this.context.container();
+        let target = this.context.container();
         if (target == null) target = this.context.view();
-        if (target != null)
+        if (target != null) {
             z$(target)
                 .trigger(eventPath, eventData);
+        }
         this.context.trigger(this.context, eventPath, eventData);
-    } else
+    } else {
         this.view().trigger(eventPath, eventData);
+    }
     return this;
 };
 /**
@@ -323,10 +327,10 @@ ContextController.prototype.trigger = function (eventPath, eventData, isHook) {
  * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
-ContextController.prototype.expose = function (methodName, handler) {
+ContextController.prototype.expose = function(methodName, handler) {
     if (typeof methodName === 'object') {
-        var _t = this;
-        z$.each(methodName, function (k, v) {
+        const _t = this;
+        z$.each(methodName, function(k, v) {
             _t.context[k] = v;
         });
     } else this.context[methodName] = handler;
@@ -426,6 +430,8 @@ var ctrl = zuix.controller(function(cp) {
  * @param {!string} componentId Component identifier.
  * @return {ContextController} The `{ContextController}` itself.
  */
-ContextController.prototype.for = function (componentId) { return this; };
+ContextController.prototype.for = function(componentId) {
+    return this;
+};
 
 module.exports = ContextController;
