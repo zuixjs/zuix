@@ -40,7 +40,6 @@ function Localizer() {
  * @param {Element} container
  * @constructor
  */
-// eslint-disable-next-line no-unused-vars
 Localizer.prototype.Localize = function(container) {
     const localizables = container.querySelectorAll('[data-locale-id]');
     for (let l = 0; l < localizables.length; l++) {
@@ -89,7 +88,6 @@ Localizer.prototype.getLocaleString = function(localeId, defaultText, localeDict
  *
  * @return {string} Locale identifier string (eg. 'en' ,'fr', 'it', ...)
  */
-// eslint-disable-next-line no-unused-vars
 Localizer.prototype.getUserLanguage = function() {
     let userLang = (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage));
     if (userLang.length > 2) userLang = userLang.substring(0, 2);
@@ -100,7 +98,6 @@ Localizer.prototype.getUserLanguage = function() {
  * Get client date format endian type. This value can be used as a rough-guess of other locale settings such as measuring units.
  * @return {string} 'L' if date format is 'Little Endian -> DMY' or 'M' for 'Middle Endian -> MDY'
  */
-// eslint-disable-next-line no-unused-vars
 Localizer.prototype.getDateEndianType = function() {
     const testDate = new Date(98326800000);
     const localeDateParts = testDate.toLocaleDateString().replace(/[\u200E]/g, '').split('/');

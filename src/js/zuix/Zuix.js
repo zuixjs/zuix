@@ -488,7 +488,6 @@ function httpCaching(enable) {
 
 
 /** @private */
-// eslint-disable-next-line no-unused-vars
 function removeCachedComponent(componentId) {
     // TODO: removeCachedComponent
     // TODO: should this be called when last instance of a component type is disposed?
@@ -786,7 +785,6 @@ function getController(javascriptCode) {
     return instance;
 }
 
-// eslint-disable-next-line no-unused-vars
 function replaceCache(c) {
     _componentCache = c;
 }
@@ -881,7 +879,6 @@ zuix.unload(ctx);
  * Pass *Element* type if the underlying component is lazy-loadable and it might not have been instantiated yet.
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.unload = function(context) {
     unload(context);
     return this;
@@ -955,7 +952,6 @@ Zuix.prototype.context = function(contextId, callback) {
  * @param {ContextOptions|undefined} [options] Component context options.
  * @return {ComponentContext}
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.createComponent = function(componentId, options) {
     if (options == null) options = {};
     if (util.isNoU(options.contextId)) {
@@ -1040,7 +1036,6 @@ zuix
  * @param {function|undefined} eventHandler The handler function.
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.hook = function(eventPath, eventHandler) {
     hook(eventPath, eventHandler);
     return this;
@@ -1193,7 +1188,6 @@ Zuix.prototype.lazyLoad = function(enable, threshold) {
  * @param {boolean} [enable]
  * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.httpCaching = function(enable) {
     if (enable != null) {
         httpCaching(enable);
@@ -1275,7 +1269,6 @@ Zuix.prototype.ZxQuery = z$.ZxQuery;
  * Dumps content of the components cache. Mainly for debugging purpose.
  * @return {Array<ComponentCache>}
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.dumpCache = function() {
     return _componentCache;
 };
@@ -1283,7 +1276,6 @@ Zuix.prototype.dumpCache = function() {
  * Dumps allocated component contexts. Mainly for debugging purpose.
  * @return {Array<ComponentContext>}
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.dumpContexts = function() {
     return _contextRoot;
 };

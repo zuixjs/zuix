@@ -331,7 +331,6 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
  * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
-// eslint-disable-next-line no-unused-vars
 ContextController.prototype.expose = function(methodName, handler) {
     if (typeof methodName === 'object') {
         const _t = this;

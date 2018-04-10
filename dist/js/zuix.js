@@ -1,5 +1,3 @@
-/* ZUIX v0.4.9-30 18.04.10 17:04:10 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -36,7 +34,6 @@ function AsynChain(callback) {
 AsynChain.prototype.isReady = function() {
     return jobsList.length === 0 || currentIndex === -1;
 };
-// eslint-disable-next-line no-unused-vars
 AsynChain.prototype.getJobs = function() {
     return jobsList;
 };
@@ -258,7 +255,6 @@ Logger.prototype.i = Logger.prototype.info =
         this.log('INFO', arguments);
         return this;
     };
-// eslint-disable-next-line no-unused-vars
 Logger.prototype.w = Logger.prototype.warn = function() {
     this.log('WARN', arguments);
     return this;
@@ -271,7 +267,6 @@ Logger.prototype.d = Logger.prototype.debug = function() {
     this.log('DEBUG', arguments);
     return this;
 };
-// eslint-disable-next-line no-unused-vars
 Logger.prototype.t = Logger.prototype.trace = function() {
     this.log('TRACE', arguments);
     return this;
@@ -736,7 +731,6 @@ ZxQuery.prototype.children = function(filter) {
  *
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.reverse = function() {
     const elements = (Array.prototype.slice).call(this._selection, 0);
     this._selection = elements.reverse();
@@ -920,7 +914,6 @@ ZxQuery.prototype.isEmpty = function() {
  *
  * @return {ElementPosition}
  */
-// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.position = function() {
     if (this._selection[0] != null) {
         return z$.getPosition(this._selection[0]);
@@ -1004,7 +997,6 @@ ZxQuery.prototype.removeClass = function(className) {
  *
  * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
  */
-// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.prev = function() {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
@@ -1040,7 +1032,6 @@ ZxQuery.prototype.html = function(htmlText) {
  * @param {boolean|undefined} [check] Value to assign to the 'checked' attribute.
  * @return {ZxQuery|boolean}
  */
-// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.checked = function(check) {
     if (util.isNoU(check)) {
         const checked = this._selection[0].checked;
@@ -1104,7 +1095,6 @@ ZxQuery.prototype.insert = function(index, el) {
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
-// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.prepend = function(el) {
     if (typeof el === 'string') {
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
@@ -1134,7 +1124,6 @@ ZxQuery.prototype.detach = function() {
  *
  * @return {ZxQuery}
  */
-// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.attach = function() {
     const el = this._selection[0];
     if (el.parentNode == null && el.__zuix_oldParent != null) {
@@ -3076,7 +3065,6 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
  * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
-// eslint-disable-next-line no-unused-vars
 ContextController.prototype.expose = function(methodName, handler) {
     if (typeof methodName === 'object') {
         const _t = this;
@@ -3678,7 +3666,6 @@ function httpCaching(enable) {
 
 
 /** @private */
-// eslint-disable-next-line no-unused-vars
 function removeCachedComponent(componentId) {
     // TODO: removeCachedComponent
     // TODO: should this be called when last instance of a component type is disposed?
@@ -3976,7 +3963,6 @@ function getController(javascriptCode) {
     return instance;
 }
 
-// eslint-disable-next-line no-unused-vars
 function replaceCache(c) {
     _componentCache = c;
 }
@@ -4071,7 +4057,6 @@ zuix.unload(ctx);
  * Pass *Element* type if the underlying component is lazy-loadable and it might not have been instantiated yet.
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.unload = function(context) {
     unload(context);
     return this;
@@ -4145,7 +4130,6 @@ Zuix.prototype.context = function(contextId, callback) {
  * @param {ContextOptions|undefined} [options] Component context options.
  * @return {ComponentContext}
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.createComponent = function(componentId, options) {
     if (options == null) options = {};
     if (util.isNoU(options.contextId)) {
@@ -4230,7 +4214,6 @@ zuix
  * @param {function|undefined} eventHandler The handler function.
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.hook = function(eventPath, eventHandler) {
     hook(eventPath, eventHandler);
     return this;
@@ -4383,7 +4366,6 @@ Zuix.prototype.lazyLoad = function(enable, threshold) {
  * @param {boolean} [enable]
  * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.httpCaching = function(enable) {
     if (enable != null) {
         httpCaching(enable);
@@ -4465,7 +4447,6 @@ Zuix.prototype.ZxQuery = z$.ZxQuery;
  * Dumps content of the components cache. Mainly for debugging purpose.
  * @return {Array<ComponentCache>}
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.dumpCache = function() {
     return _componentCache;
 };
@@ -4473,7 +4454,6 @@ Zuix.prototype.dumpCache = function() {
  * Dumps allocated component contexts. Mainly for debugging purpose.
  * @return {Array<ComponentContext>}
  */
-// eslint-disable-next-line no-unused-vars
 Zuix.prototype.dumpContexts = function() {
     return _contextRoot;
 };

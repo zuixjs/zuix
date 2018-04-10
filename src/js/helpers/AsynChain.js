@@ -33,7 +33,6 @@ function AsynChain(callback) {
 AsynChain.prototype.isReady = function() {
     return jobsList.length === 0 || currentIndex === -1;
 };
-// eslint-disable-next-line no-unused-vars
 AsynChain.prototype.getJobs = function() {
     return jobsList;
 };

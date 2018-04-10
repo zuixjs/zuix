@@ -21,6 +21,7 @@
       }
     }],
     "camelcase": 1,
+    "no-unused-vars": 1,
     "no-extend-native": 1,
     "prefer-spread": 1,
     "prefer-rest-params": 1,
