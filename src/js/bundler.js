@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*!
  * @license
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -24,9 +25,11 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
+/* global define */
+
 'use strict';
 
-// TODO: detect whether running in a browser enviroment or not
+// TODO: detect whether running in a browser environment or not
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.

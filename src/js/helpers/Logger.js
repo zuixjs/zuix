@@ -130,6 +130,7 @@ Logger.prototype.i = Logger.prototype.info =
         this.log('INFO', arguments);
         return this;
     };
+// eslint-disable-next-line no-unused-vars
 Logger.prototype.w = Logger.prototype.warn = function() {
     this.log('WARN', arguments);
     return this;
@@ -142,6 +143,7 @@ Logger.prototype.d = Logger.prototype.debug = function() {
     this.log('DEBUG', arguments);
     return this;
 };
+// eslint-disable-next-line no-unused-vars
 Logger.prototype.t = Logger.prototype.trace = function() {
     this.log('TRACE', arguments);
     return this;

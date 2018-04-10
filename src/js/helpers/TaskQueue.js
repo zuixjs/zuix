@@ -85,7 +85,7 @@ function TaskQueue(listener) {
     };
     _t.taskCheck = function() {
         for (let i = 0; i < _t._taskList.length; i++) {
-            if (_t._taskList[i].status == 0) {
+            if (_t._taskList[i].status === 0) {
                 _t._taskList[i].status = 1;
                 _log.t(_t._taskList[i].tid, 'load:begin', 'timer:task:start');
                 listener(_t, 'load:begin', {
@@ -94,10 +94,10 @@ function TaskQueue(listener) {
                 _t._taskList[i].index = i;
                 (_t._taskList[i].fn).call(_t._taskList[i]);
                 return;
-            } else if (_t._taskList[i].status == 1) {
+            } else if (_t._taskList[i].status === 1) {
                 // currently running
                 return;
-            } else if (_t._taskList[i].status == 2) {
+            } else if (_t._taskList[i].status === 2) {
                 // TODO: _!!!-!
                 return;
             }
@@ -106,6 +106,12 @@ function TaskQueue(listener) {
         listener(_t, 'load:end');
     };
 }
+
+/**
+ *
+ * @param handler {function}
+ */
+TaskQueue.prototype.callback = function(handler) { };
 TaskQueue.prototype.queue = function(tid, fn, pri) {
     return this.taskQueue(tid, fn, pri);
 };

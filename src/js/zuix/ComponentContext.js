@@ -98,13 +98,13 @@ function ComponentContext(options, eventCallback) {
      */
     this.behavior = null;
 
-    /** @protected */
+    /** @package */
     this._eventMap = [];
-    /** @protected */
+    /** @package */
     this._behaviorMap = [];
 
     /**
-     * @protected
+     * @package
      * @type {ContextController}
      */
     this._c = null;

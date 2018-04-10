@@ -92,7 +92,7 @@ module.exports = {
             return;
         }
         s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        s = s.replace(/^\./, '');           // strip a leading dot
+        s = s.replace(/^\./, ''); // strip a leading dot
         const a = s.split('.');
         let ref = o;
         for (let i = 0; i < a.length; ++i) {
@@ -118,7 +118,9 @@ module.exports = {
         try {
             temp = obj.constructor();
             for (let key in obj) {
-                temp[key] = cloneObject(obj[key]);
+                if (obj.hasOwnProperty(key)) {
+                    temp[key] = cloneObject(obj[key]);
+                }
             }
         } catch (e) {
             // TODO: should warn when clone is not possible

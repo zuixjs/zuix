@@ -54,7 +54,7 @@ function ContextController(context) {
     this.context = context;
 
     /**
-     * @protected
+     * @package
      * @type {!Array.<ZxQuery>}
      **/
     this._fieldCache = [];
@@ -122,15 +122,19 @@ function ContextController(context) {
     let handler = null;
     if (options.on != null) {
         for (let ep in options.on) {
-            handler = options.on[ep];
-            _t.addEvent(ep, handler);
+            if (options.on.hasOwnProperty(ep)) {
+                handler = options.on[ep];
+                _t.addEvent(ep, handler);
+            }
         }
     }
     // create behavior map from context options
     if (options.behavior != null) {
         for (let bp in options.behavior) {
-            handler = options.behavior[bp];
-            _t.addBehavior(bp, handler);
+            if (options.behavior.hasOwnProperty(bp)) {
+                handler = options.behavior[bp];
+                _t.addBehavior(bp, handler);
+            }
         }
     }
 
@@ -178,7 +182,7 @@ ContextController.prototype.addBehavior = function(eventPath, handler) {
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
 ContextController.prototype.field = function(fieldName) {
-    // this method is "attacched" from Zuix.js on controller initialization
+    // this method is "attached" from Zuix.js on controller initialization
     return null;
 };
 ContextController.prototype.clearCache = function() {
@@ -327,6 +331,7 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
  * @param {function} [handler] Reference to the controller member to expose.
  * @return {ContextController} The `{ContextController}` itself.
  */
+// eslint-disable-next-line no-unused-vars
 ContextController.prototype.expose = function(methodName, handler) {
     if (typeof methodName === 'object') {
         const _t = this;
@@ -431,6 +436,7 @@ var ctrl = zuix.controller(function(cp) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.for = function(componentId) {
+    // this method is "attached" from Zuix.js on controller initialization
     return this;
 };
 

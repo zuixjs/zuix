@@ -198,6 +198,7 @@ ZxQuery.prototype.children = function(filter) {
  *
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
+// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.reverse = function() {
     const elements = (Array.prototype.slice).call(this._selection, 0);
     this._selection = elements.reverse();
@@ -226,7 +227,7 @@ ZxQuery.prototype.eq = function(i) {
     let resultSet = selection[i];
     if (arguments.length > 1) {
         resultSet = [];
-        z$.each(arguments, function (k, v) {
+        z$.each(arguments, function(k, v) {
             if (selection[v] != null) {
                 resultSet.push(selection[v]);
             }
@@ -381,6 +382,7 @@ ZxQuery.prototype.isEmpty = function() {
  *
  * @return {ElementPosition}
  */
+// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.position = function() {
     if (this._selection[0] != null) {
         return z$.getPosition(this._selection[0]);
@@ -464,6 +466,7 @@ ZxQuery.prototype.removeClass = function(className) {
  *
  * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
  */
+// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.prev = function() {
     return new ZxQuery(this._selection[0].previousElementSibling);
 };
@@ -499,6 +502,7 @@ ZxQuery.prototype.html = function(htmlText) {
  * @param {boolean|undefined} [check] Value to assign to the 'checked' attribute.
  * @return {ZxQuery|boolean}
  */
+// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.checked = function(check) {
     if (util.isNoU(check)) {
         const checked = this._selection[0].checked;
@@ -562,6 +566,7 @@ ZxQuery.prototype.insert = function(index, el) {
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string} el Element to append.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
+// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.prepend = function(el) {
     if (typeof el === 'string') {
         this._selection[0].innerHTML = el + this._selection[0].innerHTML;
@@ -591,6 +596,7 @@ ZxQuery.prototype.detach = function() {
  *
  * @return {ZxQuery}
  */
+// eslint-disable-next-line no-unused-vars
 ZxQuery.prototype.attach = function() {
     const el = this._selection[0];
     if (el.parentNode == null && el.__zuix_oldParent != null) {
@@ -683,16 +689,18 @@ z$.each = function(items, iterationCallback) {
     if (len > 0) {
         let count = 0;
         for (let i in items) {
-            let item = items[i];
-            if (item instanceof Element) {
-                item = z$(item);
-            }
-            if (iterationCallback.call(item, i, items[i]) === false) {
-                break;
-            }
-            count++;
-            if (count >= len) {
-                break;
+            if (items.hasOwnProperty(i)) {
+                let item = items[i];
+                if (item instanceof Element) {
+                    item = z$(item);
+                }
+                if (iterationCallback.call(item, i, items[i]) === false) {
+                    break;
+                }
+                count++;
+                if (count >= len) {
+                    break;
+                }
             }
         }
     }
