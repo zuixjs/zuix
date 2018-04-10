@@ -28,6 +28,8 @@
 
 const _log =
     require('../helpers/Logger')('ComponentContext.js');
+const _optionAttributes =
+    require('./OptionAttributes')();
 const z$ =
     require('../helpers/ZxQuery');
 const util =
@@ -198,7 +200,7 @@ ComponentContext.prototype.view = function(view) {
         // load inline view
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
-            this._view.removeAttribute('data-ui-view');
+            this._view.removeAttribute(_optionAttributes.dataUiView);
             this._container.appendChild(this._view);
             this._view = this._container;
         } else this._view = view;
@@ -251,7 +253,7 @@ ComponentContext.prototype.style = function(css) {
 
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type
-        css = z$.wrapCss('[data-ui-component="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
+        css = z$.wrapCss('['+_optionAttributes.dataUiComponent+'="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
 
         // trigger `css:parse` hook before assigning content to the view
         const hookData = {content: css};
@@ -453,7 +455,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         htmlPath = options.path;
     }
     // TODO: check if view caching is working in this case too
-    const inlineView = z$().find('[data-ui-view="' + htmlPath + '"]:not([data-ui-component*=""])');
+    const inlineView = z$().find('['+_optionAttributes.dataUiView+'="' + htmlPath + '"]:not(['+_optionAttributes.dataUiComponent+'*=""])');
     if (inlineView.length() > 0) {
         const inlineElement = inlineView.get(0);
         if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
@@ -508,11 +510,11 @@ ComponentContext.prototype.viewToModel = function() {
     const _t = this;
     this._model = {};
     // create data model from inline view fields
-    z$(this._view).find('[data-ui-field]').each(function(i, el) {
+    z$(this._view).find('['+_optionAttributes.dataUiField+']').each(function(i, el) {
         if (this.parent('pre,code').length() > 0) {
             return true;
         }
-        const name = this.attr('data-ui-field');
+        const name = this.attr(_optionAttributes.dataUiField);
         const value =
             // TODO: this is a work around for IE where "el.innerHTML" is lost after view replacing
             (!util.isNoU(el.innerHTML) && util.isIE())
@@ -543,13 +545,13 @@ ComponentContext.prototype.modelToView = function() {
     _log.t(this.componentId, 'model:view', 'timer:mv:start');
     if (this._view != null && this._model != null) {
         const _t = this;
-        z$(this._view).find('[data-ui-field]').each(function(i, el) {
+        z$(this._view).find('['+_optionAttributes.dataUiField+']').each(function(i, el) {
             if (this.parent('pre,code').length() > 0) {
                 return true;
             }
-            let boundField = this.attr('data-bind-to');
+            let boundField = this.attr(_optionAttributes.dataBindTo);
             if (boundField == null) {
-                boundField = this.attr('data-ui-field');
+                boundField = this.attr(_optionAttributes.dataUiField);
             }
             if (typeof _t._model === 'function') {
                 (_t._model).call(z$(_t._view), this, boundField);

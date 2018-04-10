@@ -40,6 +40,8 @@ const ContextController =
     require('./ContextController');
 const _componentizer =
     require('./Componentizer')();
+const _optionAttributes =
+    require('./OptionAttributes')();
 
 require('./ComponentCache');
 
@@ -84,10 +86,6 @@ require('./ComponentCache');
  */
 
 
-/**
- * @const
- */
-const ZUIX_FIELD_ATTRIBUTE = 'data-ui-field';
 /**
  * @private
  * @type {!Array.<ComponentContext>}
@@ -181,7 +179,7 @@ function field(fieldName, container, context) {
 
     let el = null;
     if (typeof context._fieldCache[fieldName] === 'undefined') {
-        el = z$(container).find('[' + ZUIX_FIELD_ATTRIBUTE + '="' + fieldName + '"]');
+        el = z$(container).find('[' + _optionAttributes.dataUiField + '="' + fieldName + '"]');
         if (el != null && el.length() > 0) {
             context._fieldCache[fieldName] = el;
             // extend the returned `ZxQuery` object adding the `field` method
@@ -207,7 +205,7 @@ function field(fieldName, container, context) {
 function load(componentId, options) {
     // TODO: throw error on argument mismatch
     // TODO: prevent load loops when including recursively a component
-
+    componentId = _componentizer.resolvePath(componentId);
     /** @type {ComponentContext} */
     let ctx = null;
     if (!util.isNoU(options)) {
@@ -379,7 +377,7 @@ function unload(context) {
     if (!util.isNoU(context)) {
         if (!util.isNoU(context._c)) {
             if (!util.isNoU(context._c.view())) {
-                context._c.view().attr('data-ui-component', null);
+                context._c.view().attr(_optionAttributes.dataUiComponent, null);
                 // un-register event handlers associated to the view
                 context._c.view().reset();
                 // un-register event handlers for all cached fields accessed through cp.field(...) method
@@ -423,7 +421,7 @@ function context(contextId, callback) {
     if (contextId instanceof z$.ZxQuery) {
         contextId = contextId.get();
     } else if (typeof contextId === 'string') {
-        const ctx = z$.find('[data-ui-context="'+contextId+'"]');
+        const ctx = z$.find('['+_optionAttributes.dataUiContext+'="'+contextId+'"]');
         if (ctx.length() > 0) contextId = ctx.get();
     }
     z$.each(_contextRoot, function(k, v) {
@@ -626,8 +624,8 @@ function createComponent(context, task) {
             if (!util.isNoU(c.view())) {
                 // if it's not null, a controller was already loaded, so we preserve the base controller name
                 // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
-                if (c.view().attr('data-ui-component') == null) {
-                    c.view().attr('data-ui-component', context.componentId);
+                if (c.view().attr(_optionAttributes.dataUiComponent) == null) {
+                    c.view().attr(_optionAttributes.dataUiComponent, context.componentId);
                 }
                 // if no model is supplied, try auto-create from view fields
                 if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
@@ -1071,6 +1069,7 @@ Zuix.prototype.hook = function(eventPath, eventHandler) {
  * @return {void}
  */
 Zuix.prototype.using = function(resourceType, resourcePath, callback) {
+    resourcePath = _componentizer.resolvePath(resourcePath);
     resourceType = resourceType.toLowerCase();
     const hashId = resourceType+'-'+resourcePath.hashCode();
 

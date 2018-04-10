@@ -28,6 +28,7 @@
 
 const fileSaver = require('./FileSaver');
 const serialize = require('./Serializer');
+const _optionAttributes = require('../zuix/OptionAttributes')();
 
 /**
  * Create application bundle containing all components
@@ -81,8 +82,10 @@ function saveBundle() {
     headerSummary += '\n\n';
     let bundle = headerSummary + serialize(zuix.bundle());
     // revert loaded status before exporting
-    bundle = bundle.replace(/data-ui-loaded=\\"true\\"/g, 'data-ui-loaded=\\"false\\"');
-    bundle = bundle.replace(/zuix-loaded=\\"true\\"/g, 'zuix-loaded=\\"false\\"');
+    bundle = bundle.replace(new RegExp(_optionAttributes.dataUiLoaded+'="true"', 'g'),
+        _optionAttributes.dataUiLoaded+'="false"');
+    bundle = bundle.replace(new RegExp(_optionAttributes.zuixLoaded+'="true"', 'g'),
+        _optionAttributes.zuixLoaded+'="false"');
     // save bundle
     const blob = new Blob(['zuix.bundle(' + bundle + ');'], {type: 'text/plain;charset=utf-8'});
     fileSaver.saveAs(blob, bundleFileName);

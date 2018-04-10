@@ -1,5 +1,3 @@
-/* ZUIX v0.4.9-31 18.04.10 17:29:34 */
-
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuixBundler=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /* eslint-disable */
 /*!
@@ -386,6 +384,7 @@ module.exports = function serialize(obj, options) {
 
 const fileSaver = _dereq_('./FileSaver');
 const serialize = _dereq_('./Serializer');
+const _optionAttributes = _dereq_('../zuix/OptionAttributes')();
 
 /**
  * Create application bundle containing all components
@@ -439,8 +438,10 @@ function saveBundle() {
     headerSummary += '\n\n';
     let bundle = headerSummary + serialize(zuix.bundle());
     // revert loaded status before exporting
-    bundle = bundle.replace(/data-ui-loaded=\\"true\\"/g, 'data-ui-loaded=\\"false\\"');
-    bundle = bundle.replace(/zuix-loaded=\\"true\\"/g, 'zuix-loaded=\\"false\\"');
+    bundle = bundle.replace(new RegExp(_optionAttributes.dataUiLoaded+'="true"', 'g'),
+        _optionAttributes.dataUiLoaded+'="false"');
+    bundle = bundle.replace(new RegExp(_optionAttributes.zuixLoaded+'="true"', 'g'),
+        _optionAttributes.zuixLoaded+'="false"');
     // save bundle
     const blob = new Blob(['zuix.bundle(' + bundle + ');'], {type: 'text/plain;charset=utf-8'});
     fileSaver.saveAs(blob, bundleFileName);
@@ -456,6 +457,45 @@ module.exports = function(root) {
     return zuix;
 };
 
-},{"./FileSaver":2,"./Serializer":3}]},{},[1])
+},{"../zuix/OptionAttributes":5,"./FileSaver":2,"./Serializer":3}],5:[function(_dereq_,module,exports){
+
+const OptionAttributes = Object.freeze({
+    dataBindModel:
+        'data-bind-model',
+    dataBindTo:
+        'data-bind-to',
+    dataUiComponent:
+        'data-ui-component',
+    dataUiContext:
+        'data-ui-context',
+    dataUiField:
+        'data-ui-field',
+    dataUiInclude:
+        'data-ui-include',
+    dataUiLazyload:
+        'data-ui-lazyload',
+    dataUiLoad:
+        'data-ui-load',
+    dataUiLoaded:
+        'data-ui-loaded',
+    dataUiOptions:
+        'data-ui-options',
+    dataUiPriority:
+        'data-ui-priority',
+    dataUiView:
+        'data-ui-view',
+    zuixLoaded:
+        'zuix-loaded'
+});
+
+/**
+ * @param root
+ * @return {Zuix}
+ */
+module.exports = function(root) {
+    return OptionAttributes;
+};
+
+},{}]},{},[1])
 (1)
 });
