@@ -34,6 +34,7 @@ interface Zuix {
     httpCaching(enable?: Boolean): Zuix | Boolean;
     componentize(element?: Element | ZxQuery): Zuix;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
+    $: ZxQuery;
 }
 interface ContextControllerHandler {
     (cp: ContextController): void;
@@ -130,5 +131,3 @@ interface ZxQuery {
 }
 
 declare const zuix: Zuix;
-
-declare const zuix.$: ZxQuery;

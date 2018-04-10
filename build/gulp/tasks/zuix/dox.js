@@ -53,7 +53,6 @@ module.exports = function() {
             tsDefs += generateTypescriptDefs('ComponentCache');
             tsDefs += generateTypescriptDefs('ZxQuery');
             tsDefs += '\ndeclare const zuix: Zuix;\n';
-            tsDefs += '\ndeclare const zuix.$: ZxQuery;\n';
         // Write TypeScript definitions to file
         const targetFolder = 'dist/ts';
         if (!fs.existsSync(targetFolder)) {
@@ -90,18 +89,22 @@ function generateTypescriptDefs(objName) {
             openContext(objName);
             output += indentTab() + ctx.name + '(';
             let t;
-            for (t = 0; t < obj.tags.length; t+=1) {
+            for (t = 0; t < obj.tags.length; t += 1) {
                 const tag = obj.tags[t];
                 if (tag.type === 'param') {
                     if (tag.name[0] === '[') {
-                        output += tag.name.substring(1, tag.name.length - 1)+'?: ';
+                        output += tag.name.substring(1, tag.name.length - 1) + '?: ';
                     } else {
-                        output += tag.name+': ';
+                        output += tag.name + ': ';
                     }
                     output += getTypes(tag.types);
-                    if (t < obj.tags.length-2) {
+                    if (t < obj.tags.length - 2) {
                         output += ', ';
                     }
+                } else if (tag.type === 'property') {
+                    output += '): ';
+                    output += getTypes(tag.types);
+                    output += ';\n';
                 } else if (tag.type === 'return' || tag.type === 'returns') {
                     output += '): ';
                     let returnTypes = getTypes(tag.types);
@@ -110,6 +113,19 @@ function generateTypescriptDefs(objName) {
                     }
                     output += returnTypes;
                     output += ';\n';
+                }
+            }
+        } else if (ctx != null && ctx.type === 'property' && ctx.constructor === objName) {
+            if (obj.tags.length > 0) {
+                openContext(objName);
+                let t;
+                for (t = 0; t < obj.tags.length; t += 1) {
+                    const tag = obj.tags[t];
+                    if (tag.type === 'property') {
+                        output += indentTab() + ctx.name + ': ';
+                        output += getTypes(tag.types);
+                        output += ';\n';
+                    }
                 }
             }
         } else {

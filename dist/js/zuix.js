@@ -4420,6 +4420,9 @@ Zuix.prototype.bundle = function(bundleData, callback) {
     return this;
 };
 
+/**
+ * @property {ZxQuery}
+ */
 Zuix.prototype.$ = z$;
 Zuix.prototype.TaskQueue = TaskQueue;
 Zuix.prototype.ZxQuery = z$.ZxQuery;

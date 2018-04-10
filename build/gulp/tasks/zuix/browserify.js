@@ -1,5 +1,4 @@
 const gulp = require('gulp');
-const gutil = require('gulp-util');
 const browserify = require('gulp-browserify');
 const rename = require('gulp-rename');
 const header = require('gulp-header');
@@ -8,9 +7,9 @@ module.exports = function() {
     return gulp.src('src/js/main.js', {read: false})
         .pipe(browserify({
             standalone: 'zuix'
-        }).on('error', (err) => {
+        })/*.on('error', (err) => {
             gutil.log('Browserify Error', gutil.colors.red(err.message));
-        }))
+        })*/)
         // this is necessary for types recognition
         .pipe(header('/** @typedef {Zuix} window.zuix */'))
         .pipe(rename('zuix.js'))

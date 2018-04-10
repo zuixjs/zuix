@@ -8,9 +8,10 @@ module.exports = function() {
             compilerFlags: {
                 // debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
                 warning_level: 'QUIET',
-                // useTypesForOptimization: true,
+                compilation_level: 'SIMPLE',
                 language_in: 'ECMASCRIPT6_STRICT',
                 language_out: 'ES5_STRICT',
+                // useTypesForOptimization: true,
                 // define: [
                 //  "goog.DEBUG=false"
                 // ],
