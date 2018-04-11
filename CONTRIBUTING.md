@@ -1,9 +1,6 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via the
-[issue tracker](https://github.com/genielabs/zuix/issues) before making a change.
-
-## How to contribute to ZUIX
+## How to contribute to zUIx
 
 #### **Did you find a bug?**
 
@@ -23,7 +20,7 @@ Include the relevant issue number if applicable.
 #### **Did you fix whitespace, format code, or make a purely cosmetic patch?**
 
 Changes that are cosmetic in nature and do not add anything substantial to the stability, functionality,
-or testability of ZUIX will generally not be accepted unless discussed via the [issue tracker](https://github.com/genielabs/zuix/issues).
+or testability of zUIx will generally not be accepted unless discussed via the [issue tracker](https://github.com/genielabs/zuix/issues).
 
 #### **Do you intend to add a new feature or change an existing one?**
 
@@ -33,20 +30,22 @@ File a new *[enhancement issue](https://github.com/genielabs/zuix/issues/new?lab
 
 File a new *[question issue](https://github.com/genielabs/zuix/issues/new?labels=question)*.
 
-#### **Do you want to contribute to the ZUIX documentation?**
+#### **Do you want to contribute to the documentation website?**
 
-The documentation site source code is available from the **[gh-pages](https://github.com/genielabs/zuix/tree/gh-pages)** branch, you can
+Source code of the documentation website is located in the **[gh-pages](https://github.com/genielabs/zuix/tree/gh-pages)** branch, you can
 contribute following same rules used for the main repo.
 
 #### **Coding styles and conventions**
 
-Please follow [standardjs.com](https://standardjs.com/rules.html) coding rules.
-You may find out that some of these rules are not respected in the existing code,
+This project follows [standardjs.com](https://standardjs.com/rules.html) coding rules.
+The build script also includes *ESLint* checks that are mainly based off the
+`eslint-config-google`.
+You may find out that some of these rules are not fully respected in the existing code,
 but this will be fixed from time to time.
 
-#### **Getting started with ZUIX source code**
+#### **Getting started with zUIx source code**
 
-Clone [**ZUIX repository**](https://github.com/genielabs/zuix) or install
+Clone [**zUIx repository**](https://github.com/genielabs/zuix) or install
 `zuix` development package from *NPM*
 
     npm install zuix
@@ -65,22 +64,22 @@ or
 
     npm run build
 
-this will also generate JSON formatted **ZUIX API** files in the `_docs` folder
-and **ZUIX TypeScript** definition file in the `./dist/js` folder.
+this will also generate, starting from JSDoc comments, the JSON formatted **API** files
+in the `_docs` folder and **TypeScript** definition file in the `./dist/js` folder.
 
 To submit a new release
 
     npm run release <newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease
 
-if passing *CI* tests this will also publish *npm packages* and update *ZUIX web site*
+if passing *CI* tests this will also publish *npm packages* and update documentation website
 files in *gh-pages* branch.
 The script run on the *CI* server side is
 
     npm run deploy
 
-#### Join ZUIX team!
+#### Join zUIx team!
 
-ZUIX is a volunteer effort. We encourage you to pitch in and join the team!
+zUIx is a volunteer effort. We encourage you to pitch in and join the team!
 
 Thanks! :heart: :heart: :heart:
 

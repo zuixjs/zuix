@@ -3,7 +3,16 @@
 
 ## zUIx
 
-##### Create amazing component-based websites and web applications.
+JavaScript library to support you in creating amazing component-based
+websites and applications.
+
+Example components and usage:
+
+[http://kit.zuix.it](https://genielabs.github.io/zkit)
+
+Documentation site:
+
+[http://zuix.it](https://genielabs.github.io/zuix)
 
 
 ### Getting Started
@@ -78,7 +87,7 @@ containing everything is needed to get you started.
 
 ### Contributing
 
-Please read the [CONTRIBUTING.md](https://github.com/genielabs/zuix/blob/master/CONTRIBUTING.md) document.
+See the [CONTRIBUTING.md](https://github.com/genielabs/zuix/blob/master/CONTRIBUTING.md) document.
 
 
 ### Documentation and API
