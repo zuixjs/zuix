@@ -28,7 +28,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **ZUIX v0.4.9-32**](https://genielabs.github.io/zuix/js/zuix.min.js)
+[Download **zUIx v0.4.9-32**](https://genielabs.github.io/zuix/js/zuix.min.js)
 *~11 kB (gzipped)*
 
 ###### Hosted
@@ -65,7 +65,7 @@ Include the library from *bower_components* folder in your HTML project files:
 
 #### Using with TypeScript
 
-To use ZUIX in a TypeScript project you can download and use the auto-generated
+To use zUIx in a TypeScript project you can download and use the auto-generated
 [module definition file](https://raw.githubusercontent.com/genielabs/zuix/master/dist/ts/zuix.d.ts)
 located in the distribution folder of the master repo.
 
@@ -81,16 +81,10 @@ containing everything is needed to get you started.
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
 *example of using* **list_view** *component with progressive/lazy loading*
 - [**G-Labs web site**](https://genielabs.github.io/glabs.it) presentation website
-- [**ZUIX on CodePen**](https://codepen.io/genielabs/)
+- [**zUIx on CodePen**](https://codepen.io/genielabs/)
 *more examples and tutorials on CodePen*
 
 
 ### Contributing
 
 See the [CONTRIBUTING.md](https://github.com/genielabs/zuix/blob/master/CONTRIBUTING.md) document.
-
-
-### Documentation and API
-
-[ZUIX Home](https://genielabs.github.io/zuix/)
-

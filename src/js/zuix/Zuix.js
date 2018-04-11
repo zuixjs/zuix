@@ -17,7 +17,7 @@
 
 /*
  *
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -126,7 +126,7 @@ let _contextSeqNum = 0;
 let _enableHttpCaching = true;
 
 /**
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *
  * @class Zuix
  * @constructor

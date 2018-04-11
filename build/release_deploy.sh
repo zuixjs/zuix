@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e # Exit with nonzero exit code if anything fails
 
-PACKAGE_NAME="ZUIX"
+PACKAGE_NAME="zUIx"
 CURRENT_VERSION=`grep '"version":' package.json | cut -d\" -f4`
 
 TARGET_BRANCH="gh-pages"

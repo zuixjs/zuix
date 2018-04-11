@@ -19,7 +19,7 @@
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -143,7 +143,7 @@ module.exports = function(callback) {
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -297,7 +297,7 @@ module.exports = function(ctx) {
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -418,7 +418,7 @@ module.exports = TaskQueue;
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -551,7 +551,7 @@ module.exports = {
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -1577,7 +1577,7 @@ module.exports = z$;
 
 /**
  *
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -1623,7 +1623,7 @@ module.exports = z$;
 
 /*
  *
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -1677,7 +1677,7 @@ module.exports = function(root) {
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -2273,7 +2273,7 @@ module.exports = ComponentContext;
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -2777,7 +2777,7 @@ function lazyElementCheck(element) {
 /*
  *
  *  This file is part of
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -3259,7 +3259,7 @@ module.exports = function(root) {
 
 /*
  *
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *        https://genielabs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
@@ -3368,7 +3368,7 @@ let _contextSeqNum = 0;
 let _enableHttpCaching = true;
 
 /**
- *  ZUIX, Javascript library for component-based development.
+ *  zUIx, Javascript library for component-based development.
  *
  * @class Zuix
  * @constructor
