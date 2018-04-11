@@ -754,7 +754,7 @@ z$.classExists = function(className) {
                         }
                     }
                 } catch (e) {
-                    if (e.name !== 'SecurityError') {
+                    if (e.name !== 'SecurityError' && e.name !== 'InvalidAccessError') {
                         throw e;
                     }
                 }

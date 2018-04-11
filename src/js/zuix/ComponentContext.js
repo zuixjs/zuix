@@ -464,9 +464,8 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         } else {
             context.view(inlineElement.outerHTML);
         }
-        const html = context.view().innerHTML;
         if (util.isFunction(options.success)) {
-            (options.success).call(context, html);
+            (options.success).call(context, inlineElement.outerHTML);
         }
         if (util.isFunction(options.then)) {
             (options.then).call(context);
@@ -582,6 +581,17 @@ ComponentContext.prototype.modelToView = function() {
                             break;
                         default:
                             el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
+                            if (boundData.attributes != null) {
+                                for (let i = 0; i < boundData.attributes.length; i++) {
+                                    const attr = boundData.attributes[i];
+                                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
+                                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
+                                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
+                                        }
+                                        el.setAttribute(attr.name, attr.value);
+                                    }
+                                }
+                            }
                     }
                 }
             }

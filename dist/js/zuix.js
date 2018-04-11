@@ -1287,7 +1287,7 @@ z$.classExists = function(className) {
                         }
                     }
                 } catch (e) {
-                    if (e.name !== 'SecurityError') {
+                    if (e.name !== 'SecurityError' && e.name !== 'InvalidAccessError') {
                         throw e;
                     }
                 }
@@ -2123,9 +2123,8 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         } else {
             context.view(inlineElement.outerHTML);
         }
-        const html = context.view().innerHTML;
         if (util.isFunction(options.success)) {
-            (options.success).call(context, html);
+            (options.success).call(context, inlineElement.outerHTML);
         }
         if (util.isFunction(options.then)) {
             (options.then).call(context);
@@ -2241,6 +2240,17 @@ ComponentContext.prototype.modelToView = function() {
                             break;
                         default:
                             el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
+                            if (boundData.attributes != null) {
+                                for (let i = 0; i < boundData.attributes.length; i++) {
+                                    const attr = boundData.attributes[i];
+                                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
+                                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
+                                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
+                                        }
+                                        el.setAttribute(attr.name, attr.value);
+                                    }
+                                }
+                            }
                     }
                 }
             }
@@ -3201,6 +3211,31 @@ ContextController.prototype.for = function(componentId) {
 module.exports = ContextController;
 
 },{"../helpers/ZxQuery":5}],11:[function(_dereq_,module,exports){
+/*
+ * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
 
 const OptionAttributes = Object.freeze({
     dataBindModel:
