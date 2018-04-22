@@ -932,6 +932,7 @@ z$.getPosition = function(el) {
     const visible = z$.isInView(el);
     let x = 0;
     let y = 0;
+    let rect = el.getBoundingClientRect();
     while (el) {
         if (el.tagName.toLowerCase() === 'body') {
             // deal with browser quirks with body/window/document and page scroll
@@ -949,6 +950,7 @@ z$.getPosition = function(el) {
     return {
         x: x,
         y: y,
+        rect: rect,
         visible: visible
     };
 };
@@ -956,20 +958,13 @@ z$.isInView = function(el, tolerance) {
     if (el.offsetParent === null) {
         return false;
     }
-    const rect = el.getBoundingClientRect();
-    const area = {
-        width: (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */,
-        height: (window.innerHeight || document.documentElement.clientHeight) /* or $(window).height() */
-    };
-    let xt = 0;
-    let yt = 0;
-    if (!isNaN(tolerance)) {
-        xt = (area.width * tolerance) - area.width;
-        yt = (area.height * tolerance) - area.height;
-    }
-    return rect.bottom > -yt && rect.right > -xt
-        && rect.left < area.width + xt
-        && rect.top < area.height + yt;
+    if (tolerance == null) tolerance = 0;
+    const r1 = (el.offsetParent).getBoundingClientRect();
+    const r2 = el.getBoundingClientRect();
+    return !(r2.left > r1.right-tolerance ||
+        r2.right < r1.left+tolerance ||
+        r2.top > r1.bottom-tolerance ||
+        r2.bottom < r1.top+tolerance);
 };
 
 z$.ZxQuery = ZxQuery;
