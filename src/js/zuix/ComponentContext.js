@@ -160,6 +160,14 @@ ComponentContext.prototype.view = function(view) {
         view = hookData.content;
 
         if (this._container != null) {
+            // check for inner mode
+            if (this._container.getAttribute(_optionAttributes.dataUiMode) === 'inner') {
+                const d = document.createElement('div');
+                d.innerHTML = view;
+                if (d.children.length === 1) {
+                    view = d.firstElementChild.innerHTML;
+                }
+            }
             // append view content to the container
             this._view = this._container;
             this._view.innerHTML += view;

@@ -43,6 +43,8 @@ const OptionAttributes = Object.freeze({
         'data-ui-load',
     dataUiLoaded:
         'data-ui-loaded',
+    dataUiMode:
+        'data-ui-mode',
     dataUiOptions:
         'data-ui-options',
     dataUiPriority:
