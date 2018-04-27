@@ -611,6 +611,7 @@ function createComponent(context, task) {
                 initController(context._c);
             });
         }
+        z$(context.view()).attr(_optionAttributes.dataUiContext, context.contextId);
 
         _log.d(context.componentId, 'component:initializing');
         if (util.isFunction(context.controller())) {
@@ -725,6 +726,12 @@ function createComponent(context, task) {
  */
 function initController(c) {
     _log.t(c.context.componentId, 'controller:init', 'timer:init:start');
+
+    // re-enable nested components loading
+    c.view().find('['+_optionAttributes.dataUiLoad+'-]').each(function(i, v) {
+        this.attr(_optionAttributes.dataUiLoad, this.attr(_optionAttributes.dataUiLoad+'-'));
+        this.attr(_optionAttributes.dataUiLoad+'-', null);
+    });
 
     // bind {ContextController}.field method
     c.field = function(fieldName) {

@@ -159,6 +159,7 @@ ComponentContext.prototype.view = function(view) {
         this.trigger(this, 'html:parse', hookData);
         view = hookData.content;
 
+        // TODO: remove data-ui-view attribute if present on root node
         if (this._container != null) {
             // check for inner mode
             if (this._container.getAttribute(_optionAttributes.dataUiMode) === 'inner') {
@@ -178,6 +179,7 @@ ComponentContext.prototype.view = function(view) {
             } else this._view = viewDiv;
         }
 
+        // Run embedded scripts
         z$(this._view).find('script').each(function(i, el) {
             if (this.attr('zuix-loaded') !== 'true') {
                 this.attr('zuix-loaded', 'true');
@@ -195,7 +197,7 @@ ComponentContext.prototype.view = function(view) {
                         clonedScript.src = this.src;
                     this.get().parentNode.insertBefore(clonedScript, this.get());
                 } else */
-                    (eval).call(window, el.innerHTML);
+                (eval).call(window, el.innerHTML);
             }
         });
 
@@ -208,6 +210,7 @@ ComponentContext.prototype.view = function(view) {
         // load inline view
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
+            // remove data-ui-view attribute if present on root node
             this._view.removeAttribute(_optionAttributes.dataUiView);
             this._container.appendChild(this._view);
             this._view = this._container;
@@ -222,6 +225,11 @@ ComponentContext.prototype.view = function(view) {
         // enable local css styling
         v.removeClass('zuix-css-ignore');
     }
+    // Disable loading of nested components until the component is ready
+    v.find('['+_optionAttributes.dataUiLoad+']').each(function(i, v) {
+        this.attr(_optionAttributes.dataUiLoad+'-', this.attr(_optionAttributes.dataUiLoad));
+        this.attr(_optionAttributes.dataUiLoad, null);
+    });
 
     this.modelToView();
 
@@ -518,6 +526,7 @@ ComponentContext.prototype.viewToModel = function() {
     this._model = {};
     // create data model from inline view fields
     z$(this._view).find('['+_optionAttributes.dataUiField+']').each(function(i, el) {
+        // TODO: this is not so clean
         if (this.parent('pre,code').length() > 0) {
             return true;
         }

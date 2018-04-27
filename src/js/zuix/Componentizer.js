@@ -360,12 +360,17 @@ function loadInline(element) {
 
     let componentId = v.attr(_optionAttributes.dataUiLoad);
     if (util.isNoU(componentId)) {
-        componentId = resolvePath(v.attr(_optionAttributes.dataUiInclude));
-        v.attr(_optionAttributes.dataUiInclude, componentId);
-        v.attr(_optionAttributes.dataUiComponent, componentId);
-        // Static include hove no controller
-        if (util.isNoU(options.controller)) {
-            options.controller = function() { };
+        const include = v.attr(_optionAttributes.dataUiInclude);
+        if (include != null) {
+            componentId = resolvePath(include);
+            v.attr(_optionAttributes.dataUiInclude, componentId);
+            v.attr(_optionAttributes.dataUiComponent, componentId);
+            // Static include hove no controller
+            if (util.isNoU(options.controller)) {
+                options.controller = function() {};
+            }
+        } else {
+            return false;
         }
     } else {
         componentId = resolvePath(componentId);
