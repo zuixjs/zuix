@@ -163,7 +163,7 @@ ComponentContext.prototype.view = function(view) {
         if (viewDiv.firstElementChild != null) {
             // remove data-ui-view attribute from template if present on root node
             viewDiv.firstElementChild.removeAttribute(_optionAttributes.dataUiView);
-            view = viewDiv.firstElementChild.outerHTML;
+            view = viewDiv.innerHTML;
         }
         if (this._container != null) {
             // check for inner mode
@@ -177,7 +177,7 @@ ComponentContext.prototype.view = function(view) {
             this._view.innerHTML += view;
         } else {
             if (this._view != null) {
-                this._view.innerHTML = viewDiv.innerHTML;
+                this._view.innerHTML = view;
             } else this._view = viewDiv;
         }
 

@@ -1,5 +1,3 @@
-/* zUIx v0.4.9-37 18.04.28 10:44:55 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1819,7 +1817,7 @@ ComponentContext.prototype.view = function(view) {
         if (viewDiv.firstElementChild != null) {
             // remove data-ui-view attribute from template if present on root node
             viewDiv.firstElementChild.removeAttribute(_optionAttributes.dataUiView);
-            view = viewDiv.firstElementChild.outerHTML;
+            view = viewDiv.innerHTML;
         }
         if (this._container != null) {
             // check for inner mode
@@ -1833,7 +1831,7 @@ ComponentContext.prototype.view = function(view) {
             this._view.innerHTML += view;
         } else {
             if (this._view != null) {
-                this._view.innerHTML = viewDiv.innerHTML;
+                this._view.innerHTML = view;
             } else this._view = viewDiv;
         }
 
@@ -2550,8 +2548,7 @@ function queueLoadables(element) {
             task.priority = pri + (level * 1000);
             waitingTasks.push(task);
         } else {
-            // _log.w("Skipped (belongs to template)", el);
-            console.log('###', el);
+            // _log.w("Element belongs to a template: process only when attached to a context instance.", el);
         }
     }
     let added = 0;

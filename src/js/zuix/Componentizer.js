@@ -269,8 +269,7 @@ function queueLoadables(element) {
             task.priority = pri + (level * 1000);
             waitingTasks.push(task);
         } else {
-            // _log.w("Skipped (belongs to template)", el);
-            console.log('###', el);
+            // _log.w("Element belongs to a template: process only when attached to a context instance.", el);
         }
     }
     let added = 0;
