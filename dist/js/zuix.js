@@ -1,5 +1,3 @@
-/* zUIx v0.4.9-36 18.04.27 19:05:15 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1815,21 +1813,23 @@ ComponentContext.prototype.view = function(view) {
         this.trigger(this, 'html:parse', hookData);
         view = hookData.content;
 
-        // TODO: remove data-ui-view attribute if present on root node
+        const viewDiv = z$.wrapElement('div', view);
+        if (viewDiv.firstElementChild != null) {
+            // remove data-ui-view attribute from template if present on root node
+            viewDiv.firstElementChild.removeAttribute(_optionAttributes.dataUiView);
+            view = viewDiv.firstElementChild.outerHTML;
+        }
         if (this._container != null) {
             // check for inner mode
             if (this._container.getAttribute(_optionAttributes.dataUiMode) === 'inner') {
-                const d = document.createElement('div');
-                d.innerHTML = view;
-                if (d.children.length === 1) {
-                    view = d.firstElementChild.innerHTML;
+                if (viewDiv.children.length === 1) {
+                    view = viewDiv.firstElementChild.innerHTML;
                 }
             }
             // append view content to the container
             this._view = this._container;
             this._view.innerHTML += view;
         } else {
-            const viewDiv = z$.wrapElement('div', view);
             if (this._view != null) {
                 this._view.innerHTML = viewDiv.innerHTML;
             } else this._view = viewDiv;
@@ -2527,12 +2527,30 @@ function queueLoadables(element) {
 //    }
     const waitingTasks = [];
     for (let w = 0; w < waitingLoad.length; w++) {
-        let pri = parseInt(waitingLoad[w].getAttribute(_optionAttributes.dataUiPriority));
+        const el = waitingLoad[w];
+        let pri = parseInt(el.getAttribute(_optionAttributes.dataUiPriority));
         if (isNaN(pri)) pri = 0;
-        const task = new TaskItem();
-        task.element = waitingLoad[w];
-        task.priority = pri; // w - ( 12 * ( w % 2 ) ) + ( pri * 73 ); // fuzzy pri
-        waitingTasks.push(task);
+        // adjust priority by element level
+        let level = 0;
+        let parent = el.parentNode;
+        let ignore = false;
+        while (parent != null && parent !== document) {
+            level++;
+            if (parent.getAttribute(_optionAttributes.dataUiView) != null) {
+                ignore = true;
+                break;
+            }
+            parent = parent.parentNode;
+        }
+        if (!ignore) {
+            const task = new TaskItem();
+            task.element = el;
+            task.priority = pri + (level * 1000);
+            waitingTasks.push(task);
+        } else {
+            // _log.w("Skipped (belongs to template)", el);
+            console.log('###', el);
+        }
     }
     let added = 0;
     // add selected elements to the requests queue

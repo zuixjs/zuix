@@ -248,12 +248,30 @@ function queueLoadables(element) {
 //    }
     const waitingTasks = [];
     for (let w = 0; w < waitingLoad.length; w++) {
-        let pri = parseInt(waitingLoad[w].getAttribute(_optionAttributes.dataUiPriority));
+        const el = waitingLoad[w];
+        let pri = parseInt(el.getAttribute(_optionAttributes.dataUiPriority));
         if (isNaN(pri)) pri = 0;
-        const task = new TaskItem();
-        task.element = waitingLoad[w];
-        task.priority = pri; // w - ( 12 * ( w % 2 ) ) + ( pri * 73 ); // fuzzy pri
-        waitingTasks.push(task);
+        // adjust priority by element level
+        let level = 0;
+        let parent = el.parentNode;
+        let ignore = false;
+        while (parent != null && parent !== document) {
+            level++;
+            if (parent.getAttribute(_optionAttributes.dataUiView) != null) {
+                ignore = true;
+                break;
+            }
+            parent = parent.parentNode;
+        }
+        if (!ignore) {
+            const task = new TaskItem();
+            task.element = el;
+            task.priority = pri + (level * 1000);
+            waitingTasks.push(task);
+        } else {
+            // _log.w("Skipped (belongs to template)", el);
+            console.log('###', el);
+        }
     }
     let added = 0;
     // add selected elements to the requests queue
