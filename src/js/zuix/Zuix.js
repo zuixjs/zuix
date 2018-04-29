@@ -135,8 +135,13 @@ let _enableHttpCaching = true;
 function Zuix() {
     _componentizer.setHost(this);
     /**
+     * @type {Array}
      * @private
+     */
+    this._store = [];
+    /**
      * @type {!Array.<ZxQuery>}
+     * @private
      **/
     this._fieldCache = [];
     return this;
@@ -234,7 +239,7 @@ function load(componentId, options) {
         // TODO: check if this case is of any use
         // empty context
         options = {};
-        ctx = new ComponentContext(options, trigger);
+        ctx = new ComponentContext(zuix, options, trigger);
     }
 
     // assign the given component (widget) to this context
@@ -270,6 +275,15 @@ function load(componentId, options) {
     }
 
     return ctx;
+}
+
+function getResourcePath(path) {
+    const config = zuix.store('config');
+    path = _componentizer.resolvePath(path);
+    if (!path.startsWith('//') && path.indexOf('://') < 0) {
+        path = (config != null && config.resourcePath != null ? config.resourcePath : '') + path;
+    }
+    return path;
 }
 
 /**
@@ -403,7 +417,7 @@ function unload(context) {
 
 /** @private */
 function createContext(options) {
-    const context = new ComponentContext(options, trigger);
+    const context = new ComponentContext(zuix, options, trigger);
     _contextRoot.push(context);
     return context;
 }
@@ -524,8 +538,9 @@ function loadController(context, task) {
             createComponent(context, task);
         } else {
             const job = function(t) {
+                const jsPath = context.componentId + '.js' + (_enableHttpCaching ? '' : '?'+new Date().getTime());
                 z$.ajax({
-                    url: context.componentId + '.js' + (_enableHttpCaching ? '' : '?'+new Date().getTime()),
+                    url: getResourcePath(jsPath),
                     success: function(ctrlJs) {
                         // TODO: improve js parsing!
                         try {
@@ -1222,6 +1237,26 @@ Zuix.prototype.httpCaching = function(enable) {
 Zuix.prototype.componentize = function(element) {
     _componentizer.componentize(element);
     return this;
+};
+/**
+ * Gets/Sets a global store entry.
+ * @param {string} name Entry name
+ * @param {object} value Entry value
+ * @return {object}
+ */
+Zuix.prototype.store = function(name, value) {
+    if (value != null) {
+        this._store[name] = value;
+    }
+    return this._store[name];
+};
+/**
+ * Get a resource path.
+ * @param {string} path resource id/path
+ * @return {string}
+ */
+Zuix.prototype.getResourcePath = function(path) {
+    return getResourcePath(path);
 };
 /**
  * Gets/Sets the components data bundle.

@@ -55,16 +55,23 @@ const util =
  * @this {ZxQuery}
  */
 
+// TODO: convert all 'this.<field>' to 'let' variables
+
+/** @type {Zuix} **/
+let zuix = null;
+
 /**
  * The component context object.
  *
+ * @param {Zuix} zuixInstance
  * @param {ContextOptions} options The context options.
  * @param {function} [eventCallback] Event routing callback.
  * @return {ComponentContext} The component context instance.
  * @constructor
  */
 
-function ComponentContext(options, eventCallback) {
+function ComponentContext(zuixInstance, options, eventCallback) {
+    zuix = zuixInstance;
     this._options = null;
     this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
     this.componentId = null;
@@ -417,7 +424,7 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
         cssPath += '?'+new Date().getTime();
     }
     z$.ajax({
-        url: cssPath,
+        url: zuix.getResourcePath(cssPath),
         success: function(viewCss) {
             context.style(viewCss);
             if (util.isFunction(options.success)) {
@@ -494,7 +501,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
             htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
         }
         z$.ajax({
-            url: htmlPath,
+            url: zuix.getResourcePath(htmlPath),
             success: function(viewHtml) {
                 context.view(viewHtml);
                 if (util.isFunction(options.success)) {

@@ -30,7 +30,6 @@ const _optionAttributes =
     require('./OptionAttributes')();
 
 const LIBRARY_PATH_DEFAULT = '//genielabs.github.io/zkit/lib';
-let _libraryPath = LIBRARY_PATH_DEFAULT;
 
 /**
  * TODO: describe this...
@@ -418,8 +417,10 @@ function loadInline(element) {
 }
 
 function resolvePath(path) {
+    const config = zuix.store('config');
+    const libraryPath = config != null && config.libraryPath != null ? config.libraryPath : LIBRARY_PATH_DEFAULT;
     if (path.startsWith('@lib/')) {
-        path = _libraryPath+path.substring(4);
+        path = libraryPath+path.substring(4);
     }
     return path;
 }

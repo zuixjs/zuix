@@ -33,6 +33,8 @@ interface Zuix {
     lazyLoad(enable?: Boolean, threshold?: Number): Zuix | Boolean;
     httpCaching(enable?: Boolean): Zuix | Boolean;
     componentize(element?: Element | ZxQuery): Zuix;
+    store(name: String, value: Object): Object;
+    getResourcePath(path: String): String;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
     $: ZxQuery;
     dumpCache(): ComponentCache[];
