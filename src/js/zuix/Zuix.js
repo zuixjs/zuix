@@ -302,20 +302,22 @@ function loadResources(ctx, options) {
     }
 
     if (util.isNoU(options.view)) {
-        if (cachedComponent !== null && cachedComponent.view != null) {
-            ctx.view(cachedComponent.view);
-            _log.t(ctx.componentId+':html', 'component:cached:html');
+        if (cachedComponent !== null) {
+            if (cachedComponent.view != null) {
+                ctx.view(cachedComponent.view);
+                _log.t(ctx.componentId+':html', 'component:cached:html');
+            }
             /*
              TODO: CSS caching, to be tested.
              */
-             if (cachedComponent.view != null && util.isNoU(options.css)) {
-                 options.css = false;
-                 if (!cachedComponent.css_applied) {
-                     cachedComponent.css_applied = true;
-                     ctx.style(cachedComponent.css);
-                     _log.t(ctx.componentId+':css', 'component:cached:css');
-                 }
-             }
+            if (options.css !== false) {
+                options.css = false;
+                if (!cachedComponent.css_applied) {
+                    cachedComponent.css_applied = true;
+                    ctx.style(cachedComponent.css);
+                    _log.t(ctx.componentId + ':css', 'component:cached:css');
+                }
+            }
         }
 
         // if not able to inherit the view from the base cachedComponent
@@ -1293,6 +1295,9 @@ Zuix.prototype.bundle = function(bundleData, callback) {
         for (let c = 0; c < bundleData.length; c++) {
             if (bundleData[c].css_applied) {
                 delete bundleData[c].css_applied;
+            }
+            if (typeof bundleData[c].controller === 'string') {
+                bundleData[c].controller = eval(bundleData[c].controller);
             }
         }
         _componentCache = bundleData;

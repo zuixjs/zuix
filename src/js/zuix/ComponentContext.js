@@ -169,16 +169,13 @@ ComponentContext.prototype.view = function(view) {
         const viewDiv = z$.wrapElement('div', view);
         if (viewDiv.firstElementChild != null) {
             // remove data-ui-view attribute from template if present on root node
-            viewDiv.firstElementChild.removeAttribute(_optionAttributes.dataUiView);
-            view = viewDiv.innerHTML;
-        }
-        if (this._container != null) {
-            // check for inner mode
-            if (this._container.getAttribute(_optionAttributes.dataUiMode) === 'inner') {
+            if (viewDiv.firstElementChild.getAttribute(_optionAttributes.dataUiView) != null) {
                 if (viewDiv.children.length === 1) {
                     view = viewDiv.firstElementChild.innerHTML;
                 }
-            }
+            } else view = viewDiv.innerHTML;
+        }
+        if (this._container != null) {
             // append view content to the container
             this._view = this._container;
             this._view.innerHTML += view;

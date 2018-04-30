@@ -1,5 +1,3 @@
-/* zUIx v0.4.9-39 18.04.29 21:21:45 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1825,16 +1823,13 @@ ComponentContext.prototype.view = function(view) {
         const viewDiv = z$.wrapElement('div', view);
         if (viewDiv.firstElementChild != null) {
             // remove data-ui-view attribute from template if present on root node
-            viewDiv.firstElementChild.removeAttribute(_optionAttributes.dataUiView);
-            view = viewDiv.innerHTML;
-        }
-        if (this._container != null) {
-            // check for inner mode
-            if (this._container.getAttribute(_optionAttributes.dataUiMode) === 'inner') {
+            if (viewDiv.firstElementChild.getAttribute(_optionAttributes.dataUiView) != null) {
                 if (viewDiv.children.length === 1) {
                     view = viewDiv.firstElementChild.innerHTML;
                 }
-            }
+            } else view = viewDiv.innerHTML;
+        }
+        if (this._container != null) {
             // append view content to the container
             this._view = this._container;
             this._view.innerHTML += view;
@@ -3302,8 +3297,6 @@ const OptionAttributes = Object.freeze({
         'data-ui-load',
     dataUiLoaded:
         'data-ui-loaded',
-    dataUiMode:
-        'data-ui-mode',
     dataUiOptions:
         'data-ui-options',
     dataUiPriority:
@@ -3627,20 +3620,22 @@ function loadResources(ctx, options) {
     }
 
     if (util.isNoU(options.view)) {
-        if (cachedComponent !== null && cachedComponent.view != null) {
-            ctx.view(cachedComponent.view);
-            _log.t(ctx.componentId+':html', 'component:cached:html');
+        if (cachedComponent !== null) {
+            if (cachedComponent.view != null) {
+                ctx.view(cachedComponent.view);
+                _log.t(ctx.componentId+':html', 'component:cached:html');
+            }
             /*
              TODO: CSS caching, to be tested.
              */
-             if (cachedComponent.view != null && util.isNoU(options.css)) {
-                 options.css = false;
-                 if (!cachedComponent.css_applied) {
-                     cachedComponent.css_applied = true;
-                     ctx.style(cachedComponent.css);
-                     _log.t(ctx.componentId+':css', 'component:cached:css');
-                 }
-             }
+            if (options.css !== false) {
+                options.css = false;
+                if (!cachedComponent.css_applied) {
+                    cachedComponent.css_applied = true;
+                    ctx.style(cachedComponent.css);
+                    _log.t(ctx.componentId + ':css', 'component:cached:css');
+                }
+            }
         }
 
         // if not able to inherit the view from the base cachedComponent
@@ -4618,6 +4613,9 @@ Zuix.prototype.bundle = function(bundleData, callback) {
         for (let c = 0; c < bundleData.length; c++) {
             if (bundleData[c].css_applied) {
                 delete bundleData[c].css_applied;
+            }
+            if (typeof bundleData[c].controller === 'string') {
+                bundleData[c].controller = eval(bundleData[c].controller);
             }
         }
         _componentCache = bundleData;
