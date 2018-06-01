@@ -29,7 +29,7 @@
 const _optionAttributes =
     require('./OptionAttributes')();
 
-const LIBRARY_PATH_DEFAULT = '//genielabs.github.io/zkit/lib';
+const LIBRARY_PATH_DEFAULT = 'https://genielabs.github.io/zkit/lib'; // CORS works only over HTTPS
 
 /**
  * TODO: describe this...
