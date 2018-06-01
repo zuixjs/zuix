@@ -79,7 +79,7 @@ zuix.using('style', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/an
 
 // Animate CSS extension method for ZxQuery
 zuix.$.ZxQuery.prototype.animateCss = function() {};
-zuix.using('component', '//genielabs.github.io/zuix/kit/extensions/animate_css', function(res, ctx){
+zuix.using('component', '@lib/extensions/animate_css', function(res, ctx){
     console.log('AnimateCSS extension loaded.', res, ctx);
 });
 
