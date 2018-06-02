@@ -185,7 +185,7 @@
             </section>
 
             <!-- page 2 -->
-            <section data-ui-field="page-docs" data-ui-lazyload="false">
+            <section data-ui-field="page-docs" data-ui-lazyload="scroll">
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
                     <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
@@ -198,7 +198,7 @@
             </section>
 
             <!-- page 3 -->
-            <section data-ui-field="page-api" data-ui-lazyload="false">
+            <section data-ui-field="page-api" data-ui-lazyload="scroll">
                 <div layout="column top-center" self="size-x1" class="page-content">
                     <!-- Your content goes here -->
                     <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
@@ -343,7 +343,7 @@
 
     <div class="content-padding">
         <i class="material-icons">arrow_forward</i>
-        <span>see sample <a href="//genielabs.github.io/zkit" style="font-weight: 800;">zKit</a> components</span>
+        <span>see <a href="//genielabs.github.io/zkit" style="font-weight: 800;">zKit</a> examples</span>
         <i class="material-icons">arrow_back</i>
     </div>
 
@@ -527,7 +527,7 @@
 <div data-ui-view="content/footer">
 <footer class="mdl-mini-footer mdl-color--yellow-400">
     <div self="top-left" class="mdl-mini-footer__left-section">
-        <span>Z</span><strong>UI</strong><span>X</span>
+        <span>z</span><strong>UI</strong><span>x</span>
         <span>
             ©
             <a href="http://glabs.it">G-Labs</a>
@@ -632,7 +632,7 @@ which is located in the distribution folder of the master repo.</p>
 </div>
 <!--{[content/docs/examples/links]}-->
 <div data-ui-view="content/docs/examples/links">
-<div layout="row center-spread">
+<div layout="row center-spread" class="animated fadeInUp">
     <a href="https://github.com/genielabs/zuix">zUIx</a>
     <a href="https://github.com/genielabs">@genielabs</a>
     <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
@@ -866,7 +866,7 @@ a {
 &lt;/style&gt;
 </code></pre>
 <p><small><strong>RESULT</strong></small></p>
-<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content" data-ui-priority="-1" data-ui-lazyload="false"></div>
+<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content" data-ui-priority="-1"></div>
 <p>&nbsp;</p>
 <p>So, as shown in the processed output, the <code>.css</code> style definitions
 are applied only to the loaded content via the <code>data-ui-component</code> constraint,
@@ -875,7 +875,7 @@ making possible to keep <strong>global style</strong> files separated from <stro
 </div>
 <!--{[templates/mdl_card]}-->
 <div data-ui-view="templates/mdl_card">
-<div class="mdl-grid">
+<div class="mdl-grid animated fadeInUp">
     <div class="mdl-card mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-shadow--8dp">
         <div class="mdl-card__title">
             <img data-ui-field="image" src="app/content/docs/examples/images/card_placeholder.jpg" class="portrait">
@@ -962,22 +962,27 @@ of any other view placed in a file or inline in the same page, unless we want to
 <p><small><strong>EXAMPLE - HTML</strong> Inline view declaration</small></p>
 <pre data-line="2"><code class="language-html">
 &lt;!-- definition of a inline view template --&gt;
-&lt;span data-ui-view="inline/common/contact_chip"
+&lt;div data-ui-view="inline/common/contact_chip"
       class="mdl-chip mdl-chip--contact"&gt;
     &lt;img class="mdl-chip__contact" src="images/avatar_01.png"&gt;
     &lt;span class="mdl-chip__text"&gt;Contact Name&lt;/span&gt;
-&lt;/span&gt;
+&lt;/div&gt;
 </code></pre>
 <p>Inclusion of the above view in the same page</p>
 <pre><code class="language-html">
     &lt;div data-ui-include="inline/common/contact_chip"&gt;&lt;/div&gt;
 </code></pre>
+<!-- BEGIN: Inline Template -->
+<div data-ui-view="inline/common/contact_chip">
+    <div class="mdl-chip mdl-chip--contact mdl-color--blue mdl-color-text--white mdl-shadow--4dp animated fadeIn">
+        <img data-ui-field="image" class="mdl-chip__contact" src="./app/content/docs/examples/images/avatar_01.png">
+        <div data-ui-field="name" class="mdl-chip__text">Contact Name</div>
+    </div>
+</div>
+<!-- END: Inline Template -->
 <p><small><strong>RESULT</strong></small></p>
 <div class="content-padding">
-<span data-ui-view="inline/common/contact_chip" class="mdl-chip mdl-chip--contact mdl-color--blue mdl-color-text--white mdl-shadow--4dp">
-<img data-ui-field="image" class="mdl-chip__contact" src="./app/content/docs/examples/images/avatar_01.png">
-<span data-ui-field="name" class="mdl-chip__text">Contact Name</span>
-</span>
+    <div data-ui-include="inline/common/contact_chip"></div>
 </div>
 <h5 id="databinding">Data Binding</h5>
 <p>So, in order to bind elements of a view to the fields of a given data model, we set the <code>data-ui-field</code> attribute
@@ -993,14 +998,14 @@ the <code>.innerHTML</code> property.</p>
 <p><small><strong>EXAMPLE - </strong> Inline View Template with <code>data-ui-field</code> fields.</small></p>
 <pre data-line="4,7"><code class="language-html">
 &lt;!-- definition of a inline view template --&gt;
-&lt;span data-ui-view="inline/common/contact_chip"
+&lt;div data-ui-view="inline/common/contact_chip"
       class="mdl-chip mdl-chip--contact"&gt;
     &lt;img  data-ui-field="image"
           class="mdl-chip__contact"
           src="images/avatar_01.png"&gt;
     &lt;span data-ui-field="name"
           class="mdl-chip__text"&gt;Contact Name&lt;/span&gt;
-&lt;/span&gt;
+&lt;/div&gt;
 </code></pre>
 <p>When including the view template we can specify in its body
 a minimal markup declaring same fields as the template,
@@ -1089,31 +1094,36 @@ var a_random_contact = {
 };
 &lt;/script&gt;
 </code></pre>
-<p><small><strong>RESULT</strong></small></p>
-<div data-ui-view="chip_example_result" layout="row center-spread">
-<div data-ui-include="inline/common/contact_chip" data-id="0" data-bind-model="chip_adapter" data-ui-options="main.options.component_no_css"></div>
-<div data-ui-include="inline/common/contact_chip" data-id="1" data-bind-model="chip_adapter" data-ui-options="main.options.component_no_css"></div>
-<script>
-var chip_items = {
-    "0": { name: 'Foo Bar', image: './app/content/docs/examples/images/avatar_02.png'},
-    "1": { name: 'Jane Doe', image: './app/content/docs/examples/images/avatar_01.png'},
-    "2": { name: 'Mikey M.', image: './app/content/docs/examples/images/avatar_03.png'}
-};
-// example model view adapter
-var chip_adapter = function(element, field) {
-    const id = this.attr('data-id');
-    const value = chip_items[id][field];
-    switch (field) {
-        case 'name':
-            element.html(value);
-            break;
-        case 'image':
-            element.attr('src', value);
-            break;
-    }
-};
-</script>
+<!-- BEGIN: Inline View - Example Data Binding -->
+<div data-ui-view="inline/chip_example_result">
+    <div layout="row center-spread">
+        <div data-ui-include="inline/common/contact_chip" data-id="0" data-bind-model="chip_adapter" data-ui-options="main.options.component_no_css"></div>
+        <div data-ui-include="inline/common/contact_chip" data-id="1" data-bind-model="chip_adapter" data-ui-options="main.options.component_no_css"></div>
+        <script>
+            var chip_items = {
+                "0": { name: 'Foo Bar', image: './app/content/docs/examples/images/avatar_02.png'},
+                "1": { name: 'Jane Doe', image: './app/content/docs/examples/images/avatar_01.png'},
+                "2": { name: 'Mikey M.', image: './app/content/docs/examples/images/avatar_03.png'}
+            };
+            // example model view adapter
+            var chip_adapter = function(element, field) {
+                const id = this.attr('data-id');
+                const value = chip_items[id][field];
+                switch (field) {
+                    case 'name':
+                        element.html(value);
+                        break;
+                    case 'image':
+                        element.attr('src', value);
+                        break;
+                }
+            };
+        </script>
+    </div>
 </div>
+<!-- END: Inline View - Example Data Binding -->
+<p><small><strong>RESULT</strong></small></p>
+<div data-ui-include="inline/chip_example_result"></div>
 <h6 id="bindingadapters">Binding Adapters</h6>
 <p>Sometimes it might be required to have more control over
 how the value of a model field affects the view.
@@ -1167,7 +1177,7 @@ var chip_adapter = function(element, field) {
 &lt;/script&gt;
 </code></pre>
 <p><small><strong>RESULT</strong></small></p>
-<div data-ui-include="chip_example_result" data-ui-options="main.options.component_no_css"></div>
+<div data-ui-include="inline/chip_example_result" data-ui-options="main.options.component_no_css"></div>
 <p><a id="Getting-Started__Behaviors"></a></p>
 <h5 id="behaviors">Behaviors</h5>
 <p>To determine how a view will behave upon certain events,
@@ -1286,8 +1296,8 @@ var chip_view_options = {
 };
 </script>
 </div>
-<!--{[kit/widgets/timeclock]}-->
-<div data-ui-view="kit/widgets/timeclock">
+<!--{[widgets/timeclock]}-->
+<div data-ui-view="widgets/timeclock">
 <div class="frame">
 
     <div data-ui-field="time" class="time"></div>
@@ -1326,19 +1336,19 @@ so also the <code>data-ui-options</code> attribute may be used to provide option
 such as <em>lazy loading</em> and <em>data binding</em>.</p>
 <p><small><strong>EXAMPLE - HTML</strong> Loading a component</small></p>
 <pre><code class="language-html">
-    &lt;div data-ui-load="kit/widgets/timeclock"&gt;&lt;/div&gt;
+    &lt;div data-ui-load="widgets/timeclock"&gt;&lt;/div&gt;
 </code></pre>
 <p><small><strong>RESULT</strong></small></p>
-<div data-ui-load="kit/widgets/timeclock"></div>
+<div data-ui-load="widgets/timeclock"></div>
 <p>&nbsp;</p>
 <p>When loading a component <em>zIUx</em> will first try to get the <strong>controller</strong> script,
 then the <strong>view</strong> and finally the <strong>style</strong>, any of which can be defined either
 inline or in a file.</p>
 <p>The example above is defined by the following files:</p>
 <div class="list" markdown="1"><ul>
-<li><a href="https://github.com/genielabs/zuix/blob/gh-pages/kit/widgets/timeclock.html">timeclock.html</a></li>
-<li><a href="https://github.com/genielabs/zuix/blob/gh-pages/kit/widgets/timeclock.css">timeclock.css</a></li>
-<li><a href="https://github.com/genielabs/zuix/blob/gh-pages/kit/widgets/timeclock.js">timeclock.js</a></li>
+<li><a href="https://github.com/genielabs/zuix/blob/gh-pages/source/app/widgets/timeclock.html">timeclock.html</a></li>
+<li><a href="https://github.com/genielabs/zuix/blob/gh-pages/source/app/widgets/timeclock.css">timeclock.css</a></li>
+<li><a href="https://github.com/genielabs/zuix/blob/gh-pages/source/app/widgets/timeclock.js">timeclock.js</a></li>
 </ul></div>
 <h5 id="thecontroller">The Controller</h5>
 <p>When all elements of a component are loaded (js controller, html view, css style)
@@ -1434,30 +1444,30 @@ This is useful since it can be used to create self-contained components that
 can be loaded without having to worry about the dependencies.</p>
 <p>&nbsp;</p>
 </div>
-<!--{[kit/components/menu_overlay]}-->
-<div data-ui-view="kit/components/menu_overlay">
+<!--{[//genielabs.github.io/zkit/lib/components/menu_overlay]}-->
+<div data-ui-view="//genielabs.github.io/zkit/lib/components/menu_overlay">
 <!-- FAB menu overlay -->
 <div data-ui-field="menu_overlay">
     <div data-ui-field="items_wrapper"></div>
 </div>
 
 <!-- Colored FAB menu button -->
-<a data-ui-field="menu_button" class="menu-button">
+<div data-ui-field="menu_button" class="menu-button">
     <div class="circle-button">
-        <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
             <path d="M0 0h24v24H0z" fill="none"></path>
         </svg>
     </div>
-</a>
-<a data-ui-field="menu_button_close" class="menu-button">
+</div>
+<div data-ui-field="menu_button_close" class="menu-button">
     <div class="circle-button">
-        <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
             <path d="M0 0h24v24H0z" fill="none"></path>
         </svg>
     </div>
-</a>
+</div>
 
 </div>
 <!--{[content/docs]}-->
@@ -1482,7 +1492,7 @@ and JavaScript knowledge you can start using zUIx.</p>
     <div class="mdl-spinner mdl-js-spinner is-active"></div>
     <p><small>Loading <em>'View Templates'</em>...</small></p>
 </div></div>
-<div data-ui-include="content/docs/components" data-ui-options="main.options.content_no_css" data-o-markdown="true" class="progressive-content-container" data-ui-lazyload="false"><div class="content-loader">
+<div data-ui-include="content/docs/components" data-ui-options="main.options.content_no_css" data-o-markdown="true" data-ui-lazyload="false" class="progressive-content-container"><div class="content-loader">
     <div class="mdl-spinner mdl-js-spinner is-active"></div>
     <p><small>Loading <em>'Components'</em>...</small></p>
 </div></div>
@@ -1505,53 +1515,53 @@ and JavaScript knowledge you can start using zUIx.</p>
 <p>&nbsp;</p>
 <p><small><strong>zUIx</strong> Quick Start Guide. © <a href="https://github.com/genielabs">genielabs</a> 2016-2018.</small></p>
 <!-- Overlay FAB TOC Menu -->
-<div data-ui-load="kit/components/menu_overlay" data-ui-scroller="page-docs" data-ui-context="menu-docs">
+<div data-ui-load="@lib/components/menu_overlay" data-ui-context="menu-docs" data-o-scroller="page-docs">
     <!--
     <span data-ui-field="button_color" class="hidden">red</span>
     <span data-ui-field="icon_color" class="hidden">white</span>
     -->
-    <ul data-ui-field="items">
-        <li>
+    <div data-ui-field="items">
+        <div class="toc-item">
             <a href="#/docs#Getting_Started--Quick_Start" title="Jump to 'Quick Start Guide'">
                 <span>Quick Start Guide</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">arrow_upward</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/docs#Getting_Started--Content_Management" title="Jump to 'Content management'">
                 <span>Content management</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">dashboard</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/docs#Getting_Started--View_Templates" title="Jump to 'View templates'">
                 <span>View templates</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">settings_ethernet</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/docs#Getting_Started--Components" title="Jump to 'Components">
                 <span>Components</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">extension</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/docs#Getting_Started--Zuix_Bundler" title="Jump to 'App Bundler'">
                 <span>App Bundler</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">folder</i>
                 </span>
             </a>
-        </li>
-    </ul>
+        </div>
+    </div>
 </div>
 </div>
 <!--{[content/api/zuix]}-->
@@ -1693,7 +1703,8 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
     var api_loader_options = {
         html: false,
         markdown: true,
-        prism: true
+        prism: true,
+        lazyLoad: true
     };
 </script>
 <h3>API</h3>
@@ -1713,51 +1724,51 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
      data-ui-options="main.options.content_no_css" data-o-markdown="true"></div>
 -->
 <!-- Overlay FAB TOC Menu -->
-<div data-ui-load="kit/components/menu_overlay" data-ui-scroller="page-api" data-ui-context="menu-api">
-    <ul data-ui-field="items">
-        <li>
+<div data-ui-load="@lib/components/menu_overlay" data-ui-context="menu-api" data-o-scroller="page-api">
+    <div data-ui-field="items">
+        <div class="toc-item">
             <a href="#/api#ZUIX_API--Zuix" title="Jump to 'Zuix class'">
                 <span>Zuix class</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">code</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/api#ZUIX_API--ComponentContext" title="Jump to 'ComponentContext'">
                 <span>ComponentContext class</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">code</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/api#ZUIX_API--ContextController" title="Jump to 'ContextController'">
                 <span>ContextController class</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">code</i>
                 </span>
             </a>
-        </li>
-        <li>
+        </div>
+        <div class="toc-item">
             <a href="#/api#ZUIX_API--ZxQuery" title="Jump to 'ZxQuery'">
                 <span>ZxQuery class</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">code</i>
                 </span>
             </a>
-        </li>
+        </div>
         <!--
-        <li>
+        <div class="toc-item">
             <a href="#/api#ZUIX_API--Localizer" title="Jump to 'Localizer'">
                 <span>ZLocalizer</span>
                 <span class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary">
                     <i class="material-icons">code</i>
                 </span>
             </a>
-        </li>
+        </div>
         -->
-    </ul>
+    </div>
 </div>
 </div>
     <script>zuix.bundle([
@@ -1771,14 +1782,14 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
     "css": ".resp-sharing-button__link,\n.resp-sharing-button__icon {\n    display: inline-block\n}\n\n.resp-sharing-button__link {\n    text-decoration: none;\n    color: #fff;\n    margin-left: 0.4em;\n    margin-right: 0.4em;\n}\n\n.resp-sharing-button {\n    border-radius: 5px;\n    transition: 25ms ease-out;\n    padding: 4px;\n    font-family: Helvetica Neue,Helvetica,Arial,sans-serif\n}\n\n.resp-sharing-button__icon svg {\n    width: 1em;\n    height: 1em;\n    margin-right: 0.4em;\n    vertical-align: top\n}\n\n.resp-sharing-button--small svg {\n    margin: 0;\n    vertical-align: middle\n}\n\n/* Non solid icons get a stroke */\n.resp-sharing-button__icon {\n    stroke: #facace;\n    fill: white;\n}\n\n/* Solid icons get a fill */\n.resp-sharing-button__icon--solid,\n.resp-sharing-button__icon--solidcircle {\n    fill: #fff;\n    stroke: none\n}\n\n.resp-sharing-button--facebook {\n    background-color: #3b5998;\n    -webkit-animation-delay: 0.7s;\n    -moz-animation-delay: 0.7s;\n    -o-animation-delay: 0.7s;\n    -ms-animation-delay: 0.7s;\n}\n\n.resp-sharing-button--facebook:hover {\n    background-color: #2d4373\n}\n\n.resp-sharing-button--twitter {\n    background-color: #55acee;\n    -webkit-animation-delay: 0.8s;\n    -moz-animation-delay: 0.8s;\n    -o-animation-delay: 0.8s;\n    -ms-animation-delay: 0.8s;\n}\n\n.resp-sharing-button--twitter:hover {\n    background-color: #2795e9\n}\n\n.resp-sharing-button--google {\n    background-color: #dd4b39;\n    -webkit-animation-delay: 0.9s;\n    -moz-animation-delay: 0.9s;\n    -o-animation-delay: 0.9s;\n    -ms-animation-delay: 0.9s;\n}\n\n.resp-sharing-button--google:hover {\n    background-color: #c23321\n}\n\n.resp-sharing-button--tumblr {\n    background-color: #35465C;\n    -webkit-animation-delay: 1.0s;\n    -moz-animation-delay: 1.0s;\n    -o-animation-delay: 1.0s;\n    -ms-animation-delay: 1.0s;\n}\n\n.resp-sharing-button--tumblr:hover {\n    background-color: #222d3c\n}\n\n.resp-sharing-button--pinterest {\n    background-color: #bd081c;\n    -webkit-animation-delay: 1.1s;\n    -moz-animation-delay: 1.1s;\n    -o-animation-delay: 1.1s;\n    -ms-animation-delay: 1.1s;\n}\n\n.resp-sharing-button--pinterest:hover {\n    background-color: #8c0615\n}\n\n.resp-sharing-button--reddit {\n    background-color: #5f99cf\n}\n\n.resp-sharing-button--reddit:hover {\n    background-color: #3a80c1\n}\n\n.resp-sharing-button--linkedin {\n    background-color: #0077b5\n}\n\n.resp-sharing-button--linkedin:hover {\n    background-color: #046293\n}\n\n.resp-sharing-button--email {\n    background-color: #777\n}\n\n.resp-sharing-button--email:hover {\n    background-color: #5e5e5e\n}\n\n.resp-sharing-button--xing {\n    background-color: #1a7576\n}\n\n.resp-sharing-button--xing:hover {\n    background-color: #114c4c\n}\n\n.resp-sharing-button--whatsapp {\n    background-color: #25D366\n}\n\n.resp-sharing-button--whatsapp:hover {\n    background-color: #1da851\n}\n\n.resp-sharing-button--hackernews {\n    background-color: #FF6600\n}\n.resp-sharing-button--hackernews:hover, .resp-sharing-button--hackernews:focus {   background-color: #FB6200 }\n\n.resp-sharing-button--vk {\n    background-color: #507299\n}\n\n.resp-sharing-button--vk:hover {\n    background-color: #43648c\n}\n\n.resp-sharing-button--facebook {\n    background-color: #3b5998;\n    border-color: #3b5998;\n}\n\n.resp-sharing-button--facebook:hover,\n.resp-sharing-button--facebook:active {\n    background-color: #2d4373;\n    border-color: #2d4373;\n}\n\n.resp-sharing-button--twitter {\n    background-color: #55acee;\n    border-color: #55acee;\n}\n\n.resp-sharing-button--twitter:hover,\n.resp-sharing-button--twitter:active {\n    background-color: #2795e9;\n    border-color: #2795e9;\n}\n\n.resp-sharing-button--google {\n    background-color: #dd4b39;\n    border-color: #dd4b39;\n}\n\n.resp-sharing-button--google:hover,\n.resp-sharing-button--google:active {\n    background-color: #c23321;\n    border-color: #c23321;\n}\n\n.resp-sharing-button--tumblr {\n    background-color: #35465C;\n    border-color: #35465C;\n}\n\n.resp-sharing-button--tumblr:hover,\n.resp-sharing-button--tumblr:active {\n    background-color: #222d3c;\n    border-color: #222d3c;\n}\n\n.resp-sharing-button--email {\n    background-color: #777777;\n    border-color: #777777;\n}\n\n.resp-sharing-button--email:hover,\n.resp-sharing-button--email:active {\n    background-color: #5e5e5e;\n    border-color: #5e5e5e;\n}\n\n.resp-sharing-button--pinterest {\n    background-color: #bd081c;\n    border-color: #bd081c;\n}\n\n.resp-sharing-button--pinterest:hover,\n.resp-sharing-button--pinterest:active {\n    background-color: #8c0615;\n    border-color: #8c0615;\n}\n\n.resp-sharing-button--linkedin {\n    background-color: #0077b5;\n    border-color: #0077b5;\n}\n\n.resp-sharing-button--linkedin:hover,\n.resp-sharing-button--linkedin:active {\n    background-color: #046293;\n    border-color: #046293;\n}\n"
   },
   {
-    "componentId": "kit/widgets/timeclock",
+    "componentId": "widgets/timeclock",
     "controller": "zuix.controller(function (cp) {\n    var updateTimeout = null;\n    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];\n\n    cp.create = function () {\n        refresh();\n    };\n\n    cp.destroy = function () {\n        if (updateTimeout != null)\n            clearTimeout(updateTimeout);\n    };\n\n    function refresh() {\n        var now = new Date();\n        var day = days[ now.getDay() ];\n        var month = months[ now.getMonth() ];\n        cp.field('info').html(day);\n        cp.field('date').html(month+' '+now.getDate()+', '+now.getFullYear());\n        cp.field('time').html(now.toLocaleTimeString());\n        updateTimeout = setTimeout(refresh, 1000);\n    }\n});",
     "css": ". {\n    margin: 16px;\n    text-align: center;\n}\n.header {\n    display: -webkit-flex;\n    display: flex;\n    -webkit-flex-direction: row;\n    flex-direction: row;\n    -webkit-justify-content: space-between;\n    justify-content: space-between;\n    padding-top: 8px;\n    padding-left: 4px;\n    padding-right: 4px;\n}\n.time {\n    font-size: 300%;\n    line-height: 100%;\n}\n.date,.day {\n    font-size: 80%;\n    font-weight: 700;\n    line-height: 100%;\n}\n.frame {\n    display: inline-block;\n    width: auto;\n    padding: 16px;\n    border-radius: 12px;\n    border: solid 2px rgba(128,128,128,0.5);\n    -webkit-box-shadow: 0 8px 10px 1px rgba(50,0,0,0.14), 0 3px 14px 2px rgba(50,0,0,0.12), 0 5px 5px -3px rgba(50,0,0,0.3);\n    box-shadow: 0 8px 10px 1px rgba(50,0,0,0.14), 0 3px 14px 2px rgba(50,0,0,0.12), 0 5px 5px -3px rgba(50,0,0,0.3);\n}\n"
   },
   {
-    "componentId": "kit/components/menu_overlay",
-    "controller": "zuix.controller(function (cp) {\n    var menuOverlayShowing = false, menuButtonShowing = true;\n    var menuButton, menuButtonClose, menuOverlay, itemsWrapper, menuItems;\n    var scroller = null, currentOffset = 0;\n\n    cp.create = function () {\n\n        menuButton = cp.field('menu_button').hide()\n            .on('click', toggleMenu);\n        menuButtonClose = cp.field('menu_button_close').hide()\n            .on('click', toggleMenu);\n        menuOverlay = cp.field('menu_overlay').visibility('hidden')\n            .on('click', toggleMenu);\n        itemsWrapper = cp.field('items_wrapper');\n\n        var items = zuix.$(cp.model().items).find('a');\n        items.each(function (i,el) {\n            var wrapperDiv = zuix.$(document.createElement('div'))\n                .addClass('menu-item')\n                .attr('data-ui-transition-delay', ((items.length()-i)/10)+'s')\n                .append(el);\n            itemsWrapper.append(wrapperDiv.get());\n        });\n        menuItems = itemsWrapper.find('div[class*=\"menu-item\"]');\n\n        // apply custom color to menu button\n        if (cp.model()['button_color'] != null) {\n            cp.view().find('.circle-button').css('background', cp.model()['button_color'].innerText);\n        }\n        if (cp.model()['icon_color'] != null) {\n            cp.view().find('.circle-button').css('fill', cp.model()['icon_color'].innerText);\n        }\n\n        var scrollerName = cp.view().attr('data-ui-scroller');\n        if (scrollerName != null) {\n            scroller = zuix.field(scrollerName);\n        } else {\n            scroller = zuix.$(window);\n        }\n        if (scroller != null) {\n            scroller.on('scroll', function (e) {\n                var scrollTop = scroller.get() === window ? (document.documentElement.scrollTop || document.body.scrollTop) : scroller.get().scrollTop;\n                if (menuButtonShowing && currentOffset < scrollTop && scrollTop > 1) {\n                    hideButton();\n                } else if (!menuButtonShowing && currentOffset > scrollTop) {\n                    showButton();\n                }\n                currentOffset = scrollTop;\n                if (menuOverlayShowing) {\n                    toggleMenu();\n                }\n            });\n        }\n\n        zuix.using('component', '@lib/extensions/animate_css', function(res, ctx){\n            // show floating action button\n            menuButton.animateCss('slideInUp').show();\n        });\n\n        cp.expose('showButton', showButton);\n        cp.expose('hideButton', hideButton);\n\n    };\n\n    function hideButton() {\n        menuButtonShowing = false;\n        menuButton.animateCss('fadeOutDown', function () {\n            this.hide();\n        });\n    }\n\n    function showButton() {\n        menuButtonShowing = true;\n        menuButton.animateCss('fadeInUp').show();\n    }\n\n    function toggleMenu() {\n        if (!menuOverlayShowing) {\n            menuOverlayShowing = true;\n            menuButton.animateCss('rubberBand', { duration: '0.3s' });\n            menuButtonClose.animateCss('rotateIn', { duration: '0.3s' }, function () {\n                menuButton.hide();\n            }).show();\n            menuOverlay.animateCss('fadeIn', { duration: '0.5s' }).visibility('');\n            menuItems.each(function(p,el) {\n                var transitionDelay = \"0\";\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('bounceInRight', { duration: '0.5s', delay: transitionDelay });\n            });\n        } else if (menuOverlayShowing) {\n            menuOverlayShowing = false;\n            if (menuButtonShowing) {\n                menuButtonClose.animateCss('rotateOut', { duration: '0.3s' }, function () {\n                    this.hide();\n                });\n                menuButton.animateCss('fadeIn', { duration: '0.3s' });\n            } else {\n                menuButtonClose.animateCss('fadeOutDown', { duration: '0.3s' }, function () {\n                    this.hide();\n                });\n            }\n            menuOverlay.animateCss('fadeOut', { duration: '0.5s', delay: '0.2s' }, function () {\n                this.visibility('hidden');\n            });\n            menuItems.each(function(p,el) {\n                var transitionDelay = \"0\";\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('fadeOutRight', { duration: '0.5s', delay: transitionDelay });\n            });\n            menuButton.show();\n        }\n    }\n});",
-    "css": ".menu-button {\n    z-index: 10; /* topmost */\n    position: fixed;\n    right: 48px;\n    bottom: 24px;\n}\ndiv[data-ui-field=\"menu_overlay\"] {\n    z-index: 10; /* topmost */\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding-top: 80px;\n    padding-bottom: 88px;\n    padding-left: 32px;\n    background-color: rgba(255, 255, 255, 0.85);\n    display: flex;\n    justify-content: space-between;\n    flex-direction: column-reverse;\n}\ndiv[data-ui-field=\"items_wrapper\"] {\n    text-align: right;\n}\n.menu-item {\n    padding-top: 8px;\n    padding-bottom: 8px;\n}\n.menu-item a {\n    font-size: 90%;\n    font-weight: 600;\n    line-height: 120%;\n    padding: 8px;\n    margin-left: 16px;\n    margin-right: 48px;\n    cursor: pointer;\n}\n.menu-item a span {\n    vertical-align: middle;\n    padding-right: 4px;\n    padding-left: 4px;\n}\n\n.circle-button {\n    border-radius: 50%;\n    width: 56px;\n    height: 56px;\n    margin: 4px;\n    background: rgba(209, 0, 73, 0.75);\n    fill: white;\n    box-shadow: 0 4px 8px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.5);\n    vertical-align: middle;\n    text-align: center;\n    font-size: 18px;\n    font-weight: 700;\n    font-family: Helvetica, sans-serif;\n    display: table-cell;\n    transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n}\n"
+    "componentId": "//genielabs.github.io/zkit/lib/components/menu_overlay",
+    "controller": "'use strict';\n\nzuix.controller(function(cp) {\n    let menuOverlayShowing = false;\n    let menuButtonShowing = true;\n    let menuButton;\n    let menuButtonClose;\n    let menuOverlay;\n    let itemsWrapper;\n    let menuItems;\n    let scroller = null;\n    let currentOffset = 0;\n\n    cp.create = function() {\n        menuButton = cp.field('menu_button').hide()\n            .on('click', toggleMenu);\n        menuButtonClose = cp.field('menu_button_close').hide()\n            .on('click', toggleMenu);\n        menuOverlay = cp.field('menu_overlay').visibility('hidden')\n            .on('click', toggleMenu);\n        itemsWrapper = cp.field('items_wrapper');\n\n        const items = zuix.$(cp.model().items).children();\n        items.each(function(i, el) {\n            const wrapperDiv = zuix.$(document.createElement('div'))\n                .addClass('menu-item')\n                .attr('data-ui-transition-delay', (.3/(items.length()-i))+'s')\n                .append(el);\n            itemsWrapper.append(wrapperDiv.get());\n        });\n        menuItems = itemsWrapper.find('div[class*=\"menu-item\"]');\n\n        // apply custom color to menu button\n        if (cp.view().attr('data-o-button-color') != null) {\n            cp.view().find('.circle-button').css('background', cp.view().attr('data-o-button-color'));\n        }\n        if (cp.view().attr('data-o-icon-color') != null) {\n            cp.view().find('.circle-button').css('fill', cp.view().attr('data-o-icon-color'));\n        }\n\n        const scrollerName = cp.view().attr('data-o-scroller');\n        if (scrollerName != null) {\n            scroller = zuix.field(scrollerName);\n        } else {\n            scroller = zuix.$(window);\n        }\n        if (scroller != null) {\n            scroller.on('scroll', function(e) {\n                const scrollTop = scroller.get() === window ? (document.documentElement.scrollTop || document.body.scrollTop) : scroller.get().scrollTop;\n                if (menuButtonShowing && currentOffset < scrollTop && scrollTop > 1) {\n                    hideButton();\n                } else if (!menuButtonShowing && currentOffset > scrollTop) {\n                    showButton();\n                }\n                currentOffset = scrollTop;\n                if (menuOverlayShowing) {\n                    toggleMenu();\n                }\n            });\n        }\n\n        // Animate CSS extension\n        zuix.using('component', '@lib/extensions/animate_css', function(res, ctx) {\n            // show floating action button\n            setTimeout(function() {\n                menuButton.animateCss('slideInUp').show();\n            }, 1000);\n        });\n        // Material Design Light integration - DOM upgrade\n        if (typeof componentHandler !== 'undefined') {\n            componentHandler.upgradeElements(cp.view().get());\n        }\n\n        cp.expose('show', function() {\n            cp.view().show();\n        });\n        cp.expose('hide', function() {\n            cp.view().hide();\n        });\n        cp.expose('toggleButton', toggleButton);\n        cp.expose('showButton', showButton);\n        cp.expose('hideButton', hideButton);\n    };\n\n    function toggleButton() {\n        if (menuButtonShowing) {\n            hideButton();\n        } else {\n            showButton();\n        }\n    }\n\n    function hideButton() {\n        menuButtonShowing = false;\n        menuButton.animateCss('fadeOutDown', {duration: '0.3s'}, function() {\n            this.hide();\n        });\n    }\n\n    function showButton() {\n        menuButtonShowing = true;\n        menuButton.animateCss('fadeInUp').show();\n    }\n\n    function toggleMenu() {\n        if (!menuOverlayShowing) {\n            menuOverlayShowing = true;\n            cp.trigger('open');\n            menuButton.animateCss('rotateOut', {duration: '0.3s'});\n            menuButtonClose.animateCss('rotateIn', {duration: '0.3s'}, function() {\n                menuButton.hide();\n            }).show();\n            menuOverlay.animateCss('fadeIn', {duration: '0.5s'}).visibility('');\n            menuItems.each(function(p, el) {\n                let transitionDelay = '0';\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('bounceInRight', {duration: '0.5s', delay: transitionDelay});\n            });\n        } else if (menuOverlayShowing) {\n            menuOverlayShowing = false;\n            cp.trigger('close');\n            if (menuButtonShowing) {\n                menuButtonClose.animateCss('rotateOut', {duration: '0.3s'}, function() {\n                    this.hide();\n                });\n                menuButton.animateCss('rotateIn', {duration: '0.3s'});\n            } else {\n                menuButtonClose.animateCss('fadeOutDown', {duration: '0.3s'}, function() {\n                    this.hide();\n                });\n            }\n            menuOverlay.animateCss('fadeOut', {duration: '0.5s', delay: '0.2s'}, function() {\n                this.visibility('hidden');\n            });\n            menuItems.each(function(p, el) {\n                let transitionDelay = '0';\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('fadeOutRight', {duration: '0.5s', delay: transitionDelay});\n            });\n            menuButton.show();\n        }\n    }\n});\n",
+    "css": ".menu-button {\n    z-index: 100; /* topmost */\n    position: fixed;\n    right: 32px;\n    bottom: 32px;\n}\ndiv[data-ui-field=\"menu_overlay\"] {\n    z-index: 100; /* topmost */\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding-top: 80px;\n    padding-bottom: 96px;\n    padding-left: 32px;\n    background-color: rgba(255, 255, 255, 0.85);\n    display: flex;\n    justify-content: space-between;\n    flex-direction: column-reverse;\n}\ndiv[data-ui-field=\"items_wrapper\"] {\n    text-align: right;\n    margin-top: auto;\n}\n\n.menu-item {\n    padding-top: 8px;\n    padding-bottom: 8px;\n    margin-right: 32px;\n}\n\n.circle-button {\n    border-radius: 50%;\n    width: 56px;\n    height: 56px;\n    margin: 4px;\n    background: deeppink;\n    fill: white;\n    box-shadow: 0 4px 8px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.5);\n    vertical-align: middle;\n    text-align: center;\n    font-size: 0;\n    display: table-cell;\n    transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n}\n\n@media only screen and (max-width: 640px) {\n    .menu-button {\n        right: 16px;\n        bottom: 16px;\n    }\n    .menu-item {\n        margin-right: 16px;\n    }\n    div[data-ui-field=\"menu_overlay\"] {\n        padding-bottom: 72px;\n    }\n}"
   },
   {
     "componentId": "content/api/api_loader",
@@ -1819,7 +1830,7 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
   },
   {
     "componentId": "content/docs",
-    "css": "h3 {\n    margin-top: 56px;\n    margin-bottom: 32px;\n}\nh4 {\n    margin-top: 56px;\n    margin-bottom: 32px;\n}\nh5 {\n    margin-top: 56px;\n    margin-bottom: 32px;\n}\nh6 {\n    margin-top: 32px;\n    margin-bottom: 32px;\n}\n.indent-1 {\n    margin-left: 56px;\n    margin-bottom: 24px;\n}\nul {\n    padding-left: 8px;\n}\n.list ul li {\n    list-style: disc;\n    margin-left: 24px;\n}\nh4 i {\n    font-size: 100%;\n    vertical-align: top;\n}"
+    "css": "h3 {\n    margin-top: 56px;\n    margin-bottom: 32px;\n}\nh4 {\n    margin-top: 56px;\n    margin-bottom: 32px;\n}\nh5 {\n    margin-top: 56px;\n    margin-bottom: 32px;\n}\nh6 {\n    margin-top: 32px;\n    margin-bottom: 32px;\n}\n.indent-1 {\n    margin-left: 56px;\n    margin-bottom: 24px;\n}\nul {\n    padding-left: 8px;\n}\n.list ul li {\n    list-style: disc;\n    margin-left: 24px;\n}\nh4 i {\n    font-size: 100%;\n    vertical-align: top;\n}\n"
   },
   {
     "componentId": "content/api",

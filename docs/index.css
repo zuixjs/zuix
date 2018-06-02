@@ -206,6 +206,13 @@ div[data-ui-field="loaderMessage"] {
     padding: 24px;
 }
 
+.toc-item {
+    padding-right: 8px;
+}
+.toc-item a span {
+    padding-right: 8px;
+}
+
 .progressive-content-container {
     margin-bottom:60px;
     border-top: dotted 1px rgba(230,230,230,0.5);
