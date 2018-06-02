@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const dox = require('gulp-dox');
 const fs = require('fs');
 const srcFolder = './src/js';
-const jsonApiFolder = './_docs/content/api/data';
+const jsonApiFolder = './zuix-website/source/app/content/api/data';
 
 module.exports = function() {
     console.log('\nGenerating JSON API files from JSDoc...');
