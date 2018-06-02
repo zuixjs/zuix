@@ -14,11 +14,10 @@ Documentation site:
 
 [http://zuix.it](https://genielabs.github.io/zuix)
 
-
 ### Getting Started
 
-Start using zUIx with the demo [website template](https://github.com/genielabs/zuix-web-template)
-or start from scratch by including it in your project using one of the following methods.
+Start using **zUIx** with the [zUIx Web Starter](https://github.com/genemars/zuix-web-starter) project,
+or start from scratch by including it in your project using one of the methods described below.
 
 ###### Local copy
 
@@ -45,10 +44,11 @@ Install from *NPM*
 
     npm install zuix-dist --save
 
-Include the library from *node_modules* folder in your HTML project files:
+Copy the library from `node_modules/zuix-dist/js` to your project folder
+and include it in your HTML pages:
 
 ```html
-    <script src="node_modules/zuix-dist/js/zuix.min.js"></script>
+    <script src="js/zuix.min.js"></script>
 ```
 
 ###### Bower
@@ -57,33 +57,30 @@ Install from *Bower*
 
     bower install zuix-dist --save
 
-Include the library from *bower_components* folder in your HTML project files:
+Copy the library from `bower_components/zuix-dist/js` to your project folder
+and include it in your HTML pages:
 
 ```html
-    <script src="bower_components/zuix-dist/js/zuix.min.js"></script>
+    <script src="js/zuix.min.js"></script>
 ```
 
 #### Using with TypeScript
 
-To use zUIx in a TypeScript project you can download and use the auto-generated
+To use zUIx in a TypeScript project you can download and include the auto-generated
 [module definition file](https://raw.githubusercontent.com/genielabs/zuix/master/dist/ts/zuix.d.ts)
-located in the distribution folder of the master repo.
+which is located in the distribution folder of the master repo.
 
-### Examples
+### More examples
 
-The following online examples can also be downloaded as a **.zip** file
-containing everything is needed to get you started.
-
-- [**Website Template**](https://genielabs.github.io/zuix-web-template/)
-*a free responsive website template with file based content management, markdown support and more...*
 - [**TodoMVC**](https://genielabs.github.io/zuix-todomvc)
 *the classic To-Do MVC application implemented as a loadable component*
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
 *example of using* **list_view** *component with progressive/lazy loading*
 - [**G-Labs web site**](https://genielabs.github.io/glabs.it) presentation website
 - [**zUIx on CodePen**](https://codepen.io/genielabs/)
-*more examples and tutorials on CodePen*
-
+*examples and tutorials on CodePen*
+- [**Website Template**](https://genielabs.github.io/zuix-web-template/)
+*(WIP) a free responsive website template with file based content management, markdown support and more...*
 
 ### Contributing
 

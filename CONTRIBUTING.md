@@ -77,6 +77,21 @@ The script run on the *CI* server side is
 
     npm run deploy
 
+
+###### Website
+
+Website source files are located in the `zuix-website` folder which is a submodule
+pointing to the `gh-pages` branch.
+
+    cd zuix-website
+
+So, every change made to the website must be pushed to the `gh-pages` branch:
+
+    git push origin gh-pages
+
+For further development and usage instructions see [gh-pages repository](https://github.com/genielabs/zuix/tree/gh-pages).
+
+
 #### Join zUIx team!
 
 zUIx is a volunteer effort. We encourage you to pitch in and join the team!
