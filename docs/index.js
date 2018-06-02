@@ -50,7 +50,7 @@ var main = {
         // actions map
         on: {
             'page:change': function (e, i) {
-                //console.log('page:change@PagedView', i);
+                // console.log('page:change@PagedView', i);
             }
         },
         // behaviors map
@@ -58,10 +58,10 @@ var main = {
             // animate entering/exiting pages on page:change event
             'page:change': changePage
         },
-        ready: function () {
+        ready: function() {
             // store a reference to this component once it's loaded
             pagedView = this;
-            //console.log("ZUIX", "INFO", "Paged view ready.", this);
+            // console.log("zUIx", "INFO", "Paged view ready.", this);
         }
     }
 
@@ -78,7 +78,7 @@ zuix.using('style', 'https://cdnjs.cloudflare.com/ajax/libs/flex-layout-attribut
 zuix.using('style', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css');
 
 // Animate CSS extension method for ZxQuery
-zuix.$.ZxQuery.prototype.animateCss = function() {};
+zuix.$.ZxQuery.prototype.animateCss = function() { return this; };
 zuix.using('component', '@lib/extensions/animate_css', function(res, ctx){
     console.log('AnimateCSS extension loaded.', res, ctx);
 });
@@ -91,7 +91,8 @@ const mainPage = zuix.field('main').hide();
 let splashScreen = zuix.field('splashScreen').show();
 let revealTimeout = null;
 // reference to homepage's cover and features block (used for change-page animation)
-let coverBlock = null, featuresBlock = null;
+let coverBlock = null;
+let featuresBlock = null;
 zuix.field('content-home').on('component:ready', function (ctx) {
     // these element are available only after the 'content-home' is loaded
     coverBlock = zuix.field('mainCover', this);
@@ -110,44 +111,49 @@ window.zuixNoConsoleOutput = true;
 
 // Global zUIx event hooks
 
-zuix.hook('load:begin', function(data){
-    if (splashScreen) splashScreen.show();
+zuix.hook('load:begin', function(data) {
+    if (splashScreen) {
+        splashScreen.animateCss('fadeIn').show();
+    }
     loaderMessage.html('Loading "<em>'+data.task+'</em>" ...').show();
-    if (revealTimeout != null)
+    if (revealTimeout != null) {
         clearTimeout(revealTimeout);
-    loaderMessage.animateCss('bounceInUp', { duration: '1.0s' })
-}).hook('load:next', function(data){
+    }
+    loaderMessage.animateCss('bounceInUp', {duration: '1.0s'});
+}).hook('load:next', function(data) {
     if (data.task.indexOf('zuix_hackbox') > 0) return;
-    if (splashScreen)
+    if (splashScreen) {
         zuix.field('loader-progress')
             .html(data.task).prev()
             .animateCss('bounce');
+    }
     loaderMessage.html('Loading "<em>'+data.task+'</em>" complete.')
-        .animateCss('bounceInUp', { duration: '1.0s' });
-    if (revealTimeout != null)
+        .animateCss('bounceInUp', {duration: '1.0s'});
+    if (revealTimeout != null) {
         clearTimeout(revealTimeout);
-}).hook('load:end', function(data){
+    }
+}).hook('load:end', function(data) {
     revealMainPage();
-}).hook('componentize:end', function(data){
-    revealMainPage();
-}).hook('html:parse', function (data) {
+}).hook('componentize:end', function(data) {
+    // revealMainPage();
+}).hook('html:parse', function(data) {
     // ShowDown - Markdown compiler
     if (typeof data.content == 'string' && this.options().markdown === true && typeof showdown !== 'undefined') {
         data.content = new showdown.Converter()
             .makeHtml(data.content);
     }
-}).hook('css:parse', function (data) {
+}).hook('css:parse', function(data) {
     // console.log(data);
-}).hook('view:process', function (view) {
+}).hook('view:process', function(view) {
     // Prism code syntax highlighter
     if (this.options().prism && typeof Prism !== 'undefined') {
-        view.find('code').each(function (i, block) {
+        view.find('code').each(function(i, block) {
             this.addClass('language-javascript');
             Prism.highlightElement(block);
         });
     }
     // Force opening of all non-local links in a new window
-    zuix.$('a[href*="://"]').attr('target','_blank');
+    zuix.$('a[href*="://"]').attr('target', '_blank');
     // Material Design Light integration - DOM upgrade
     if (this.options().mdl && typeof componentHandler !== 'undefined')
         componentHandler.upgradeElements(view.get());
@@ -156,7 +162,7 @@ zuix.hook('load:begin', function(data){
 
 // URL routing
 
-window.onhashchange = function () {
+window.onhashchange = function() {
     routeCurrentUrl(window.location.hash);
 };
 function routeCurrentUrl(path) {
@@ -187,11 +193,11 @@ function routeCurrentUrl(path) {
     if (pageAnchor !== null) {
         const a = p.find('a[id=' + pageAnchor+']');
         if (a.length() > 0) {
-            setTimeout(function () {
+            setTimeout(function() {
                 scrollTo(p.get(), p.get().scrollTop+a.position().y-64, 750);
             }, 500);
         }
-    } //else p.get().scrollTop = 0;
+    } // else p.get().scrollTop = 0;
 }
 
 
@@ -226,17 +232,17 @@ function revealMainPage() {
 
 function reveal() {
     if (splashScreen) {
+        const s = splashScreen; splashScreen = false;
         // unregister 'componentize:end' hook
         zuix.hook('componentize:end', null);
         // this is only executed once, on app startup
-        const s = splashScreen; splashScreen = false;
         s.animateCss('fadeOutUp', function(){
             s.hide();
         });
         // fade in main page
         mainPage.animateCss('fadeIn',
-            { duration: '1.2s' },
-            function(){
+            {duration: '1.2s'},
+            function() {
                 s.hide();
             }).show();
         routeCurrentUrl(window.location.hash);
@@ -245,16 +251,16 @@ function reveal() {
 
 const zxHeader = zuix.$.find('.site-header').hide();
 zxHeader.hidden = true; const headerTriggerY = 100;
-//const zxHeaderTitle = zxHeader.find('[data-ui-field=title]');
-//const zxFooter = zuix.$.find('.site-footer').hide();
+// const zxHeaderTitle = zxHeader.find('[data-ui-field=title]');
+// const zxFooter = zuix.$.find('.site-footer').hide();
 
-zuix.$.find('section').eq(0).on('scroll', function (data) {
+zuix.$.find('section').eq(0).on('scroll', function(data) {
    checkMenuVisibility();
 });
 
 function checkMenuVisibility() {
     const checkPosition = featuresBlock.position();
-    //console.log(checkPosition, zxHeader.display());
+    // console.log(checkPosition, zxHeader.display());
     if (checkPosition.y < headerTriggerY && zxHeader.hidden && !zxHeader.hasClass('animated')) {
         zxHeader.show()
             .animateCss('fadeInDown', { duration: '.5s' }, function () {
@@ -274,13 +280,13 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
 
     // cover+header animation reveal/hide
     if (i.page == 0) {
-        zxHeader.animateCss('fadeOut', function () {
+        zxHeader.animateCss('fadeOut', function() {
             this.hide();
         });
         coverBlock
             .animateCss('bounceInDown');
         featuresBlock
-            .animateCss('bounceInUp', function () {
+            .animateCss('bounceInUp', function() {
                 zxHeader.hidden = true;
                 checkMenuVisibility();
             });
@@ -291,15 +297,24 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         featuresBlock
             .animateCss('slideOutDown');
     } else if (i.old == 2) {
-        zuix.context('menu-docs').hideButton();
+        zuix.context('menu-docs', function() {
+            this.hideButton();
+        });
     } else if (i.old == 3) {
-        zuix.context('menu-api').hideButton();
+        zuix.context('menu-api', function() {
+            this.hideButton();
+        });
     }
 
-    if (i.page == 2)
-        zuix.context('menu-docs').showButton();
-    else if (i.page == 3)
-        zuix.context('menu-api').showButton();
+    if (i.page == 2) {
+        zuix.context('menu-docs', function () {
+            this.showButton();
+        });
+    } else if (i.page == 3) {
+        zuix.context('menu-api', function () {
+            this.showButton();
+        });
+    }
 
     // 'page change' animation
     if (effectIn == null) effectIn = 'fadeIn';
