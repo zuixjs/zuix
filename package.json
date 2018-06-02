@@ -22,7 +22,7 @@
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
     "gulp-closure-compiler": "^0.4.0",
-    "gulp-dox": "^0.1.6",
+    "gulp-dox": "^0.2.1",
     "gulp-eslint": "^4.0.2",
     "gulp-header": "^2.0.5",
     "gulp-install": "^1.1.0",
