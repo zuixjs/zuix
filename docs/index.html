@@ -756,7 +756,7 @@ var my_loading_options = {
 &lt;/script&gt;
 </code></pre>
 <h6 id="priority">Priority</h6>
-<p>With the <code>data-ui-priority</code> attribute we can change the order which contents or components are loaded.
+<p>With the <code>data-ui-priority</code> attribute we can change in which order components have to be loaded.
 Its value is indeed a number indicating the loading sequence order and that can also have negative values.
 The default value is zero and items with minor priority will get loaded first.</p>
 <div align="center"><a href="https://codepen.io/genielabs/pen/YQPxqJ" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect"><i class="material-icons animated flash infinite">play_circle_outline</i> Example on CodePen</a></div>
@@ -774,8 +774,8 @@ if the element become visible.
 When the element visibility depends on a scrollable container
 (eg. on the <code>BODY</code> tag or a <code>DIV</code> with <em>CSS</em> <code>overflow</code> set to <code>scroll</code>)
 we can set the attribute <code>data-ui-lazyload="scroll"</code> on the
-scrollable container. This way lazy-loadable element will
-be automatically loaded once become visible.</p>
+scrollable container. This way lazy-loadable elements will
+be automatically loaded once they scroll into the view.</p>
 <p><small><strong>EXAMPLE - </strong> Use of lazy loading option</small></p>
 <pre data-line="1,2,6"><code class="language-html">
 &lt;div class="vertical-scrollable" data-ui-lazyload="scroll"&gt;
@@ -803,7 +803,7 @@ the method <code>zuix.componentize([&lt;container&gt;])</code> must be called.</
 <div align="center"><a href="https://codepen.io/genielabs/pen/pwyJaE" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect"><i class="material-icons animated flash infinite">play_circle_outline</i> Example on CodePen</a></div>
 <h5 id="stylingcontent">Styling content</h5>
 <p>When including a content, after loading the <code>.html</code> file,
-<em>ZUIX</em> will also try to load a <code>.css</code> style
+<em>zUIx</em> will also try to load a <code>.css</code> style
 file with the same location/basename, unless the <code>css: false</code>
 field is present in the <code>data-ui-options</code> object.</p>
 <p>If the style file is found, all style definitions contained in it,
