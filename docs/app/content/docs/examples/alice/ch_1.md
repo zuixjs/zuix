@@ -9,7 +9,7 @@ So she was considering in her own mind (as well as she could, for the hot day ma
 There was nothing so *very* remarkable in that; nor did Alice think it so *very* much out of the way to hear the Rabbit say to itself, ‘Oh dear! Oh dear! I shall be late!’ (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually *took a watch out of its waistcoat-pocket* , and looked at it, and then hurried on, Alice started to her feet, for it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.
 
 
-![White Rabbit checking watch](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_1_1.png)
+![White Rabbit checking watch](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_1_1.png)
 
 In another moment down went Alice after it, never once considering how in the world she was to get out again.
 
@@ -32,14 +32,14 @@ There were doors all round the hall, but they were all locked; and when Alice ha
 Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice’s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!
 
 
-![Alice finding tiny door behind curtain](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_1_2.png)
+![Alice finding tiny door behind curtain](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_1_2.png)
 
 Alice opened the door and found that it led into a small passage, not much larger than a rat-hole: she knelt down and looked along the passage into the loveliest garden you ever saw. How she longed to get out of that dark hall, and wander about among those beds of bright flowers and those cool fountains, but she could not even get her head though the doorway; ‘and even if my head would go through,’ thought poor Alice, ‘it would be of very little use without my shoulders. Oh, how I wish I could shut up like a telescope! I think I could, if I only know how to begin.’ For, you see, so many out-of-the-way things had happened lately, that Alice had begun to think that very few things indeed were really impossible.
 
 There seemed to be no use in waiting by the little door, so she went back to the table, half hoping she might find another key on it, or at any rate a book of rules for shutting people up like telescopes: this time she found a little bottle on it, (‘which certainly was not here before,’ said Alice,) and round the neck of the bottle was a paper label, with the words ‘DRINK ME’ beautifully printed on it in large letters.
 
 
-![Alice taking “Drink Me” bottle](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_1_3.png)
+![Alice taking “Drink Me” bottle](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_1_3.png)
 
 It was all very well to say ‘Drink me,’ but the wise little Alice was not going to do *that* in a hurry. ‘No, I’ll look first,’ she said, ‘and see whether it’s marked “poison” or not’; for she had read several nice little histories about children who had got burnt, and eaten up by wild beasts and other unpleasant things, all because they *would* not remember the simple rules their friends had taught them: such as, that a red-hot poker will burn you if you hold it too long; and that if you cut your finger *very* deeply with a knife, it usually bleeds; and she had never forgotten that, if you drink much from a bottle marked ‘poison,’ it is almost certain to disagree with you, sooner or later.
 

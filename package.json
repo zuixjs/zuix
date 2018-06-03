@@ -2,7 +2,7 @@
   "name": "zuix",
   "version": "0.4.9-40",
   "description": "ZUIX is a JavaScript library for creating component-based sites and web apps.",
-  "author": "Generoso Martello <generoso@martello.com>",
+  "author": "Generoso Martello",
   "contributors": [],
   "bin": {},
   "scripts": {
@@ -48,7 +48,10 @@
     "content manager",
     "component manager",
     "ui",
-    "web"
+    "web",
+    "website",
+    "app"
+    "webapp",
   ],
   "license": "Apache-2.0",
   "preferGlobal": true

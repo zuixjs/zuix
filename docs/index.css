@@ -207,9 +207,11 @@ div[data-ui-field="loaderMessage"] {
 }
 
 .toc-item {
+    padding-bottom: 8px;
     padding-right: 8px;
 }
 .toc-item a span {
+    font-weight: 800;
     padding-right: 8px;
 }
 

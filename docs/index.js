@@ -153,7 +153,10 @@ zuix.hook('load:begin', function(data) {
         });
     }
     // Force opening of all non-local links in a new window
-    zuix.$('a[href*="://"]').attr('target', '_blank');
+    zuix.$('a[href*="://"]')
+        .attr('target', '_blank')
+        .attr('rel', 'noreferrer');
+
     // Material Design Light integration - DOM upgrade
     if (this.options().mdl && typeof componentHandler !== 'undefined')
         componentHandler.upgradeElements(view.get());

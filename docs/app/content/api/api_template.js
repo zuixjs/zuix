@@ -105,6 +105,16 @@ zuix.controller(function (cp) {
                 .css('cursor', 'pointer')
                 .on('click', function () {
                     expandItem(this);
+                }).each(function(i,e) {
+                    // TODO: improve this...
+                    if (window.location.hash.endsWith('#/api#'+this.prev().attr('id'))) {
+                        expandItem(this);
+                        const p = pagedView.getCurrentPage();
+                        const a = this.prev();
+                        setTimeout(function () {
+                            scrollTo(p.get(), p.get().scrollTop+a.position().y-64, 750);
+                        }, 500);
+                    }
                 });
             cp.trigger('view:process', cp.field('types'), true);
 

@@ -2,7 +2,7 @@
 
 #### The Pool of Tears
 
-![Alice stretched tall](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_2_1.png)
+![Alice stretched tall](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_2_1.png)
 
 ‘Curiouser and curiouser!’ cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); ‘now I’m opening out like the largest telescope that ever was! Good-bye, feet!’ (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). ‘Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I’m sure *I* shan’t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; — but I must be kind to them,’ thought Alice, ‘or perhaps they won’t walk the way I want to go! Let me see: I’ll give them a new pair of boots every Christmas.’
 
@@ -26,7 +26,7 @@ Poor Alice! It was as much as she could do, lying down on one side, to look thro
 After a time she heard a little pattering of feet in the distance, and she hastily dried her eyes to see what was coming. It was the White Rabbit returning, splendidly dressed, with a pair of white kid gloves in one hand and a large fan in the other: he came trotting along in a great hurry, muttering to himself as he came, ‘Oh! the Duchess, the Duchess! Oh! won’t she be savage if I’ve kept her waiting!’ Alice felt so desperate that she was ready to ask help of any one; so, when the Rabbit came near her, she began, in a low, timid voice, ‘If you please, sir —’ The Rabbit started violently, dropped the white kid gloves and the fan, and skurried away into the darkness as hard as he could go.
 
 
-![Giant Alice watching Rabbit run away](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_2_2.png)
+![Giant Alice watching Rabbit run away](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_2_2.png)
 
 Alice took up the fan and gloves, and, as the hall was very hot, she kept fanning herself all the time she went on talking: ‘Dear, dear! How queer everything is to-day! And yesterday things went on just as usual. I wonder if I’ve been changed in the night? Let me think: was I the same when I got up this morning? I almost think I can remember feeling a little different. But if I’m not the same, the next question is, Who in the world am I? Ah, *that’s* the great puzzle!’ And she began thinking over all the children she knew that were of the same age as herself, to see if she could have been changed for any of them.
 
@@ -53,7 +53,7 @@ As she said this she looked down at her hands, and was surprised to see that she
 As she said these words her foot slipped, and in another moment, splash! she was up to her chin in salt water. Her first idea was that she had somehow fallen into the sea, ‘and in that case I can go back by railway,’ she said to herself. (Alice had been to the seaside once in her life, and had come to the general conclusion, that wherever you go to on the English coast you find a number of bathing machines in the sea, some children digging in the sand with wooden spades, then a row of lodging houses, and behind them a railway station.) However, she soon made out that she was in the pool of tears which she had wept when she was nine feet high.
 
 
-![Alice in pool of tears](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_2_3.png)
+![Alice in pool of tears](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_2_3.png)
 
 ‘I wish I hadn’t cried so much!’ said Alice, as she swam about, trying to find her way out. ‘I shall be punished for it now, I suppose, by being drowned in my own tears! That *will* be a queer thing, to be sure! However, everything is queer to-day.’
 
@@ -66,7 +66,7 @@ Just then she heard something splashing about in the pool a little way off, and 
 ‘Not like cats!’ cried the Mouse, in a shrill, passionate voice. ‘Would *you* like cats if you were me?’
 
 
-![Alice with Mouse in pool of tears](https://genielabs.github.io/zuix/content/docs/examples/alice/img/ch_2_4.png)
+![Alice with Mouse in pool of tears](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_2_4.png)
 
 ‘Well, perhaps not,’ said Alice in a soothing tone: ‘don’t be angry about it. And yet I wish I could show you our cat Dinah: I think you’d take a fancy to cats if you could only see her. She is such a dear quiet thing,’ Alice went on, half to herself, as she swam lazily about in the pool, ‘and she sits purring so nicely by the fire, licking her paws and washing her face — and she is such a nice soft thing to nurse — and she’s such a capital one for catching mice — oh, I beg your pardon!’ cried Alice again, for this time the Mouse was bristling all over, and she felt certain it must be really offended. ‘We won’t talk about her any more if you’d rather not.’
 
