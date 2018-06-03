@@ -50,8 +50,8 @@
     "ui",
     "web",
     "website",
-    "app"
-    "webapp",
+    "app",
+    "webapp"
   ],
   "license": "Apache-2.0",
   "preferGlobal": true
