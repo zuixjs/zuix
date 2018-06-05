@@ -572,7 +572,7 @@
 <div data-ui-view="content/start">
 <p><a id="Getting_Started--Usage"></a></p>
 <h3 id="gettingstarted">Getting Started</h3>
-<p><img src="images/zuix_web_starter.png" width="128" height="128" vspace="8" hspace="8" align="right">
+<p><img src="images/zuix_web_starter.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated fadeInUp">
 Start using <strong>zUIx</strong> with the <a href="https://github.com/genemars/zuix-web-starter">zUIx Web Starter</a> project,
 or start from scratch by including it in your project using one of the methods described below.</p>
 <h6 id="localcopy">Local copy</h6>
@@ -636,6 +636,7 @@ which is located in the distribution folder of the master repo.</p>
     <a href="https://github.com/genielabs">@genielabs</a>
     <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
 </div>
+
 </div>
 <!--{[content/docs/content_management]}-->
 <div data-ui-view="content/docs/content_management">
@@ -729,7 +730,7 @@ into each <code>div</code> element.</p>
     &lt;div data-ui-include="https://genielabs.github.io/zuix/app/content/docs/examples/links"&gt;&lt;/div&gt;
 </code></pre>
 <p><small><strong>RESULT</strong></small></p>
-<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content_no_css" data-o-markdown="true"></div>
+<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content_no_css"></div>
 <p>&nbsp;</p>
 <h6 id="options">Options</h6>
 <p>When loading a content (or a component) we can also use the <code>data-ui-options</code> attribute to get more control over the loading
@@ -866,7 +867,7 @@ a {
 &lt;/style&gt;
 </code></pre>
 <p><small><strong>RESULT</strong></small></p>
-<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content" data-ui-priority="-1"></div>
+<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content" data-ui-lazyload="false" data-ui-priority="-1"></div>
 <p>&nbsp;</p>
 <p>So, as shown in the processed output, the <code>.css</code> style definitions
 are applied only to the loaded content via the <code>data-ui-component</code> constraint,
@@ -900,7 +901,7 @@ making possible to keep <strong>global style</strong> files separated from <stro
 where some elements in it are bound to fields of a <em>data model</em> and that
 so it dynamically changes the shown values accordingly to it.</p>
 <p>The <code>data-ui-field</code> attribute, placed on elements of a view,
-is used to bind their values to the respective fields in the model.</p>
+is used to bind their values to the respective fields in the data model.</p>
 <p><small><strong>EXAMPLE -</strong> <strong>HTML</strong> template file <code>templates/mdl_card.html</code></small></p>
 <pre data-line="5,6,8,13"><code class="language-html">
 &lt;!-- Template of a Material Design card --&gt;
@@ -925,7 +926,7 @@ is used to bind their values to the respective fields in the model.</p>
     <div data-ui-include="templates/mdl_card" self="size-1of2 sm-full"></div>
 </div>
 <p>&nbsp;</p>
-<p>To apply the template above with different data, we use the following code:</p>
+<p>To apply the template above with a different data model, we use the following code:</p>
 <p><small><strong>EXAMPLE - HTML</strong></small></p>
 <pre><code class="language-html">
 &lt;div data-ui-include="templates/mdl_card"&gt;
@@ -1105,7 +1106,7 @@ var a_random_contact = {
                 "1": { name: 'Jane Doe', image: './app/content/docs/examples/images/avatar_01.png'},
                 "2": { name: 'Mikey M.', image: './app/content/docs/examples/images/avatar_03.png'}
             };
-            // example model view adapter
+            // example bind-model view adapter
             var chip_adapter = function(element, field) {
                 const id = this.attr('data-id');
                 const value = chip_items[id][field];
@@ -1298,7 +1299,7 @@ var chip_view_options = {
 </div>
 <!--{[widgets/timeclock]}-->
 <div data-ui-view="widgets/timeclock">
-<div class="frame">
+<div class="frame animated zoomIn">
 
     <div data-ui-field="time" class="time"></div>
     <div class="header">
@@ -1319,16 +1320,6 @@ a view template, a component has a piece of <em>JavaScript</em> code associated
 to it and may so control any element in its view, make service calls and
 implement any kind of complex UI functionality.</p>
 <p>This piece of JavaScript code is the <strong>Controller</strong> of the component.</p>
-<!--
-and it consist of a handler function that holds the
-component controller object that implement a few interface methods:
-**init**, **create**, **destroy**, **update**.
-These methods gets called in the various steps of the component
-life-cycle
-
-To declare a component controller the `zuix.controller(...)` method is
-used. This will be described in next paragraph.
--->
 <h5 id="loadingacomponent">Loading a component</h5>
 <p>To load a component the <code>data-ui-load</code> attribute is used in the same way
 described for <code>data-ui-include</code> attribute in <a href="#/docs#Getting_Started--Content_Loading">content loading</a>,
@@ -1474,7 +1465,7 @@ can be loaded without having to worry about the dependencies.</p>
 <div data-ui-view="content/docs">
 <p><a id="Getting_Started--Quick_Start"></a></p>
 <h3 id="quickstartguide">Quick Start Guide</h3>
-<p><img src="images/documentation.png" width="128" height="128" vspace="8" hspace="8" align="right">
+<p><img src="images/documentation.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated zoomIn">
 This is a basic guide with examples, simple terminology and not too much technical stuff so that even with little HTML
 and JavaScript knowledge you can start using zUIx.</p>
 <h5 id="index">Index</h5>
@@ -1607,13 +1598,13 @@ by using the <code>zuix.context(...)</code> method, when loading a component fro
      data-ui-context="my-context-id"&gt;
     &lt;!-- ... --&gt;
 &lt;/div&gt;
-&lt;script&gt;
+&amp;lt;script&amp;gt;
 // Get the component context by using the assigned id
 const ctx = zuix.context('my-context-id');
 // OR by referencing its HTML element container
 const componentDiv = zuix.field('my-field-id');
 const ctx = zuix.context(componentDiv);
-&lt;/script&gt;
+&amp;lt;/script&amp;gt;
 </code></pre>
 <p><i class="material-icons mdl-typography--font-bold">arrow_right</i>
 as the result of the <code>{ContextReadyCallback}</code> specified in the <code>{ContextOptions}</code>.</p>
@@ -1701,7 +1692,7 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
 <div data-ui-view="content/api">
 <p><a id="ZUIX_API"></a></p>
 <h3 id="api">API</h3>
-<p><img src="images/api.png" width="128" height="128" vspace="8" hspace="8" align="right"></p>
+<p><img src="images/api.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated rotateIn"></p>
 <script>
     var api_loader_options = {
         html: false,

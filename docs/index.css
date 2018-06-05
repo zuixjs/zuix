@@ -219,6 +219,11 @@ div[data-ui-field="loaderMessage"] {
     margin-bottom:60px;
     border-top: dotted 1px rgba(230,230,230,0.5);
 }
+
+div[data-ui-view] {
+    display: none;
+}
+
 @media screen and (max-width: 1080px) {
     .hackbox { width: 84%; }
 }

@@ -137,13 +137,17 @@ zuix.hook('load:begin', function(data) {
 }).hook('componentize:end', function(data) {
     // revealMainPage();
 }).hook('html:parse', function(data) {
+    let markdown = (this.options().markdown === true);
+    //markdown = markdown || (this.container() != null && this.container().getAttribute('data-o-markdown') === 'true');
+    //markdown = markdown || (this.view() != null && this.view().getAttribute('data-o-markdown') === 'true');
     // ShowDown - Markdown compiler
-    if (typeof data.content == 'string' && this.options().markdown === true && typeof showdown !== 'undefined') {
+    if (typeof data.content == 'string' && markdown && typeof showdown !== 'undefined') {
         data.content = new showdown.Converter()
             .makeHtml(data.content);
     }
 }).hook('css:parse', function(data) {
     // console.log(data);
+    // TODO: should post-process with LESS
 }).hook('view:process', function(view) {
     // Prism code syntax highlighter
     if (this.options().prism && typeof Prism !== 'undefined') {
