@@ -964,9 +964,11 @@ z$.getPosition = function(el, tolerance) {
         if (scrollable === document.body) {
             scrollInfo.size.width = document.body.offsetWidth;
             scrollInfo.size.height = document.body.offsetHeight;
-            scrollInfo.viewport.width = document.documentElement.offsetWidth;
-            scrollInfo.viewport.height = document.documentElement.offsetHeight;
+            scrollInfo.viewport.width = document.documentElement.clientWidth || scrollInfo.size.width;
+            scrollInfo.viewport.height = document.documentElement.clientHeight || scrollInfo.size.height;
         } else {
+            scrollInfo.size.width = vp.width;
+            scrollInfo.size.height = vp.height;
             scrollInfo.viewport.width = scrollable.offsetWidth;
             scrollInfo.viewport.height = scrollable.offsetHeight;
         }

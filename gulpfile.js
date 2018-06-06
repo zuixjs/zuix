@@ -5,10 +5,10 @@ const gulp = require('./build/gulp')([
     'bundler/browserify',
     'bundler/compile'
 ]);
-const eslint = require('gulp-eslint');
 gulp.task('default', function() {
     console.log('\nRunning ESLint...');
     // ESLint
+    const eslint = require('gulp-eslint');
     return gulp.src(['./src/js/**'])
         .pipe(eslint('./eslintrc.json'))
         .pipe(eslint.results((results) => {

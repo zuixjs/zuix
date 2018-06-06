@@ -1,4 +1,4 @@
-/* zUIx v0.4.9-50 18.06.06 13:52:35 */
+/* zUIx v0.4.9-41 18.06.06 20:57:26 */
 
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
@@ -1499,9 +1499,11 @@ z$.getPosition = function(el, tolerance) {
         if (scrollable === document.body) {
             scrollInfo.size.width = document.body.offsetWidth;
             scrollInfo.size.height = document.body.offsetHeight;
-            scrollInfo.viewport.width = document.documentElement.offsetWidth;
-            scrollInfo.viewport.height = document.documentElement.offsetHeight;
+            scrollInfo.viewport.width = document.documentElement.clientWidth || scrollInfo.size.width;
+            scrollInfo.viewport.height = document.documentElement.clientHeight || scrollInfo.size.height;
         } else {
+            scrollInfo.size.width = vp.width;
+            scrollInfo.size.height = vp.height;
             scrollInfo.viewport.width = scrollable.offsetWidth;
             scrollInfo.viewport.height = scrollable.offsetHeight;
         }
