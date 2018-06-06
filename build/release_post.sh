@@ -55,7 +55,7 @@ node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\
 # Copy latest zUIx dist files to the website
 cp -rfv dist/js docs/js
 # Version number increment in the Download page
-node ../node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./docs/index.html
+node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./docs/index.html
 
 # Update version number for dist package
 update_version "dist/package.json" ${NEW_VERSION}

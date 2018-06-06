@@ -311,7 +311,7 @@ function getNextLoadable() {
         const isLazy = lazyElementCheck(item.element);
         if (lazyLoad() && isLazy) {
             item.lazy = true;
-            item.visible = z$.isInView(item.element, _lazyLoadingThreshold);
+            item.visible = z$.getPosition(item.element, _lazyLoadingThreshold).visible;
         } else {
             item.lazy = false;
             item.visible = true;
