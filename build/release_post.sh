@@ -53,7 +53,8 @@ fi
 node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./README.md
 
 # Copy latest zUIx dist files to the website
-cp -rfv dist/js docs/js
+cp -rfv dist/js docs/
+cp -rfv dist/js zuix-website/source/
 # Version number increment in the Download page
 node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./docs/index.html
 
