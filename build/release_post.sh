@@ -57,6 +57,7 @@ cp -rfv dist/js docs/
 cp -rfv dist/js zuix-website/source/
 # Version number increment in the Download page
 node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./docs/index.html
+node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./zuix-website/source/app/content/start.html
 
 # Update version number for dist package
 update_version "dist/package.json" ${NEW_VERSION}
