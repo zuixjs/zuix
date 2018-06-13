@@ -220,6 +220,11 @@ div[data-ui-field="loaderMessage"] {
     border-top: dotted 1px rgba(230,230,230,0.5);
 }
 
+.size-full {
+    width: 100vh;
+    min-height: 100vh;
+}
+
 div[data-ui-view] {
     display: none;
 }

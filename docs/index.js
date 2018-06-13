@@ -47,9 +47,10 @@ var main = {
     contentPager: {
         css: false,
         html: false,
+        lazyLoad: false,
         // actions map
         on: {
-            'page:change': function (e, i) {
+            'page:change': function(e, i) {
                 // console.log('page:change@PagedView', i);
             }
         },
