@@ -277,17 +277,25 @@ function checkMenuVisibility() {
     const checkPosition = featuresBlock.position();
     // console.log(checkPosition, zxHeader.display());
     if (checkPosition.y < headerTriggerY && zxHeader.hidden && !zxHeader.hasClass('animated')) {
-        zxHeader.show()
-            .animateCss('fadeInDown', { duration: '.5s' }, function () {
-                this.show();
-                zxHeader.hidden = false;
-            });
+        showMenu();
     } else if (checkPosition.y >= headerTriggerY && !zxHeader.hidden && !zxHeader.hasClass('animated')) {
-        zxHeader.show().animateCss('fadeOutUp', { duration: '.5s' }, function () {
-            this.hide();
-            zxHeader.hidden = true;
-        });
+        hideMenu();
     }
+}
+
+function showMenu() {
+    zxHeader.show()
+        .animateCss('fadeInDown', { duration: '.5s' }, function () {
+            this.show();
+            zxHeader.hidden = false;
+        });
+}
+
+function hideMenu() {
+    zxHeader.show().animateCss('fadeOutUp', { duration: '.5s' }, function () {
+        this.hide();
+        zxHeader.hidden = true;
+    });
 }
 
 function isSplashEnabled() {
