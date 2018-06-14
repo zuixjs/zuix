@@ -162,9 +162,9 @@
 
             <!-- page 0 -->
             <section>
-                <div layout="column top-center" class="page-content">
+                <div layout="column top-stretch" class="page-content">
 
-                    <div data-ui-include="content/home" data-ui-field="content-home" data-ui-options="main.options.content" layout="columns center-stretch"></div>
+                    <div data-ui-include="content/home" data-ui-field="content-home" data-ui-options="main.options.content"></div>
 
                 </div>
             </section>
@@ -380,18 +380,20 @@
 
     <div self="size-xlarge center-center" layout="rows center-justify">
         <div self="size-1of2 sm-full" class="example-box -animated -fadeInLeft">
-            <div -class="animated zoomIn">
+            <div>
                 <h6>Reusability by design</h6>
                 <p>
                     With <strong>zUIx</strong> you can include content
                     and load components also if located on different servers.
                 </p>
-<em class="caption">Loading content from local server</em><pre><code class="html language-html">&lt;div data-ui-include="content/lorem_ipsum"&gt;&lt;/div&gt;
+<em class="caption">Loading content from local server</em>
+<pre><code class="html language-html">&lt;div data-ui-include="content/lorem_ipsum"&gt;&lt;/div&gt;
 </code></pre>
+
             </div>
         </div>
         <div self="size-1of2 sm-full" layout="row center-center" class="example-box -animated -fadeInRight">
-            <div data-ui-include="content/lorem_ipsum" -class="animated zoomIn"></div>
+            <div data-ui-include="content/lorem_ipsum"></div>
             <!--
             <div data-ui-load="@lib/components/social_sharing"
                  layout="rows center-center">
@@ -404,10 +406,12 @@
 
     <div self="size-xlarge center-center" layout="rows center-justify" class="animated fadeInUp">
         <div self="md-full" class="example-box">
-<em class="caption">Loading content from a shared library</em><pre><code class="html language-html">&lt;div data-ui-include="@lib/templates/spinkit/spinner_cubes"&gt;&lt;/div&gt;
+<em class="caption">Loading content from a shared library</em>
+<pre><code class="html language-html">&lt;div data-ui-include="@lib/templates/spinkit/spinner_cubes"&gt;&lt;/div&gt;
 </code></pre>
+
         </div>
-        <div self="size-x1 center-center" -class="example-box">
+        <div self="size-x1 center-center">
 
             <div data-ui-include="@lib/templates/spinkit/spinner_cubes"></div>
 
@@ -439,7 +443,8 @@
             </p>
         </div>
         <div self="md-full" class="example-box">
-<em class="caption">Applying a <a href="https://getmdl.io/components/index.html">MDL</a> template from a remote server</em><pre><code class="html language-html">&lt;div data-ui-include="https://genielabs.github.io/zuix/app/templates/mdl_card"&gt;
+<em class="caption">Applying a <a href="https://getmdl.io/components/index.html">MDL</a> template from a remote server</em>
+<pre><code class="html language-html">&lt;div data-ui-include="https://genielabs.github.io/zuix/app/templates/mdl_card"&gt;
     &lt;h1 data-ui-field="title"&gt;Still got the goods&lt;/h1&gt;
     &lt;img data-ui-field="image" src="images/example_picture.jpg"&gt;
     &lt;p data-ui-field="text"&gt;
@@ -449,6 +454,7 @@
     &lt;a data-ui-field="link_read" href="javascript:alert('Clicked!')"&gt;Read More&lt;/a&gt;
 &lt;/div&gt;
 </code></pre>
+
         </div>
 
     </div>
