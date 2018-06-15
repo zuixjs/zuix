@@ -287,9 +287,11 @@ function reveal() {
             });
         }
         // fade in main page
-        mainPage.animateCss('fadeIn', {duration: '1.2s'}, function() {
-            if (s !== false) s.hide();
-        }).show();
+        if (mainPage.display() === 'none') {
+            mainPage.animateCss('fadeIn', {duration: '1.2s'}, function () {
+                if (s !== false) s.hide();
+            }).show();
+        }
         routeCurrentUrl(window.location.hash);
     }
 }
