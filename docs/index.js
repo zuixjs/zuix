@@ -93,7 +93,6 @@ let splashScreen = zuix.field('splashScreen');
 if (!isSplashEnabled()) {
     splashScreen.hide();
     splashScreen = false;
-    mainPage.show();
 } else {
     splashScreen.show();
 }
@@ -286,13 +285,11 @@ function reveal() {
             s.animateCss('fadeOutUp', function () {
                 s.hide();
             });
-            // fade in main page
-            mainPage.animateCss('fadeIn',
-                {duration: '1.2s'},
-                function() {
-                    s.hide();
-                }).show();
         }
+        // fade in main page
+        mainPage.animateCss('fadeIn', {duration: '1.2s'}, function() {
+            if (s !== false) s.hide();
+        }).show();
         routeCurrentUrl(window.location.hash);
     }
 }
