@@ -92,7 +92,7 @@ const mainPage = zuix.field('main').hide();
 let splashScreen = zuix.field('splashScreen');
 if (!isSplashEnabled()) {
     splashScreen.hide();
-    splashScreen = null;
+    splashScreen = false;
     mainPage.show();
 } else {
     splashScreen.show();
@@ -109,13 +109,44 @@ zuix.field('content-home').on('component:ready', function (ctx) {
 // Reference to navigation components
 let pagedView = null;
 
-
 // Turn off debug output
 
 window.zuixNoConsoleOutput = true;
 // zuix.lazyLoad(false);
 // zuix.httpCaching(false);
 
+// Use "scroll_helper" to auto show/hide header and menu button on internal pages
+
+zuix.load('@lib/controllers/scroll_helper', {
+    view: zuix.field('page-start'),
+    on: {
+        'scroll:change': function(e, data) {
+            if (pagedView.getCurrent() === 1) {
+                pageScrollChanged(e, data);
+            }
+        }
+    }
+});
+zuix.load('@lib/controllers/scroll_helper', {
+    view: zuix.field('page-docs'),
+    on: {
+        'scroll:change': function (e, data) {
+            if (pagedView.getCurrent() === 2) {
+                pageScrollChanged(e, data);
+            }
+        }
+    }
+});
+zuix.load('@lib/controllers/scroll_helper', {
+    view: zuix.field('page-api'),
+    on: {
+        'scroll:change': function(e, data) {
+            if (pagedView.getCurrent() === 3) {
+                pageScrollChanged(e, data);
+            }
+        }
+    }
+});
 
 // Global zUIx event hooks
 
@@ -237,7 +268,7 @@ function scrollTo(element, to, duration) {
 }
 
 function revealMainPage() {
-    loaderMessage.animateCss('bounceOutDown', { duration: '2.0s' }, function () {
+    loaderMessage.animateCss('bounceOutDown', { duration: '0.0s' }, function() {
         this.hide();
     });
     if (revealTimeout != null)
@@ -246,56 +277,59 @@ function revealMainPage() {
 }
 
 function reveal() {
-    if (splashScreen) {
+    if (splashScreen || !isSplashEnabled()) {
         const s = splashScreen; splashScreen = false;
         // unregister 'componentize:end' hook
         zuix.hook('componentize:end', null);
         // this is only executed once, on app startup
-        s.animateCss('fadeOutUp', function(){
-            s.hide();
-        });
-        // fade in main page
-        mainPage.animateCss('fadeIn',
-            {duration: '1.2s'},
-            function() {
+        if (s !== false) {
+            s.animateCss('fadeOutUp', function () {
                 s.hide();
-            }).show();
+            });
+            // fade in main page
+            mainPage.animateCss('fadeIn',
+                {duration: '1.2s'},
+                function() {
+                    s.hide();
+                }).show();
+        }
         routeCurrentUrl(window.location.hash);
     }
 }
 
+const coverHeaderTriggerY = 100;
 const zxHeader = zuix.$.find('.site-header').hide();
-zxHeader.hidden = true; const headerTriggerY = 100;
-// const zxHeaderTitle = zxHeader.find('[data-ui-field=title]');
-// const zxFooter = zuix.$.find('.site-footer').hide();
-
+zxHeader.hidden = true;
+// TODO: use "scroll_helper" to do this
 zuix.$.find('section').eq(0).on('scroll', function(data) {
    checkMenuVisibility();
 });
 
 function checkMenuVisibility() {
     const checkPosition = featuresBlock.position();
-    // console.log(checkPosition, zxHeader.display());
-    if (checkPosition.y < headerTriggerY && zxHeader.hidden && !zxHeader.hasClass('animated')) {
-        showMenu();
-    } else if (checkPosition.y >= headerTriggerY && !zxHeader.hidden && !zxHeader.hasClass('animated')) {
-        hideMenu();
+    if (checkPosition.y < coverHeaderTriggerY) {
+        showHeader();
+    } else if (checkPosition.y >= coverHeaderTriggerY) {
+        hideHeader();
     }
 }
 
-function showMenu() {
-    zxHeader.show()
-        .animateCss('fadeInDown', { duration: '.5s' }, function () {
+function showHeader() {
+    if (zxHeader.hidden && !zxHeader.hasClass('animated')) {
+        zxHeader.show().animateCss('fadeInDown', {duration: '.5s'}, function() {
             this.show();
             zxHeader.hidden = false;
         });
+    }
 }
 
-function hideMenu() {
-    zxHeader.show().animateCss('fadeOutUp', { duration: '.5s' }, function () {
-        this.hide();
-        zxHeader.hidden = true;
-    });
+function hideHeader() {
+    if (!zxHeader.hidden && !zxHeader.hasClass('animated')) {
+        zxHeader.show().animateCss('fadeOutUp', {duration: '.5s'}, function() {
+            this.hide();
+            zxHeader.hidden = true;
+        });
+    }
 }
 
 function isSplashEnabled() {
@@ -317,18 +351,15 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
 
     // cover+header animation reveal/hide
     if (i.page == 0) {
-        zxHeader.animateCss('fadeOut', function() {
-            this.hide();
-        });
+        hideHeader();
         coverBlock
             .animateCss('bounceInDown');
         featuresBlock
             .animateCss('bounceInUp', function() {
-                zxHeader.hidden = true;
                 checkMenuVisibility();
             });
     } else if (i.old == 0) {
-        zxHeader.show().animateCss('fadeIn');
+        //showHeader();
         coverBlock
             .animateCss('slideOutUp');
         featuresBlock
@@ -343,12 +374,15 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         });
     }
 
+    if (i.page != 0) {
+        showHeader();
+    }
     if (i.page == 2) {
-        zuix.context('menu-docs', function () {
+        zuix.context('menu-docs', function() {
             this.showButton();
         });
     } else if (i.page == 3) {
-        zuix.context('menu-api', function () {
+        zuix.context('menu-api', function() {
             this.showButton();
         });
     }
@@ -377,4 +411,24 @@ function changePage(e, i, effectIn, effectOut, dirIn, dirOut) {
         }).show();
     }
 
+}
+
+function pageScrollChanged(e, data) {
+    switch (data.event) {
+        case 'hit-top':
+            showHeader();
+            break;
+        case 'scroll':
+            if (data.info.shift.y < 0) {
+                // scrolling up
+                showHeader();
+            } else if (data.info.shift.y > 0) {
+                // scrolling down
+                hideHeader();
+            }
+            break;
+        case 'hit-bottom':
+            //showHeader();
+            break;
+    }
 }

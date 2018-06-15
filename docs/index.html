@@ -81,7 +81,7 @@
             <!-- Title -->
             <span class="mdl-layout-title">
                 <a layout="row center-center" class="mdl-color-text--black" href="#/">
-                    <i class="material-icons">home</i>&nbsp;zUIx
+                    <i class="material-icons mdl-color-text--green">home</i>&nbsp;zUIx.js
                 </a>
             </span>
             <!-- Add spacer, to align navigation to the right -->
@@ -237,16 +237,16 @@
      class="hackbox"
      self="size-large lg-full"></div>
 -->
-
-
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
     ga('create', 'UA-92520304-1', 'auto');
     ga('send', 'pageview');
 </script>
+
+
 
 <!-- zUIx inline resource resourceBundle -->
 <!--{[content/home/cover]}-->
@@ -468,7 +468,7 @@
         </div>
         <div class="example-box" style="min-height:55vh" layout="column center-center">
 
-            <div data-ui-include="templates/mdl_card" class="size-w460" data-ui-lazyload="true">
+            <div data-ui-include="templates/mdl_card" data-ui-priority="100" class="size-w460" data-ui-lazyload="true">
                 <div class="template-example mdl-color--white content-padding">
                     <h1 data-ui-field="title">Still got the goods</h1>
                     <div align="center">
@@ -1598,15 +1598,6 @@ and JavaScript knowledge you can start using zUIx.</p>
         </div>
     </div>
 </div>
-<script>
-    zuix.context('menu-docs', function() {
-        this.on('show', function() {
-            showMenu();
-        }).on('hide', function() {
-            hideMenu();
-        });
-    });
-</script>
 </div>
 <!--{[content/api/zuix]}-->
 <div data-ui-view="content/api/zuix">
@@ -1822,15 +1813,6 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
         -->
     </div>
 </div>
-<script>
-    zuix.context('menu-api', function() {
-        this.on('show', function() {
-            showMenu();
-        }).on('hide', function() {
-            hideMenu();
-        });
-    });
-</script>
 </div>
     <script>zuix.bundle([
   {
@@ -1844,7 +1826,7 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
   },
   {
     "componentId": "@lib/components/menu_overlay",
-    "controller": "'use strict';\n\nzuix.controller(function(cp) {\n    let menuOverlayShowing = false;\n    let menuButtonShowing = true;\n    let menuButton;\n    let menuButtonClose;\n    let menuOverlay;\n    let itemsWrapper;\n    let menuItems;\n    let scroller = null;\n    let currentOffset = 0;\n\n    cp.create = function() {\n        menuButton = cp.field('menu_button').hide()\n            .on('click', toggleMenu);\n        menuButtonClose = cp.field('menu_button_close').hide()\n            .on('click', toggleMenu);\n        menuOverlay = cp.field('menu_overlay').visibility('hidden')\n            .on('click', toggleMenu);\n        itemsWrapper = cp.field('items_wrapper');\n\n        const items = zuix.$(cp.model().items).children();\n        items.each(function(i, el) {\n            const wrapperDiv = zuix.$(document.createElement('div'))\n                .addClass('menu-item')\n                .attr('data-ui-transition-delay', (.3/(items.length()-i))+'s')\n                .append(el);\n            itemsWrapper.append(wrapperDiv.get());\n        });\n        menuItems = itemsWrapper.find('div[class*=\"menu-item\"]');\n\n        // apply custom color to menu button\n        if (cp.view().attr('data-o-button-color') != null) {\n            cp.view().find('.circle-button').css('background', cp.view().attr('data-o-button-color'));\n        }\n        if (cp.view().attr('data-o-icon-color') != null) {\n            cp.view().find('.circle-button').css('fill', cp.view().attr('data-o-icon-color'));\n        }\n\n        const scrollerName = cp.view().attr('data-o-scroller');\n        if (scrollerName != null) {\n            scroller = zuix.field(scrollerName);\n        } else {\n            scroller = zuix.$(window);\n        }\n        if (scroller != null) {\n            scroller.on('scroll', function(e) {\n                const scrollTop = scroller.get() === window ? (document.documentElement.scrollTop || document.body.scrollTop) : scroller.get().scrollTop;\n                if (menuButtonShowing && currentOffset < scrollTop && scrollTop > 1) {\n                    hideButton();\n                } else if (!menuButtonShowing && currentOffset > scrollTop) {\n                    showButton();\n                }\n                currentOffset = scrollTop;\n                if (menuOverlayShowing) {\n                    toggleMenu();\n                }\n            });\n        }\n\n        // Animate CSS extension\n        zuix.using('component', '@lib/extensions/animate_css', function(res, ctx) {\n            // show floating action button\n            setTimeout(function() {\n                menuButton.animateCss('slideInUp').show();\n            }, 1000);\n        });\n        // Material Design Light integration - DOM upgrade\n        if (typeof componentHandler !== 'undefined') {\n            componentHandler.upgradeElements(cp.view().get());\n        }\n\n        cp.expose('show', function() {\n            cp.view().show();\n        });\n        cp.expose('hide', function() {\n            cp.view().hide();\n        });\n        cp.expose('toggleButton', toggleButton);\n        cp.expose('showButton', showButton);\n        cp.expose('hideButton', hideButton);\n    };\n\n    function toggleButton() {\n        if (menuButtonShowing) {\n            hideButton();\n        } else {\n            showButton();\n        }\n    }\n\n    function hideButton() {\n        menuButtonShowing = false;\n        menuButton.animateCss('fadeOutDown', {duration: '0.3s'}, function() {\n            this.hide();\n        });\n        cp.trigger('hide');\n    }\n\n    function showButton() {\n        menuButtonShowing = true;\n        menuButton.animateCss('fadeInUp').show();\n        cp.trigger('show');\n    }\n\n    function toggleMenu() {\n        if (!menuOverlayShowing) {\n            menuOverlayShowing = true;\n            cp.trigger('open');\n            menuButton.animateCss('rotateOut', {duration: '0.3s'});\n            menuButtonClose.animateCss('rotateIn', {duration: '0.3s'}, function() {\n                menuButton.hide();\n            }).show();\n            menuOverlay.animateCss('fadeIn', {duration: '0.5s'}).visibility('');\n            menuItems.each(function(p, el) {\n                let transitionDelay = '0';\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('bounceInRight', {duration: '0.5s', delay: transitionDelay});\n            });\n        } else if (menuOverlayShowing) {\n            menuOverlayShowing = false;\n            cp.trigger('close');\n            if (menuButtonShowing) {\n                menuButtonClose.animateCss('rotateOut', {duration: '0.3s'}, function() {\n                    this.hide();\n                });\n                menuButton.animateCss('rotateIn', {duration: '0.3s'});\n            } else {\n                menuButtonClose.animateCss('fadeOutDown', {duration: '0.3s'}, function() {\n                    this.hide();\n                });\n            }\n            menuOverlay.animateCss('fadeOut', {duration: '0.5s', delay: '0.2s'}, function() {\n                this.visibility('hidden');\n            });\n            menuItems.each(function(p, el) {\n                let transitionDelay = '0';\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('fadeOutRight', {duration: '0.5s', delay: transitionDelay});\n            });\n            menuButton.show();\n        }\n    }\n});\n",
+    "controller": "'use strict';\n\nzuix.controller(function(cp) {\n    let menuOverlayShowing = false;\n    let menuButtonShowing = true;\n    let menuButton;\n    let menuButtonClose;\n    let menuOverlay;\n    let itemsWrapper;\n    let menuItems;\n    let scroller = null;\n    let currentOffset = 0;\n\n    cp.create = function() {\n        menuButton = cp.field('menu_button').hide()\n            .on('click', toggleMenu);\n        menuButtonClose = cp.field('menu_button_close').hide()\n            .on('click', toggleMenu);\n        menuOverlay = cp.field('menu_overlay').visibility('hidden')\n            .on('click', toggleMenu);\n        itemsWrapper = cp.field('items_wrapper');\n\n        const items = zuix.$(cp.model().items).children();\n        items.each(function(i, el) {\n            const wrapperDiv = zuix.$(document.createElement('div'))\n                .addClass('menu-item')\n                .attr('data-ui-transition-delay', (.3/(items.length()-i))+'s')\n                .append(el);\n            itemsWrapper.append(wrapperDiv.get());\n        });\n        menuItems = itemsWrapper.find('div[class*=\"menu-item\"]');\n\n        // apply custom color to menu button\n        if (cp.view().attr('data-o-button-color') != null) {\n            cp.view().find('.circle-button').css('background', cp.view().attr('data-o-button-color'));\n        }\n        if (cp.view().attr('data-o-icon-color') != null) {\n            cp.view().find('.circle-button').css('fill', cp.view().attr('data-o-icon-color'));\n        }\n\n        const scrollerName = cp.view().attr('data-o-scroller');\n        if (scrollerName != null) {\n            scroller = zuix.field(scrollerName);\n        } else {\n            scroller = zuix.$(window);\n        }\n        if (scroller != null) {\n            scroller.on('scroll', function(e) {\n                const scrollTop = scroller.get() === window ? (document.documentElement.scrollTop || document.body.scrollTop) : scroller.get().scrollTop;\n                if (menuButtonShowing) {\n                    if ((currentOffset - scrollTop) < -2) hideButton();\n                } else if (!menuButtonShowing) {\n                    if ((currentOffset - scrollTop) > 2) showButton();\n                }\n                currentOffset = scrollTop;\n                if (menuOverlayShowing) {\n                    toggleMenu();\n                }\n            });\n        }\n\n        // Animate CSS extension\n        zuix.using('component', '@lib/extensions/animate_css', function(res, ctx) {\n            // show floating action button\n            setTimeout(function() {\n                menuButton.animateCss('slideInUp').show();\n            }, 1000);\n        });\n        // Material Design Light integration - DOM upgrade\n        if (typeof componentHandler !== 'undefined') {\n            componentHandler.upgradeElements(cp.view().get());\n        }\n\n        cp.expose('show', function() {\n            cp.view().show();\n        });\n        cp.expose('hide', function() {\n            cp.view().hide();\n        });\n        cp.expose('toggleButton', toggleButton);\n        cp.expose('showButton', showButton);\n        cp.expose('hideButton', hideButton);\n    };\n\n    function toggleButton() {\n        if (menuButtonShowing) {\n            hideButton();\n        } else {\n            showButton();\n        }\n    }\n\n    function hideButton() {\n        menuButtonShowing = false;\n        menuButton.animateCss('fadeOutDown', {duration: '0.3s'}, function() {\n            this.hide();\n        });\n        cp.trigger('hide');\n    }\n\n    function showButton() {\n        menuButtonShowing = true;\n        menuButton.animateCss('fadeInUp').show();\n        cp.trigger('show');\n    }\n\n    function toggleMenu() {\n        if (!menuOverlayShowing) {\n            menuOverlayShowing = true;\n            cp.trigger('open');\n            menuButton.animateCss('rotateOut', {duration: '0.3s'});\n            menuButtonClose.animateCss('rotateIn', {duration: '0.3s'}, function() {\n                menuButton.hide();\n            }).show();\n            menuOverlay.animateCss('fadeIn', {duration: '0.5s'}).visibility('');\n            menuItems.each(function(p, el) {\n                let transitionDelay = '0';\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('bounceInRight', {duration: '0.5s', delay: transitionDelay});\n            });\n        } else if (menuOverlayShowing) {\n            menuOverlayShowing = false;\n            cp.trigger('close');\n            if (menuButtonShowing) {\n                menuButtonClose.animateCss('rotateOut', {duration: '0.3s'}, function() {\n                    this.hide();\n                });\n                menuButton.animateCss('rotateIn', {duration: '0.3s'});\n            } else {\n                menuButtonClose.animateCss('fadeOutDown', {duration: '0.3s'}, function() {\n                    this.hide();\n                });\n            }\n            menuOverlay.animateCss('fadeOut', {duration: '0.5s', delay: '0.2s'}, function() {\n                this.visibility('hidden');\n            });\n            menuItems.each(function(p, el) {\n                let transitionDelay = '0';\n                if (this.attr('data-ui-transition-delay') != null) {\n                    transitionDelay = this.attr('data-ui-transition-delay');\n                }\n                this.animateCss('fadeOutRight', {duration: '0.5s', delay: transitionDelay});\n            });\n            menuButton.show();\n        }\n    }\n});\n",
     "css": ".menu-button {\n    z-index: 100; /* topmost */\n    position: fixed;\n    right: 32px;\n    bottom: 32px;\n}\ndiv[data-ui-field=\"menu_overlay\"] {\n    z-index: 100; /* topmost */\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding-top: 80px;\n    padding-bottom: 96px;\n    padding-left: 32px;\n    background-color: rgba(255, 255, 255, 0.85);\n    display: flex;\n    justify-content: space-between;\n    flex-direction: column-reverse;\n}\ndiv[data-ui-field=\"items_wrapper\"] {\n    text-align: right;\n    margin-top: auto;\n}\n\n.menu-item {\n    padding-top: 8px;\n    padding-bottom: 8px;\n    margin-right: 32px;\n}\n\n.circle-button {\n    border-radius: 50%;\n    width: 56px;\n    height: 56px;\n    margin: 4px;\n    background: deeppink;\n    fill: white;\n    box-shadow: 0 4px 8px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.5);\n    vertical-align: middle;\n    text-align: center;\n    font-size: 0;\n    display: table-cell;\n    transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n}\n\n@media only screen and (max-width: 640px) {\n    .menu-button {\n        right: 16px;\n        bottom: 16px;\n    }\n    .menu-item {\n        margin-right: 16px;\n    }\n    div[data-ui-field=\"menu_overlay\"] {\n        padding-bottom: 72px;\n    }\n}"
   },
   {
