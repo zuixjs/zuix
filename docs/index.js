@@ -276,7 +276,7 @@ function revealMainPage() {
 }
 
 function reveal() {
-    if (splashScreen || !isSplashEnabled()) {
+    if ((splashScreen || !isSplashEnabled()) && mainPage.display() === 'none') {
         const s = splashScreen; splashScreen = false;
         // unregister 'componentize:end' hook
         zuix.hook('componentize:end', null);
