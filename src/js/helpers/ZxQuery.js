@@ -963,11 +963,13 @@ z$.getPosition = function(el, tolerance) {
     position.visible = false;
     const scrollable = el.offsetParent;
     if (scrollable != null) {
-        const vp = scrollable.getBoundingClientRect();
-        vp.x = el.scrollLeft | vp.x;
-        vp.width = el.scrollWidth | vp.width;
-        vp.y = el.scrollTop | vp.y;
-        vp.height = el.scrollHeight | vp.height;
+        let vp = scrollable.getBoundingClientRect();
+        vp = {
+            x: el.scrollLeft | vp.x,
+            y: el.scrollTop | vp.y,
+            width: el.scrollWidth | vp.width,
+            height: el.scrollHeight | vp.height
+        };
         scrollInfo.size.width = vp.width;
         scrollInfo.size.height = vp.height;
         if (scrollable === document.body) {
