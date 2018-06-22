@@ -4,15 +4,16 @@
 ## zUIx
 
 JavaScript library to support you in creating amazing component-based
-websites and applications.
+websites and web applications.
 
-Example components and usage:
-
-[http://kit.zuix.it](https://genielabs.github.io/zkit)
-
-Documentation site:
+###### Documentation site:
 
 [http://zuix.it](https://genielabs.github.io/zuix)
+
+###### Web Starter Project
+
+[https://github.com/genemars/zuix-web-starter]
+
 
 ### Getting Started
 
@@ -76,11 +77,15 @@ which is located in the distribution folder of the master repo.
 *the classic To-Do MVC application implemented as a loadable component*
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
 *example of using* **list_view** *component with progressive/lazy loading*
-- [**G-Labs web site**](https://genielabs.github.io/glabs.it) presentation website
+[http://kit.zuix.it](https://genielabs.github.io/zkit)
 - [**zUIx on CodePen**](https://codepen.io/genielabs/)
 *examples and tutorials on CodePen*
-- [**Website Template**](https://genielabs.github.io/zuix-web-template/)
-*(WIP) a free responsive website template with file based content management, markdown support and more...*
+- [**z-Kit**](https://genielabs.github.io/zkit)
+*example components for modern web*
+- [**G-Labs website**](https://genielabs.github.io/glabs.it)
+*presentation website*
+- [**zUIx Web Starter**](https://github.com/genemars/zuix-web-starter/)
+*starter project for component-based web development.*
 
 ### Contributing
 

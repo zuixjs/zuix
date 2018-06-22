@@ -356,7 +356,7 @@
 </div>
 <!--{[content/home/examples/view_pager/random_image_item]}-->
 <div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper">
+<div class="image-wrapper animated fadeIn">
     <div class="backdrop"></div>
     <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
 </div>
@@ -367,7 +367,7 @@
 <div layout="column center-center" class="opaqueBlocK mdl-color-text--black animated bounceInUp mdl-shadow--8dp">
 
     <div self="size-xlarge center-center" layout="rows center-justify">
-        <div self="size-1of2 sm-full" class="example-box -animated -fadeInLeft">
+        <div self="size-1of2 sm-full" class="example-box">
             <div>
                 <h6>Reusability by design</h6>
                 <p>
@@ -380,7 +380,7 @@
 
             </div>
         </div>
-        <div self="size-1of2 sm-full" layout="row center-center" class="example-box -animated -fadeInRight">
+        <div self="size-1of2 sm-full" layout="row center-center" class="example-box">
             <div data-ui-include="content/lorem_ipsum"></div>
             <!--
             <div data-ui-load="@lib/components/social_sharing"
@@ -394,7 +394,31 @@
 
     <div self="size-xlarge center-center" layout="rows center-justify" class="animated fadeInUp">
         <div self="md-full" class="example-box">
-<em class="caption">Loading content from a shared library</em>
+            <h6>App-level polymorphism</h6>
+            <p>
+                The special <code>@lib</code> keyword is a relative
+                or absolute URL path that can be used as a shortcut to load components
+                from a configurable shared location.
+            </p>
+            <p>
+                Switch easily from development to production
+                or apply different UI frameworks and themes seamlessly.
+            </p>
+        </div>
+        <div self="md-full" class="example-box">
+
+            <em class="caption">Changing the <code>@lib</code> base path</em>
+<pre><code class="javascript language-javascript">// using Material Design theme...
+zuix.store("config", {
+    "libraryPath": "https://myapp.site/lib/mdl"
+});
+// ...or to use Bootstrap theme
+zuix.store("config", {
+    "libraryPath": "https://myapp.site/lib/bootstrap"
+});
+</code></pre>
+
+            <em class="caption">Loading content from <code>@lib</code></em>
 <pre><code class="html language-html">&lt;div data-ui-include="@lib/templates/spinkit/spinner_cubes"&gt;&lt;/div&gt;
 </code></pre>
 
@@ -406,10 +430,8 @@
         </div>
         <div self="size-full" class="example-box">
             <p>
-                The special <code>@lib</code> keyword is a configurable, relative
-                or absolute, URL path that can be used as a shortcut to load components
-                from a shared location. By default it points to the
-                <a href="https://genielabs.github.io/zkit">zKit</a> website that is a
+                By default <code>@lib</code> will point to
+                <a href="https://genielabs.github.io/zkit">zKit</a>, a
                 collections of sample components made with <strong>zUIx</strong>.
             </p>
         </div>
@@ -643,8 +665,9 @@
                 though still offering a full feature set:
             </p>
             <ul>
+                <li>Content modules and Templates with CSS scoping</li>
+                <li>Components with fields caching</li>
                 <li>Events, Behaviors and Hooks</li>
-                <li>Components and fields caching</li>
                 <li>Automatic events unbinding</li>
                 <li>Integrated resources loader</li>
                 <li>Integrated jQuery-alike DOM helper</li>
@@ -805,13 +828,19 @@ which is located in the distribution folder of the master repo.</p>
 <em>the classic To-Do MVC application implemented as a loadable component</em></li>
 <li><a href="https://genielabs.github.io/zuix-hackernews"><i class="material-icons">link</i> <strong>Hacker News Web</strong></a>
 <em>example of using</em> <strong>list_view</strong> <em>component with lazy loading</em></li>
-<li><a href="https://github.com/genielabs/glabs.it"><i class="material-icons">link</i> <strong>G-Labs web site</strong></a>
-<em>presentation website</em></li>
 <li><a href="https://codepen.io/genielabs"><i class="material-icons">link</i> <strong>zUIx on CodePen</strong></a>
 <em>more examples and tutorials on CodePen</em></li>
-<li><a href="https://genielabs.github.io/zuix-web-template"><i class="material-icons">link</i> <strong>Website Template</strong></a>
-<em>(WIP) a free responsive website template with file based content management, markdown support and more…</em></li>
+<li><a href="https://github.com/genielabs/zkit"><i class="material-icons">link</i> <strong>z-Kit</strong></a>
+<em>example components for modern web</em></li>
+<li><a href="https://github.com/genielabs/glabs.it"><i class="material-icons">link</i> <strong>G-Labs website</strong></a>
+<em>presentation website</em></li>
+<li><a href="https://github.com/genemars/zuix-web-starter"><i class="material-icons">link</i> <strong>zUIx Web Starter</strong></a>
+<em>starter project for component-based web development</em></li>
 </ul>
+<!--
+- <a href="https://genielabs.github.io/zuix-web-template"><i class="material-icons">link</i> **Website Template**</a>
+*(WIP) a free responsive website template with file based content management, markdown support and more...*
+-->
 <h4 id="contributing">Contributing</h4>
 <p>Please read the <a href="https://github.com/genielabs/zuix/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> document.</p>
 </div>
@@ -1947,7 +1976,7 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
   {
     "componentId": "content/home/examples/view_pager/random_image_item",
     "controller": "zuix.controller(function(cp) {\n    cp.create = function() {\n        cp.field('image')\n            .on('load', function() {\n                this.show();\n            })\n            .hide()\n            //.attr('src', 'http://lorempixel.com/420/280/?random&ts='+(new Date().getTime()));\n            .attr('src', 'https://picsum.photos/352/288?random&ts='+(new Date().getTime()));\n    };\n});",
-    "css": ".image {\n    width:324px;\n    height: 260px;\n    animation-duration: 0.35s;\n    animation-delay: 0s;\n    margin: 8px;\n}\n.image-wrapper {\n    border-radius: 12px;\n    width:352px;\n    height: 288px;\n    padding: 6px;\n}\n.backdrop {\n    position: absolute;\n    width:340px;\n    height: 276px;\n    background: rgba(255,255,255,0.5);\n    -webkit-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    -moz-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n}"
+    "css": ".image {\n    width:324px;\n    height: 260px;\n    animation-duration: 0.35s;\n    animation-delay: 0s;\n    margin: 8px;\n}\n.image-wrapper {\n    border-radius: 12px;\n    width:352px;\n    height: 288px;\n    padding: 6px;\n    overflow: hidden;\n}\n.backdrop {\n    position: absolute;\n    width:340px;\n    height: 276px;\n    background: rgba(255,255,255,0.5);\n    -webkit-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    -moz-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n}"
   },
   {
     "componentId": "widgets/timeclock",
