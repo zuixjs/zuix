@@ -12,7 +12,7 @@ websites and web applications.
 
 ###### Web Starter Project
 
-[https://github.com/genemars/zuix-web-starter]
+[https://github.com/genemars/zuix-web-starter](https://github.com/genemars/zuix-web-starter)
 
 
 ### Getting Started
