@@ -262,7 +262,6 @@
         </div>
 
         <div class="intro animated zoomIn">
-            <!-- Free your creativity from popular frameworks chains! -->
             Create amazing component-based<br>
             websites and web applications.
         </div>
@@ -328,13 +327,6 @@
 </p>
 
 </div>
-<!--{[@lib/templates/spinkit/spinner_cubes]}-->
-<div data-ui-view="@lib/templates/spinkit/spinner_cubes">
-<div class="spinner">
-    <div class="cube1"></div>
-    <div class="cube2"></div>
-</div>
-</div>
 <!--{[templates/mdl_card]}-->
 <div data-ui-view="templates/mdl_card">
 <div class="mdl-grid animated fadeIn size-w460">
@@ -362,17 +354,24 @@
 </div>
 
 </div>
+<!--{[@lib/templates/spinkit/spinner_cubes]}-->
+<div data-ui-view="@lib/templates/spinkit/spinner_cubes">
+<div class="spinner">
+    <div class="cube1"></div>
+    <div class="cube2"></div>
+</div>
+</div>
 <!--{[content/home/features]}-->
 <div data-ui-view="content/home/features">
-<div layout="column center-center" class="opaqueBlocK mdl-color-text--black animated bounceInUp mdl-shadow--8dp">
+<div layout="column center-center" class="opaqueBlocK mdl-color-text--black animated bounceInUp mdl-shadow--16dp">
 
-    <div self="size-xlarge center-center" layout="rows center-justify">
+    <div self="size-xlarge center-center" layout="rows top-justify">
         <div self="size-1of2 sm-full" class="example-box">
             <div>
                 <h6>Reusability by design</h6>
                 <p>
-                    With <strong>zUIx</strong> you can include content
-                    and load components also if located on different servers.
+                    Include content and load components
+                    also if located on different servers.
                 </p>
 <em class="caption">Loading content from local server</em>
 <pre><code class="html language-html">&lt;div data-ui-include="content/lorem_ipsum"&gt;&lt;/div&gt;
@@ -380,7 +379,7 @@
 
             </div>
         </div>
-        <div self="size-1of2 sm-full" layout="row center-center" class="example-box">
+        <div self="size-1of2 sm-full center" layout="row center-center" class="example-box">
             <div data-ui-include="content/lorem_ipsum"></div>
             <!--
             <div data-ui-load="@lib/components/social_sharing"
@@ -391,51 +390,6 @@
             -->
         </div>
     </div>
-
-    <div self="size-xlarge center-center" layout="rows center-justify" class="animated fadeInUp">
-        <div self="md-full" class="example-box">
-            <h6>App-level polymorphism</h6>
-            <p>
-                The special <code>@lib</code> keyword is a relative
-                or absolute URL path that can be used as a shortcut to load components
-                from a configurable shared location.
-            </p>
-            <p>
-                Switch easily from development to production
-                or apply different UI frameworks and themes seamlessly.
-            </p>
-        </div>
-        <div self="md-full" class="example-box">
-
-            <em class="caption">Changing the <code>@lib</code> base path</em>
-<pre><code class="javascript language-javascript">// using Material Design theme...
-zuix.store("config", {
-    "libraryPath": "https://myapp.site/lib/mdl"
-});
-// ...or to use Bootstrap theme
-zuix.store("config", {
-    "libraryPath": "https://myapp.site/lib/bootstrap"
-});
-</code></pre>
-
-            <em class="caption">Loading content from <code>@lib</code></em>
-<pre><code class="html language-html">&lt;div data-ui-include="@lib/templates/spinkit/spinner_cubes"&gt;&lt;/div&gt;
-</code></pre>
-
-        </div>
-        <div self="size-x1 center-center">
-
-            <div data-ui-include="@lib/templates/spinkit/spinner_cubes"></div>
-
-        </div>
-        <div self="size-full" class="example-box">
-            <p>
-                By default <code>@lib</code> will point to
-                <a href="https://genielabs.github.io/zkit">zKit</a>, a
-                collections of sample components made with <strong>zUIx</strong>.
-            </p>
-        </div>
-    </div>
 <!--
 </div>
 <div layout="column center-center" class="opaqueBlocK mdl-color-text--black animated bounceInUp mdl-shadow--8dp">
@@ -444,7 +398,7 @@ zuix.store("config", {
         <div self="size-full left" class="example-box">
             <h6>Transform and reshape</h6>
             <p>
-                Keep <code>HTML</code> content code simple and clean and then transform it by
+                Keep <code>HTML</code> code concise and neat, then transform it by
                 applying <strong>templates</strong> or loading <strong>components</strong> over it.
                 <br>
                 With automatic fields mapping (data-binding) or with JavaScript,
@@ -636,19 +590,55 @@ zuix.store("config", {
             <em class="material-icons mdl-typography--font-bold mdl-color-text--green">fast_forward</em>
             to actually see the lazy-loading in action.
         </p>
-
-<!-- todo show media browser component example -->
-<!--
-        <div self="left" class="example-box">
-            <h6>Componentize</h6>
-            <p>
-                Creating components with zUIx is easy.
-            </p>
-        </div>
--->
-
     </div>
 
+    <div self="size-xlarge center-center" layout="rows center-center" class="animated fadeInUp">
+        <div self="md-full" class="example-box">
+            <h6>Theme switching</h6>
+            <p>
+                Switch themes or apply different UI frameworks seamlessly.
+            </p>
+            <p>
+                The special <code>@lib</code> keyword is a relative
+                or absolute URL path that can be used as a shortcut to load components
+                from a configurable shared location.
+            </p>
+
+            <em class="caption">Switching UI framework by changing <code>@lib</code> path</em>
+<pre><code class="javascript language-javascript">// using Material Design theme...
+zuix.store("config", {
+  "libraryPath": "https://myapp.site/lib/mdl"
+});
+// ...or to use Bootstrap theme
+zuix.store("config", {
+  "libraryPath": "https://myapp.site/lib/bootstrap"
+});
+</code></pre>
+
+        </div>
+    </div>
+
+    <div self="size-xlarge center-center" layout="rows center-center" class="animated fadeInUp">
+        <div self="md-full" class="example-box">
+
+            <em class="caption">Loading content using <code>@lib</code> keyword</em>
+<pre><code class="html language-html">&lt;div data-ui-include="@lib/templates/spinkit/spinner_cubes"&gt;&lt;/div&gt;
+</code></pre>
+
+        </div>
+        <div self="size-x1 center-center">
+
+            <div data-ui-include="@lib/templates/spinkit/spinner_cubes"></div>
+
+        </div>
+        <div self="size-1of2" class="example-box">
+            <p>
+                By default <code>@lib</code> will point to
+                <a href="https://genielabs.github.io/zkit">zKit</a>, a
+                collection of example components.
+            </p>
+        </div>
+    </div>
 
     <div self="size-xlarge center-center" layout="column top-center" class="animated fadeIn">
 
@@ -2006,16 +1996,16 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
     "css": "p {\n    opacity: 0.6;\n    padding: 16px;\n}\n"
   },
   {
-    "componentId": "@lib/templates/spinkit/spinner_cubes",
-    "css": ".spinner {\n    margin: 100px auto;\n    width: 40px;\n    height: 40px;\n    position: relative;\n}\n\n.cube1, .cube2 {\n    background-color: #333;\n    width: 15px;\n    height: 15px;\n    position: absolute;\n    top: 0;\n    left: 0;\n\n    -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;\n    animation: sk-cubemove 1.8s infinite ease-in-out;\n}\n\n.cube2 {\n    -webkit-animation-delay: -0.9s;\n    animation-delay: -0.9s;\n}\n\n@-webkit-keyframes sk-cubemove {\n    25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }\n    50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }\n    75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }\n    100% { -webkit-transform: rotate(-360deg) }\n}\n\n@keyframes sk-cubemove {\n    25% {\n        transform: translateX(42px) rotate(-90deg) scale(0.5);\n        -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);\n    } 50% {\n          transform: translateX(42px) translateY(42px) rotate(-179deg);\n          -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);\n      } 50.1% {\n            transform: translateX(42px) translateY(42px) rotate(-180deg);\n            -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);\n        } 75% {\n              transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);\n              -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);\n          } 100% {\n                transform: rotate(-360deg);\n                -webkit-transform: rotate(-360deg);\n            }\n}"
-  },
-  {
     "componentId": "templates/mdl_card",
     "css": ".mdl-card {\n    padding: 0 !important;\n    margin: 0 !important;\n}\n\n.mdl-card__title {\n    width: auto !important;\n    height: 176px !important;\n    position: relative !important;\n    overflow: hidden !important;\n    padding: 0 !important;\n    margin: 0 !important;\n}\n.mdl-card__title img {\n    position: absolute !important;\n    left: 50% !important;\n    top: 50% !important;\n    height: 100% !important;\n    width: auto !important;\n    -webkit-transform: translate(-50%,-50%) !important;\n    -ms-transform: translate(-50%,-50%) !important;\n    transform: translate(-50%,-50%) !important;\n}\n.mdl-card__title img.portrait {\n    width: 100% !important;\n    height: auto !important;\n}\n.mdl-card__supporting-text {\n    color: black !important;\n    font-family: \"Helvetica\",\"Arial\",sans-serif !important;\n    font-size: 15pt !important;\n    line-height: 24pt !important;\n    width: 100% !important;\n    padding: 16px !important;\n}\nh1 {\n    font-family: \"Roboto\",\"Helvetica\",\"Arial\",sans-serif !important;\n    font-size: 28pt !important;\n    font-weight: 600 !important;\n    padding: 12px !important;\n    margin: 0 !important;\n    text-shadow:\n        -1px -1px 0 #000,\n        1px -1px 0 #000,\n        -1px 1px 0 #000,\n        1px 1px 0 #000 !important;\n    z-index: 10 !important;\n}\n"
   },
   {
+    "componentId": "@lib/templates/spinkit/spinner_cubes",
+    "css": ".spinner {\n    margin: 100px auto;\n    width: 40px;\n    height: 40px;\n    position: relative;\n}\n\n.cube1, .cube2 {\n    background-color: #333;\n    width: 15px;\n    height: 15px;\n    position: absolute;\n    top: 0;\n    left: 0;\n\n    -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;\n    animation: sk-cubemove 1.8s infinite ease-in-out;\n}\n\n.cube2 {\n    -webkit-animation-delay: -0.9s;\n    animation-delay: -0.9s;\n}\n\n@-webkit-keyframes sk-cubemove {\n    25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }\n    50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }\n    75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }\n    100% { -webkit-transform: rotate(-360deg) }\n}\n\n@keyframes sk-cubemove {\n    25% {\n        transform: translateX(42px) rotate(-90deg) scale(0.5);\n        -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);\n    } 50% {\n          transform: translateX(42px) translateY(42px) rotate(-179deg);\n          -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);\n      } 50.1% {\n            transform: translateX(42px) translateY(42px) rotate(-180deg);\n            -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);\n        } 75% {\n              transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);\n              -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);\n          } 100% {\n                transform: rotate(-360deg);\n                -webkit-transform: rotate(-360deg);\n            }\n}"
+  },
+  {
     "componentId": "content/home/features",
-    "css": ". {\n    font-size: 90%;\n    margin-bottom: 16px;\n    overflow: hidden;\n}\np {\n    font-weight: 400;\n}\nh6 {\n    line-height: 140%;\n    color: #2E7D32;\n    font-weight: 800;\n}\nul li {\n    list-style: disc;\n}\npre {\n    font-size:80%;\n    border: solid 1px rgba(0,255,50,0.5);\n    background: rgba(255,255,255,0.95);\n    border-radius: 8px;\n}\n.opaqueBlocK {\n    background: rgba(230, 255, 230, 0.95);\n    margin-top: 12px;\n}\n.example-box {\n    padding: 16px;\n}\n.lazy-image {\n    width:352px;\n    height:100%;\n    background: darkgray;\n    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(203,245,198,0.8) 100%); /* w3c */\n}\n\n.features-box {\n    color: white;\n    padding: 16px;\n}\n.features-box .title {\n    width: 100%;\n    margin: 0 0 12px;\n}\n.features-box .title h2 {\n    font-weight: bold;\n    font-size: 140%;\n    color:yellow;\n    text-wrap: avoid;\n    white-space: nowrap;\n    vertical-align: middle;\n    margin: 0;\n    padding: 12px 0 12px;\n}\n.features-box .material-icons {\n    font-size: 150%;\n    min-width: 32px;\n    text-align: center;\n}\n.features-box .text {\n    font-family: 'Dosis', sans-serif;\n    padding: 0 32px 0 48px;\n    font-weight: 400;\n    width: 100%;\n    font-size: 100%;\n    line-height: 180%;\n}\n\n.opaqueBlocK .mdl-card {\n    padding: 16px;\n}\n.opaqueBlocK .material-icons {\n    color: white;\n}\n.opaqueBlocK .mdl-card__title {\n    color:yellow;\n    padding: 0;\n    text-wrap: avoid;\n    white-space: nowrap;\n    vertical-align: middle;\n    margin-bottom: 24px;\n}\n.opaqueBlocK .mdl-card__title-text {\n    width: 100%;\n    font-weight: bold;\n    font-size: 140%;\n}\n.opaqueBlocK .mdl-card__supporting-text {\n    color: white;\n    font-family: 'Dosis', sans-serif;\n    padding: 0 32px 0 48px;\n    font-weight: 400;\n    width: 100%;\n    font-size: 100%;\n    line-height: 180%;\n}\n[data-ui-include=\"content/lorem_ipsum\"] {\n    margin-top: 48px;\n    padding: 16px;\n}\n.view-pager-example {\n    width: 100%;\n    height: 290px;\n    overflow: hidden;\n    margin-bottom: 72px;\n    margin-top: 72px;\n}\n\n\n.size-w460 {\n    max-width: 460px;\n}\n\n.template-example {\n    max-width: 460px;\n}\n.template-example h1 {\n    font-size: 160%;\n    margin-top: 0;\n    padding-top: 0;\n    padding-bottom: 0;\n}\n.template-example img {\n    max-width: 400px;\n    max-height: 220px;\n}\n.template-example p {\n    font-size: 100%;\n    padding-top: 12px;\n    padding-bottom: 12px;\n}\n\nem.caption {\n    color: #1B5E20;\n    line-height: 200%;\n    font-weight: 500;\n    padding: 4px;\n}\n\n.start-button {\n    margin-top: 48px;\n    margin-bottom: 96px;\n}"
+    "css": ". {\n    font-size: 90%;\n    margin-bottom: 16px;\n    overflow: hidden;\n}\np {\n    font-weight: 400;\n    line-height: 160%;\n    margin-bottom: 16px;\n}\nh6 {\n    color: #007800;\n    text-transform: uppercase;\n    font-size: 120%;\n    font-weight: 700;\n    line-height: 140%;\n    text-shadow:\n            -1px -1px 0 #ffffff88,\n            1px -1px 0 #ffffff88,\n            -1px 1px 0 #ffffff88,\n            1px 1px 0 #ffffff88;\n    margin-top: 4px;\n}\nul li {\n    list-style: disc;\n}\npre {\n    font-size:80%;\n    border: solid 1px rgba(0,255,50,0.5);\n    background: rgba(255,255,255,0.95);\n    border-radius: 8px;\n}\n.opaqueBlocK {\n    background: rgba(230, 255, 230, 0.95);\n    margin-top: 12px;\n    min-height: 45vh;\n}\n.example-box {\n    padding: 16px;\n}\n.lazy-image {\n    width:352px;\n    height:100%;\n    background: darkgray;\n    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(203,245,198,0.8) 100%); /* w3c */\n}\n\n.features-box {\n    color: white;\n    padding: 16px;\n}\n.features-box .title {\n    width: 100%;\n    margin: 0 0 12px;\n}\n.features-box .title h2 {\n    font-weight: bold;\n    font-size: 140%;\n    color:yellow;\n    text-wrap: avoid;\n    white-space: nowrap;\n    vertical-align: middle;\n    margin: 0;\n    padding: 12px 0 12px;\n}\n.features-box .material-icons {\n    font-size: 150%;\n    min-width: 32px;\n    text-align: center;\n}\n.features-box .text {\n    font-family: 'Dosis', sans-serif;\n    padding: 0 32px 0 48px;\n    font-weight: 400;\n    width: 100%;\n    font-size: 100%;\n    line-height: 180%;\n}\n\n.opaqueBlocK .mdl-card {\n    padding: 16px;\n}\n.opaqueBlocK .material-icons {\n    color: white;\n}\n.opaqueBlocK .mdl-card__title {\n    color:yellow;\n    padding: 0;\n    text-wrap: avoid;\n    white-space: nowrap;\n    vertical-align: middle;\n    margin-bottom: 24px;\n}\n.opaqueBlocK .mdl-card__title-text {\n    width: 100%;\n    font-weight: bold;\n    font-size: 140%;\n}\n.opaqueBlocK .mdl-card__supporting-text {\n    color: white;\n    font-family: 'Dosis', sans-serif;\n    padding: 0 32px 0 48px;\n    font-weight: 400;\n    width: 100%;\n    font-size: 100%;\n    line-height: 180%;\n}\n[data-ui-include=\"content/lorem_ipsum\"] {\n    margin-top: 48px;\n    padding: 16px;\n}\n.view-pager-example {\n    width: 100%;\n    height: 290px;\n    overflow: hidden;\n    margin-bottom: 72px;\n    margin-top: 72px;\n}\n\n\n.size-w460 {\n    max-width: 460px;\n}\n\n.template-example {\n    max-width: 460px;\n}\n.template-example h1 {\n    font-size: 160%;\n    margin-top: 0;\n    padding-top: 0;\n    padding-bottom: 0;\n}\n.template-example img {\n    max-width: 400px;\n    max-height: 220px;\n}\n.template-example p {\n    font-size: 100%;\n    padding-top: 12px;\n    padding-bottom: 12px;\n}\n\nem.caption {\n    color: #1B5E20;\n    line-height: 200%;\n    font-weight: 500;\n    padding: 4px;\n}\n\n.start-button {\n    margin-top: 48px;\n    margin-bottom: 96px;\n}"
   },
   {
     "componentId": "content/footer",
