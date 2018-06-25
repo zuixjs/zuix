@@ -29,7 +29,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 ```
 
 [Download **zUIx v0.4.9-43**](https://genielabs.github.io/zuix/js/zuix.min.js)
-*~11 kB (gzipped)*
+*~13 kB (gzipped)*
 
 ###### Hosted
 
@@ -65,13 +65,13 @@ and include it in your HTML pages:
     <script src="js/zuix.min.js"></script>
 ```
 
-#### Using with TypeScript
+#### TypeScript integration
 
 To use zUIx in a TypeScript project you can download and include the auto-generated
 [module definition file](https://raw.githubusercontent.com/genielabs/zuix/master/dist/ts/zuix.d.ts)
 which is located in the distribution folder of the master repo.
 
-### More examples
+### Examples
 
 - [**TodoMVC**](https://genielabs.github.io/zuix-todomvc)
 *the classic To-Do MVC application implemented as a loadable component*
