@@ -241,7 +241,7 @@ div[data-ui-view] {
     .hackbox { width: 84%; }
 }
 
-@media only screen and (max-width: 640px) {
+@media screen and (max-width: 960px), screen and (max-height: 480px) {
     .content-padding {
         padding-left: 8px;
         padding-right: 8px;
