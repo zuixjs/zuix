@@ -190,7 +190,6 @@ zuix.hook('load:begin', function(data) {
     // Prism code syntax highlighter
     if (this.options().prism && typeof Prism !== 'undefined') {
         view.find('code').each(function(i, block) {
-            this.addClass('language-javascript');
             Prism.highlightElement(block);
         });
     }
@@ -341,7 +340,7 @@ function isSplashEnabled() {
     enabled = enabled && !re.test(userAgent);
     // TODO: splash screen is disabled by default
     // TODO: should be enabled when running in "dynamic" mode instead of "static"
-    enabled = false;
+    //enabled = false;
     return enabled;
 }
 

@@ -1,5 +1,3 @@
-/* zUIx v0.4.9-43 18.06.21 12:26:59 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -2195,47 +2193,68 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     if (!util.isNoU(options.path)) {
         htmlPath = options.path;
     }
-    // TODO: check if view caching is working in this case too
-    const inlineView = z$().find('['+_optionAttributes.dataUiView+'="' + htmlPath + '"]:not(['+_optionAttributes.dataUiComponent+'*=""])');
-    if (inlineView.length() > 0) {
-        const inlineElement = inlineView.get(0);
-        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
-            // TODO: test this case
-            context.view(inlineElement);
-        } else {
-            context.view(inlineElement.outerHTML);
-        }
+    // cache inline "data-ui-view" html
+    let inlineViews = zuix.store('zuix.inlineViews');
+    if (inlineViews == null) {
+        inlineViews = [];
+        zuix.store('zuix.inlineViews', inlineViews);
+    }
+    if (inlineViews[htmlPath] != null) {
+        context.view(inlineViews[htmlPath]);
         if (util.isFunction(options.success)) {
-            (options.success).call(context, inlineElement.outerHTML);
+            (options.success).call(context, inlineViews[htmlPath]);
         }
         if (util.isFunction(options.then)) {
             (options.then).call(context);
         }
     } else {
-        const cext = util.isNoU(options.cext) ? '.html' : options.cext;
-        if (htmlPath == context.componentId) {
-            htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
-        }
-        z$.ajax({
-            url: zuix.getResourcePath(htmlPath),
-            success: function(viewHtml) {
-                context.view(viewHtml);
-                if (util.isFunction(options.success)) {
-                    (options.success).call(context, viewHtml);
-                }
-            },
-            error: function(err) {
-                _log.e(err, context);
-                if (util.isFunction(options.error)) {
-                    (options.error).call(context, err);
-                }
-            },
-            then: function() {
-                if (util.isFunction(options.then)) {
-                    (options.then).call(context);
-                }
+        // TODO: check if view caching is working in this case too
+        const inlineView = z$().find('[' + _optionAttributes.dataUiView + '="' + htmlPath + '"]:not([' + _optionAttributes.dataUiComponent + '*=""])');
+        if (inlineView.length() > 0) {
+            const inlineElement = inlineView.get(0);
+            inlineViews[htmlPath] = inlineElement.innerHTML;
+            if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
+                // TODO: test this case better (or finally integrate some unit testing =))
+                // TODO: "html:parse" will not fire in this case (and this is the wanted behavior)
+                inlineView.attr(_optionAttributes.dataUiView, null);
+                context._view = inlineElement;
+                // trigger `view:process` hook
+                this.trigger(this, 'view:process', z$(context.view()));
+            } else {
+                context.view(inlineElement.innerHTML);
             }
-        });
+            if (util.isFunction(options.success)) {
+                (options.success).call(context, inlineElement.innerHTML);
+            }
+            if (util.isFunction(options.then)) {
+                (options.then).call(context);
+            }
+        } else {
+            const cext = util.isNoU(options.cext) ? '.html' : options.cext;
+            if (htmlPath == context.componentId) {
+                htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
+            }
+            z$.ajax({
+                url: zuix.getResourcePath(htmlPath),
+                success: function(viewHtml) {
+                    context.view(viewHtml);
+                    if (util.isFunction(options.success)) {
+                        (options.success).call(context, viewHtml);
+                    }
+                },
+                error: function(err) {
+                    _log.e(err, context);
+                    if (util.isFunction(options.error)) {
+                        (options.error).call(context, err);
+                    }
+                },
+                then: function() {
+                    if (util.isFunction(options.then)) {
+                        (options.then).call(context);
+                    }
+                }
+            });
+        }
     }
     return this;
 };

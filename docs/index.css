@@ -225,16 +225,11 @@ div[data-ui-field="loaderMessage"] {
     position: fixed;
     left: 0; top: 0px; bottom:0; right:0;
     z-index: 100;
-    display: none;
 }
 
 .size-full {
     width: 100vh;
     min-height: 100vh;
-}
-
-div[data-ui-view] {
-    display: none;
 }
 
 @media screen and (max-width: 1080px) {

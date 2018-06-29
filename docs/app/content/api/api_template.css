@@ -56,10 +56,11 @@ h5 code.language-javascript {
     padding-right: 16px;
 }
 .api-member-details code {
-    color: lightgray;
     background-color: #f2f2f2;
     padding: 2px;
     font-size: 80%;
+}
+.api-member-details .language-undefined {
 }
 .api-member-details .language-javascript {
     color: #424242;

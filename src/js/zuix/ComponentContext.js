@@ -476,47 +476,68 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     if (!util.isNoU(options.path)) {
         htmlPath = options.path;
     }
-    // TODO: check if view caching is working in this case too
-    const inlineView = z$().find('['+_optionAttributes.dataUiView+'="' + htmlPath + '"]:not(['+_optionAttributes.dataUiComponent+'*=""])');
-    if (inlineView.length() > 0) {
-        const inlineElement = inlineView.get(0);
-        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
-            // TODO: test this case
-            context.view(inlineElement);
-        } else {
-            context.view(inlineElement.outerHTML);
-        }
+    // cache inline "data-ui-view" html
+    let inlineViews = zuix.store('zuix.inlineViews');
+    if (inlineViews == null) {
+        inlineViews = [];
+        zuix.store('zuix.inlineViews', inlineViews);
+    }
+    if (inlineViews[htmlPath] != null) {
+        context.view(inlineViews[htmlPath]);
         if (util.isFunction(options.success)) {
-            (options.success).call(context, inlineElement.outerHTML);
+            (options.success).call(context, inlineViews[htmlPath]);
         }
         if (util.isFunction(options.then)) {
             (options.then).call(context);
         }
     } else {
-        const cext = util.isNoU(options.cext) ? '.html' : options.cext;
-        if (htmlPath == context.componentId) {
-            htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
-        }
-        z$.ajax({
-            url: zuix.getResourcePath(htmlPath),
-            success: function(viewHtml) {
-                context.view(viewHtml);
-                if (util.isFunction(options.success)) {
-                    (options.success).call(context, viewHtml);
-                }
-            },
-            error: function(err) {
-                _log.e(err, context);
-                if (util.isFunction(options.error)) {
-                    (options.error).call(context, err);
-                }
-            },
-            then: function() {
-                if (util.isFunction(options.then)) {
-                    (options.then).call(context);
-                }
+        // TODO: check if view caching is working in this case too
+        const inlineView = z$().find('[' + _optionAttributes.dataUiView + '="' + htmlPath + '"]:not([' + _optionAttributes.dataUiComponent + '*=""])');
+        if (inlineView.length() > 0) {
+            const inlineElement = inlineView.get(0);
+            inlineViews[htmlPath] = inlineElement.innerHTML;
+            if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
+                // TODO: test this case better (or finally integrate some unit testing =))
+                // TODO: "html:parse" will not fire in this case (and this is the wanted behavior)
+                inlineView.attr(_optionAttributes.dataUiView, null);
+                context._view = inlineElement;
+                // trigger `view:process` hook
+                this.trigger(this, 'view:process', z$(context.view()));
+            } else {
+                context.view(inlineElement.innerHTML);
             }
-        });
+            if (util.isFunction(options.success)) {
+                (options.success).call(context, inlineElement.innerHTML);
+            }
+            if (util.isFunction(options.then)) {
+                (options.then).call(context);
+            }
+        } else {
+            const cext = util.isNoU(options.cext) ? '.html' : options.cext;
+            if (htmlPath == context.componentId) {
+                htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
+            }
+            z$.ajax({
+                url: zuix.getResourcePath(htmlPath),
+                success: function(viewHtml) {
+                    context.view(viewHtml);
+                    if (util.isFunction(options.success)) {
+                        (options.success).call(context, viewHtml);
+                    }
+                },
+                error: function(err) {
+                    _log.e(err, context);
+                    if (util.isFunction(options.error)) {
+                        (options.error).call(context, err);
+                    }
+                },
+                then: function() {
+                    if (util.isFunction(options.then)) {
+                        (options.then).call(context);
+                    }
+                }
+            });
+        }
     }
     return this;
 };

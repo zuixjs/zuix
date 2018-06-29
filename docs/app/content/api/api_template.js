@@ -76,7 +76,7 @@ zuix.controller(function (cp) {
                 const pl = {content: this.description};
                 cp.trigger('html:parse', pl, true);
                 html += '<p>' + pl.content + '</p>';
-                html += '<code class="language-js">function '+buildCallbackArgs(this)+' { ... }</code>';
+                html += '<code class="language-javascript">function '+buildCallbackArgs(this)+' { ... }</code>';
                 html += buildMethodParams(this);
                 html += buildReturnType(this);
                 html += buildExamples(this);
@@ -132,7 +132,7 @@ zuix.controller(function (cp) {
             if (i < method.parameters.length-1)
                 args += ',';
         });
-        return '<div class="title"><h5><i class="material-icons">expand_more</i><code>'+method.name+'('+ args +')</code></h5></div>';
+        return '<div class="title"><h5><i class="material-icons">expand_more</i><code class="language-javascript">'+method.name+'('+ args +')</code></h5></div>';
     }
 
     function buildCallbackArgs(method) {
