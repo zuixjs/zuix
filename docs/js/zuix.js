@@ -1,4 +1,4 @@
-/* zUIx v0.4.9-43 18.06.21 12:26:59 */
+/* zUIx v0.4.9-44 18.07.09 22:13:07 */
 
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
@@ -596,6 +596,17 @@ const util = _dereq_('./Util.js');
  * @this {ZxQuery}
  */
 
+/** @private */
+let supportsPassive = false;
+try {
+    const opts = Object.defineProperty({}, 'passive', {
+        get: function() {
+            supportsPassive = true;
+        }
+    });
+    window.addEventListener('testPassive', null, opts);
+    window.removeEventListener('testPassive', null, opts);
+} catch (e) {}
 
 /** @private */
 const _zuix_events_mapping = [];
@@ -613,7 +624,7 @@ function addEventHandler(el, path, handler) {
     });
     if (!found) {
         _zuix_events_mapping.push({element: el, path: path, handler: handler});
-        el.addEventListener(path, routeEvent, false);
+        el.addEventListener(path, routeEvent, supportsPassive ? {passive: true} : false);
     }
 }
 function removeEventHandler(el, path, handler) {
@@ -1427,19 +1438,20 @@ z$.replaceCssVars = function(css, model) {
     return css;
 };
 z$.replaceBraces = function(html, callback) {
-    const tags = new RegExp(/[^{}]+(?=})/g);
+    // TODO: add optional parameter for custom regex
+    const tags = new RegExp(/{?{.*?}?}/g); // <-- single/double braces wrapper
     let outHtml = '';
     let matched = 0;
     let currentIndex = 0;
     let result;
     while (result = tags.exec(html)) {
         if (typeof result[0] === 'string' && (result[0].trim().length === 0 || result[0].indexOf('\n') >= 0)) {
-            const nv = html.substr(currentIndex, result.index-currentIndex)+result[0]+'}';
+            const nv = html.substr(currentIndex, result.index-currentIndex)+result[0];
             outHtml += nv;
             currentIndex += nv.length;
             continue;
         }
-        let value = '{'+result[0]+'}';
+        let value = result[0];
         if (typeof callback === 'function') {
             const r = callback(result[0]);
             if (!util.isNoU(r)) {
@@ -1447,8 +1459,8 @@ z$.replaceBraces = function(html, callback) {
                 matched++;
             }
         }
-        outHtml += html.substr(currentIndex, result.index-currentIndex-1)+value;
-        currentIndex = result.index+result[0].length+1;
+        outHtml += html.substr(currentIndex, result.index-currentIndex)+value;
+        currentIndex = result.index+result[0].length;
     }
     if (matched > 0) {
         outHtml += html.substr(currentIndex);
@@ -1952,8 +1964,7 @@ ComponentContext.prototype.view = function(view) {
     }
     // Disable loading of nested components until the component is ready
     v.find('['+_optionAttributes.dataUiLoad+']').each(function(i, v) {
-        this.attr(_optionAttributes.dataUiLoad+'-', this.attr(_optionAttributes.dataUiLoad));
-        this.attr(_optionAttributes.dataUiLoad, null);
+        this.attr(_optionAttributes.dataUiLoaded, 'false');
     });
 
     this.modelToView();
@@ -2195,47 +2206,68 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     if (!util.isNoU(options.path)) {
         htmlPath = options.path;
     }
-    // TODO: check if view caching is working in this case too
-    const inlineView = z$().find('['+_optionAttributes.dataUiView+'="' + htmlPath + '"]:not(['+_optionAttributes.dataUiComponent+'*=""])');
-    if (inlineView.length() > 0) {
-        const inlineElement = inlineView.get(0);
-        if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
-            // TODO: test this case
-            context.view(inlineElement);
-        } else {
-            context.view(inlineElement.outerHTML);
-        }
+    // cache inline "data-ui-view" html
+    let inlineViews = zuix.store('zuix.inlineViews');
+    if (inlineViews == null) {
+        inlineViews = [];
+        zuix.store('zuix.inlineViews', inlineViews);
+    }
+    if (inlineViews[htmlPath] != null) {
+        context.view(inlineViews[htmlPath]);
         if (util.isFunction(options.success)) {
-            (options.success).call(context, inlineElement.outerHTML);
+            (options.success).call(context, inlineViews[htmlPath]);
         }
         if (util.isFunction(options.then)) {
             (options.then).call(context);
         }
     } else {
-        const cext = util.isNoU(options.cext) ? '.html' : options.cext;
-        if (htmlPath == context.componentId) {
-            htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
-        }
-        z$.ajax({
-            url: zuix.getResourcePath(htmlPath),
-            success: function(viewHtml) {
-                context.view(viewHtml);
-                if (util.isFunction(options.success)) {
-                    (options.success).call(context, viewHtml);
-                }
-            },
-            error: function(err) {
-                _log.e(err, context);
-                if (util.isFunction(options.error)) {
-                    (options.error).call(context, err);
-                }
-            },
-            then: function() {
-                if (util.isFunction(options.then)) {
-                    (options.then).call(context);
-                }
+        // TODO: check if view caching is working in this case too
+        const inlineView = z$().find('[' + _optionAttributes.dataUiView + '="' + htmlPath + '"]:not([' + _optionAttributes.dataUiComponent + '*=""])');
+        if (inlineView.length() > 0) {
+            const inlineElement = inlineView.get(0);
+            inlineViews[htmlPath] = inlineElement.innerHTML;
+            if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
+                // TODO: test this case better (or finally integrate some unit testing =))
+                // TODO: "html:parse" will not fire in this case (and this is the wanted behavior)
+                inlineView.attr(_optionAttributes.dataUiView, null);
+                context._view = inlineElement;
+                // trigger `view:process` hook
+                this.trigger(this, 'view:process', z$(context.view()));
+            } else {
+                context.view(inlineElement.innerHTML);
             }
-        });
+            if (util.isFunction(options.success)) {
+                (options.success).call(context, inlineElement.innerHTML);
+            }
+            if (util.isFunction(options.then)) {
+                (options.then).call(context);
+            }
+        } else {
+            const cext = util.isNoU(options.cext) ? '.html' : options.cext;
+            if (htmlPath == context.componentId) {
+                htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
+            }
+            z$.ajax({
+                url: zuix.getResourcePath(htmlPath),
+                success: function(viewHtml) {
+                    context.view(viewHtml);
+                    if (util.isFunction(options.success)) {
+                        (options.success).call(context, viewHtml);
+                    }
+                },
+                error: function(err) {
+                    _log.e(err, context);
+                    if (util.isFunction(options.error)) {
+                        (options.error).call(context, err);
+                    }
+                },
+                then: function() {
+                    if (util.isFunction(options.then)) {
+                        (options.then).call(context);
+                    }
+                }
+            });
+        }
     }
     return this;
 };
@@ -2588,8 +2620,8 @@ function queueLoadables(element) {
     let waitingLoad = getElementCache(element);
 //    if (waitingLoad == null || waitingLoad.length == 0) {
     waitingLoad = z$(element).find('['+
-        _optionAttributes.dataUiLoad+']:not(['+_optionAttributes.dataUiLoaded+'=true]),['+
-        _optionAttributes.dataUiInclude+']:not(['+_optionAttributes.dataUiLoaded+'=true])');
+        _optionAttributes.dataUiLoad+']:not(['+_optionAttributes.dataUiLoaded+']),['+
+        _optionAttributes.dataUiInclude+']:not(['+_optionAttributes.dataUiLoaded+'])');
     waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
     setElementCache(element, waitingLoad);
 //    }
@@ -2689,10 +2721,12 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element) {
     const v = z$(element);
-    if (v.attr(_optionAttributes.dataUiLoaded) === 'true' || v.parent('pre,code').length() > 0) {
+    if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
         // _log.w("Skipped", element);
         return false;
-    } else v.attr(_optionAttributes.dataUiLoaded, 'true');
+    } else {
+        v.attr(_optionAttributes.dataUiLoaded, 'true');
+    }
 
     /** @type {ContextOptions} */
     let options = v.attr(_optionAttributes.dataUiOptions);
@@ -2774,18 +2808,18 @@ function resolvePath(path) {
 }
 
 function applyOptions(element, options) {
-    if (element != null && !util.isNoU(options)) {
-        if (typeof options === 'string') {
-            options = util.propertyFromPath(window, options);
-        }
-        // TODO: should check if options object is valid
-        if (!util.isNoU(options.lazyLoad)) {
+    if (typeof options === 'string') {
+        options = util.propertyFromPath(window, options);
+    }
+    // TODO: should check if options object is valid
+    if (element != null && options != null) {
+        if (options.lazyLoad != null) {
             element.setAttribute(_optionAttributes.dataUiLazyload, options.lazyLoad.toString().toLowerCase());
         }
-        if (!util.isNoU(options.contextId)) {
+        if (options.contextId != null) {
             element.setAttribute(_optionAttributes.dataUiContext, options.contextId.toString().toLowerCase());
         }
-        if (!util.isNoU(options.componentId)) {
+        if (options.componentId != null) {
             element.setAttribute(_optionAttributes.dataUiLoad, options.componentId.toString().toLowerCase());
         }
         // TODO: eventually map other attributes from options
@@ -4128,9 +4162,8 @@ function initController(c) {
     _log.t(c.context.componentId, 'controller:init', 'timer:init:start');
 
     // re-enable nested components loading
-    c.view().find('['+_optionAttributes.dataUiLoad+'-]').each(function(i, v) {
-        this.attr(_optionAttributes.dataUiLoad, this.attr(_optionAttributes.dataUiLoad+'-'));
-        this.attr(_optionAttributes.dataUiLoad+'-', null);
+    c.view().find('['+_optionAttributes.dataUiLoaded+'="false"]:not(['+_optionAttributes.dataUiComponent+'])').each(function(i, v) {
+        this.attr(_optionAttributes.dataUiLoaded, null);
     });
 
     // bind {ContextController}.field method
@@ -4168,6 +4201,8 @@ function initController(c) {
             loadResources(ctx.c, ctx.o);
         }
     }
+
+    zuix.componentize(c.view());
 }
 
 /**
