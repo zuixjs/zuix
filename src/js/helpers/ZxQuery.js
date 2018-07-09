@@ -62,16 +62,7 @@ const util = require('./Util.js');
  */
 
 /** @private */
-let supportsPassive = false;
-try {
-    const opts = Object.defineProperty({}, 'passive', {
-        get: function() {
-            supportsPassive = true;
-        }
-    });
-    window.addEventListener('testPassive', null, opts);
-    window.removeEventListener('testPassive', null, opts);
-} catch (e) {}
+let supportsPassive = false; // util.hasPassiveEvents();
 
 /** @private */
 const _zuix_events_mapping = [];

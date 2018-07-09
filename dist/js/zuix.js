@@ -1,5 +1,3 @@
-/* zUIx v0.4.9-44 18.07.09 22:13:07 */
-
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -528,6 +526,20 @@ module.exports = {
             // TODO: should warn when clone is not possible
         }
         return temp;
+    },
+
+    hasPassiveEvents: function hasPassiveEvents() {
+        let supportsPassive = false;
+        try {
+            const opts = Object.defineProperty({}, 'passive', {
+                get: function() {
+                    supportsPassive = true;
+                }
+            });
+            window.addEventListener('testPassive', null, opts);
+            window.removeEventListener('testPassive', null, opts);
+        } catch (e) {}
+        return supportsPassive;
     }
 
 };
@@ -597,16 +609,7 @@ const util = _dereq_('./Util.js');
  */
 
 /** @private */
-let supportsPassive = false;
-try {
-    const opts = Object.defineProperty({}, 'passive', {
-        get: function() {
-            supportsPassive = true;
-        }
-    });
-    window.addEventListener('testPassive', null, opts);
-    window.removeEventListener('testPassive', null, opts);
-} catch (e) {}
+let supportsPassive = false; // util.hasPassiveEvents();
 
 /** @private */
 const _zuix_events_mapping = [];
