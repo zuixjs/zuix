@@ -61,6 +61,17 @@ const util = require('./Util.js');
  * @this {ZxQuery}
  */
 
+/** @private */
+let supportsPassive = false;
+try {
+    const opts = Object.defineProperty({}, 'passive', {
+        get: function() {
+            supportsPassive = true;
+        }
+    });
+    window.addEventListener('testPassive', null, opts);
+    window.removeEventListener('testPassive', null, opts);
+} catch (e) {}
 
 /** @private */
 const _zuix_events_mapping = [];
@@ -78,7 +89,7 @@ function addEventHandler(el, path, handler) {
     });
     if (!found) {
         _zuix_events_mapping.push({element: el, path: path, handler: handler});
-        el.addEventListener(path, routeEvent, false);
+        el.addEventListener(path, routeEvent, supportsPassive ? {passive: true} : false);
     }
 }
 function removeEventHandler(el, path, handler) {
@@ -892,19 +903,20 @@ z$.replaceCssVars = function(css, model) {
     return css;
 };
 z$.replaceBraces = function(html, callback) {
-    const tags = new RegExp(/[^{}]+(?=})/g);
+    // TODO: add optional parameter for custom regex
+    const tags = new RegExp(/{?{.*?}?}/g); // <-- single/double braces wrapper
     let outHtml = '';
     let matched = 0;
     let currentIndex = 0;
     let result;
     while (result = tags.exec(html)) {
         if (typeof result[0] === 'string' && (result[0].trim().length === 0 || result[0].indexOf('\n') >= 0)) {
-            const nv = html.substr(currentIndex, result.index-currentIndex)+result[0]+'}';
+            const nv = html.substr(currentIndex, result.index-currentIndex)+result[0];
             outHtml += nv;
             currentIndex += nv.length;
             continue;
         }
-        let value = '{'+result[0]+'}';
+        let value = result[0];
         if (typeof callback === 'function') {
             const r = callback(result[0]);
             if (!util.isNoU(r)) {
@@ -912,8 +924,8 @@ z$.replaceBraces = function(html, callback) {
                 matched++;
             }
         }
-        outHtml += html.substr(currentIndex, result.index-currentIndex-1)+value;
-        currentIndex = result.index+result[0].length+1;
+        outHtml += html.substr(currentIndex, result.index-currentIndex)+value;
+        currentIndex = result.index+result[0].length;
     }
     if (matched > 0) {
         outHtml += html.substr(currentIndex);

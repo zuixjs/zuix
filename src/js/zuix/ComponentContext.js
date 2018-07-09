@@ -233,8 +233,7 @@ ComponentContext.prototype.view = function(view) {
     }
     // Disable loading of nested components until the component is ready
     v.find('['+_optionAttributes.dataUiLoad+']').each(function(i, v) {
-        this.attr(_optionAttributes.dataUiLoad+'-', this.attr(_optionAttributes.dataUiLoad));
-        this.attr(_optionAttributes.dataUiLoad, null);
+        this.attr(_optionAttributes.dataUiLoaded, 'false');
     });
 
     this.modelToView();

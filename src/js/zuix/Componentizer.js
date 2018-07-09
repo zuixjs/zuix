@@ -240,8 +240,8 @@ function queueLoadables(element) {
     let waitingLoad = getElementCache(element);
 //    if (waitingLoad == null || waitingLoad.length == 0) {
     waitingLoad = z$(element).find('['+
-        _optionAttributes.dataUiLoad+']:not(['+_optionAttributes.dataUiLoaded+'=true]),['+
-        _optionAttributes.dataUiInclude+']:not(['+_optionAttributes.dataUiLoaded+'=true])');
+        _optionAttributes.dataUiLoad+']:not(['+_optionAttributes.dataUiLoaded+']),['+
+        _optionAttributes.dataUiInclude+']:not(['+_optionAttributes.dataUiLoaded+'])');
     waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
     setElementCache(element, waitingLoad);
 //    }
@@ -341,10 +341,12 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element) {
     const v = z$(element);
-    if (v.attr(_optionAttributes.dataUiLoaded) === 'true' || v.parent('pre,code').length() > 0) {
+    if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
         // _log.w("Skipped", element);
         return false;
-    } else v.attr(_optionAttributes.dataUiLoaded, 'true');
+    } else {
+        v.attr(_optionAttributes.dataUiLoaded, 'true');
+    }
 
     /** @type {ContextOptions} */
     let options = v.attr(_optionAttributes.dataUiOptions);
@@ -426,18 +428,18 @@ function resolvePath(path) {
 }
 
 function applyOptions(element, options) {
-    if (element != null && !util.isNoU(options)) {
-        if (typeof options === 'string') {
-            options = util.propertyFromPath(window, options);
-        }
-        // TODO: should check if options object is valid
-        if (!util.isNoU(options.lazyLoad)) {
+    if (typeof options === 'string') {
+        options = util.propertyFromPath(window, options);
+    }
+    // TODO: should check if options object is valid
+    if (element != null && options != null) {
+        if (options.lazyLoad != null) {
             element.setAttribute(_optionAttributes.dataUiLazyload, options.lazyLoad.toString().toLowerCase());
         }
-        if (!util.isNoU(options.contextId)) {
+        if (options.contextId != null) {
             element.setAttribute(_optionAttributes.dataUiContext, options.contextId.toString().toLowerCase());
         }
-        if (!util.isNoU(options.componentId)) {
+        if (options.componentId != null) {
             element.setAttribute(_optionAttributes.dataUiLoad, options.componentId.toString().toLowerCase());
         }
         // TODO: eventually map other attributes from options

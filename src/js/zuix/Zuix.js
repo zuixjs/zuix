@@ -745,9 +745,8 @@ function initController(c) {
     _log.t(c.context.componentId, 'controller:init', 'timer:init:start');
 
     // re-enable nested components loading
-    c.view().find('['+_optionAttributes.dataUiLoad+'-]').each(function(i, v) {
-        this.attr(_optionAttributes.dataUiLoad, this.attr(_optionAttributes.dataUiLoad+'-'));
-        this.attr(_optionAttributes.dataUiLoad+'-', null);
+    c.view().find('['+_optionAttributes.dataUiLoaded+'="false"]:not(['+_optionAttributes.dataUiComponent+'])').each(function(i, v) {
+        this.attr(_optionAttributes.dataUiLoaded, null);
     });
 
     // bind {ContextController}.field method
@@ -785,6 +784,8 @@ function initController(c) {
             loadResources(ctx.c, ctx.o);
         }
     }
+
+    zuix.componentize(c.view());
 }
 
 /**
