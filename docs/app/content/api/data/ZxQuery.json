@@ -235,11 +235,11 @@
     "ignore": false,
     "line": 64,
     "codeStart": 65,
-    "code": "let supportsPassive = false; // util.hasPassiveEvents();",
+    "code": "let supportsPassive = util.hasPassiveEvents();",
     "ctx": {
       "type": "declaration",
       "name": "supportsPassive",
-      "value": "false",
+      "value": "util.hasPassiveEvents()",
       "string": "supportsPassive"
     }
   },

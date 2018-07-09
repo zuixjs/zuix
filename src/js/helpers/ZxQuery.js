@@ -62,7 +62,7 @@ const util = require('./Util.js');
  */
 
 /** @private */
-let supportsPassive = false; // util.hasPassiveEvents();
+let supportsPassive = util.hasPassiveEvents();
 
 /** @private */
 const _zuix_events_mapping = [];
