@@ -417,16 +417,16 @@ function pageScrollChanged(e, data) {
             showHeader();
             break;
         case 'scroll':
-            if (data.info.shift.y < 0) {
+            if (data.info.shift.y > 0) {
                 // scrolling up
                 showHeader();
-            } else if (data.info.shift.y > 0) {
+            } else if (data.info.shift.y < 0) {
                 // scrolling down
                 hideHeader();
             }
             break;
         case 'hit-bottom':
-            //showHeader();
+            showHeader();
             break;
     }
 }
