@@ -69,7 +69,7 @@ const _zuix_events_mapping = [];
 function routeEvent(e) {
     triggerEventHandlers(this, e.type, e);
 }
-function addEventHandler(el, path, handler) {
+function addEventHandler(el, path, handler, options) {
     let found = false;
     z$.each(_zuix_events_mapping, function() {
         if (this.element === el && this.path === path && this.handler === handler) {
@@ -79,8 +79,8 @@ function addEventHandler(el, path, handler) {
         }
     });
     if (!found) {
-        _zuix_events_mapping.push({element: el, path: path, handler: handler});
-        el.addEventListener(path, routeEvent, supportsPassive ? {passive: true} : false);
+        _zuix_events_mapping.push({element: el, path: path, handler: handler, opgions: options});
+        el.addEventListener(path, routeEvent, supportsPassive && (options == null || options.passive !== false) ? {passive: true} : false);
     }
 }
 function removeEventHandler(el, path, handler) {
@@ -337,9 +337,14 @@ ZxQuery.prototype.one = function(eventPath, eventHandler) {
  */
 ZxQuery.prototype.on = function(eventPath, eventHandler) {
     const events = eventPath.match(/\S+/g) || [];
+    let options;
+    if (typeof eventHandler !== 'function') {
+        options = eventHandler;
+        eventHandler = options.handler;
+    }
     this.each(function(k, el) {
         z$.each(events, function(k, ev) {
-            addEventHandler(el, ev, eventHandler);
+            addEventHandler(el, ev, eventHandler, options);
         });
     });
     return this;
