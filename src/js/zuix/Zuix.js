@@ -278,7 +278,10 @@ function load(componentId, options) {
 }
 
 function getResourcePath(path) {
-    const config = zuix.store('config');
+    let config = zuix.store('config');
+    if (config[location.host] != null) {
+        config = config[location.host];
+    }
     path = _componentizer.resolvePath(path);
     if (!path.startsWith('//') && path.indexOf('://') < 0) {
         path = (config != null && config.resourcePath != null ? config.resourcePath : '') + path;

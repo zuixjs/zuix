@@ -419,7 +419,10 @@ function loadInline(element) {
 }
 
 function resolvePath(path) {
-    const config = zuix.store('config');
+    let config = zuix.store('config');
+    if (config[location.host] != null) {
+        config = config[location.host];
+    }
     const libraryPath = config != null && config.libraryPath != null ? config.libraryPath : LIBRARY_PATH_DEFAULT;
     if (path.startsWith('@lib/')) {
         path = libraryPath+path.substring(4);
