@@ -37,23 +37,23 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "a9a7088e824337d845732ba09a26a7d8"
   },
   {
     "url": "app/content/api/data/ContextController.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "68eb64b0986d8f2684e59233ee70e8d0"
   },
   {
     "url": "app/content/api/data/Localizer.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "64c7ececaa90db2712cafd081214023d"
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "9038fefdca6421ae6631a39c3dbd8d02"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "00d518b8f8773153cea487336859fad9"
   },
   {
     "url": "app/content/docs/examples/links.css",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "c0eb1bf634c2c4fdfa701547fd07f109"
+    "revision": "c607c7673daf26290d7b1858a6500479"
   },
   {
     "url": "index.js",
@@ -101,35 +101,35 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "836bfd290636d351913dc8628a21adfc"
+    "revision": "cd4d2491f787cab75e871ce3c7c2a1fd"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "1eb03638ed7f9eb2006103ab47b70d01"
+    "revision": "f0869de8aea2e54e9dea19fc6bf15edd"
   },
   {
     "url": "js/zuix.js",
-    "revision": "7979d4390ae98d960bb6db44982d2faf"
+    "revision": "750a81f35d60654e4a9391b289b6aa3b"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "ddcf816a989c24f0450d3e2947fe95f5"
+    "revision": "c41a4bbdc3dc4c0fdb4df45988b1990f"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "eb1e6896190dc168976e3bfade74e1dc"
+    "revision": "cd4d2491f787cab75e871ce3c7c2a1fd"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "b35b5244abbd5fa7d894d5bdba111209"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "e7d6413f6719ddfeed138c8c6af8d231"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "dc79b0b96fe17402eaab5261e07f48e6"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
