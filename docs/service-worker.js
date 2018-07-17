@@ -73,7 +73,7 @@ self.__precacheManifest = [
   },
   {
     "url": "config.js",
-    "revision": "1f8f89534e9e790099c6bb99d9b1390b"
+    "revision": "b3f927651bc0af878c86cbcb5e980b50"
   },
   {
     "url": "css/flex-layout-attribute.min.css",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "c607c7673daf26290d7b1858a6500479"
+    "revision": "e428fb47b27b700fd80f6beaf2f7fdd7"
   },
   {
     "url": "index.js",
