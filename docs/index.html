@@ -905,8 +905,77 @@ div[data-ui-field="loaderMessage"] {
             <section>
                 <div layout="column top-stretch" class="page-content">
 
-                    <div data-ui-include="content/home" data-ui-field="content-home" data-ui-options="main.options.content" data-ui-view="content/home">
-<div data-ui-include="content/home/cover" data-ui-field="mainCover" data-ui-view="content/home/cover">
+                    <div data-ui-include="content/home" data-ui-field="content-home" data-ui-options="main.options.content"></div>
+
+                </div>
+            </section>
+
+            <!-- page 1 -->
+            <section data-ui-field="page-start">
+                <div layout="column top-center" self="size-x1" class="page-content">
+                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
+
+                        <div data-ui-include="content/start" data-ui-options="main.options.content" class="progressive-content-container"></div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- page 2 -->
+            <section data-ui-field="page-docs" data-ui-lazyload="scroll">
+                <div layout="column top-center" self="size-x1" class="page-content">
+                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
+
+                        <div data-ui-include="content/docs" data-ui-options="main.options.content" class="progressive-content-container"></div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- page 3 -->
+            <section data-ui-field="page-api" data-ui-lazyload="scroll">
+                <div layout="column top-center" self="size-x1" class="page-content">
+                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
+
+                        <div data-ui-include="content/api" data-ui-options="main.options.content"></div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- absolute positioned elements -->
+
+<div data-ui-field="loaderMessage-c">
+    <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp" data-ui-field="loaderMessage"></div>
+</div>
+
+<!-- zUIx Hack Box widget -->
+<!--
+<div data-ui-load="widgets/zuix_hackbox"
+     data-ui-priority="-10"
+     class="hackbox"
+     self="size-large lg-full"></div>
+-->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-92520304-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- zUIx inline resource resourceBundle -->
+<!--{[content/home/cover]}-->
+<div data-ui-view="content/home/cover">
 <div layout="column center-center" class="opaqueBlocK mdl-shadow--8dp animated bounceInDown">
 
     <div self="size-large center-center">
@@ -938,8 +1007,8 @@ div[data-ui-field="loaderMessage"] {
 </div>
 
 </div>
-
-<div data-ui-include="content/home/links" data-ui-view="content/home/links">
+<!--{[content/home/links]}-->
+<div data-ui-view="content/home/links">
 <div layout="column center-center" class="opaqueBlocK mdl-shadow--8dp">
 
 
@@ -970,8 +1039,286 @@ div[data-ui-field="loaderMessage"] {
 
 </div>
 </div>
+<!--{[content/lorem_ipsum]}-->
+<div data-ui-view="content/lorem_ipsum">
+<p>
+    «
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+    nisi ut aliquip ex ea commodo consequat.
+    »
+</p>
 
-<div data-ui-include="content/home/features" data-ui-field="mainFeatures" data-ui-options="main.options.content" data-ui-view="content/home/features">
+</div>
+<!--{[templates/mdl_card]}-->
+<div data-ui-view="templates/mdl_card">
+<div class="mdl-grid animated fadeIn size-w460">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-shadow--8dp">
+        <div class="mdl-card__title">
+            <img data-ui-field="image" src="app/content/docs/examples/images/card_placeholder.jpg" class="portrait">
+            <h1 data-ui-field="title" class="mdl-card__title-text mdl-color-text--white animated fadeInDown">Card title</h1>
+        </div>
+        <div data-ui-field="text" class="mdl-card__supporting-text animated fadeInUp">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Aliquam accusamus, consectetur.
+        </div>
+        <div class="mdl-card__actions mdl-card--border animated fadeInRight">
+            <a data-ui-field="link_read" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--accent">Open</a>
+        </div>
+    </div>
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[content/home/examples/view_pager/random_image_item]}-->
+<div data-ui-view="content/home/examples/view_pager/random_image_item">
+<div class="image-wrapper animated fadeIn">
+    <div class="backdrop"></div>
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+</div>
+
+</div>
+<!--{[@lib/templates/spinkit/spinner_cubes]}-->
+<div data-ui-view="https://genielabs.github.io/zkit/lib/templates/spinkit/spinner_cubes">
+<div class="spinner">
+    <div class="cube1"></div>
+    <div class="cube2"></div>
+</div>
+</div>
+<!--{[content/home/features]}-->
+<div data-ui-view="content/home/features">
 <div layout="column center-center" class="opaqueBlocK mdl-color-text--black animated bounceInUp mdl-shadow--16dp">
 
     <div self="size-xlarge center-center" layout="rows top-justify">
@@ -989,17 +1336,7 @@ div[data-ui-field="loaderMessage"] {
             </div>
         </div>
         <div self="size-1of2 sm-full center" layout="row center-center" class="example-box">
-            <div data-ui-include="content/lorem_ipsum" data-ui-view="content/lorem_ipsum">
-<p>
-    «
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-    nisi ut aliquip ex ea commodo consequat.
-    »
-</p>
-
-</div>
+            <div data-ui-include="content/lorem_ipsum"></div>
             <!--
             <div data-ui-load="@lib/components/social_sharing"
                  layout="rows center-center">
@@ -1260,12 +1597,7 @@ zuix.store("config", {
         </div>
         <div self="size-x1 center-center">
 
-            <div data-ui-include="@lib/templates/spinkit/spinner_cubes" data-ui-view="https://genielabs.github.io/zkit/lib/templates/spinkit/spinner_cubes">
-<div class="spinner">
-    <div class="cube1"></div>
-    <div class="cube2"></div>
-</div>
-</div>
+            <div data-ui-include="@lib/templates/spinkit/spinner_cubes"></div>
 
         </div>
         <div self="size-1of2" class="example-box">
@@ -1360,8 +1692,8 @@ zuix.store("config", {
 
 </div>
 </div>
-
-<div data-ui-include="content/footer" data-ui-options="main.options.content" data-ui-view="content/footer">
+<!--{[content/footer]}-->
+<div data-ui-view="content/footer">
 <footer class="mdl-mini-footer mdl-color--yellow-400">
     <div self="top-left" class="mdl-mini-footer__left-section">
         <span>z</span><strong>UI</strong><span>x</span>
@@ -1395,17 +1727,18 @@ zuix.store("config", {
     </div>
 </footer>
 </div>
+<!--{[content/home]}-->
+<div data-ui-view="content/home">
+<div data-ui-include="content/home/cover" data-ui-field="mainCover"></div>
+
+<div data-ui-include="content/home/links"></div>
+
+<div data-ui-include="content/home/features" data-ui-field="mainFeatures" data-ui-options="main.options.content"></div>
+
+<div data-ui-include="content/footer" data-ui-options="main.options.content"></div>
 </div>
-
-                </div>
-            </section>
-
-            <!-- page 1 -->
-            <section data-ui-field="page-start">
-                <div layout="column top-center" self="size-x1" class="page-content">
-                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
-
-                        <div data-ui-include="content/start" data-ui-options="main.options.content" class="progressive-content-container" data-ui-view="content/start">
+<!--{[content/start]}-->
+<div data-ui-view="content/start">
 <p><a id="Getting_Started--Usage"></a></p>
 <h3 id="gettingstarted">Getting Started</h3>
 <p><img src="images/zuix_web_starter.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated fadeInUp">
@@ -1470,30 +1803,26 @@ which is located in the distribution folder of the master repo.</p>
 <h4 id="contributing">Contributing</h4>
 <p>Please read the <a href="https://github.com/genielabs/zuix/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> document.</p>
 </div>
+<!--{[content/docs/examples/links]}-->
+<div data-ui-view="content/docs/examples/links">
+<div layout="row center-spread" class="animated fadeInUp">
+    <a href="https://github.com/genielabs/zuix">zUIx</a>
+    <a href="https://github.com/genielabs">@genielabs</a>
+    <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
+</div>
 
-                    </div>
-                </div>
-            </section>
+</div>
+<!--{[content/docs/examples/links]}-->
+<div data-ui-view="content/docs/examples/links">
+<div layout="row center-spread" class="animated fadeInUp">
+    <a href="https://github.com/genielabs/zuix">zUIx</a>
+    <a href="https://github.com/genielabs">@genielabs</a>
+    <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
+</div>
 
-            <!-- page 2 -->
-            <section data-ui-field="page-docs" data-ui-lazyload="scroll">
-                <div layout="column top-center" self="size-x1" class="page-content">
-                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
-
-                        <div data-ui-include="content/docs" data-ui-options="main.options.content" class="progressive-content-container" data-ui-view="content/docs">
-<p><a id="Getting_Started--Quick_Start"></a></p>
-<h3 id="introduction">Introduction</h3>
-<p><img src="images/documentation.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated fadeIn">
-This is a basic guide with examples, simple terminology and not too much technical stuff so that even with little HTML
-and JavaScript knowledge you can start using zUIx.</p>
-<h5 id="index">Index</h5>
-<ul>
-<li><a href="#/docs#Getting_Started--Content_Management"><i class="material-icons mdl-color-text--grey-500">dashboard</i> <strong>Content management</strong></a> <!--small>(beginner)</small--></li>
-<li><a href="#/docs#Getting_Started--View_Templates"><i class="material-icons mdl-color-text--grey-500">settings_ethernet</i> <strong>View templates</strong> and data binding</a> <!--small>(intermediate-)</small--></li>
-<li><a href="#/docs#Getting_Started--Components"><i class="material-icons mdl-color-text--grey-500">extension</i> <strong>Components</strong></a> <!--small>(intermediate+)</small--></li>
-<li><a href="#/docs#Getting_Started--Zuix_Bundler"><i class="material-icons mdl-color-text--grey-500">folder</i> <strong>App bundler</strong></a> <!--small>(beginner+)</small--></li>
-</ul>
-<div data-ui-include="content/docs/content_management" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" class="progressive-content-container" data-ui-view="content/docs/content_management">
+</div>
+<!--{[content/docs/content_management]}-->
+<div data-ui-view="content/docs/content_management">
 <p><a id="Getting_Started--Content_Management"></a></p>
 <h4 id="contentmanagementiclassmaterialiconsmdlcolortextgrey500dashboardi">Content management <i class="material-icons mdl-color-text--grey-500">dashboard</i></h4>
 <p>With <em>Content Management</em> we are referring here to the capability of loading
@@ -1584,14 +1913,7 @@ into each <code>div</code> element.</p>
     &lt;div data-ui-include="https://genielabs.github.io/zuix/app/content/docs/examples/links"&gt;&lt;/div&gt;
 </code></pre>
 <p><small><strong>RESULT</strong></small></p>
-<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content_no_css" data-ui-view="content/docs/examples/links">
-<div layout="row center-spread" class="animated fadeInUp">
-    <a href="https://github.com/genielabs/zuix">zUIx</a>
-    <a href="https://github.com/genielabs">@genielabs</a>
-    <a href="https://genielabs.github.io/HomeGenie/">HomeGenie</a>
-</div>
-
-</div>
+<div data-ui-include="content/docs/examples/links" data-ui-options="main.options.content_no_css"></div>
 <p>&nbsp;</p>
 <h6 id="options">Options</h6>
 <p>When loading a content (or a component) we can also use the <code>data-ui-options</code> attribute to get more control over the loading
@@ -1735,7 +2057,46 @@ are applied only to the loaded content via the <code>data-ui-component</code> co
 making possible to keep <strong>global style</strong> files separated from <strong>content-local style</strong> files
 (scoped CSS).</p>
 </div>
-<div data-ui-include="content/docs/view_templates" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" class="progressive-content-container" data-ui-view="content/docs/view_templates">
+<!--{[templates/mdl_card]}-->
+<div data-ui-view="templates/mdl_card">
+<div class="mdl-grid animated fadeIn size-w460">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-shadow--8dp">
+        <div class="mdl-card__title">
+            <img data-ui-field="image" src="app/content/docs/examples/images/card_placeholder.jpg" class="portrait">
+            <h1 data-ui-field="title" class="mdl-card__title-text mdl-color-text--white animated fadeInDown">Card title</h1>
+        </div>
+        <div data-ui-field="text" class="mdl-card__supporting-text animated fadeInUp">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Aliquam accusamus, consectetur.
+        </div>
+        <div class="mdl-card__actions mdl-card--border animated fadeInRight">
+            <a data-ui-field="link_read" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--accent">Open</a>
+        </div>
+    </div>
+</div>
+
+</div>
+<!--{[templates/mdl_card]}-->
+<div data-ui-view="templates/mdl_card">
+<div class="mdl-grid animated fadeIn size-w460">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-shadow--8dp">
+        <div class="mdl-card__title">
+            <img data-ui-field="image" src="app/content/docs/examples/images/card_placeholder.jpg" class="portrait">
+            <h1 data-ui-field="title" class="mdl-card__title-text mdl-color-text--white animated fadeInDown">Card title</h1>
+        </div>
+        <div data-ui-field="text" class="mdl-card__supporting-text animated fadeInUp">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Aliquam accusamus, consectetur.
+        </div>
+        <div class="mdl-card__actions mdl-card--border animated fadeInRight">
+            <a data-ui-field="link_read" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--accent">Open</a>
+        </div>
+    </div>
+</div>
+
+</div>
+<!--{[content/docs/view_templates]}-->
+<div data-ui-view="content/docs/view_templates">
 <p><a id="Getting_Started--View_Templates"></a></p>
 <h4 id="viewtemplatesiclassmaterialiconsmdlcolortextgrey500settings_etherneti">View templates <i class="material-icons mdl-color-text--grey-500">settings_ethernet</i></h4>
 <p>A <strong>view template</strong> (or just <em>view</em>), is that particular kind of content
@@ -1764,24 +2125,7 @@ is used to bind their values to the respective fields in the data model.</p>
 </code></pre>
 <p><small><strong>TEMPLATE PREVIEW</strong></small></p>
 <div self="size-x1" layout="row center-center">
-    <div data-ui-include="templates/mdl_card" self="size-1of2 sm-full" data-ui-view="templates/mdl_card">
-<div class="mdl-grid animated fadeIn size-w460">
-    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-shadow--8dp">
-        <div class="mdl-card__title">
-            <img data-ui-field="image" src="app/content/docs/examples/images/card_placeholder.jpg" class="portrait">
-            <h1 data-ui-field="title" class="mdl-card__title-text mdl-color-text--white animated fadeInDown">Card title</h1>
-        </div>
-        <div data-ui-field="text" class="mdl-card__supporting-text animated fadeInUp">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Aliquam accusamus, consectetur.
-        </div>
-        <div class="mdl-card__actions mdl-card--border animated fadeInRight">
-            <a data-ui-field="link_read" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--accent">Open</a>
-        </div>
-    </div>
-</div>
-
-</div>
+    <div data-ui-include="templates/mdl_card" self="size-1of2 sm-full"></div>
 </div>
 <p>&nbsp;</p>
 <p>To apply the template above with a different data model, we use the following code:</p>
@@ -2153,7 +2497,20 @@ var chip_view_options = {
 };
 </script>
 </div>
-<div data-ui-include="content/docs/components" data-ui-options="main.options.content_no_css" data-ui-lazyload="false" class="progressive-content-container" data-ui-view="content/docs/components">
+<!--{[widgets/timeclock]}-->
+<div data-ui-view="widgets/timeclock">
+<div class="frame animated zoomIn">
+
+    <div data-ui-field="time" class="time"></div>
+    <div class="header">
+        <div data-ui-field="info" class="day"></div>
+        <div data-ui-field="date" class="date"></div>
+    </div>
+
+</div>
+</div>
+<!--{[content/docs/components]}-->
+<div data-ui-view="content/docs/components">
 <p><a id="Getting_Started--Components"></a></p>
 <h4 id="componentsiclassmaterialiconsmdlcolortextgrey500extensioni">Components <i class="material-icons mdl-color-text--grey-500">extension</i></h4>
 <p>Exception made for handling of standard events and behaviors,
@@ -2215,7 +2572,8 @@ the controller is defined inline rather than in a separate file.</p>
 Referer to the API page for a complete list of properties and methods
 of the <a href="#/api#ZUIX_API--ContextController">{ContextController}</a> object.</p>
 </div>
-<div data-ui-include="content/docs/zuix_bundler" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" class="progressive-content-container" data-ui-view="content/docs/zuix_bundler">
+<!--{[content/docs/zuix_bundler]}-->
+<div data-ui-view="content/docs/zuix_bundler">
 <p><a id="Getting_Started--Zuix_Bundler"></a></p>
 <h4 id="appbundlericlassmaterialiconsmdlcolortextgrey500folderi">App Bundler <i class="material-icons mdl-color-text--grey-500">folder</i></h4>
 <p>When your website or application is ready for production it can then be bundled,
@@ -2275,6 +2633,61 @@ This is useful since it can be used to create self-contained components that
 can be loaded without having to worry about the dependencies.</p>
 <p>&nbsp;</p>
 </div>
+<!--{[@lib/components/menu_overlay]}-->
+<div data-ui-view="https://genielabs.github.io/zkit/lib/components/menu_overlay">
+<div data-ui-field="menu_overlay">
+    <div data-ui-field="items_wrapper"></div>
+</div>
+
+<!-- Colored FAB menu button -->
+<div data-ui-field="menu_button" class="menu-button">
+    <div class="circle-button">
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
+</div>
+<div data-ui-field="menu_button_close" class="menu-button">
+    <div class="circle-button">
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
+</div>
+
+</div>
+<!--{[content/docs]}-->
+<div data-ui-view="content/docs">
+<p><a id="Getting_Started--Quick_Start"></a></p>
+<h3 id="introduction">Introduction</h3>
+<p><img src="images/documentation.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated fadeIn">
+This is a basic guide with examples, simple terminology and not too much technical stuff so that even with little HTML
+and JavaScript knowledge you can start using zUIx.</p>
+<h5 id="index">Index</h5>
+<ul>
+<li><a href="#/docs#Getting_Started--Content_Management"><i class="material-icons mdl-color-text--grey-500">dashboard</i> <strong>Content management</strong></a> <!--small>(beginner)</small--></li>
+<li><a href="#/docs#Getting_Started--View_Templates"><i class="material-icons mdl-color-text--grey-500">settings_ethernet</i> <strong>View templates</strong> and data binding</a> <!--small>(intermediate-)</small--></li>
+<li><a href="#/docs#Getting_Started--Components"><i class="material-icons mdl-color-text--grey-500">extension</i> <strong>Components</strong></a> <!--small>(intermediate+)</small--></li>
+<li><a href="#/docs#Getting_Started--Zuix_Bundler"><i class="material-icons mdl-color-text--grey-500">folder</i> <strong>App bundler</strong></a> <!--small>(beginner+)</small--></li>
+</ul>
+<div data-ui-include="content/docs/content_management" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" class="progressive-content-container"><div class="content-loader">
+    <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    <p><small>Loading <em>'Content Management'</em>...</small></p>
+</div></div>
+<div data-ui-include="content/docs/view_templates" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" class="progressive-content-container"><div class="content-loader">
+    <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    <p><small>Loading <em>'View Templates'</em>...</small></p>
+</div></div>
+<div data-ui-include="content/docs/components" data-ui-options="main.options.content_no_css" data-ui-lazyload="false" class="progressive-content-container"><div class="content-loader">
+    <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    <p><small>Loading <em>'Components'</em>...</small></p>
+</div></div>
+<div data-ui-include="content/docs/zuix_bundler" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" class="progressive-content-container"><div class="content-loader">
+    <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    <p><small>Loading <em>'Zuix Bundler'</em>...</small></p>
+</div></div>
 <!--
 
 ##### Global Hooks Events
@@ -2339,30 +2752,8 @@ can be loaded without having to worry about the dependencies.</p>
     </div>
 </div>
 </div>
-
-                    </div>
-                </div>
-            </section>
-
-            <!-- page 3 -->
-            <section data-ui-field="page-api" data-ui-lazyload="scroll">
-                <div layout="column top-center" self="size-x1" class="page-content">
-                    <div self="size-xlarge top-center" class="section-content mdl-shadow--8dp">
-
-                        <div data-ui-include="content/api" data-ui-options="main.options.content" data-ui-view="content/api">
-<p><a id="ZUIX_API"></a></p>
-<h3 id="api">API</h3>
-<p><img src="images/api.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated fadeIn"></p>
-<script>
-    var api_loader_options = {
-        html: false,
-        markdown: true,
-        prism: true,
-        lazyLoad: true
-    };
-</script>
-<p><a id="ZUIX_API--Zuix"></a></p>
-<div data-ui-include="content/api/zuix" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" data-ui-view="content/api/zuix">
+<!--{[content/api/zuix]}-->
+<div data-ui-view="content/api/zuix">
 <h3 id="zuixclass"><code>Zuix</code> class</h3>
 <p>This is the main framework class which is accessible though the global object <code>zuix</code>.
 The <code>zuix</code> object takes care of parsing all <code>data-ui-load</code> and <code>data-ui-include</code>
@@ -2385,8 +2776,8 @@ accomplish various tasks such as:</p>
 </div>
 <p>&nbsp;</p>
 </div>
-<p><a id="ZUIX_API--ComponentContext"></a></p>
-<div data-ui-include="content/api/component_context" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" data-ui-view="content/api/component_context">
+<!--{[content/api/component_context]}-->
+<div data-ui-view="content/api/component_context">
 <h3 id="componentcontextclass"><code>ComponentContext</code> class</h3>
 <p>The context of a component (or a content) is that object that manages and holds a reference to all the resources
 related to the component instance itself. So, when a component is loaded, the container/view element,
@@ -2437,8 +2828,8 @@ var component_options = {
 </div>
 <p>&nbsp;</p>
 </div>
-<p><a id="ZUIX_API--ContextController"></a></p>
-<div data-ui-include="content/api/context_controller" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" data-ui-view="content/api/context_controller">
+<!--{[content/api/context_controller]}-->
+<div data-ui-view="content/api/context_controller">
 <h3 id="contextcontrollerclass"><code>ContextController</code> class</h3>
 <p>This is the class that implements the component controller. After a component is loaded it
 will trigger the <code>init</code> function of the <code>ContextController</code> object and then, once the component view is ready,
@@ -2454,8 +2845,8 @@ Methods of the controller object allow accessing and managing the view, events a
 </div>
 <p>&nbsp;</p>
 </div>
-<p><a id="ZUIX_API--ZxQuery"></a></p>
-<div data-ui-include="content/api/zxquery" data-ui-lazyload="false" data-ui-options="main.options.content_no_css" data-ui-view="content/api/zxquery">
+<!--{[content/api/zxquery]}-->
+<div data-ui-view="content/api/zxquery">
 <h3 id="zxqueryclass"><code>ZxQuery</code> class</h3>
 <p><em>ZxQuery</em> is a class that implements a very lite subset of jQuery-like functionality.
 It can wrap elements of the DOM and provides useful methods for manipulating them.</p>
@@ -2494,6 +2885,52 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
 <p><code>// TODO: document various 'zuix.$' utility methods ...</code></p>
 <p>&nbsp;</p>
 </div>
+<!--{[@lib/components/menu_overlay]}-->
+<div data-ui-view="https://genielabs.github.io/zkit/lib/components/menu_overlay">
+<div data-ui-field="menu_overlay">
+    <div data-ui-field="items_wrapper"></div>
+</div>
+
+<!-- Colored FAB menu button -->
+<div data-ui-field="menu_button" class="menu-button">
+    <div class="circle-button">
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
+</div>
+<div data-ui-field="menu_button_close" class="menu-button">
+    <div class="circle-button">
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
+</div>
+
+</div>
+<!--{[content/api]}-->
+<div data-ui-view="content/api">
+<p><a id="ZUIX_API"></a></p>
+<h3 id="api">API</h3>
+<p><img src="images/api.png" width="128" height="128" vspace="8" hspace="8" align="right" class="animated fadeIn"></p>
+<script>
+    var api_loader_options = {
+        html: false,
+        markdown: true,
+        prism: true,
+        lazyLoad: true
+    };
+</script>
+<p><a id="ZUIX_API--Zuix"></a></p>
+<div data-ui-include="content/api/zuix" data-ui-lazyload="false" data-ui-options="main.options.content_no_css"></div>
+<p><a id="ZUIX_API--ComponentContext"></a></p>
+<div data-ui-include="content/api/component_context" data-ui-lazyload="false" data-ui-options="main.options.content_no_css"></div>
+<p><a id="ZUIX_API--ContextController"></a></p>
+<div data-ui-include="content/api/context_controller" data-ui-lazyload="false" data-ui-options="main.options.content_no_css"></div>
+<p><a id="ZUIX_API--ZxQuery"></a></p>
+<div data-ui-include="content/api/zxquery" data-ui-lazyload="false" data-ui-options="main.options.content_no_css"></div>
 <!--
 <a id="ZUIX_API--Localizer"></a>
 <div data-ui-include="content/api/localizer"
@@ -2554,363 +2991,6 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
         -->
     </div>
 </div>
-</div>
-
-                    </div>
-                </div>
-            </section>
-
-        </div>
-
-    </main>
-
-</div>
-
-<!-- absolute positioned elements -->
-
-<div data-ui-field="loaderMessage-c">
-    <div class="mdl-color--black mdl-color-text--white mdl-shadow--8dp" data-ui-field="loaderMessage"></div>
-</div>
-
-<!-- zUIx Hack Box widget -->
-<!--
-<div data-ui-load="widgets/zuix_hackbox"
-     data-ui-priority="-10"
-     class="hackbox"
-     self="size-large lg-full"></div>
--->
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-92520304-1', 'auto');
-    ga('send', 'pageview');
-</script>
-
-
-
-<!-- zUIx inline resource resourceBundle -->
-<!--{[templates/mdl_card]}-->
-<div data-ui-view="templates/mdl_card">
-<div class="mdl-grid animated fadeIn size-w460">
-    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-shadow--8dp">
-        <div class="mdl-card__title">
-            <img data-ui-field="image" src="app/content/docs/examples/images/card_placeholder.jpg" class="portrait">
-            <h1 data-ui-field="title" class="mdl-card__title-text mdl-color-text--white animated fadeInDown">Card title</h1>
-        </div>
-        <div data-ui-field="text" class="mdl-card__supporting-text animated fadeInUp">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Aliquam accusamus, consectetur.
-        </div>
-        <div class="mdl-card__actions mdl-card--border animated fadeInRight">
-            <a data-ui-field="link_read" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--accent">Open</a>
-        </div>
-    </div>
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[content/home/examples/view_pager/random_image_item]}-->
-<div data-ui-view="content/home/examples/view_pager/random_image_item">
-<div class="image-wrapper animated fadeIn">
-    <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
-</div>
-
-</div>
-<!--{[widgets/timeclock]}-->
-<div data-ui-view="widgets/timeclock">
-<div class="frame animated zoomIn">
-
-    <div data-ui-field="time" class="time"></div>
-    <div class="header">
-        <div data-ui-field="info" class="day"></div>
-        <div data-ui-field="date" class="date"></div>
-    </div>
-
-</div>
-</div>
-<!--{[@lib/components/menu_overlay]}-->
-<div data-ui-view="https://genielabs.github.io/zkit/lib/components/menu_overlay">
-<div data-ui-field="menu_overlay">
-    <div data-ui-field="items_wrapper"></div>
-</div>
-
-<!-- Colored FAB menu button -->
-<div data-ui-field="menu_button" class="menu-button">
-    <div class="circle-button">
-        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-    </div>
-</div>
-<div data-ui-field="menu_button_close" class="menu-button">
-    <div class="circle-button">
-        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-    </div>
-</div>
-
-</div>
-<!--{[@lib/components/menu_overlay]}-->
-<div data-ui-view="https://genielabs.github.io/zkit/lib/components/menu_overlay">
-<div data-ui-field="menu_overlay">
-    <div data-ui-field="items_wrapper"></div>
-</div>
-
-<!-- Colored FAB menu button -->
-<div data-ui-field="menu_button" class="menu-button">
-    <div class="circle-button">
-        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-    </div>
-</div>
-<div data-ui-field="menu_button_close" class="menu-button">
-    <div class="circle-button">
-        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-    </div>
-</div>
-
 </div>
 <script>zuix.bundle([
   {
