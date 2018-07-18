@@ -420,7 +420,7 @@ function loadInline(element) {
 
 function resolvePath(path) {
     let config = zuix.store('config');
-    if (config[location.host] != null) {
+    if (config != null && config[location.host] != null) {
         config = config[location.host];
     }
     const libraryPath = config != null && config.libraryPath != null ? config.libraryPath : LIBRARY_PATH_DEFAULT;
