@@ -1074,7 +1074,7 @@ div[data-ui-field="loaderMessage"] {
 <div data-ui-view="content/home/examples/view_pager/random_image_item">
 <div class="image-wrapper animated fadeIn">
     <div class="backdrop"></div>
-    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp">
+    <img data-ui-field="image" src="images/image_place_holder.png" class="image animated fadeInUp" draggable="false">
 </div>
 
 </div>
@@ -2700,7 +2700,7 @@ If no parameter is given, the ZxQuery will include the main <code>document</code
   {
     "componentId": "content/home/examples/view_pager/random_image_item",
     "controller": "zuix.controller(function(cp) {\n    cp.create = function() {\n        cp.field('image')\n            .on('load', function() {\n                this.show();\n            })\n            .hide()\n            //.attr('src', 'http://lorempixel.com/420/280/?random&ts='+(new Date().getTime()));\n            .attr('src', 'https://picsum.photos/352/288/?random&ts='+(new Date().getTime()));\n    };\n});\n",
-    "css": ".image {\n    width:324px;\n    height: 260px;\n    animation-duration: 0.35s;\n    animation-delay: 0s;\n    margin: 8px;\n}\n.image-wrapper {\n    border-radius: 12px;\n    width:352px;\n    height: 288px;\n    padding: 6px;\n    overflow: hidden;\n}\n.backdrop {\n    position: absolute;\n    width:340px;\n    height: 276px;\n    background: rgba(255,255,255,0.5);\n    -webkit-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    -moz-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n}\n"
+    "css": ".image {\n    width:324px;\n    height: 260px;\n    animation-duration: 0.35s;\n    animation-delay: 0s;\n    margin: 8px;\n}\n.image-wrapper {\n    border-radius: 12px;\n    width:352px;\n    height: 288px;\n    padding: 6px;\n    overflow: hidden;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -khtml-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n}\n.backdrop {\n    position: absolute;\n    width:340px;\n    height: 276px;\n    background: rgba(255,255,255,0.5);\n    -webkit-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    -moz-box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n    box-shadow: 6px 10px 32px -13px rgba(0,0,0,0.75);\n}\n"
   },
   {
     "componentId": "widgets/timeclock",

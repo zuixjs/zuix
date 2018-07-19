@@ -33,27 +33,27 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentCache.json",
-    "revision": "32ae65562c7d0f14dd071833a5ea8194"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "a9a7088e824337d845732ba09a26a7d8"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/ContextController.json",
-    "revision": "68eb64b0986d8f2684e59233ee70e8d0"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/Localizer.json",
-    "revision": "64c7ececaa90db2712cafd081214023d"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "221098d34f3b21aed4fedda11d42ce0e"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "00d518b8f8773153cea487336859fad9"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/docs/examples/links.css",
@@ -77,7 +77,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/flex-layout-attribute.min.css",
-    "revision": "c55488315343d9afb4d13ebf9cc8f97b"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "index.css",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "09c51ba02b4b3e1a693778d1d06c8c1a"
+    "revision": "3b68a7eb146f5b91c12679c2d24c9a9e"
   },
   {
     "url": "index.js",
@@ -153,12 +153,75 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "87d9a1ca5aea7527b269a3ec32280d21"
+    "revision": "f4c422d29df4207d696d185e4ca4bdc3"
   },
   {
     "url": "js/zuix/zuix.min.js",
     "revision": "2724e83dfdf0d7fc23aa4ab12821535a"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_1_1.png",
+    "revision": "f13e634f4f4767f426a791ddf85ba9b0"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_1_2.png",
+    "revision": "a40e24033ce25edb5169d5f50a1783d7"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_1_3.png",
+    "revision": "9325671498a60f3e05c6bfdcb6001bac"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_1.png",
+    "revision": "ffd9b2ce17eb5cf4b6e0c2e88128e7bc"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_2.png",
+    "revision": "c0aa4864727b53a82614fb098c286bca"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_3.png",
+    "revision": "45b8f2b32fa463cbbf478693354bb676"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_4.png",
+    "revision": "5175980071714ec946d815b4180b23bc"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_3_1.png",
+    "revision": "0b58afb90669a0c00dd796f64872b141"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_3_2.png",
+    "revision": "6f21a396f2c8b7f3a5a884dc9a8932c0"
+  },
+  {
+    "url": "images/api.png",
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "images/documentation.png",
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "images/example_picture.jpg",
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "images/image_place_holder.png",
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "images/wallpaper.jpg",
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "images/zuix_web_starter.png",
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.routing.registerRoute(/\.(?:png|jpg|jpeg|svg)$/, workbox.strategies.cacheFirst({ cacheName: "images", plugins: [new workbox.expiration.Plugin({"maxEntries":50,"purgeOnQuotaError":false})] }), 'GET');
+workbox.routing.registerRoute(/\.(?:html|json|js|css)$/, workbox.strategies.cacheFirst({ cacheName: "default", plugins: [new workbox.expiration.Plugin({"maxEntries":50,"purgeOnQuotaError":false})] }), 'GET');
