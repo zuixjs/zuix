@@ -33,47 +33,35 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentCache.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "32ae65562c7d0f14dd071833a5ea8194"
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "a9a7088e824337d845732ba09a26a7d8"
   },
   {
     "url": "app/content/api/data/ContextController.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "68eb64b0986d8f2684e59233ee70e8d0"
   },
   {
     "url": "app/content/api/data/Localizer.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "64c7ececaa90db2712cafd081214023d"
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "221098d34f3b21aed4fedda11d42ce0e"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/alice/ch_1.html",
-    "revision": "d9d4ff89ee70a4e1037ff19443beccfa"
-  },
-  {
-    "url": "app/content/docs/examples/alice/ch_2.html",
-    "revision": "4c1e365cf8d994c6cee8519dc6b02033"
-  },
-  {
-    "url": "app/content/docs/examples/alice/ch_3.html",
-    "revision": "3735692dc8f9a88ebf9d569baeb06cb7"
+    "revision": "00d518b8f8773153cea487336859fad9"
   },
   {
     "url": "app/content/docs/examples/links.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "300f68df4ae2415d93a52a566b256dbf"
   },
   {
     "url": "app/content/docs/examples/links.html",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "b9d9dd3877f514fb4a90a4d14daef5fd"
   },
   {
     "url": "app/templates/mdl_card.css",
@@ -89,7 +77,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/flex-layout-attribute.min.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "c55488315343d9afb4d13ebf9cc8f97b"
   },
   {
     "url": "index.css",
@@ -97,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "76c4ce21f7739954ce87e57fa47361ec"
+    "revision": "ec2e74ffc4d30394391bfdf3daeb023e"
   },
   {
     "url": "index.js",
@@ -105,35 +93,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/animate-3.5.2.min.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/mdl/material.css",
-    "revision": "57313781c72269db589ebea903725dcc"
-  },
-  {
-    "url": "js/mdl/material.js",
-    "revision": "d4d04abe369dc10ce86e42c00ee62ccd"
-  },
-  {
-    "url": "js/mdl/material.min.css",
-    "revision": "8ce4631006b601c6253396365879a7a9"
-  },
-  {
-    "url": "js/mdl/material.min.js",
-    "revision": "df211fcb13a5c100eeb182f14fd37b44"
-  },
-  {
-    "url": "js/prism/clipboard.min.js",
-    "revision": "3e5e0fa949e0e7c5ed5fed7b4cc0ee00"
-  },
-  {
-    "url": "js/prism/prism.css",
-    "revision": "485c9fc9787ea73d7c802822096c5dfe"
-  },
-  {
-    "url": "js/prism/prism.js",
-    "revision": "dac215c15573fb5907885ef1094829fa"
+    "revision": "178b651958ceff556cbc5f355e08bbf1"
   },
   {
     "url": "js/showdown.min.js",
@@ -141,11 +101,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "d58ff2644f64acef00ac316afcb47044"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "17cb1cc49a73b499768d27f10e762875"
   },
   {
     "url": "js/zuix.js",
@@ -157,19 +117,23 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "d58ff2644f64acef00ac316afcb47044"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "17cb1cc49a73b499768d27f10e762875"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "f4c422d29df4207d696d185e4ca4bdc3"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "2724e83dfdf0d7fc23aa4ab12821535a"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "manifest.json",
+    "revision": "fac3401654e32b3003f57571497bdbec"
   },
   {
     "url": "app/content/docs/examples/alice/img/ch_1_1.png",
@@ -208,60 +172,56 @@ self.__precacheManifest = [
     "revision": "6f21a396f2c8b7f3a5a884dc9a8932c0"
   },
   {
-    "url": "app/content/docs/examples/images/avatar_01.png",
-    "revision": "8b86e5f8249828163a0d7e9f6d315dce"
-  },
-  {
-    "url": "app/content/docs/examples/images/avatar_02.png",
-    "revision": "8a011d6e36c3b968241ac4331cd03aad"
-  },
-  {
-    "url": "app/content/docs/examples/images/avatar_03.png",
-    "revision": "57f804786860e3d1166d0905651efed2"
-  },
-  {
-    "url": "app/content/docs/examples/images/card_cover_2.jpg",
-    "revision": "7988b42acee615124d83c43f3f34c02b"
-  },
-  {
-    "url": "app/content/docs/examples/images/card_cover.jpg",
-    "revision": "056b0eb64ac30441bd6aca8e3798286b"
-  },
-  {
-    "url": "app/content/docs/examples/images/card_placeholder.jpg",
-    "revision": "67f0870f50d4008e45eca50cd43e50bf"
-  },
-  {
-    "url": "app/content/docs/examples/images/cover_javascript.jpg",
-    "revision": "86f9d6c2b7e0bf1703681ada474a313d"
-  },
-  {
-    "url": "app/content/docs/examples/images/cover_recipes.jpg",
-    "revision": "6b19a1781bc4e0ca2d71e843ec7ad38e"
-  },
-  {
     "url": "images/api.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "ba62975c85636fe9b08d5f842c2023f0"
   },
   {
     "url": "images/documentation.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "d3ca9f4ad8b31f6f4141cb594e99ddc3"
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "b2519b8b7ef1a2026b40f9feeaa7d64c"
+  },
+  {
+    "url": "images/icons/desktop/android-chrome-192x192.png",
+    "revision": "93d5e77e9ee1e9c6975f3c0bd1a21574"
+  },
+  {
+    "url": "images/icons/desktop/android-chrome-512x512.png",
+    "revision": "6df83c6c13be17a2ea70d29e340c5ddb"
+  },
+  {
+    "url": "images/icons/desktop/apple-touch-icon.png",
+    "revision": "2b78ed332644d19d9779c069c5842538"
+  },
+  {
+    "url": "images/icons/desktop/favicon-16x16.png",
+    "revision": "6c047cdbd3d5c4c962a3a692a5025d27"
+  },
+  {
+    "url": "images/icons/desktop/favicon-32x32.png",
+    "revision": "7413528d5e59c22af1ccf38187bc950b"
+  },
+  {
+    "url": "images/icons/desktop/mstile-150x150.png",
+    "revision": "540caa78f56655281b2d4b17ad52f2ce"
+  },
+  {
+    "url": "images/icons/desktop/safari-pinned-tab.svg",
+    "revision": "a0ab2c612c6a5019b3e4ae7c38043b98"
   },
   {
     "url": "images/image_place_holder.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "587f8d42c812f26f176b2e3b45514614"
   },
   {
     "url": "images/wallpaper.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7885e42f532c3e40db3cfbff68e42c56"
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7d3fc094f12897efebda1109d55b9721"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
