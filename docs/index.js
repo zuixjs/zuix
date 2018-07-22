@@ -69,15 +69,6 @@ var main = {
 };
 
 
-// Instead of including CSS and JS scripts
-// using '<style>' and '<script>' we take
-// advantage of the 'zuix.using' method so
-// the included files will be packed into
-// the final 'app.bundle.js'
-
-zuix.using('style', 'https://cdnjs.cloudflare.com/ajax/libs/flex-layout-attribute/1.0.3/css/flex-layout-attribute.min.css');
-zuix.using('style', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css');
-
 // Animate CSS extension method for ZxQuery
 zuix.$.ZxQuery.prototype.animateCss = function() { return this; };
 zuix.using('component', '@lib/extensions/animate_css', function(res, ctx){
@@ -338,9 +329,6 @@ function isSplashEnabled() {
     const re = new RegExp(botPattern, 'i');
     const userAgent = navigator.userAgent;
     enabled = enabled && !re.test(userAgent);
-    // TODO: splash screen is disabled by default
-    // TODO: should be enabled when running in "dynamic" mode instead of "static"
-    //enabled = false;
     return enabled;
 }
 

@@ -71,8 +71,13 @@ To use zUIx in a TypeScript project you can download and include the auto-genera
 [module definition file](https://raw.githubusercontent.com/genielabs/zuix/master/dist/ts/zuix.d.ts)
 which is located in the distribution folder of the master repo.
 
+
 ### Examples
 
+- [**zUIx Web Book**](https://github.com/genielabs/zuix-web-book/)
+*a Progressive Web App template of a Web Book, suitable for reading but not only.*
+- [**z-Kit**](https://genielabs.github.io/zkit)
+*example components for modern web*
 - [**TodoMVC**](https://genielabs.github.io/zuix-todomvc)
 *the classic To-Do MVC application implemented as a loadable component*
 - [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
@@ -80,12 +85,7 @@ which is located in the distribution folder of the master repo.
 [http://kit.zuix.it](https://genielabs.github.io/zkit)
 - [**zUIx on CodePen**](https://codepen.io/genielabs/)
 *examples and tutorials on CodePen*
-- [**z-Kit**](https://genielabs.github.io/zkit)
-*example components for modern web*
-- [**G-Labs website**](https://genielabs.github.io/glabs.it)
-*presentation website*
-- [**zUIx Web Starter**](https://github.com/genemars/zuix-web-starter/)
-*starter project for component-based web development.*
+
 
 ### Contributing
 

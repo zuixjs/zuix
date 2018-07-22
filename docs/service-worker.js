@@ -81,15 +81,15 @@ self.__precacheManifest = [
   },
   {
     "url": "index.css",
-    "revision": "f70a81e828c7a01c4c264922a12d2101"
+    "revision": "588f075779ca17aa0b949aba18a12493"
   },
   {
     "url": "index.html",
-    "revision": "d3388152cb77045ead201525a4001d1f"
+    "revision": "babf96da30ed6717c403e0b1339d16a6"
   },
   {
     "url": "index.js",
-    "revision": "abbbb062d9422e05520ecd6284997de0"
+    "revision": "91df2ecdbfa1a6cd0bedaa74ba075c71"
   },
   {
     "url": "js/animate-3.5.2.min.css",
@@ -245,11 +245,15 @@ self.__precacheManifest = [
   },
   {
     "url": "images/wallpaper.jpg",
-    "revision": "7885e42f532c3e40db3cfbff68e42c56"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "7d3fc094f12897efebda1109d55b9721"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "images/zuix-logo.svg",
+    "revision": "cd8baa13270a24886c2f335322aa4814"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
