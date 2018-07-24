@@ -37,7 +37,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "a9a7088e824337d845732ba09a26a7d8"
   },
   {
     "url": "app/content/api/data/ContextController.json",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "8430de16876a3deb25ef623caf0bbbb1"
+    "revision": "f4a30414024db71d7ea5dad62cb774dd"
   },
   {
     "url": "index.js",
@@ -96,32 +96,8 @@ self.__precacheManifest = [
     "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
-    "url": "js/mdl/material.css",
-    "revision": "57313781c72269db589ebea903725dcc"
-  },
-  {
-    "url": "js/mdl/material.js",
-    "revision": "d4d04abe369dc10ce86e42c00ee62ccd"
-  },
-  {
-    "url": "js/mdl/material.min.css",
-    "revision": "8ce4631006b601c6253396365879a7a9"
-  },
-  {
     "url": "js/mdl/material.min.js",
     "revision": "df211fcb13a5c100eeb182f14fd37b44"
-  },
-  {
-    "url": "js/prism/clipboard.min.js",
-    "revision": "3e5e0fa949e0e7c5ed5fed7b4cc0ee00"
-  },
-  {
-    "url": "js/prism/prism.css",
-    "revision": "485c9fc9787ea73d7c802822096c5dfe"
-  },
-  {
-    "url": "js/prism/prism.js",
-    "revision": "dac215c15573fb5907885ef1094829fa"
   },
   {
     "url": "js/showdown.min.js",
@@ -209,7 +185,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "b2519b8b7ef1a2026b40f9feeaa7d64c"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",
@@ -240,52 +216,20 @@ self.__precacheManifest = [
     "revision": "a0ab2c612c6a5019b3e4ae7c38043b98"
   },
   {
-    "url": "images/icons/icon-128x128.png",
-    "revision": "69f3f1f3f956bb71f35ce66b7717e1a0"
-  },
-  {
-    "url": "images/icons/icon-144x144.png",
-    "revision": "45e24db8671c41ca95c440df0cadf2a3"
-  },
-  {
-    "url": "images/icons/icon-152x152.png",
-    "revision": "e0867fd6e9bc25afd831b1eabdd83f8d"
-  },
-  {
-    "url": "images/icons/icon-192x192.png",
-    "revision": "cf383c3d4500d31884326cc9d53a8c3a"
-  },
-  {
-    "url": "images/icons/icon-384x384.png",
-    "revision": "19007d16c73f442f44c926beddc34637"
-  },
-  {
-    "url": "images/icons/icon-512x512.png",
-    "revision": "274298ed7162d12352fa836d3a2cb11e"
-  },
-  {
-    "url": "images/icons/icon-72x72.png",
-    "revision": "919cb6b3e8a1b5d0c963921dba0e4388"
-  },
-  {
-    "url": "images/icons/icon-96x96.png",
-    "revision": "5547ad1a33334c0f5c04f6de1f6d2c52"
-  },
-  {
     "url": "images/image_place_holder.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "587f8d42c812f26f176b2e3b45514614"
   },
   {
     "url": "images/wallpaper.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7885e42f532c3e40db3cfbff68e42c56"
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7d3fc094f12897efebda1109d55b9721"
   },
   {
     "url": "images/zuix-logo.svg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "cd8baa13270a24886c2f335322aa4814"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
