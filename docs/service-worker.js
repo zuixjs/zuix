@@ -37,7 +37,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "a9a7088e824337d845732ba09a26a7d8"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/ContextController.json",
@@ -77,7 +77,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/flex-layout-attribute.min.css",
-    "revision": "c55488315343d9afb4d13ebf9cc8f97b"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "index.css",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "babf96da30ed6717c403e0b1339d16a6"
+    "revision": "8430de16876a3deb25ef623caf0bbbb1"
   },
   {
     "url": "index.js",
@@ -240,8 +240,40 @@ self.__precacheManifest = [
     "revision": "a0ab2c612c6a5019b3e4ae7c38043b98"
   },
   {
+    "url": "images/icons/icon-128x128.png",
+    "revision": "69f3f1f3f956bb71f35ce66b7717e1a0"
+  },
+  {
+    "url": "images/icons/icon-144x144.png",
+    "revision": "45e24db8671c41ca95c440df0cadf2a3"
+  },
+  {
+    "url": "images/icons/icon-152x152.png",
+    "revision": "e0867fd6e9bc25afd831b1eabdd83f8d"
+  },
+  {
+    "url": "images/icons/icon-192x192.png",
+    "revision": "cf383c3d4500d31884326cc9d53a8c3a"
+  },
+  {
+    "url": "images/icons/icon-384x384.png",
+    "revision": "19007d16c73f442f44c926beddc34637"
+  },
+  {
+    "url": "images/icons/icon-512x512.png",
+    "revision": "274298ed7162d12352fa836d3a2cb11e"
+  },
+  {
+    "url": "images/icons/icon-72x72.png",
+    "revision": "919cb6b3e8a1b5d0c963921dba0e4388"
+  },
+  {
+    "url": "images/icons/icon-96x96.png",
+    "revision": "5547ad1a33334c0f5c04f6de1f6d2c52"
+  },
+  {
     "url": "images/image_place_holder.png",
-    "revision": "587f8d42c812f26f176b2e3b45514614"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/wallpaper.jpg",
@@ -253,7 +285,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/zuix-logo.svg",
-    "revision": "cd8baa13270a24886c2f335322aa4814"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
