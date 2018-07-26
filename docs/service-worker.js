@@ -77,7 +77,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/flex-layout-attribute.min.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "c55488315343d9afb4d13ebf9cc8f97b"
   },
   {
     "url": "index.css",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "f4a30414024db71d7ea5dad62cb774dd"
+    "revision": "e78c8f301ed533895b80ea7523559ca6"
   },
   {
     "url": "index.js",
@@ -93,11 +93,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/animate-3.5.2.min.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/mdl/material.min.js",
-    "revision": "df211fcb13a5c100eeb182f14fd37b44"
+    "revision": "178b651958ceff556cbc5f355e08bbf1"
   },
   {
     "url": "js/showdown.min.js",
@@ -109,7 +105,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "17cb1cc49a73b499768d27f10e762875"
   },
   {
     "url": "js/zuix.js",
