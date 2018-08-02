@@ -111,7 +111,7 @@ zuix.load('@lib/controllers/scroll_helper', {
     view: zuix.field('page-start'),
     on: {
         'scroll:change': function(e, data) {
-            if (pagedView.getCurrent() === 1) {
+            if (pagedView != null && pagedView.getCurrent() === 1) {
                 pageScrollChanged(e, data);
             }
         }
@@ -121,7 +121,7 @@ zuix.load('@lib/controllers/scroll_helper', {
     view: zuix.field('page-docs'),
     on: {
         'scroll:change': function (e, data) {
-            if (pagedView.getCurrent() === 2) {
+            if (pagedView != null && pagedView.getCurrent() === 2) {
                 pageScrollChanged(e, data);
             }
         }
@@ -131,7 +131,7 @@ zuix.load('@lib/controllers/scroll_helper', {
     view: zuix.field('page-api'),
     on: {
         'scroll:change': function(e, data) {
-            if (pagedView.getCurrent() === 3) {
+            if (pagedView != null && pagedView.getCurrent() === 3) {
                 pageScrollChanged(e, data);
             }
         }

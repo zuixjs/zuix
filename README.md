@@ -85,6 +85,8 @@ which is located in the distribution folder of the master repo.
 [http://kit.zuix.it](https://genielabs.github.io/zkit)
 - [**zUIx on CodePen**](https://codepen.io/genielabs/)
 *examples and tutorials on CodePen*
+- [**zUIx on Glitch**](https://glitch.com/@genemars)
+*examples and tutorials on Glitch*
 
 
 ### Contributing
