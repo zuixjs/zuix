@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "bebc2e82ef25a898ed0f868f1344b8f2"
+    "revision": "9d4f45516a0494383bd5c0476a7f1f12"
   },
   {
     "url": "index.js",
@@ -181,23 +181,59 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "d58ff2644f64acef00ac316afcb47044"
+    "revision": "eb1e6896190dc168976e3bfade74e1dc"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "17cb1cc49a73b499768d27f10e762875"
+    "revision": "b35b5244abbd5fa7d894d5bdba111209"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "e0f10db71977ee88d4c6fa61b85eed3e"
+    "revision": "ca2e10c1cddd564b87e5006455dde7d5"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "2724e83dfdf0d7fc23aa4ab12821535a"
+    "revision": "9548801bec6203de4e3b6eb009b0389f"
   },
   {
     "url": "manifest.json",
     "revision": "fac3401654e32b3003f57571497bdbec"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_1_1.png",
+    "revision": "f13e634f4f4767f426a791ddf85ba9b0"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_1_2.png",
+    "revision": "a40e24033ce25edb5169d5f50a1783d7"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_1_3.png",
+    "revision": "9325671498a60f3e05c6bfdcb6001bac"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_1.png",
+    "revision": "ffd9b2ce17eb5cf4b6e0c2e88128e7bc"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_2.png",
+    "revision": "c0aa4864727b53a82614fb098c286bca"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_3.png",
+    "revision": "45b8f2b32fa463cbbf478693354bb676"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_2_4.png",
+    "revision": "5175980071714ec946d815b4180b23bc"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_3_1.png",
+    "revision": "0b58afb90669a0c00dd796f64872b141"
+  },
+  {
+    "url": "app/content/docs/examples/alice/img/ch_3_2.png",
+    "revision": "6f21a396f2c8b7f3a5a884dc9a8932c0"
   },
   {
     "url": "app/content/docs/examples/images/avatar_01.png",
@@ -241,7 +277,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "13a0d1c91331c8459bca0ec2fa41fbc5"
+    "revision": "fe07f5b3ad3fea33162d35fe96e5ed6d"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",
