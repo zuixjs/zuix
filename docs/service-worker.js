@@ -53,7 +53,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "5631a48b4239db56b85a36562f1e9acd"
+    "revision": "f3e3fe518eb9ca3decebd6140f59ce31"
   },
   {
     "url": "app/content/docs/examples/alice/ch_1.html",
@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "024028f2aae6c78cc45bc5cd53068444"
+    "revision": "cb7a03de7d33f0c1bfe7dece1caf1bbb"
   },
   {
     "url": "index.js",
@@ -165,35 +165,35 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "e3064d6a65d8a042cc0c87477e336224"
+    "revision": "07a599c693af60cc57334965ac21c25b"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "65e5e4f94f371c51d7c310381214d065"
+    "revision": "413fd996cfab6a4d6fa8c9f2f81866c7"
   },
   {
     "url": "js/zuix.js",
-    "revision": "7ddef083df88ce91ebebb9762df07fb4"
+    "revision": "395474058f28dfb0542a61f6a2a8887a"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "e983b5b880627907a242c2b6a9e55552"
+    "revision": "0603ae8976002413eb2c55b65c4614b9"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "e3064d6a65d8a042cc0c87477e336224"
+    "revision": "eb1e6896190dc168976e3bfade74e1dc"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "65e5e4f94f371c51d7c310381214d065"
+    "revision": "b35b5244abbd5fa7d894d5bdba111209"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "7ddef083df88ce91ebebb9762df07fb4"
+    "revision": "e8290ab5b20f8c218953903f11c3976f"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "e983b5b880627907a242c2b6a9e55552"
+    "revision": "5f73106c543cc2c2d3f6fd995cd408cc"
   },
   {
     "url": "manifest.json",

@@ -784,7 +784,7 @@ z$.wrapElement = function(containerTag, element) {
     return container;
 };
 z$.wrapCss = function(wrapperRule, css) {
-    const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
+    const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
     let ruleMatch;
     // remove comments
