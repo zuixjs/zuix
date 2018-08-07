@@ -784,7 +784,7 @@ z$.wrapElement = function(containerTag, element) {
     return container;
 };
 z$.wrapCss = function(wrapperRule, css) {
-    const wrapReX = /((.*){([^{}]|((.*){([^}]+)[}]))*})/g;
+    const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
     let ruleMatch;
     // remove comments
@@ -792,8 +792,9 @@ z$.wrapCss = function(wrapperRule, css) {
     do {
         ruleMatch = wrapReX.exec(css);
         if (ruleMatch && ruleMatch.length > 1) {
-            const ruleParts = ruleMatch[2];
+            let ruleParts = ruleMatch[2];
             if (ruleParts != null && ruleParts.length > 0) {
+                ruleParts = ruleParts.replace(/\n/g, '');
                 const classes = ruleParts.split(',');
                 let isMediaQuery = false;
                 z$.each(classes, function(k, v) {
