@@ -37,7 +37,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "a9a7088e824337d845732ba09a26a7d8"
+    "revision": "d2a1249b1b49bc16f146f81a19cb6c2a"
   },
   {
     "url": "app/content/api/data/ContextController.json",
@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "9d4f45516a0494383bd5c0476a7f1f12"
+    "revision": "024028f2aae6c78cc45bc5cd53068444"
   },
   {
     "url": "index.js",
@@ -165,35 +165,35 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "d58ff2644f64acef00ac316afcb47044"
+    "revision": "e3064d6a65d8a042cc0c87477e336224"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "17cb1cc49a73b499768d27f10e762875"
+    "revision": "65e5e4f94f371c51d7c310381214d065"
   },
   {
     "url": "js/zuix.js",
-    "revision": "e0f10db71977ee88d4c6fa61b85eed3e"
+    "revision": "7ddef083df88ce91ebebb9762df07fb4"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "2724e83dfdf0d7fc23aa4ab12821535a"
+    "revision": "e983b5b880627907a242c2b6a9e55552"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "eb1e6896190dc168976e3bfade74e1dc"
+    "revision": "e3064d6a65d8a042cc0c87477e336224"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "b35b5244abbd5fa7d894d5bdba111209"
+    "revision": "65e5e4f94f371c51d7c310381214d065"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "ca2e10c1cddd564b87e5006455dde7d5"
+    "revision": "7ddef083df88ce91ebebb9762df07fb4"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "9548801bec6203de4e3b6eb009b0389f"
+    "revision": "e983b5b880627907a242c2b6a9e55552"
   },
   {
     "url": "manifest.json",
@@ -277,7 +277,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "fe07f5b3ad3fea33162d35fe96e5ed6d"
+    "revision": "13a0d1c91331c8459bca0ec2fa41fbc5"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",
