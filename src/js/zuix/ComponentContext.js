@@ -272,14 +272,14 @@ ComponentContext.prototype.style = function(css) {
         // store original unparsed css (might be useful for debugging)
         this._css = css;
 
-        // nest the CSS inside [data-ui-component='<componentId>']
-        // so that the style is only applied to this component type
-        css = z$.wrapCss('['+_optionAttributes.dataUiComponent+'="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
-
         // trigger `css:parse` hook before assigning content to the view
         const hookData = {content: css};
         this.trigger(this, 'css:parse', hookData);
         css = hookData.content;
+
+        // nest the CSS inside [data-ui-component='<componentId>']
+        // so that the style is only applied to this component type
+        css = z$.wrapCss('['+_optionAttributes.dataUiComponent+'="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
 
         // output css
         this._style = z$.appendCss(css, this._style, this.componentId);
