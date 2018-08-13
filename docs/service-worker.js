@@ -49,7 +49,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "99ea146ee6002db90f4d9ffd29f46508"
+    "revision": "54c0f8f78b2f384a063d12da3b1e1f83"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "1ea846818a4700c5aa7645250d52086d"
+    "revision": "8feddd2989ba9657678ae340584efc1c"
   },
   {
     "url": "index.js",
@@ -165,35 +165,35 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "b9d470a93c23950243de1c43cfa17870"
+    "revision": "11c768a25a24f0742c768c492ec8ea0b"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "3990932a9ceab200c770046a996a1385"
+    "revision": "f0e06db1a193147f2edb10ab9bd7fefa"
   },
   {
     "url": "js/zuix.js",
-    "revision": "e1ffc7b98cdad9b5c48d1cae392160ef"
+    "revision": "0d13a5b85331ad5ae00b6d62a45a362d"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "4125823920f87e1d139b5673991b1c3c"
+    "revision": "b498cc4ae5ee9815e661a11e9d5b6931"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "b9d470a93c23950243de1c43cfa17870"
+    "revision": "11c768a25a24f0742c768c492ec8ea0b"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "3990932a9ceab200c770046a996a1385"
+    "revision": "f0e06db1a193147f2edb10ab9bd7fefa"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "e1ffc7b98cdad9b5c48d1cae392160ef"
+    "revision": "8457b985664cad8b2acc282cc61df168"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "4125823920f87e1d139b5673991b1c3c"
+    "revision": "b498cc4ae5ee9815e661a11e9d5b6931"
   },
   {
     "url": "manifest.json",
@@ -277,7 +277,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "13a0d1c91331c8459bca0ec2fa41fbc5"
+    "revision": "fe07f5b3ad3fea33162d35fe96e5ed6d"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",

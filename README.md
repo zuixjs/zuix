@@ -74,6 +74,8 @@ which is located in the distribution folder of the master repo.
 
 ### Examples
 
+- [**zUIx HTML-PWA**](https://github.com/genielabs/zuix-html-pwa)
+*a Progressive Web App template of a modern mobile app, made with just HTML, CSS, JavaScript and zero build tools*
 - [**zUIx Web Book**](https://github.com/genielabs/zuix-web-book/)
 *a Progressive Web App template of a Web Book, suitable for reading but not only.*
 - [**z-Kit**](https://genielabs.github.io/zkit)
