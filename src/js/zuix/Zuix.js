@@ -631,7 +631,10 @@ function createComponent(context, task) {
                 initController(context._c);
             });
         }
-        z$(context.view()).attr(_optionAttributes.dataUiContext, context.contextId);
+        const v = z$(context.view());
+        if (v.attr(_optionAttributes.dataUiContext) == null) {
+            v.attr(_optionAttributes.dataUiContext, context.contextId);
+        }
 
         _log.d(context.componentId, 'component:initializing');
         if (util.isFunction(context.controller())) {

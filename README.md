@@ -28,7 +28,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **zUIx v0.4.9-54**](https://genielabs.github.io/zuix/js/zuix.min.js)
+[Download **zUIx v0.4.9-55**](https://genielabs.github.io/zuix/js/zuix.min.js)
 *~13 kB (gzipped)*
 
 ###### Hosted
