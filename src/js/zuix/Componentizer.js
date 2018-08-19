@@ -509,7 +509,7 @@ function lazyElementCheck(element) {
                 if (lazyContainer.getAttribute(_optionAttributes.dataUiLazyload) === 'scroll') {
                     (function(instance, lc) {
                         let lastScroll = new Date().getTime();
-                        z$(lc).on('scroll', function() {
+                        z$(lc === document.body ? window : lc).on('scroll', function() {
                             const now = new Date().getTime();
                             if (now - lastScroll > 100) {
                                 lastScroll = now;

@@ -53,7 +53,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "f3e3fe518eb9ca3decebd6140f59ce31"
+    "revision": "6fb9e4b1d411ae76c546363bd0ba8aca"
   },
   {
     "url": "app/content/docs/examples/alice/ch_1.html",
@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "8feddd2989ba9657678ae340584efc1c"
+    "revision": "c416876c5d245816709928cd8f1b9bfa"
   },
   {
     "url": "index.js",
@@ -173,7 +173,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix.js",
-    "revision": "0d13a5b85331ad5ae00b6d62a45a362d"
+    "revision": "8457b985664cad8b2acc282cc61df168"
   },
   {
     "url": "js/zuix.min.js",
@@ -181,19 +181,19 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "11c768a25a24f0742c768c492ec8ea0b"
+    "revision": "eb1e6896190dc168976e3bfade74e1dc"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "f0e06db1a193147f2edb10ab9bd7fefa"
+    "revision": "b35b5244abbd5fa7d894d5bdba111209"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "8457b985664cad8b2acc282cc61df168"
+    "revision": "c3cfe6598bae67fd68994b56213e1926"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "b498cc4ae5ee9815e661a11e9d5b6931"
+    "revision": "1b0403416ed827f21d64f854d2c8dd60"
   },
   {
     "url": "manifest.json",
@@ -277,7 +277,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "fe07f5b3ad3fea33162d35fe96e5ed6d"
+    "revision": "13a0d1c91331c8459bca0ec2fa41fbc5"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",

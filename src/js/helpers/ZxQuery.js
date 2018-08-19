@@ -964,57 +964,38 @@ z$.getPosition = function(el, tolerance) {
             rect: rect
         };
     })(el);
-    const scrollInfo = {
-        size: {},
-        viewport: {x: 0, y: 0},
-        offset: {x: 0, y: 0}
-    };
     position.visible = false;
-    const scrollable = el.offsetParent;
+    let scrollable = el.offsetParent;
     if (scrollable != null) {
-        let vp = scrollable.getBoundingClientRect();
-        vp = {
-            x: el.scrollLeft | vp.x,
-            y: el.scrollTop | vp.y,
-            width: el.scrollWidth | vp.width,
-            height: el.scrollHeight | vp.height
-        };
-        scrollInfo.size.width = vp.width;
-        scrollInfo.size.height = vp.height;
-        if (scrollable === document.body) {
-            scrollInfo.size.width = document.body.offsetWidth;
-            scrollInfo.size.height = document.body.offsetHeight;
-            scrollInfo.viewport.width = document.documentElement.clientWidth || scrollInfo.size.width;
-            scrollInfo.viewport.height = document.documentElement.clientHeight || scrollInfo.size.height;
-        } else {
+        if (scrollable !== document.body) {
             // find the scrollable container
             let s = scrollable.offsetParent;
             while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
                 s = s.offsetParent;
             }
-            if (s != null) {
-                scrollInfo.viewport.width = s.offsetWidth;
-                scrollInfo.viewport.height = s.offsetHeight;
-            } else {
-                scrollInfo.viewport.width = scrollable.offsetWidth;
-                scrollInfo.viewport.height = scrollable.offsetHeight;
-            }
+            if (s != null) scrollable = s;
+        }
+        let r1 = scrollable.getBoundingClientRect();
+        if (scrollable === document.body) {
+            // modify from read-only object
+            r1 = {
+                x: r1.x,
+                y: r1.y,
+                width: document.documentElement.offsetWidth || document.documentElement.clientWidth,
+                height: document.documentElement.offsetHeight || document.documentElement.clientHeight,
+                top: 0,
+                left: 0,
+                right: document.documentElement.clientWidth || document.documentElement.offsetWidth,
+                bottom: document.documentElement.clientHeight || document.documentElement.offsetHeight
+            };
         }
         if (tolerance == null) tolerance = 0;
-        const r1 = {
-            left: 0,
-            top: 0,
-            right: scrollInfo.viewport.width,
-            bottom: scrollInfo.viewport.height,
-            width: scrollInfo.viewport.width,
-            height: scrollInfo.viewport.height
-        };
-        let r2 = el.getBoundingClientRect();
+        const r2 = el.getBoundingClientRect();
         // visible status
-        let visible = !(r2.left > r1.right - tolerance ||
-            r2.right < r1.left + tolerance ||
-            r2.top > r1.bottom - tolerance ||
-            r2.bottom < r1.top + tolerance);
+        const visible = !(r2.left-1 > r1.right - tolerance ||
+            r2.right+1 < r1.left + tolerance ||
+            r2.top-1 > r1.bottom - tolerance ||
+            r2.bottom+1 < r1.top + tolerance);
         position.visible = visible;
         // viewport-relative frame position
         position.frame = {
@@ -1035,7 +1016,6 @@ z$.getPosition = function(el, tolerance) {
             } else position.event = 'scroll';
         }
     }
-
     return position;
 };
 
