@@ -53,7 +53,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "6fb9e4b1d411ae76c546363bd0ba8aca"
+    "revision": "7fb3644d4d0e70b1b2a045be03bbbc1f"
   },
   {
     "url": "app/content/docs/examples/alice/ch_1.html",
@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "c416876c5d245816709928cd8f1b9bfa"
+    "revision": "bf3000c9fc30ae6ff37b64f51252f3d9"
   },
   {
     "url": "index.js",
@@ -165,35 +165,35 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "11c768a25a24f0742c768c492ec8ea0b"
+    "revision": "049ef0a061acdc17668974f93a68c01f"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "f0e06db1a193147f2edb10ab9bd7fefa"
+    "revision": "c4e4d35ef0ae605ed92ab28c1665656c"
   },
   {
     "url": "js/zuix.js",
-    "revision": "8457b985664cad8b2acc282cc61df168"
+    "revision": "46c1709514818ce94b7f8b48cb5e2ed3"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "b498cc4ae5ee9815e661a11e9d5b6931"
+    "revision": "91d25db55cab906cb04eb37aa8e6f4be"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "eb1e6896190dc168976e3bfade74e1dc"
+    "revision": "049ef0a061acdc17668974f93a68c01f"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "b35b5244abbd5fa7d894d5bdba111209"
+    "revision": "c4e4d35ef0ae605ed92ab28c1665656c"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "c3cfe6598bae67fd68994b56213e1926"
+    "revision": "46c1709514818ce94b7f8b48cb5e2ed3"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "1b0403416ed827f21d64f854d2c8dd60"
+    "revision": "91d25db55cab906cb04eb37aa8e6f4be"
   },
   {
     "url": "manifest.json",
@@ -277,7 +277,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "13a0d1c91331c8459bca0ec2fa41fbc5"
+    "revision": "fe07f5b3ad3fea33162d35fe96e5ed6d"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",

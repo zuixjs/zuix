@@ -1,3 +1,5 @@
+/* zUIx v0.4.9-56 18.08.19 02:16:32 */
+
 /** @typedef {Zuix} window.zuix */!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.zuix=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2017 G-Labs. All Rights Reserved.
@@ -1514,7 +1516,6 @@ z$.getPosition = function(el, tolerance) {
     position.visible = false;
     let scrollable = el.offsetParent;
     if (scrollable != null) {
-
         if (scrollable !== document.body) {
             // find the scrollable container
             let s = scrollable.offsetParent;
@@ -1523,7 +1524,6 @@ z$.getPosition = function(el, tolerance) {
             }
             if (s != null) scrollable = s;
         }
-
         let r1 = scrollable.getBoundingClientRect();
         if (scrollable === document.body) {
             // modify from read-only object
@@ -1533,12 +1533,11 @@ z$.getPosition = function(el, tolerance) {
                 width: document.documentElement.offsetWidth || document.documentElement.clientWidth,
                 height: document.documentElement.offsetHeight || document.documentElement.clientHeight,
                 top: 0,
-                left:0,
+                left: 0,
                 right: document.documentElement.clientWidth || document.documentElement.offsetWidth,
                 bottom: document.documentElement.clientHeight || document.documentElement.offsetHeight
             };
         }
-
         if (tolerance == null) tolerance = 0;
         const r2 = el.getBoundingClientRect();
         // visible status
@@ -1566,7 +1565,6 @@ z$.getPosition = function(el, tolerance) {
             } else position.event = 'scroll';
         }
     }
-
     return position;
 };
 
