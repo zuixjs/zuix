@@ -12,7 +12,7 @@ if [ -z "$1" ]
 fi
 
 # Build
-gulp
+node build
 if [ $? -ne 0 ]; then
     echo "Error building ${PACKAGE_NAME}"
     exit -1

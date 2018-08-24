@@ -17,7 +17,7 @@
 
 /**
  *
- * Find more details about ZUIX here:
+ * Find more details about zUIx.js here:
  *   http://zuix.it
  *   https://github.com/genielabs/zuix
  *

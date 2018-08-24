@@ -74,6 +74,8 @@ which is located in the distribution folder of the master repo.
 
 ### Examples
 
+- [**zUIx WebFlix**](https://github.com/genielabs/zuix-web-flix)
+*NetFlix app clone as a progressive web app template*
 - [**zUIx HTML-PWA**](https://github.com/genielabs/zuix-html-pwa)
 *a Progressive Web App template of a modern mobile app, made with just HTML, CSS, JavaScript and zero build tools*
 - [**zUIx Web Book**](https://github.com/genielabs/zuix-web-book/)

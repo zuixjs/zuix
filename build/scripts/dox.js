@@ -1,67 +1,79 @@
-const gulp = require('gulp');
-const dox = require('gulp-dox');
-const fs = require('fs');
-const srcFolder = './src/js';
-const jsonApiFolder = './zuix-website/source/app/content/api/data';
+/*
+ * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ *         https://genielabs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-module.exports = function() {
-    console.log('\nGenerating JSON API files from JSDoc...');
-    return Promise.all([
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/Zuix.js')
-                .pipe(dox({raw: true}))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ComponentContext.js')
-                .pipe(dox({raw: true}))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ContextController.js')
-                .pipe(dox({raw: true}))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/zuix/ComponentCache.js')
-                .pipe(dox({raw: true}))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/helpers/ZxQuery.js')
-                .pipe(dox({raw: true}))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(srcFolder+'/localizer/Localizer.js')
-                .pipe(dox({raw: true}))
-                .pipe(gulp.dest(jsonApiFolder))
-                .on('end', resolve);
-        })
-    ]).then(function() {
-        console.log('...wrote to "'+jsonApiFolder+'".');
-        // Generate ZUIX TypeScript Definition file
-        console.log('\nGenerating TypeScript definitions file...');
-        let tsDefs = generateTypescriptDefs('Zuix');
-            tsDefs += generateTypescriptDefs('ComponentContext');
-            tsDefs += generateTypescriptDefs('ContextController');
-            tsDefs += generateTypescriptDefs('ComponentCache');
-            tsDefs += generateTypescriptDefs('ZxQuery');
-            tsDefs += '\ndeclare const zuix: Zuix;\n';
-        // Write TypeScript definitions to file
-        const targetFolder = 'dist/ts';
-        if (!fs.existsSync(targetFolder)) {
-            fs.mkdirSync(targetFolder);
-        }
-        fs.writeFileSync(targetFolder+'/zuix.d.ts', tsDefs);
-        console.log('... wrote to "'+targetFolder+'" folder.\n');
-    });
-};
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://genielabs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+// Commons
+const fs = require('fs');
+const path = require('path');
+// Dox jsDoc parser
+const dox = require('dox');
+
+// Config
+const srcFolder = './src/js/';
+const jsonApiFolder = './zuix-website/source/app/content/api/data/';
+const inputFiles = [
+    'zuix/Zuix.js',
+    'zuix/ComponentContext.js',
+    'zuix/ContextController.js',
+    'zuix/ComponentCache.js',
+    'helpers/ZxQuery.js',
+    'localizer/Localizer.js'
+];
+
+// Generate JSON data from jsDoc
+console.log('\nGenerating JSON data files from jsDoc...');
+inputFiles.map((f, i)=>{
+    const sourceFile = path.join(srcFolder, f);
+    //console.log(`- reading "${sourceFile}"`);
+    const code = fs.readFileSync(sourceFile, 'utf8');
+    const jsonData = dox.parseComments(code, {raw: true});
+    const targetFile = path.join(jsonApiFolder, path.basename(f+'on'));
+    console.log(`- "${targetFile}"`);
+    const targetFolder = path.dirname(targetFile);
+    if (!fs.existsSync(targetFolder)) {
+        fs.mkdirSync(targetFolder);
+    }
+    fs.writeFileSync(targetFile, JSON.stringify(jsonData));
+});
+
+// Generate ZUIX TypeScript Definition file
+console.log('\nGenerating TypeScript definitions file...');
+let tsDefs = generateTypescriptDefs('Zuix');
+tsDefs += generateTypescriptDefs('ComponentContext');
+tsDefs += generateTypescriptDefs('ContextController');
+tsDefs += generateTypescriptDefs('ComponentCache');
+tsDefs += generateTypescriptDefs('ZxQuery');
+tsDefs += '\ndeclare const zuix: Zuix;\n';
+// Write TypeScript definitions to file
+const targetFolder = 'dist/ts';
+if (!fs.existsSync(targetFolder)) {
+    fs.mkdirSync(targetFolder);
+}
+const targetFile = path.join(targetFolder, '/zuix.d.ts');
+fs.writeFileSync(targetFile, tsDefs);
+console.log(`... wrote to "${targetFile}".\n`);
 
 function generateTypescriptDefs(objName) {
     const json = JSON.parse(fs.readFileSync(jsonApiFolder+'/'+objName+'.json'));

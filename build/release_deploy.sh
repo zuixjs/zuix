@@ -2,7 +2,7 @@
 set -e # Exit with nonzero exit code if anything fails
 
 function doCompile {
-  gulp
+  node build
 }
 
 function publishPackages {

@@ -33,27 +33,27 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentCache.json",
-    "revision": "32ae65562c7d0f14dd071833a5ea8194"
+    "revision": "0d1b9236f9d61ca6541f29fe5a1b55c6"
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "76a6ec8cc42d58a3e97c8a94caaeb276"
   },
   {
     "url": "app/content/api/data/ContextController.json",
-    "revision": "68eb64b0986d8f2684e59233ee70e8d0"
+    "revision": "2f9706ac9f7820028e38ca4c8dd89b04"
   },
   {
     "url": "app/content/api/data/Localizer.json",
-    "revision": "64c7ececaa90db2712cafd081214023d"
+    "revision": "b8d4d18a76d4fdb112c232374e85743b"
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "6ea30ab3c51d3b2d88bd2bc8305ba601"
+    "revision": "0a05939d145f43eab0c77327c57e3854"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "00d518b8f8773153cea487336859fad9"
+    "revision": "83772ae313c85d143db762f4316c1ea3"
   },
   {
     "url": "app/content/docs/examples/links.css",
@@ -85,35 +85,63 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "e08699d767b1f5fb0db124aac7779108"
+    "revision": "e2cc703df44599120a6d0313d6bf6825"
   },
   {
     "url": "index.js",
-    "revision": "5e92cab97bd1f881fd464e686025d3b1"
+    "revision": "fac616709cdf228aa8081d1257de26ca"
   },
   {
     "url": "js/animate-3.5.2.min.css",
-    "revision": "178b651958ceff556cbc5f355e08bbf1"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "url": "js/mdl/material.css",
+    "revision": "57313781c72269db589ebea903725dcc"
+  },
+  {
+    "url": "js/mdl/material.js",
+    "revision": "d4d04abe369dc10ce86e42c00ee62ccd"
+  },
+  {
+    "url": "js/mdl/material.min.css",
+    "revision": "8ce4631006b601c6253396365879a7a9"
+  },
+  {
+    "url": "js/mdl/material.min.js",
+    "revision": "df211fcb13a5c100eeb182f14fd37b44"
+  },
+  {
+    "url": "js/prism/clipboard.min.js",
+    "revision": "3e5e0fa949e0e7c5ed5fed7b4cc0ee00"
+  },
+  {
+    "url": "js/prism/prism.css",
+    "revision": "485c9fc9787ea73d7c802822096c5dfe"
+  },
+  {
+    "url": "js/prism/prism.js",
+    "revision": "dac215c15573fb5907885ef1094829fa"
   },
   {
     "url": "js/showdown.min.js",
-    "revision": "ab769b69bf049ba617d4743529b58536"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "049ef0a061acdc17668974f93a68c01f"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "c4e4d35ef0ae605ed92ab28c1665656c"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix.js",
-    "revision": "c841fb821fc6b1b81ccbabebf1c50906"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "91d25db55cab906cb04eb37aa8e6f4be"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
@@ -221,11 +249,11 @@ self.__precacheManifest = [
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7d3fc094f12897efebda1109d55b9721"
   },
   {
     "url": "images/zuix-logo.svg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "cd8baa13270a24886c2f335322aa4814"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();

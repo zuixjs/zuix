@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 G-Labs. All Rights Reserved.
+ * Copyright 2015-2018 G-Labs. All Rights Reserved.
  *         https://genielabs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -474,7 +474,7 @@ function hook(path, handler) {
 }
 
 /**
- * Fires a ZUIX hook.
+ * Fires a zUIx hook.
  *
  * @private
  * @param {object} context
@@ -1008,7 +1008,7 @@ Zuix.prototype.trigger = function(context, eventPath, eventData) {
     return this;
 };
 /**
- * Registers a callback for a global ZUIX event.
+ * Registers a callback for a global zUIx event.
  * There can only be one callback for each kind of global hook event.
  * Pass null as <eventHandler> to stop listening to a previously registered callback.
  *

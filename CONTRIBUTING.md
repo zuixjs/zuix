@@ -45,22 +45,13 @@ but this will be fixed from time to time.
 
 #### **Getting started with zUIx source code**
 
-Clone [**zUIx repository**](https://github.com/genielabs/zuix) or install
-`zuix` development package from *NPM*
+Clone [**zUIx repository**](https://github.com/genielabs/zuix) and install dependencies:
 
-    npm install zuix
-
-Start local web server (currently only for *gh-pages* branch).
-
-    npm run start
+    npm install
 
 ###### Build
 
 Build source and create minified version in `./dist/js` folder:
-
-    gulp
-
-or
 
     npm run build
 
@@ -85,11 +76,11 @@ pointing to the `gh-pages` branch.
 
     cd zuix-website
 
-So, every change made to the website must be pushed to the `gh-pages` branch:
+Any change made to the website must be pushed to the `gh-pages` branch:
 
     git push origin gh-pages
 
-For further development and usage instructions see [gh-pages repository](https://github.com/genielabs/zuix/tree/gh-pages).
+For complete instructions see [gh-pages repository](https://github.com/genielabs/zuix/tree/gh-pages).
 
 
 #### Join zUIx team!
