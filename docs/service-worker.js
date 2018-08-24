@@ -37,7 +37,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "d2a1249b1b49bc16f146f81a19cb6c2a"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "app/content/api/data/ContextController.json",
@@ -49,23 +49,11 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "54c0f8f78b2f384a063d12da3b1e1f83"
+    "revision": "6ea30ab3c51d3b2d88bd2bc8305ba601"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "7fb3644d4d0e70b1b2a045be03bbbc1f"
-  },
-  {
-    "url": "app/content/docs/examples/alice/ch_1.html",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/alice/ch_2.html",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/alice/ch_3.html",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "00d518b8f8773153cea487336859fad9"
   },
   {
     "url": "app/content/docs/examples/links.css",
@@ -84,30 +72,6 @@ self.__precacheManifest = [
     "revision": "ecaa9aeb44f0e845c1f42a641f02b45c"
   },
   {
-    "url": "blog/20180718.html",
-    "revision": "9b35bb409b836f07b3821240d2908e97"
-  },
-  {
-    "url": "blog/20180722.html",
-    "revision": "460a706726acbaa34b53597951e42cc2"
-  },
-  {
-    "url": "blog/20180726.html",
-    "revision": "7f04856c21e6f20b291ce69cde4d5e1d"
-  },
-  {
-    "url": "blog/20180728.html",
-    "revision": "19d916bc5d396353f8ba714fbc56b4e2"
-  },
-  {
-    "url": "blog/20180801.html",
-    "revision": "ceef1b5f0db98461946adae41bef6b65"
-  },
-  {
-    "url": "blog/README.html",
-    "revision": "7912b20e19c6d4a1da66b495fa6a9433"
-  },
-  {
     "url": "config.js",
     "revision": "b3f927651bc0af878c86cbcb5e980b50"
   },
@@ -121,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "bf3000c9fc30ae6ff37b64f51252f3d9"
+    "revision": "e08699d767b1f5fb0db124aac7779108"
   },
   {
     "url": "index.js",
@@ -132,36 +96,8 @@ self.__precacheManifest = [
     "revision": "178b651958ceff556cbc5f355e08bbf1"
   },
   {
-    "url": "js/mdl/material.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/mdl/material.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/mdl/material.min.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/mdl/material.min.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/prism/clipboard.min.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/prism/prism.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/prism/prism.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
     "url": "js/showdown.min.js",
-    "revision": "6101622ce87d86b59560aebb6574105c"
+    "revision": "ab769b69bf049ba617d4743529b58536"
   },
   {
     "url": "js/zuix-bundler.js",
@@ -173,7 +109,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix.js",
-    "revision": "46c1709514818ce94b7f8b48cb5e2ed3"
+    "revision": "c841fb821fc6b1b81ccbabebf1c50906"
   },
   {
     "url": "js/zuix.min.js",
@@ -181,19 +117,19 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix/zuix-bundler.js",
-    "revision": "049ef0a061acdc17668974f93a68c01f"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix-bundler.min.js",
-    "revision": "c4e4d35ef0ae605ed92ab28c1665656c"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix.js",
-    "revision": "46c1709514818ce94b7f8b48cb5e2ed3"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix.min.js",
-    "revision": "91d25db55cab906cb04eb37aa8e6f4be"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "manifest.json",
@@ -236,38 +172,6 @@ self.__precacheManifest = [
     "revision": "6f21a396f2c8b7f3a5a884dc9a8932c0"
   },
   {
-    "url": "app/content/docs/examples/images/avatar_01.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/avatar_02.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/avatar_03.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/card_cover_2.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/card_cover.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/card_placeholder.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/cover_javascript.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "app/content/docs/examples/images/cover_recipes.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
     "url": "images/api.png",
     "revision": "ba62975c85636fe9b08d5f842c2023f0"
   },
@@ -277,7 +181,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "fe07f5b3ad3fea33162d35fe96e5ed6d"
+    "revision": "b2519b8b7ef1a2026b40f9feeaa7d64c"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",
@@ -308,38 +212,6 @@ self.__precacheManifest = [
     "revision": "a0ab2c612c6a5019b3e4ae7c38043b98"
   },
   {
-    "url": "images/icons/icon-128x128.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-144x144.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-152x152.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-192x192.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-384x384.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-512x512.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-72x72.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "images/icons/icon-96x96.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
     "url": "images/image_place_holder.png",
     "revision": "587f8d42c812f26f176b2e3b45514614"
   },
@@ -349,11 +221,11 @@ self.__precacheManifest = [
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "7d3fc094f12897efebda1109d55b9721"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/zuix-logo.svg",
-    "revision": "cd8baa13270a24886c2f335322aa4814"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
