@@ -1,28 +1,20 @@
 {
   "name": "zuix-dist",
-  "version": "0.4.9-56",
-  "description": "zUIx is a JavaScript library for creating component-based sites and web apps.",
-  "author": "Generoso Martello <generoso@martello.com>",
-  "homepage": "https://genielabs.github.io/zuix",
-  "contributors": [],
-  "bin": {},
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {},
+  "version": "0.4.9-57",
+  "description": "zUIx is a JavaScript library for creating component-based websites and web apps.",
+  "typings": "ts/zuix.d.ts",
+  "author": "Generoso Martello",
   "repository": {
     "type": "git",
     "url": "https://github.com/genielabs/zuix"
   },
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/genielabs/zuix/issues"
+  },
   "keywords": [
-    "javascript",
-    "mvx",
-    "library",
-    "framework",
-    "components",
-    "content manager",
-    "component manager",
-    "ui",
-    "web"
+    "zuix",
+    "zuix.js"
   ],
   "license": "Apache-2.0"
 }
