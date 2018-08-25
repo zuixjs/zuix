@@ -1,12 +1,12 @@
 {
   "name": "zuix",
   "version": "0.4.9-56",
-  "description": "zUIx is a JavaScript library for creating component-based sites and web apps.",
+  "description": "zUIx is a JavaScript library for creating component-based websites and web apps.",
   "author": "Generoso Martello",
   "contributors": [],
   "bin": {},
   "scripts": {
-    "info": "echo 'zUIx.js, the easy shift to component-based web development.'",
+    "info": "echo 'zUIx.js, friendly component-based web development.'",
     "test": "echo \"Error: not implemented\" && exit 1",
     "build": "echo '=> running build' && node build",
     "release": "./build/release_post.sh",
@@ -20,7 +20,6 @@
     "eslint-config-google": "^0.9.1",
     "fs-readdir-recursive": "^1.1.0",
     "dox": "^0.9.0",
-    "async": "^2.6.1",
     "replace": "^1.0.0",
     "terminal-kit": "^1.26.2"
   },
@@ -30,18 +29,15 @@
   },
   "keywords": [
     "javascript",
-    "mvx",
     "library",
-    "framework",
-    "components",
     "content manager",
     "component manager",
+    "component-based",
+    "modular-web",
+    "mvx",
     "ui",
-    "web",
     "website",
-    "app",
-    "webapp"
+    "web app"
   ],
-  "license": "Apache-2.0",
-  "preferGlobal": true
+  "license": "Apache-2.0"
 }
