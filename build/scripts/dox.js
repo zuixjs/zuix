@@ -24,17 +24,18 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
+const baseFolder = process.cwd();
 // Commons
 const fs = require('fs');
 const path = require('path');
 // logging
-const tlog = require(path.join(process.cwd(), 'src/lib/logger'));
+const tlog = require(path.join(baseFolder, 'src/lib/logger'));
 // Dox jsDoc parser
 const dox = require('dox');
 
 // Config
 const srcFolder = './src/js/';
-const jsonApiFolder = './zuix-website/source/app/content/api/data/';
+const jsonApiFolder = path.join(baseFolder, 'zuix-website/source/app/content/api/data/');
 const inputFiles = [
     'zuix/Zuix.js',
     'zuix/ComponentContext.js',
@@ -46,7 +47,7 @@ const inputFiles = [
 
 function build() {
     // Generate JSON data from jsDoc
-    tlog.info('API data');
+    tlog.info('^BAPI data^:');
     inputFiles.map((f, i)=>{
         const sourceFile = path.join(srcFolder, f);
         const code = fs.readFileSync(sourceFile, 'utf8');
@@ -60,9 +61,9 @@ function build() {
         fs.writeFileSync(targetFile, JSON.stringify(jsonData));
     });
     // Generate ZUIX TypeScript Definition file
-    const targetFolder = 'dist/ts';
-    const targetFile = path.join(targetFolder, '/zuix.d.ts');
-    tlog.br().info('TypeScript defs')
+    const targetFolder = path.join(baseFolder, 'dist/ts');
+    const targetFile = path.join(targetFolder, 'zuix.d.ts');
+    tlog.br().info('^BTypeScript defs^:')
         .info('   ^w%s^:', targetFile);
     let tsDefs = generateTypescriptDefs('Zuix');
     tsDefs += generateTypescriptDefs('ComponentContext');
@@ -79,7 +80,7 @@ function build() {
 }
 
 function generateTypescriptDefs(objName) {
-    const json = JSON.parse(fs.readFileSync(jsonApiFolder+'/'+objName+'.json'));
+    const json = JSON.parse(fs.readFileSync(path.join(jsonApiFolder, objName+'.json')));
     let output = '';
     let contextOpen = false;
 
@@ -96,16 +97,12 @@ function generateTypescriptDefs(objName) {
         }
     };
 
-    let j;
-    for (j = 0; j < json.length; j++) {
-        const obj = json[j];
+    json.map((obj, j)=>{
         const ctx = obj.ctx;
         if (ctx != null && ctx.type === 'method' && ctx.constructor === objName) {
             openContext(objName);
             output += indentTab() + ctx.name + '(';
-            let t;
-            for (t = 0; t < obj.tags.length; t += 1) {
-                const tag = obj.tags[t];
+            obj.tags.map((tag, t)=>{
                 if (tag.type === 'param') {
                     if (tag.name[0] === '[') {
                         output += tag.name.substring(1, tag.name.length - 1) + '?: ';
@@ -129,19 +126,18 @@ function generateTypescriptDefs(objName) {
                     output += returnTypes;
                     output += ';\n';
                 }
-            }
+            });
         } else if (ctx != null && ctx.type === 'property' && ctx.constructor === objName) {
             if (obj.tags.length > 0) {
                 openContext(objName);
                 let t;
-                for (t = 0; t < obj.tags.length; t += 1) {
-                    const tag = obj.tags[t];
+                obj.tags.map((tag, t)=>{
                     if (tag.type === 'property') {
                         output += indentTab() + ctx.name + ': ';
                         output += getTypes(tag.types);
                         output += ';\n';
                     }
-                }
+                });
             }
         } else {
             for (let key in obj) {
@@ -152,23 +148,19 @@ function generateTypescriptDefs(objName) {
                     if (tagType === 'typedef') {
                         closeContext();
                         output += 'interface ' + name + ' {\n';
-                        let i;
-                        for (i = 1; i < definitions.length; i+=1) {
-                            const d = definitions[i];
+                        definitions.map((d, i)=>{
                             if (d.type === 'property') {
                                 output += indentTab() + d.name + (d.optional ? '?' : '') + ': ';
                                 output += getTypes(d.types);
                                 output += ';\n';
                             }
-                        }
+                        });
                         output += '}\n';
                     } else if (tagType === 'callback') {
                         closeContext();
                         output += 'interface ' + name + ' {\n';
                         output += indentTab() + '(';
-                        let i;
-                        for (i = 1; i < definitions.length; i+=1) {
-                            const d = definitions[i];
+                        definitions.map((d, i)=>{
                             if (d.type === 'param') {
                                 output += d.name + (d.optional ? '?' : '') + ': ';
                                 output += getTypes(d.types);
@@ -176,7 +168,7 @@ function generateTypescriptDefs(objName) {
                                     output += ', ';
                                 }
                             }
-                        }
+                        });
                         output += '): void;\n';
                         output += '}\n';
                     } else {
@@ -185,16 +177,14 @@ function generateTypescriptDefs(objName) {
                 }
             }
         }
-    }
+    });
     closeContext();
     return output;
 }
 
 function getTypes(types) {
     let typesString = '';
-    let t;
-    for (t = 0; t < types.length; t+=1) {
-        let typeName = types[t];
+    types.map((typeName, t)=>{
         if (typeof typeName !== 'string') {
             typeName = JSON.stringify(typeName);
         }
@@ -208,7 +198,7 @@ function getTypes(types) {
         }
         typeName = typeName.charAt(0).toUpperCase() + typeName.slice(1);
         typesString += typeName + (t < types.length - 1 ? ' | ' : '');
-    }
+    });
     return typesString;
 }
 

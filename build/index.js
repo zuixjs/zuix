@@ -1,9 +1,10 @@
+const baseFolder = process.cwd();
 // Commons
 const path = require('path');
 // Build scripts
-const lint = require(path.join(process.cwd(), 'build/scripts/lint')).lint;
-const build = require(path.join(process.cwd(), 'build/scripts/build')).build;
-const dox = require(path.join(process.cwd(), 'build/scripts/dox')).build;
+const lint = require(path.join(baseFolder, 'build/scripts/lint')).lint;
+const build = require(path.join(baseFolder, 'build/scripts/build')).build;
+const dox = require(path.join(baseFolder, 'build/scripts/dox')).build;
 
 // lint runs synchronously
 console.log('\nChecking code with ESLint ...');

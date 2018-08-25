@@ -24,17 +24,18 @@
  * @author Generoso Martello <generoso@martello.com>
  */
 
+const baseFolder = process.cwd();
 // Commons
 const fs = require('fs');
 const path = require('path');
 const recursive = require('fs-readdir-recursive');
 // logging
-const tlog = require(path.join(process.cwd(), 'src/lib/logger'));
+const tlog = require(path.join(baseFolder, 'src/lib/logger'));
 // ESLint
 const linter = require('eslint').linter;
-const lintConfig = require(path.join(process.cwd(), 'eslintrc.json'));
+const lintConfig = require(path.join(baseFolder, 'eslintrc.json'));
 
-const sourceFolder = path.join(process.cwd(), 'src/js/');
+const sourceFolder = path.join(baseFolder, 'src/js/');
 const stats = {
     error: 0,
     warning: 0
@@ -46,7 +47,7 @@ function lint(callback) {
             tlog.info('^B%s^R', f);
             const code = fs.readFileSync(sourceFolder + f, 'utf8');
             const issues = linter.verify(code, lintConfig, sourceFolder + f);
-            issues.forEach(function (m) {
+            issues.map((m, i)=>{
                 if (m.fatal || m.severity > 1) {
                     stats.error++;
                     tlog.error('   ^RError^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
@@ -55,12 +56,11 @@ function lint(callback) {
                     tlog.warn('   ^YWarning^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
                 }
             });
-
             if (issues.length === 0) tlog.info('   ^G\u2713^: OK');
             tlog.br();
         }
     });
-    tlog.info('Lint finished with ^R%s^: errors and ^Y%s^: warnings.\n\n', stats.error, stats.warning);
+    tlog.info('Linting completed ^G-^: Errors ^R%s^: ^G-^: Warnings ^Y%s^:\n\n', stats.error, stats.warning);
     //process.exit(stats.error);
     if (callback) callback(stats);
 }

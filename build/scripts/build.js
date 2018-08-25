@@ -27,8 +27,10 @@
 // Commons
 const fs = require('fs');
 const path = require('path');
+const baseFolder = process.cwd();
+const distFolder = path.join(baseFolder, 'dist');
 // logging
-const tlog = require(path.join(process.cwd(), 'src/lib/logger'));
+const tlog = require(path.join(baseFolder, 'src/lib/logger'));
 // Browserify
 const browserify = require('browserify');
 const derequire = require('browserify-derequire');
@@ -43,12 +45,16 @@ function build(mainFile, baseName, callback) {
     });
 
     // prepare main output stream
-    const output = fs.createWriteStream(`dist/js/${baseName}.js`);
+    const fileName = path.join(distFolder, 'js/', `${baseName}.js`);
+    const fileNameMin = path.join(distFolder, 'js/', `${baseName}.min.js`);
+    const output = fs.createWriteStream(fileName);
 
     // add jsDoc header to declare zuix object as {Zuix}
     output.write('/** @typedef {Zuix} window.zuix */\n');
 
-    tlog.info('^B%s^:', baseName).info('   Browserifying');
+    tlog.info('^B%s^:', baseName)
+        .info('   ^yBrowserify^:')
+        .info('     %s', fileName);
 
     browserifyTask.add(mainFile);
     browserifyTask.bundle().pipe(output).on('error', (err) => {
@@ -61,10 +67,12 @@ function build(mainFile, baseName, callback) {
 
     // start compile process once browserify finished writing output file
     output.on('finish', ()=>{
-        tlog.info('   Compiling');
+        tlog.info('   ^yGoogle Closure Compiler^:')
+            .info('     %s', fileNameMin)
+            .info('     %s.map', fileNameMin);
         new ClosureCompiler({
-            js: `dist/js/${baseName}.js`,
-            js_output_file: `dist/js/${baseName}.min.js`,
+            js: fileName,
+            js_output_file: fileNameMin,
             // debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
             warning_level: 'QUIET',
             compilation_level: 'SIMPLE',
@@ -74,7 +82,7 @@ function build(mainFile, baseName, callback) {
             // define: [
             //  "goog.DEBUG=false"
             // ],
-            create_source_map: `dist/js/${baseName}.min.js.map`,
+            create_source_map: `${fileNameMin}.map`,
             source_map_location_mapping: 'dist/js/|./',
             output_wrapper: `%output%\n//# sourceMappingURL=${baseName}.min.js.map`
         }).run((exitCode, stdOut, stdErr) => {
