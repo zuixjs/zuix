@@ -9,12 +9,10 @@
   <a href="https://badge.fury.io/js/zuix-dist"><img src="https://badge.fury.io/js/zuix-dist.svg" alt="npm dist"></a>
 </p>
 
-# zUIx
+# [zUIx](https://genielabs.github.io/zuix)
 
 A lightweight JavaScript library to support you in creating amazing component-based websites and web applications.
-
-[http://zuix.it](https://genielabs.github.io/zuix)
-
+- [Website and Documentation](https://genielabs.github.io/zuix)
 
 ## Examples
 
@@ -31,7 +29,7 @@ A lightweight JavaScript library to support you in creating amazing component-ba
 - [**Hacker News Reader**](https://genielabs.github.io/zuix-hackernews)
 *example web app using* **list_view** *component with progressive/lazy loading*
 
-### Playground
+### Online Playgrounds
 
 - [**zUIx on Glitch**](https://glitch.com/@genemars)
 *examples and tutorials on Glitch*
