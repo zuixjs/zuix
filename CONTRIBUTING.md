@@ -30,11 +30,6 @@ File a new *[enhancement issue](https://github.com/genielabs/zuix/issues/new?lab
 
 File a new *[question issue](https://github.com/genielabs/zuix/issues/new?labels=question)*.
 
-#### **Do you want to contribute to the documentation website?**
-
-Source code of the documentation website is located in the **[gh-pages](https://github.com/genielabs/zuix/tree/gh-pages)** branch, you can
-contribute following same rules used for the main repo.
-
 #### **Coding styles and conventions**
 
 This project follows [standardjs.com](https://standardjs.com/rules.html) coding rules.
@@ -56,7 +51,7 @@ Build source and create minified version in `./dist/js` folder:
     npm run build
 
 this will also generate, starting from JSDoc comments, the JSON formatted **API** files
-in the `_docs` folder and **TypeScript** definition file in the `./dist/js` folder.
+in the `./docs/app/content/api/data` folder and **TypeScript** definition file in the `./dist/js` folder.
 
 To submit a new release
 
@@ -74,7 +69,11 @@ The script run on the *CI* server side is
 Website source files are located in the `zuix-website` folder which is a submodule
 pointing to the `gh-pages` branch.
 
-    cd zuix-website
+    cd zuix-website && npm install
+
+Website files are generated in the `./docs` folder issuing the command
+
+    npm run build  # to be run from ./zuix-website folder
 
 Any change made to the website must be pushed to the `gh-pages` branch:
 

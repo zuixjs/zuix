@@ -40,23 +40,31 @@ const stats = {
     warning: 0
 };
 
-recursive(sourceFolder).map((f, i)=>{
-    if (f.endsWith('.js')) {
-        tlog.info('^B%s^R', f);
-        const code = fs.readFileSync(sourceFolder+f, 'utf8');
-        const issues = linter.verify(code, lintConfig, sourceFolder+f);
-        issues.forEach(function(m) {
-            if (m.fatal || m.severity > 1) {
-                tlog.error('   ^RError^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
-            } else {
-                tlog.warn('   ^YWarning^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
-            }
-        });
+function lint(callback) {
+    recursive(sourceFolder).map((f, i) => {
+        if (f.endsWith('.js')) {
+            tlog.info('^B%s^R', f);
+            const code = fs.readFileSync(sourceFolder + f, 'utf8');
+            const issues = linter.verify(code, lintConfig, sourceFolder + f);
+            issues.forEach(function (m) {
+                if (m.fatal || m.severity > 1) {
+                    stats.error++;
+                    tlog.error('   ^RError^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
+                } else {
+                    stats.warning++;
+                    tlog.warn('   ^YWarning^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
+                }
+            });
 
-        if (issues.length == 0) tlog.overwrite('   ^G\u2713^:OK');
-        tlog.br();
-    }
-});
+            if (issues.length === 0) tlog.info('   ^G\u2713^: OK');
+            tlog.br();
+        }
+    });
+    tlog.info('Lint finished with ^R%s^: errors and ^Y%s^: warnings.\n\n', stats.error, stats.warning);
+    //process.exit(stats.error);
+    if (callback) callback(stats);
+}
 
-tlog.info('Lint finished with ^R%s^: errors and ^Y%s^: warnings.\n\n', stats.error, stats.warning);
-process.exit(stats.error);
+module.exports = {
+    lint: lint
+};

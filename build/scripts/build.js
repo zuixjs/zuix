@@ -27,62 +27,69 @@
 // Commons
 const fs = require('fs');
 const path = require('path');
+// logging
+const tlog = require(path.join(process.cwd(), 'src/lib/logger'));
 // Browserify
+const browserify = require('browserify');
 const derequire = require('browserify-derequire');
-const browserify = require('browserify')({
-    standalone: 'zuix',
-    plugin: [ derequire ]
-});
 // Google Closure Compiler
 const ClosureCompiler = require('google-closure-compiler').compiler;
 
-// read script arguments
-if (process.argv.length < 4) {
-    console.log(`usage: ${process.argv[1]} <main_file.js> <output_base_name>`);
-    process.exit(-1);
-}
-const mainFile = process.argv[2];
-const baseName = process.argv[3];
+function build(mainFile, baseName, callback) {
 
-// prepare main output stream
-const output = fs.createWriteStream(`dist/js/${baseName}.js`);
-
-// add jsDoc header to declare zuix object as {Zuix}
-output.write('/** @typedef {Zuix} window.zuix */\n');
-
-console.log(baseName, 'Browserifying...');
-
-browserify.add(mainFile);
-browserify.bundle().pipe(output).on('error', (err) => {
-    // TODO: not sure this event is implemented by browserify...
-    console.log('ERROR', err);
-    process.exit(-1);
-});
-
-// start compile process once browserify finished writing output file
-output.on('finish', ()=>{
-    console.log(baseName, 'Compiling...');
-    new ClosureCompiler({
-        js: `dist/js/${baseName}.js`,
-        js_output_file: `dist/js/${baseName}.min.js`,
-        // debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
-        warning_level: 'QUIET',
-        compilation_level: 'SIMPLE',
-        language_in: 'ECMASCRIPT6_STRICT',
-        language_out: 'ES6_STRICT',
-        // useTypesForOptimization: true,
-        // define: [
-        //  "goog.DEBUG=false"
-        // ],
-        create_source_map: `dist/js/${baseName}.min.js.map`,
-        source_map_location_mapping: 'dist/js/|./',
-        output_wrapper: `%output%\n//# sourceMappingURL=${baseName}.min.js.map`
-    }).run((exitCode, stdOut, stdErr) => {
-        //compilation complete
-        console.log(baseName, 'Done.');
-        if (exitCode != 0) {
-            console.log("ERROR", exitCode, stdOut, stdErr);
-        }
-        process.exit(exitCode);
+    const browserifyTask = browserify({
+        standalone: baseName,
+        plugin: [ derequire ]
     });
-});
+
+    // prepare main output stream
+    const output = fs.createWriteStream(`dist/js/${baseName}.js`);
+
+    // add jsDoc header to declare zuix object as {Zuix}
+    output.write('/** @typedef {Zuix} window.zuix */\n');
+
+    tlog.info('^B%s^:', baseName).info('   Browserifying');
+
+    browserifyTask.add(mainFile);
+    browserifyTask.bundle().pipe(output).on('error', (err) => {
+        // TODO: not sure this event is implemented by browserify...
+        output.end();
+        tlog.error(err);
+        //process.exit(-1);
+        callback(-1);
+    });
+
+    // start compile process once browserify finished writing output file
+    output.on('finish', ()=>{
+        tlog.info('   Compiling');
+        new ClosureCompiler({
+            js: `dist/js/${baseName}.js`,
+            js_output_file: `dist/js/${baseName}.min.js`,
+            // debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
+            warning_level: 'QUIET',
+            compilation_level: 'SIMPLE',
+            language_in: 'ECMASCRIPT6_STRICT',
+            language_out: 'ES6_STRICT',
+            // useTypesForOptimization: true,
+            // define: [
+            //  "goog.DEBUG=false"
+            // ],
+            create_source_map: `dist/js/${baseName}.min.js.map`,
+            source_map_location_mapping: 'dist/js/|./',
+            output_wrapper: `%output%\n//# sourceMappingURL=${baseName}.min.js.map`
+        }).run((exitCode, stdOut, stdErr) => {
+            //compilation complete
+            output.end();
+            tlog.info(' ^G\u2713^:done\n\n');
+            if (exitCode != 0) {
+                tlog.err(exitCode, stdOut, stdErr);
+            }
+            callback(exitCode);
+        });
+    });
+
+}
+
+module.exports = {
+    build: build
+};

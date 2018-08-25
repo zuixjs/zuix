@@ -8,7 +8,7 @@
   "scripts": {
     "info": "echo 'zUIx.js, the easy shift to component-based web development.'",
     "test": "echo \"Error: not implemented\" && exit 1",
-    "build": "echo '=> running build' && node build/index.js",
+    "build": "echo '=> running build' && node build",
     "release": "./build/release_post.sh",
     "deploy": "./build/release_deploy.sh"
   },

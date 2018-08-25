@@ -27,6 +27,8 @@
 // Commons
 const fs = require('fs');
 const path = require('path');
+// logging
+const tlog = require(path.join(process.cwd(), 'src/lib/logger'));
 // Dox jsDoc parser
 const dox = require('dox');
 
@@ -42,38 +44,39 @@ const inputFiles = [
     'localizer/Localizer.js'
 ];
 
-// Generate JSON data from jsDoc
-console.log('\nGenerating JSON data files from jsDoc...');
-inputFiles.map((f, i)=>{
-    const sourceFile = path.join(srcFolder, f);
-    //console.log(`- reading "${sourceFile}"`);
-    const code = fs.readFileSync(sourceFile, 'utf8');
-    const jsonData = dox.parseComments(code, {raw: true});
-    const targetFile = path.join(jsonApiFolder, path.basename(f+'on'));
-    console.log(`- "${targetFile}"`);
-    const targetFolder = path.dirname(targetFile);
+function build() {
+    // Generate JSON data from jsDoc
+    tlog.info('API data');
+    inputFiles.map((f, i)=>{
+        const sourceFile = path.join(srcFolder, f);
+        const code = fs.readFileSync(sourceFile, 'utf8');
+        const jsonData = dox.parseComments(code, {raw: true});
+        const targetFile = path.join(jsonApiFolder, path.basename(f+'on'));
+        tlog.info('   ^w%s^:', targetFile);
+        const targetFolder = path.dirname(targetFile);
+        if (!fs.existsSync(targetFolder)) {
+            fs.mkdirSync(targetFolder);
+        }
+        fs.writeFileSync(targetFile, JSON.stringify(jsonData));
+    });
+    // Generate ZUIX TypeScript Definition file
+    const targetFolder = 'dist/ts';
+    const targetFile = path.join(targetFolder, '/zuix.d.ts');
+    tlog.br().info('TypeScript defs')
+        .info('   ^w%s^:', targetFile);
+    let tsDefs = generateTypescriptDefs('Zuix');
+    tsDefs += generateTypescriptDefs('ComponentContext');
+    tsDefs += generateTypescriptDefs('ContextController');
+    tsDefs += generateTypescriptDefs('ComponentCache');
+    tsDefs += generateTypescriptDefs('ZxQuery');
+    tsDefs += '\ndeclare const zuix: Zuix;\n';
+    // Write TypeScript definitions to file
     if (!fs.existsSync(targetFolder)) {
         fs.mkdirSync(targetFolder);
     }
-    fs.writeFileSync(targetFile, JSON.stringify(jsonData));
-});
-
-// Generate ZUIX TypeScript Definition file
-console.log('\nGenerating TypeScript definitions file...');
-let tsDefs = generateTypescriptDefs('Zuix');
-tsDefs += generateTypescriptDefs('ComponentContext');
-tsDefs += generateTypescriptDefs('ContextController');
-tsDefs += generateTypescriptDefs('ComponentCache');
-tsDefs += generateTypescriptDefs('ZxQuery');
-tsDefs += '\ndeclare const zuix: Zuix;\n';
-// Write TypeScript definitions to file
-const targetFolder = 'dist/ts';
-if (!fs.existsSync(targetFolder)) {
-    fs.mkdirSync(targetFolder);
+    fs.writeFileSync(targetFile, tsDefs);
+    tlog.br().info(' ^G\u2713^:done\n\n');
 }
-const targetFile = path.join(targetFolder, '/zuix.d.ts');
-fs.writeFileSync(targetFile, tsDefs);
-console.log(`... wrote to "${targetFile}".\n`);
 
 function generateTypescriptDefs(objName) {
     const json = JSON.parse(fs.readFileSync(jsonApiFolder+'/'+objName+'.json'));
@@ -212,3 +215,7 @@ function getTypes(types) {
 function indentTab(n) {
     return '    ';
 }
+
+module.exports = {
+    build: build
+};
