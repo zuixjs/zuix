@@ -36,43 +36,6 @@ const browserify = require('browserify')({
 // Google Closure Compiler
 const ClosureCompiler = require('google-closure-compiler').compiler;
 
-// ESLint
-const linter = require('eslint').linter;
-const lintConfig = require(path.join(process.cwd(), 'eslintrc.json'));
-
-
-// TODO: ESLint check -- WIP
-/*
-const sourceFolder = 'src/js/';
-const stats = {
-    error: 0,
-    warning: 0
-};
-const recursive = require('fs-readdir-recursive');
-recursive(sourceFolder).map((f, i)=>{
-    if (f.endsWith('.js')) {
-        // TODO: run esling
-        const code = fs.readFileSync(sourceFolder+f, 'utf8');
-        const issues = linter.verify(code, lintConfig, sourceFolder+f);
-        issues.forEach(function(m) {
-            if (m.fatal || m.severity > 1) {
-                stats.error++;
-                console.log('ERR   ^RError^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
-            } else {
-                stats.warning++;
-                console.log('WRN   ^YWarning^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
-            }
-        });
-        console.log(i, f)
-    }
-});
-if (stats.error > 0) {
-    console.log('ERROR', 'ESLint reported errors.');
-    process.exit(stats.error);
-}
-*/
-
-
 // read script arguments
 if (process.argv.length < 4) {
     console.log(`usage: ${process.argv[1]} <main_file.js> <output_base_name>`);
@@ -91,7 +54,7 @@ console.log(baseName, 'Browserifying...');
 
 browserify.add(mainFile);
 browserify.bundle().pipe(output).on('error', (err) => {
-    // TODO: not sure this event is supported by browserify...
+    // TODO: not sure this event is implemented by browserify...
     console.log('ERROR', err);
     process.exit(-1);
 });

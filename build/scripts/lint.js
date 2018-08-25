@@ -28,32 +28,35 @@
 const fs = require('fs');
 const path = require('path');
 const recursive = require('fs-readdir-recursive');
+// logging
+const tlog = require(path.join(process.cwd(), 'src/lib/logger'));
 // ESLint
 const linter = require('eslint').linter;
 const lintConfig = require(path.join(process.cwd(), 'eslintrc.json'));
 
-const sourceFolder = 'src/js/';
+const sourceFolder = path.join(process.cwd(), 'src/js/');
 const stats = {
     error: 0,
     warning: 0
 };
+
 recursive(sourceFolder).map((f, i)=>{
     if (f.endsWith('.js')) {
+        tlog.info('^B%s^R', f);
         const code = fs.readFileSync(sourceFolder+f, 'utf8');
         const issues = linter.verify(code, lintConfig, sourceFolder+f);
         issues.forEach(function(m) {
             if (m.fatal || m.severity > 1) {
-                stats.error++;
-                console.log('ERR   ^RError^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
+                tlog.error('   ^RError^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
             } else {
-                stats.warning++;
-                console.log('WRN   ^YWarning^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
+                tlog.warn('   ^YWarning^: %s ^R(^Y%s^w:^Y%s^R)', m.message, m.line, m.column);
             }
         });
-        console.log(i, f)
+
+        if (issues.length == 0) tlog.overwrite('   ^G\u2713^:OK');
+        tlog.br();
     }
 });
-if (stats.error > 0) {
-    console.log('ERROR', 'ESLint reported errors.');
-    process.exit(stats.error);
-}
+
+tlog.info('Lint finished with ^R%s^: errors and ^Y%s^: warnings.\n\n', stats.error, stats.warning);
+process.exit(stats.error);
