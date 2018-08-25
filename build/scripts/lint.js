@@ -33,7 +33,7 @@ const recursive = require('fs-readdir-recursive');
 const tlog = require(path.join(baseFolder, 'src/lib/logger'));
 // ESLint
 const linter = require('eslint').linter;
-const lintConfig = require(path.join(baseFolder, 'eslintrc.json'));
+const lintConfig = require(path.join(baseFolder, '.eslintrc.json'));
 
 const sourceFolder = path.join(baseFolder, 'src/js/');
 const stats = {
