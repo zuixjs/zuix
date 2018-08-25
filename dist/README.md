@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://genielabs.github.io/zuix" target="_blank" rel="noopener noreferrer">
-        <img width="128" src="https://genielabs.github.io/zuix/images/zuix-logo.svg" alt="Vue logo">
+        <img width="96" src="https://genielabs.github.io/zuix/images/zuix-logo.svg" alt="Vue logo">
     </a>
 </p>
 
