@@ -49,7 +49,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "0a05939d145f43eab0c77327c57e3854"
+    "revision": "56a754103daac76bcd35ae39383317de"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
@@ -85,7 +85,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "e2cc703df44599120a6d0313d6bf6825"
+    "revision": "fb0f353e87d3158acd29eb8f65fec17c"
   },
   {
     "url": "index.js",
@@ -93,35 +93,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/animate-3.5.2.min.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
-  },
-  {
-    "url": "js/mdl/material.css",
-    "revision": "57313781c72269db589ebea903725dcc"
-  },
-  {
-    "url": "js/mdl/material.js",
-    "revision": "d4d04abe369dc10ce86e42c00ee62ccd"
-  },
-  {
-    "url": "js/mdl/material.min.css",
-    "revision": "8ce4631006b601c6253396365879a7a9"
-  },
-  {
-    "url": "js/mdl/material.min.js",
-    "revision": "df211fcb13a5c100eeb182f14fd37b44"
-  },
-  {
-    "url": "js/prism/clipboard.min.js",
-    "revision": "3e5e0fa949e0e7c5ed5fed7b4cc0ee00"
-  },
-  {
-    "url": "js/prism/prism.css",
-    "revision": "485c9fc9787ea73d7c802822096c5dfe"
-  },
-  {
-    "url": "js/prism/prism.js",
-    "revision": "dac215c15573fb5907885ef1094829fa"
+    "revision": "178b651958ceff556cbc5f355e08bbf1"
   },
   {
     "url": "js/showdown.min.js",
@@ -129,7 +101,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "049ef0a061acdc17668974f93a68c01f"
   },
   {
     "url": "js/zuix-bundler.min.js",

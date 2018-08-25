@@ -74,19 +74,18 @@ which is located in the distribution folder of the master repo.
 
 ### Examples
 
-- [**zUIx WebFlix**](https://github.com/genielabs/zuix-web-flix)
-*NetFlix app clone as a progressive web app template*
-- [**zUIx HTML-PWA**](https://github.com/genielabs/zuix-html-pwa)
-*a Progressive Web App template of a modern mobile app, made with just HTML, CSS, JavaScript and zero build tools*
-- [**zUIx Web Book**](https://github.com/genielabs/zuix-web-book/)
-*a Progressive Web App template of a Web Book, suitable for reading but not only.*
+- [**WebFlix**](https://github.com/genielabs/zuix-web-flix)
+*Web app template inspired to Netflix mobile app (PWA)*
+- [**HTML-PWA**](https://github.com/genielabs/zuix-html-pwa)
+*Web app template of a modern mobile app, made with just HTML, CSS, JavaScript (PWA)*
+- [**Web Book**](https://github.com/genielabs/zuix-web-book/)
+*Web app template of a web book, suitable for reading but not only (PWA)*
 - [**z-Kit**](https://genielabs.github.io/zkit)
-*example components for modern web*
+*reusable components for modern web*
 - [**TodoMVC**](https://genielabs.github.io/zuix-todomvc)
-*the classic To-Do MVC application implemented as a loadable component*
-- [**Hacker News Web**](https://genielabs.github.io/zuix-hackernews)
-*example of using* **list_view** *component with progressive/lazy loading*
-[http://kit.zuix.it](https://genielabs.github.io/zkit)
+*the classic To-Do MVC application*
+- [**Hacker News Reader**](https://genielabs.github.io/zuix-hackernews)
+*example web app using* **list_view** *component with progressive/lazy loading*
 - [**zUIx on CodePen**](https://codepen.io/genielabs/)
 *examples and tutorials on CodePen*
 - [**zUIx on Glitch**](https://glitch.com/@genemars)
