@@ -97,7 +97,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/showdown.min.js",
-    "revision": "ab769b69bf049ba617d4743529b58536"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix-bundler.js",
@@ -109,11 +109,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix.js",
-    "revision": "09afe2eaca3097a98083e1c641459837"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "42165634de12e3503f30d86ffe1b2c15"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
@@ -181,7 +181,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "b2519b8b7ef1a2026b40f9feeaa7d64c"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",
@@ -212,48 +212,20 @@ self.__precacheManifest = [
     "revision": "a0ab2c612c6a5019b3e4ae7c38043b98"
   },
   {
-    "url": "images/icons/icon-144x144.png",
-    "revision": "45e24db8671c41ca95c440df0cadf2a3"
-  },
-  {
-    "url": "images/icons/icon-152x152.png",
-    "revision": "e0867fd6e9bc25afd831b1eabdd83f8d"
-  },
-  {
-    "url": "images/icons/icon-192x192.png",
-    "revision": "cf383c3d4500d31884326cc9d53a8c3a"
-  },
-  {
-    "url": "images/icons/icon-384x384.png",
-    "revision": "19007d16c73f442f44c926beddc34637"
-  },
-  {
-    "url": "images/icons/icon-512x512.png",
-    "revision": "274298ed7162d12352fa836d3a2cb11e"
-  },
-  {
-    "url": "images/icons/icon-72x72.png",
-    "revision": "919cb6b3e8a1b5d0c963921dba0e4388"
-  },
-  {
-    "url": "images/icons/icon-96x96.png",
-    "revision": "5547ad1a33334c0f5c04f6de1f6d2c52"
-  },
-  {
     "url": "images/image_place_holder.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "587f8d42c812f26f176b2e3b45514614"
   },
   {
     "url": "images/wallpaper.jpg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7885e42f532c3e40db3cfbff68e42c56"
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "7d3fc094f12897efebda1109d55b9721"
   },
   {
     "url": "images/zuix-logo.svg",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "cd8baa13270a24886c2f335322aa4814"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
