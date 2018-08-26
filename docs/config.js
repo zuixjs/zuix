@@ -4,10 +4,10 @@
         "title": "zUIx Web Starter application.",
         "googleSiteId": "UA-92520304-1",
         "resourcePath": "./app/",
-        "libraryPath": "https://genielabs.github.io/zkit/lib/",
-        "genielabs.github.io": {
+        "libraryPath": "https://zuixjs.github.io/zkit/lib/",
+        "zuixjs.github.io": {
                 "resourcePath": "/zuix/app/",
-                "libraryPath": "https://genielabs.github.io/zkit/lib/"
+                "libraryPath": "https://zuixjs.github.io/zkit/lib/"
         }
 });
 

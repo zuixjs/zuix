@@ -1,6 +1,6 @@
 /*
  * Copyright 2015-2018 G-Labs. All Rights Reserved.
- *         https://genielabs.github.io/zuix
+ *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://genielabs.github.io/zuix
+ *        https://zuixjs.github.io/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
  */

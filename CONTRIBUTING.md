@@ -4,9 +4,9 @@
 
 #### **Did you find a bug?**
 
-* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/genielabs/zuix/issues).
+* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/zuixjs/zuix/issues).
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/genielabs/zuix/issues/new).
+* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/zuixjs/zuix/issues/new).
 Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample**
 or an **executable test case** demonstrating the expected behavior that is not occurring.
 
@@ -20,15 +20,15 @@ Include the relevant issue number if applicable.
 #### **Did you fix whitespace, format code, or make a purely cosmetic patch?**
 
 Changes that are cosmetic in nature and do not add anything substantial to the stability, functionality,
-or testability of zUIx will generally not be accepted unless discussed via the [issue tracker](https://github.com/genielabs/zuix/issues).
+or testability of zUIx will generally not be accepted unless discussed via the [issue tracker](https://github.com/zuixjs/zuix/issues).
 
 #### **Do you intend to add a new feature or change an existing one?**
 
-File a new *[enhancement issue](https://github.com/genielabs/zuix/issues/new?labels=enhancement)*.
+File a new *[enhancement issue](https://github.com/zuixjs/zuix/issues/new?labels=enhancement)*.
 
 #### **Do you have questions about the source code?**
 
-File a new *[question issue](https://github.com/genielabs/zuix/issues/new?labels=question)*.
+File a new *[question issue](https://github.com/zuixjs/zuix/issues/new?labels=question)*.
 
 #### **Coding styles and conventions**
 
@@ -40,7 +40,7 @@ but this will be fixed from time to time.
 
 #### **Getting started with zUIx source code**
 
-Clone [**zUIx repository**](https://github.com/genielabs/zuix) and install dependencies:
+Clone [**zUIx repository**](https://github.com/zuixjs/zuix) and install dependencies:
 
     npm install
 
@@ -79,7 +79,7 @@ Any change made to the website must be pushed to the `gh-pages` branch:
 
     git push origin gh-pages
 
-For complete instructions see [gh-pages repository](https://github.com/genielabs/zuix/tree/gh-pages).
+For complete instructions see [gh-pages repository](https://github.com/zuixjs/zuix/tree/gh-pages).
 
 
 #### Join zUIx team!

@@ -1,4 +1,4 @@
 [submodule "zuix-website"]
 	path = zuix-website
-	url = https://github.com/genielabs/zuix.git
+	url = https://github.com/zuixjs/zuix.git
 	branch = gh-pages

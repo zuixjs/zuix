@@ -19,7 +19,7 @@
  *
  * Find more details about zUIx.js here:
  *   http://zuix.it
- *   https://github.com/genielabs/zuix
+ *   https://github.com/zuixjs/zuix
  *
  * @author Generoso Martello <generoso@martello.com>
  *

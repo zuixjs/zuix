@@ -20,14 +20,14 @@
     "web"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://genielabs.github.io/zuix",
+  "homepage": "https://zuixjs.github.io/zuix",
   "authors": [
     "G-Labs",
     "Generoso Martello <generoso@martello.com>"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/genielabs/zuix"
+    "url": "https://github.com/zuixjs/zuix"
   },
   "private": false
 }

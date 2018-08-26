@@ -59,7 +59,7 @@ Alice had no idea what to do, and in despair she put her hand in her pocket, and
 Then they all crowded round her once more, while the Dodo solemnly presented the thimble, saying ‘We beg your acceptance of this elegant thimble’; and, when it had finished this short speech, they all cheered.
 
 
-![Dodo presenting thimble](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_3_1.png)
+![Dodo presenting thimble](https://zuixjs.github.io/zuix/app/content/docs/examples/alice/img/ch_3_1.png)
 
 Alice thought the whole thing very absurd, but they all looked so grave that she did not dare to laugh; and, as she could not think of anything to say, she simply bowed, and took the thimble, looking as solemn as she could.
 
@@ -119,7 +119,7 @@ The next thing was to eat the comfits: this caused some noise and confusion, as 
 ```
 
 
-![Mouse telling story to birds and Alice](https://genielabs.github.io/zuix/app/content/docs/examples/alice/img/ch_3_2.png)
+![Mouse telling story to birds and Alice](https://zuixjs.github.io/zuix/app/content/docs/examples/alice/img/ch_3_2.png)
 
 ‘You are not attending!’ said the Mouse to Alice severely. ‘What are you thinking of?’
 

@@ -33,27 +33,27 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/api/data/ComponentCache.json",
-    "revision": "0d1b9236f9d61ca6541f29fe5a1b55c6"
+    "revision": "590c19f86a52e96ee82bf1d00a06666b"
   },
   {
     "url": "app/content/api/data/ComponentContext.json",
-    "revision": "76a6ec8cc42d58a3e97c8a94caaeb276"
+    "revision": "f2dabdb70162f1396f0b29eaea2b107f"
   },
   {
     "url": "app/content/api/data/ContextController.json",
-    "revision": "2f9706ac9f7820028e38ca4c8dd89b04"
+    "revision": "0c4ad0ee692190c4e5e72e61ebe6524c"
   },
   {
     "url": "app/content/api/data/Localizer.json",
-    "revision": "b8d4d18a76d4fdb112c232374e85743b"
+    "revision": "ce207eacf9b35bdc0ab49b97b4790a46"
   },
   {
     "url": "app/content/api/data/Zuix.json",
-    "revision": "56a754103daac76bcd35ae39383317de"
+    "revision": "c84a8e32f1ccf91230b09206c01f6ced"
   },
   {
     "url": "app/content/api/data/ZxQuery.json",
-    "revision": "83772ae313c85d143db762f4316c1ea3"
+    "revision": "6464041bab9a495ca4889140a8d3cc1a"
   },
   {
     "url": "app/content/docs/examples/links.css",
@@ -61,7 +61,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app/content/docs/examples/links.html",
-    "revision": "b9d9dd3877f514fb4a90a4d14daef5fd"
+    "revision": "cbd247603f5f438b7c760f4fdc77cf50"
   },
   {
     "url": "app/templates/mdl_card.css",
@@ -73,7 +73,7 @@ self.__precacheManifest = [
   },
   {
     "url": "config.js",
-    "revision": "b3f927651bc0af878c86cbcb5e980b50"
+    "revision": "15a2850aeb99b7bf331c66a6d9140136"
   },
   {
     "url": "css/flex-layout-attribute.min.css",
@@ -85,11 +85,11 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "9b4e248a992a62e3af577ac01fffd75c"
+    "revision": "670a8b60299a25dfaa9462112d1e6c9c"
   },
   {
     "url": "index.js",
-    "revision": "fac616709cdf228aa8081d1257de26ca"
+    "revision": "d64130f67867775460c0fa7559a55f55"
   },
   {
     "url": "js/animate-3.5.2.min.css",
@@ -101,19 +101,19 @@ self.__precacheManifest = [
   },
   {
     "url": "js/zuix-bundler.js",
-    "revision": "3f474466c27da6a2f22caa4e4630752e"
+    "revision": "ad3072934705ccaaadfcf0565ae199d5"
   },
   {
     "url": "js/zuix-bundler.min.js",
-    "revision": "3518a066916b1e027074cb1190fe67d8"
+    "revision": "3e6e52cddf01923bf7053f0700bfee0b"
   },
   {
     "url": "js/zuix.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "09afe2eaca3097a98083e1c641459837"
   },
   {
     "url": "js/zuix.min.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "42165634de12e3503f30d86ffe1b2c15"
   },
   {
     "url": "js/zuix/zuix-bundler.js",
@@ -181,7 +181,7 @@ self.__precacheManifest = [
   },
   {
     "url": "images/example_picture.jpg",
-    "revision": "b2519b8b7ef1a2026b40f9feeaa7d64c"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/icons/desktop/android-chrome-192x192.png",
@@ -212,20 +212,48 @@ self.__precacheManifest = [
     "revision": "a0ab2c612c6a5019b3e4ae7c38043b98"
   },
   {
+    "url": "images/icons/icon-144x144.png",
+    "revision": "45e24db8671c41ca95c440df0cadf2a3"
+  },
+  {
+    "url": "images/icons/icon-152x152.png",
+    "revision": "e0867fd6e9bc25afd831b1eabdd83f8d"
+  },
+  {
+    "url": "images/icons/icon-192x192.png",
+    "revision": "cf383c3d4500d31884326cc9d53a8c3a"
+  },
+  {
+    "url": "images/icons/icon-384x384.png",
+    "revision": "19007d16c73f442f44c926beddc34637"
+  },
+  {
+    "url": "images/icons/icon-512x512.png",
+    "revision": "274298ed7162d12352fa836d3a2cb11e"
+  },
+  {
+    "url": "images/icons/icon-72x72.png",
+    "revision": "919cb6b3e8a1b5d0c963921dba0e4388"
+  },
+  {
+    "url": "images/icons/icon-96x96.png",
+    "revision": "5547ad1a33334c0f5c04f6de1f6d2c52"
+  },
+  {
     "url": "images/image_place_holder.png",
-    "revision": "587f8d42c812f26f176b2e3b45514614"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/wallpaper.jpg",
-    "revision": "7885e42f532c3e40db3cfbff68e42c56"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/zuix_web_starter.png",
-    "revision": "7d3fc094f12897efebda1109d55b9721"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "images/zuix-logo.svg",
-    "revision": "cd8baa13270a24886c2f335322aa4814"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();

@@ -13,11 +13,11 @@
   "author": "Generoso Martello",
   "repository": {
     "type": "git",
-    "url": "https://github.com/genielabs/zuix.git"
+    "url": "https://github.com/zuixjs/zuix.git"
   },
   "contributors": [],
   "bugs": {
-    "url": "https://github.com/genielabs/zuix/issues"
+    "url": "https://github.com/zuixjs/zuix/issues"
   },
   "keywords": [
     "zuix",
