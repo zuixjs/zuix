@@ -63,6 +63,10 @@ sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.min.js
 
+# Copy latest zUIx dist files to the CDN website folder (docs)
+mkdir -p docs/js
+cp -rfv dist/js docs/
+
 # Commit the new release and add new git tag
 git add .
 git commit -a -m "${PACKAGE_NAME} v${NEW_VERSION}"
