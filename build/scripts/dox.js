@@ -35,7 +35,7 @@ const dox = require('dox');
 
 // Config
 const srcFolder = './src/js/';
-const jsonApiFolder = path.join(baseFolder, 'zuix-website/source/app/content/api/data/');
+const jsonApiFolder = path.join(baseFolder, 'docs/api/data/');
 const inputFiles = [
     'zuix/Zuix.js',
     'zuix/ComponentContext.js',

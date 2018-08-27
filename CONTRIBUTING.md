@@ -58,6 +58,7 @@ To submit a new release
     npm run release <newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease
 
 if passing *CI* tests, new release files will be copied to the CDN website (`./docs` folder) and the version number in the `README.md` file will be updated.
+Also the new API data files will be updated in the `./docs/api` folder.
 The script run on the *CI* server side is
 
     npm run deploy
