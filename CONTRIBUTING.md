@@ -57,29 +57,10 @@ To submit a new release
 
     npm run release <newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease
 
-if passing *CI* tests this will also publish *npm packages* and update documentation website
-files in *gh-pages* branch.
+if passing *CI* tests this will also update version number in the `README.md` file.
 The script run on the *CI* server side is
 
     npm run deploy
-
-
-###### Website
-
-Website source files are located in the `zuix-website` folder which is a submodule
-pointing to the `gh-pages` branch.
-
-    cd zuix-website && npm install
-
-Website files are generated in the `./docs` folder issuing the command
-
-    npm run build  # to be run from ./zuix-website folder
-
-Any change made to the website must be pushed to the `gh-pages` branch:
-
-    git push origin gh-pages
-
-For complete instructions see [gh-pages repository](https://github.com/zuixjs/zuix/tree/gh-pages).
 
 
 #### Join zUIx team!
@@ -87,4 +68,3 @@ For complete instructions see [gh-pages repository](https://github.com/zuixjs/zu
 zUIx is a volunteer effort. We encourage you to pitch in and join the team!
 
 Thanks! :heart: :heart: :heart:
-

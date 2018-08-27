@@ -52,10 +52,6 @@ fi
 # Update version number in the README.md file
 node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./README.md
 
-# Version number increment in the Download page
-node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./docs/index.html
-node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./zuix-website/source/app/content/start.html
-
 # Update version number for dist package
 update_version "dist/package.json" ${NEW_VERSION}
 #update_version "bower.json"
@@ -66,10 +62,6 @@ sed -i "1i${JS_VERSION}\n" dist/js/zuix.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.min.js
-
-# Copy latest zUIx dist files to the website
-cp -rfv dist/js docs/
-cp -rfv dist/js zuix-website/source/
 
 # Commit the new release and add new git tag
 git add .
