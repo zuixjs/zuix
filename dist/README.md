@@ -5,13 +5,14 @@
 </p>
 
 <p align="center">
-  <a href="https://travis-ci.org/zuixjs/zuix"><img src="https://travis-ci.org/zuixjs/zuix.svg?branch=master" alt="Build Status"></a>
-  <a href="https://badge.fury.io/js/zuix-dist"><img src="https://badge.fury.io/js/zuix-dist.svg" alt="npm dist"></a>
+  <a href="https://travis-ci.org/zuixjs/zuix"><img src="https://img.shields.io/travis/zuixjs/zuix.svg?style=for-the-badge" alt="Build Status"></a>
+  <a href="https://www.npmjs.com/package/zuix-dist"><img src="https://img.shields.io/npm/v/zuix.svg?style=for-the-badge" alt="npm dist"></a>
+  <a href="https://github.com/zuixjs/zuix/blob/master/LICENSE.TXT"><img src="https://img.shields.io/npm/l/zuix.svg?style=for-the-badge" alt="License"></a>
 </p>
 
 # [zUIx](https://zuixjs.github.io/zuix)
 
-A lightweight JavaScript library to support you in creating amazing component-based websites and web applications.
+A lightweight JavaScript library to support you in creating amazing component-based websites and applications.
 - [Website and Documentation](https://zuixjs.github.io/zuix)
 
 ## Examples
@@ -50,7 +51,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **zUIx v0.4.9-56**](https://zuixjs.github.io/zuix/js/zuix.min.js)
+[Download **zUIx v1.0.0**](https://zuixjs.github.io/zuix/js/zuix.min.js)
 *~13 kB (gzipped)*
 
 ### Hosted

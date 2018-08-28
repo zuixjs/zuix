@@ -1,7 +1,7 @@
 {
   "name": "zuix",
-  "version": "0.4.9-57",
-  "description": "zUIx is a JavaScript library for creating component-based websites and web apps.",
+  "version": "1.0.0",
+  "description": "zUIx is a JavaScript library for creating component-based websites and applications.",
   "typings": "dist/ts/zuix.d.ts",
   "scripts": {
     "info": "echo 'zUIx.js, friendly component-based web development.'",

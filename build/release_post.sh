@@ -51,6 +51,8 @@ fi
 
 # Update version number in the README.md file
 node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./README.md
+# Copy the updated README.md to the dist folder as well
+yes | cp -rf ./README.md ./dist/
 
 # Update version number for dist package
 update_version "dist/package.json" ${NEW_VERSION}
