@@ -30,7 +30,8 @@ Some polyfills are being used mainly due to *IE11* compatibility:
 
 For the same reason the use of ES6 features not supported by *IE11* is prevented.
 This constraint is only limited to the library itself but any project using the library can take advantage of all features in modern JavaScript.
-For this reason, callback function must guarantee proper functioning when using arrow functions.
-So a callback can be either implemented using `function` and referencing the `this` context object, or using `arrow function` and using the last argument in place of the `this` object.
+
+For this reason, callback functions implemented by the library must guarantee proper functioning when used with *arrow functions*.
+So a project using *zuix.js* can implement a callback either with a `function` and reference the `this` context object inside its body, or with an `arrow function` and using the last argument in place of the `this` object.
 
 Anyway everything is written and structured so that when it will come the right time to drop support for IE11, migrating to the use of the `class` facility and other ES>=6 features and will be straightforward.
