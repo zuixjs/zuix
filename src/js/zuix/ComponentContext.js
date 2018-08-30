@@ -308,7 +308,7 @@ ComponentContext.prototype.model = function(model) {
     this.modelToView();
     // call controller `update` method when model is updated
     if (this._c != null && util.isFunction(this._c.update)) {
-        this._c.update.call(this._c);
+        this._c.update.call(this._c, this._c);
     }
     return this;
 };
@@ -423,18 +423,18 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
         success: function(viewCss) {
             context.style(viewCss);
             if (util.isFunction(options.success)) {
-                (options.success).call(context, viewCss);
+                (options.success).call(context, viewCss, context);
             }
         },
         error: function(err) {
             _log.e(err, context);
             if (util.isFunction(options.error)) {
-                (options.error).call(context, err);
+                (options.error).call(context, err, context);
             }
         },
         then: function() {
             if (util.isFunction(options.then)) {
-                (options.then).call(context);
+                (options.then).call(context, context);
             }
         }
     });
@@ -483,10 +483,10 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     if (inlineViews[htmlPath] != null) {
         context.view(inlineViews[htmlPath]);
         if (util.isFunction(options.success)) {
-            (options.success).call(context, inlineViews[htmlPath]);
+            (options.success).call(context, inlineViews[htmlPath], context);
         }
         if (util.isFunction(options.then)) {
-            (options.then).call(context);
+            (options.then).call(context, context);
         }
     } else {
         // TODO: check if view caching is working in this case too
@@ -505,10 +505,10 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
                 context.view(inlineElement.innerHTML);
             }
             if (util.isFunction(options.success)) {
-                (options.success).call(context, inlineElement.innerHTML);
+                (options.success).call(context, inlineElement.innerHTML, context);
             }
             if (util.isFunction(options.then)) {
-                (options.then).call(context);
+                (options.then).call(context, context);
             }
         } else {
             const cext = util.isNoU(options.cext) ? '.html' : options.cext;
@@ -520,18 +520,18 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
                 success: function(viewHtml) {
                     context.view(viewHtml);
                     if (util.isFunction(options.success)) {
-                        (options.success).call(context, viewHtml);
+                        (options.success).call(context, viewHtml, context);
                     }
                 },
                 error: function(err) {
                     _log.e(err, context);
                     if (util.isFunction(options.error)) {
-                        (options.error).call(context, err);
+                        (options.error).call(context, err, context);
                     }
                 },
                 then: function() {
                     if (util.isFunction(options.then)) {
-                        (options.then).call(context);
+                        (options.then).call(context, context);
                     }
                 }
             });
@@ -594,12 +594,13 @@ ComponentContext.prototype.modelToView = function() {
             if (boundField == null) {
                 boundField = this.attr(_optionAttributes.dataUiField);
             }
+            const v = z$(_t._view);
             if (typeof _t._model === 'function') {
-                (_t._model).call(z$(_t._view), this, boundField);
+                (_t._model).call(v, this, boundField, v);
             } else {
                 const boundData = util.propertyFromPath(_t._model, boundField);
                 if (typeof boundData === 'function') {
-                    (boundData).call(z$(_t._view), this, boundField);
+                    (boundData).call(v, this, boundField, v);
                 } else if (boundData != null) {
                     // try to guess target property
                     switch (el.tagName.toLowerCase()) {

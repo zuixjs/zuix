@@ -38,6 +38,10 @@ The build script also includes *ESLint* checks that are mainly based off the
 You may find out that some of these rules are not fully respected in the existing code,
 but this will be fixed from time to time.
 
+#### Implementation notes
+
+See the [src/README.md](https://github.com/zuixjs/zuix/tree/master/src/README.md) file.
+
 #### **Getting started with zUIx source code**
 
 Clone [**zUIx repository**](https://github.com/zuixjs/zuix) and install dependencies:

@@ -108,11 +108,12 @@ function ContextController(context) {
     };
     /** @protected */
     this.eventRouter = function(e) {
+        const v = _t.view();
         if (typeof context._behaviorMap[e.type] === 'function') {
-            context._behaviorMap[e.type].call(_t.view(), e, e.detail);
+            context._behaviorMap[e.type].call(v, e, e.detail, v);
         }
         if (typeof context._eventMap[e.type] === 'function') {
-            context._eventMap[e.type].call(_t.view(), e, e.detail);
+            context._eventMap[e.type].call(v, e, e.detail, v);
         }
         // TODO: else-> should report anomaly
     };

@@ -360,7 +360,7 @@ function loadResources(ctx, options) {
                     error: function(err) {
                         _log.e(err, ctx);
                         if (util.isFunction(options.error)) {
-                            (ctx.error).call(ctx, err);
+                            (ctx.error).call(ctx, err, ctx);
                         }
                     }
                 });
@@ -409,7 +409,7 @@ function unload(context) {
                 context._c.view().detach();
             }
             if (util.isFunction(context._c.destroy)) {
-                context._c.destroy.call(context);
+                context._c.destroy.call(context, context);
             }
         }
         // detach the container from the DOM as well
@@ -483,7 +483,7 @@ function hook(path, handler) {
  */
 function trigger(context, path, data) {
     if (util.isFunction(_hooksCallbacks[path])) {
-        _hooksCallbacks[path].call(context, data);
+        _hooksCallbacks[path].call(context, data, context);
     }
 }
 
@@ -567,14 +567,14 @@ function loadController(context, task) {
                         } catch (e) {
                             _log.e(new Error(), e, ctrlJs, context);
                             if (util.isFunction(context.error)) {
-                                (context.error).call(context, e);
+                                (context.error).call(context, e, context);
                             }
                         }
                     },
                     error: function(err) {
                         _log.e(err, new Error(), context);
                         if (util.isFunction(context.error)) {
-                            (context.error).call(context, err);
+                            (context.error).call(context, err, context);
                         }
                     },
                     then: function() {
@@ -713,7 +713,7 @@ function createComponent(context, task) {
                                 error: function(err) {
                                     _log.e(err, context);
                                     if (util.isFunction(context.options().error)) {
-                                        (context.options().error).call(context, err);
+                                        (context.options().error).call(context, err, context);
                                     }
                                 },
                                 then: function() {

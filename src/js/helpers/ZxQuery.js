@@ -49,6 +49,7 @@ const util = require('./Util.js');
  * @callback IterationCallback
  * @param {number} i Iteration count.
  * @param {object} item Current element.
+ * @param {object} $item ZxQuery wrapped element (same as 'this').
  * @this {object}
  */
 
@@ -104,7 +105,7 @@ function triggerEventHandlers(el, path, evt) {
     const element = z$(el);
     z$.each(_zuix_events_mapping, function() {
         if (this.element === el && this.path === path) {
-            this.handler.call(element, evt);
+            this.handler.call(element, evt, element);
         }
     });
 }
@@ -324,7 +325,7 @@ ZxQuery.prototype.one = function(eventPath, eventHandler) {
         if (fired) return;
         fired = true;
         z$(this).off(eventPath, eventHandler);
-        (eventHandler).call(this, a, b);
+        (eventHandler).call(this, a, b, this);
     });
     return this;
 };
@@ -695,7 +696,7 @@ z$.each = function(items, iterationCallback) {
                 if (item instanceof Element) {
                     item = z$(item);
                 }
-                if (iterationCallback.call(item, i, items[i]) === false) {
+                if (iterationCallback.call(item, i, items[i], item) === false) {
                     break;
                 }
                 count++;
