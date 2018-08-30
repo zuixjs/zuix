@@ -15,7 +15,7 @@ interface ContextOptions {
     error?: ContextErrorCallback;
 }
 interface ContextErrorCallback {
-    (error: Object): void;
+    (error: Object, ctx: ComponentContext): void;
 }
 interface ContextReadyCallback {
     (ctx: ComponentContext): void;
@@ -44,7 +44,7 @@ interface ContextControllerHandler {
     (cp: ContextController): void;
 }
 interface EventCallback {
-    (event: String, data: Object): void;
+    (event: String, data: Object, $el: ZxQuery): void;
 }
 interface ComponentContext {
     container(container?: Element): ComponentContext | Element;
@@ -95,7 +95,7 @@ interface ElementPosition {
     visible: Boolean;
 }
 interface ElementsIterationCallback {
-    (count: Number, item: Element): void;
+    (count: Number, item: Element, $item: ZxQuery): void;
 }
 interface ZxQuery {
     length(): Number;
