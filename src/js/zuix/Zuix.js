@@ -74,6 +74,7 @@ require('./ComponentCache');
  *
  * @callback ContextErrorCallback
  * @param {Object} error
+ * @param {ComponentContext} ctx The component context object (same as `this`).
  * @this {ComponentContext}
  */
 
@@ -81,7 +82,7 @@ require('./ComponentCache');
  * Callback function triggered when a component has been successfully loaded.
  *
  * @callback ContextReadyCallback
- * @param {ComponentContext} ctx The component context.
+ * @param {ComponentContext} ctx The component context (same as `this`).
  * @this {ComponentContext}
  */
 

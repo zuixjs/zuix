@@ -48,8 +48,7 @@ const util = require('./Util.js');
  * @private
  * @callback IterationCallback
  * @param {number} i Iteration count.
- * @param {object} item Current element.
- * @param {object} $item ZxQuery wrapped element (same as 'this').
+ * @param {object} item Current element (same as `this`).
  * @this {object}
  */
 
@@ -59,6 +58,7 @@ const util = require('./Util.js');
  * @callback ElementsIterationCallback
  * @param {number} count Iteration count.
  * @param {Element} item Current element.
+ * @param {ZxQuery} $item ZxQuery wrapped element (same as 'this').
  * @this {ZxQuery}
  */
 

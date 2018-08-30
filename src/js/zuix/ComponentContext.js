@@ -52,6 +52,7 @@ const util =
  * @callback EventCallback
  * @param {string} event Event name.
  * @param {Object} data Event data.
+ * @param {ZxQuery} $el ZxQuery wrapped element that sourced the event (same as `this`).
  * @this {ZxQuery}
  */
 
