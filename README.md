@@ -97,4 +97,4 @@ which is located in the distribution folder of the master repo.
 
 ## Contributing
 
-See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md) document.
+See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md#contributing) document.

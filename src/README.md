@@ -11,7 +11,7 @@ to merge source files and generate `zuix.js` and `zuix-bundler.js`. The starting
 - **google-closure**
 to make code verification against `ECMASCRIPT6_STRICT` and to generate minified versions of the libraries with relative `.map` files.
 - **dox**
-to generate the JSON files out of JSDoc comments used in the source code. These files are used to display the API documentation in the website. It also generate the *TypeScript* definition file.
+to generate JSON data files out of JSDoc comments found in the source code. These files are used by zuix website to generate the API documentation. It also generates the *TypeScript* definition file.
 
 The code must guarantee compatibility against the following browsers:
 
@@ -31,7 +31,7 @@ Some polyfills are being used mainly due to *IE11* compatibility:
 For the same reason the use of ES6 features not supported by *IE11* is prevented.
 This constraint is only limited to the library itself but any project using the library can take advantage of all features in modern JavaScript.
 
-For this reason, callback functions implemented by the library must guarantee proper functioning when used with *arrow functions*.
-So a project using *zuix.js* can implement a callback either with a `function` and reference the `this` context object inside its body, or with an `arrow function` and using the last argument in place of the `this` object.
+Callback functions implemented by the library must guarantee proper functioning when used with *arrow functions*.
+So a project using *zuix.js* can implement a callback either with a `function` and reference the `this` context object inside its body, or with an `=>` *arrow function* and use the last argument in place of the `this` object.
 
 Anyway everything is written and structured so that when it will come the right time to drop support for IE11, migrating to the use of the `class` facility and other ES>=6 features and will be straightforward.

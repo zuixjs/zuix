@@ -40,7 +40,7 @@ but this will be fixed from time to time.
 
 #### Implementation notes
 
-See the [src/README.md](https://github.com/zuixjs/zuix/tree/master/src/README.md) file.
+See the [src/README.md](https://github.com/zuixjs/zuix/blob/master/src/README.md#implementation-notes-and-code-structure) file.
 
 #### **Getting started with zUIx source code**
 
@@ -72,4 +72,4 @@ The script run on the *CI* server side is
 
 zUIx is a volunteer effort. We encourage you to pitch in and join the team!
 
-Thanks! :heart: :heart: :heart:
+Thanks! :heart:
