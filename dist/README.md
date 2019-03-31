@@ -51,7 +51,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **zUIx v1.0.0**](https://zuixjs.github.io/zuix/js/zuix.min.js)
+[Download **zUIx v1.0.1**](https://zuixjs.github.io/zuix/js/zuix.min.js)
 *~13 kB (gzipped)*
 
 ### Hosted
@@ -97,4 +97,4 @@ which is located in the distribution folder of the master repo.
 
 ## Contributing
 
-See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md) document.
+See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md#contributing) document.

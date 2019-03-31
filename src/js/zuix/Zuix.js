@@ -452,7 +452,7 @@ function context(contextId, callback) {
         }
     });
     if (typeof callback === 'function' && (contextId instanceof Element || contextId instanceof z$.ZxQuery)) {
-        if (context == null) {
+        if (context == null || !context.isReady) {
             z$(contextId).one('component:ready', function() {
                 context = zuix.context(this);
                 callback.call(context, context);
@@ -779,6 +779,7 @@ function initController(c) {
     }
 
     c.trigger('component:ready', c.view(), true);
+    c.context.isReady = true;
 
     _log.t(c.context.componentId, 'controller:init', 'timer:init:stop');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);

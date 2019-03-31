@@ -1,4 +1,4 @@
-/* zUIx v1.0.1 18.08.30 21:48:09 */
+/* zUIx v1.0.2 19.03.31 11:39:45 */
 
 /** @typedef {Zuix} window.zuix */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zuix = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
@@ -1267,6 +1267,9 @@ z$.ajax = function(opt) {
     }
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url);
+    if (opt.withCredentials != null) {
+        xhr.withCredentials = opt.withCredentials;
+    }
     xhr.onload = function() {
         if (xhr.status === 200) {
             if (util.isFunction(opt.success)) opt.success(xhr.responseText);
@@ -3867,7 +3870,7 @@ function context(contextId, callback) {
         }
     });
     if (typeof callback === 'function' && (contextId instanceof Element || contextId instanceof z$.ZxQuery)) {
-        if (context == null) {
+        if (context == null || !context.isReady) {
             z$(contextId).one('component:ready', function() {
                 context = zuix.context(this);
                 callback.call(context, context);
@@ -4194,6 +4197,7 @@ function initController(c) {
     }
 
     c.trigger('component:ready', c.view(), true);
+    c.context.isReady = true;
 
     _log.t(c.context.componentId, 'controller:init', 'timer:init:stop');
     _log.i(c.context.componentId, 'component:loaded', c.context.contextId);

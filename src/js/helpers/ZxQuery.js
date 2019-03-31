@@ -717,6 +717,9 @@ z$.ajax = function(opt) {
     }
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url);
+    if (opt.withCredentials != null) {
+        xhr.withCredentials = opt.withCredentials;
+    }
     xhr.onload = function() {
         if (xhr.status === 200) {
             if (util.isFunction(opt.success)) opt.success(xhr.responseText);
