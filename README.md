@@ -18,6 +18,7 @@ A lightweight JavaScript library to support you in creating amazing component-ba
 ## Examples
 
 - [**HomeGenie Web UI**](https://github.com/genielabs/homegenie-web-ui)
+*dashboard and reusable components for Smart Home and IoT applications*
 - [**WebFlix**](https://github.com/zuixjs/zuix-web-flix)
 *Web app template inspired to Netflix mobile app (PWA)*
 - [**HTML-PWA**](https://github.com/zuixjs/zuix-html-pwa)
