@@ -17,6 +17,7 @@ A lightweight JavaScript library to support you in creating amazing component-ba
 
 ## Examples
 
+- [**HomeGenie Web UI**](https://github.com/genielabs/homegenie-web-ui)
 - [**WebFlix**](https://github.com/zuixjs/zuix-web-flix)
 *Web app template inspired to Netflix mobile app (PWA)*
 - [**HTML-PWA**](https://github.com/zuixjs/zuix-html-pwa)
@@ -51,7 +52,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **zUIx v1.0.1**](https://zuixjs.github.io/zuix/js/zuix.min.js)
+[Download **zUIx v1.0.3**](https://zuixjs.github.io/zuix/js/zuix.min.js)
 *~13 kB (gzipped)*
 
 ### Hosted
