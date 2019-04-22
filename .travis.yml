@@ -3,7 +3,8 @@ node_js:
 - 8.1.0
 before_install:
 #openssl aes-256-cbc -K $encrypted_3a594aa52544_key -iv $encrypted_3a594aa52544_iv -in github_deploy_key.enc -out github_deploy_key -d
-- sudo apt-get install oracle-java8-set-default
+#- sudo apt-get install oracle-java8-set-default
+- sudo apt-get install openjdk-8-jre-headless
 before_script:
 script:
 - npm run deploy
