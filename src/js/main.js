@@ -1,7 +1,7 @@
 /* eslint-disable */
 /*!
  * @license
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

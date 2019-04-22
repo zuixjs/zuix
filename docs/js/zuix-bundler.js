@@ -5,7 +5,7 @@
 /* eslint-disable */
 /*!
  * @license
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -358,7 +358,7 @@ module.exports = function serialize(obj, options) {
 
 },{}],4:[function(_dereq_,module,exports){
 /*
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -462,7 +462,7 @@ module.exports = function(root) {
 
 },{"../zuix/OptionAttributes":5,"./FileSaver":2,"./Serializer":3}],5:[function(_dereq_,module,exports){
 /*
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

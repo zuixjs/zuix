@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -601,6 +601,9 @@ ZxQuery.prototype.detach = function() {
  */
 ZxQuery.prototype.attach = function() {
     const el = this._selection[0];
+    if (el.parentNode != null && el.__zuix_oldParent != null) {
+        el.parentNode.removeChild(el);
+    }
     if (el.parentNode == null && el.__zuix_oldParent != null) {
         z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
         el.__zuix_oldParent = null;
@@ -716,19 +719,26 @@ z$.ajax = function(opt) {
         url = opt;
     }
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    if (opt.withCredentials != null) {
-        xhr.withCredentials = opt.withCredentials;
-    }
     xhr.onload = function() {
         if (xhr.status === 200) {
             if (util.isFunction(opt.success)) opt.success(xhr.responseText);
         } else {
-            if (util.isFunction(opt.error)) opt.error(xhr);
+            if (util.isFunction(opt.error)) opt.error(xhr, xhr.statusText, xhr.status);
         }
         if (util.isFunction(opt.then)) opt.then(xhr);
     };
-    xhr.send();
+    xhr.onerror = function(xhr, textStatus, errorThrown) {
+        if (util.isFunction(opt.error)) opt.error(xhr, textStatus, errorThrown);
+    };
+    if (typeof opt.beforeSend == 'function') {
+        opt.beforeSend(xhr);
+    }
+    try {
+        xhr.open('GET', url);
+        xhr.send();
+    } catch (e) {
+        if (util.isFunction(opt.error)) opt.error(xhr, xhr.statusText, xhr.status, e);
+    }
     return this;
 };
 z$.hasClass = function(el, className) {

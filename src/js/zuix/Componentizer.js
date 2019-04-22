@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -419,13 +419,29 @@ function loadInline(element) {
 }
 
 function resolvePath(path) {
-    let config = zuix.store('config');
-    if (config != null && config[location.host] != null) {
-        config = config[location.host];
-    }
-    const libraryPath = config != null && config.libraryPath != null ? config.libraryPath : LIBRARY_PATH_DEFAULT;
-    if (path.startsWith('@lib/')) {
-        path = libraryPath+path.substring(5);
+    if (path[0] === '@') {
+        let config = zuix.store('config');
+        let libraryPath = LIBRARY_PATH_DEFAULT;
+        if (config != null && config[location.host] != null) {
+            config = config[location.host];
+        }
+        if (config != null) {
+            switch (typeof config.libraryPath) {
+                case 'object':
+                    z$.each(config.libraryPath, function(k, v) {
+                        if (path.startsWith(k + '/')) {
+                            libraryPath = v;
+                            return false;
+                        }
+                        return true;
+                    });
+                    break;
+                case 'string':
+                    libraryPath = config.libraryPath;
+                    break;
+            }
+        }
+        path = libraryPath + path.substring(path.indexOf('/') + 1);
     }
     return path;
 }

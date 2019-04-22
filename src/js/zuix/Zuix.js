@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 G-Labs. All Rights Reserved.
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -190,9 +190,8 @@ function field(fieldName, container, context) {
             context._fieldCache[fieldName] = el;
             // extend the returned `ZxQuery` object adding the `field` method
             if (el.length() === 1 && util.isNoU(el.field)) {
-                const that = this;
                 el.field = function(name) {
-                    return that.field(name, el, el);
+                    return field(name, el, el);
                 };
             }
         }
@@ -1192,7 +1191,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
             }
         } else {
             // TODO: add logging
-            console.log('Resource already added ' + hashId + '(' + resourcePath + ')');
+            // console.log('Resource already added ' + hashId + '(' + resourcePath + ')');
             if (callback) {
                 callback(resourcePath, hashId);
             }
