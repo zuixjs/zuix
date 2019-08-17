@@ -2205,7 +2205,7 @@ ComponentContext.prototype.view = function(view) {
         const viewDiv = z$.wrapElement('div', view);
         if (viewDiv.firstElementChild != null) {
             // remove data-ui-view attribute from template if present on root node
-            if (viewDiv.firstElementChild.getAttribute(_optionAttributes.dataUiView) != null) {
+            if (util.dom.getAttribute(viewDiv.firstElementChild, _optionAttributes.dataUiView) != null) {
                 if (viewDiv.children.length === 1) {
                     view = viewDiv.firstElementChild.innerHTML;
                 }
@@ -2963,7 +2963,7 @@ function queueLoadables(element) {
     const waitingTasks = [];
     for (let w = 0; w < waitingLoad.length; w++) {
         const el = waitingLoad[w];
-        let pri = +(el.getAttribute(_optionAttributes.dataUiPriority));
+        let pri = +(util.dom.getAttribute(el, _optionAttributes.dataUiPriority));
         if (isNaN(pri)) pri = 0;
         // adjust priority by element level
         let level = 0;
@@ -2971,7 +2971,7 @@ function queueLoadables(element) {
         let ignore = false;
         while (parent != null && parent !== document) {
             level++;
-            if (parent.getAttribute(_optionAttributes.dataUiView) != null) {
+            if (util.dom.getAttribute(parent, _optionAttributes.dataUiView) != null) {
                 ignore = true;
                 break;
             }
@@ -2999,7 +2999,7 @@ function queueLoadables(element) {
         if (!alreadyAdded) {
             // Add attributes to element if data-ui-options was provided
             const el = waitingTasks[i].element;
-            const options = el.getAttribute(_optionAttributes.dataUiOptions);
+            const options = util.dom.getAttribute(el, _optionAttributes.dataUiOptions);
             applyOptions(el, options);
             // Add task to the queue
             _componentizeQueue.push(waitingTasks[i]);
@@ -3229,7 +3229,7 @@ function addLazyContainer(el) {
 /** @private */
 function lazyElementCheck(element) {
     // Check if element has explicit lazyLoad=false flag set
-    if (element.getAttribute(_optionAttributes.dataUiLazyload) === 'false') {
+    if (util.dom.getAttribute(element, _optionAttributes.dataUiLazyload) === 'false') {
         return false;
     }
     // Check if element is already added to Lazy-Element list
@@ -3246,7 +3246,7 @@ function lazyElementCheck(element) {
             if (lc == null) {
                 lc = addLazyContainer(lazyContainer);
                 // if it's of type 'scroll' attach 'scroll' event handler
-                if (lazyContainer.getAttribute(_optionAttributes.dataUiLazyload) === 'scroll') {
+                if (util.dom.getAttribute(lazyContainer, _optionAttributes.dataUiLazyload) === 'scroll') {
                     (function(instance, lc) {
                         let lastScroll = new Date().getTime();
                         z$(lc === document.body ? window : lc).on('scroll', function() {
@@ -3260,7 +3260,7 @@ function lazyElementCheck(element) {
                 }
             }
             return true;
-        } else if (element.getAttribute(_optionAttributes.dataUiLazyload) === 'true') {
+        } else if (util.dom.getAttribute(element, _optionAttributes.dataUiLazyload) === 'true') {
             // element has explicit lazyLoad=true flag set
             le = addLazyElement(element);
             return true;
