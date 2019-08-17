@@ -38,7 +38,7 @@ const OptionAttributes = Object.freeze({
     dataUiInclude:
         'data-ui-include,z-include',
     dataUiLazyload:
-        'data-ui-lazyload,z-lazyLoad',
+        'data-ui-lazyload,z-lazy',
     dataUiLoad:
         'data-ui-load,z-load',
     dataUiLoaded:

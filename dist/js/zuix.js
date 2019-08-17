@@ -2140,16 +2140,18 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         set: function(target, key, value, path, old) {
             // update bound field if found in the view
             const view = z$(this.context.view());
-            let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
-            if (fld.get() == null) {
-                fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
-            }
-            if (fld.get()) {
-                this.context.dataBind(fld.get(), value);
-            }
-            // call controller's 'update' method
-            if (this.context._c && typeof this.context._c.update === 'function') {
-                this.context._c.update(target, key, value, path, old);
+            if (view.get()) {
+                let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
+                if (fld.get() == null) {
+                    fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
+                }
+                if (fld.get()) {
+                    this.context.dataBind(fld.get(), value);
+                }
+                // call controller's 'update' method
+                if (this.context._c && typeof this.context._c.update === 'function') {
+                    this.context._c.update(target, key, value, path, old);
+                }
             }
         }
     }, {context: this});
@@ -3755,7 +3757,7 @@ const OptionAttributes = Object.freeze({
     dataUiInclude:
         'data-ui-include,z-include',
     dataUiLazyload:
-        'data-ui-lazyload,z-lazyLoad',
+        'data-ui-lazyload,z-lazy',
     dataUiLoad:
         'data-ui-load,z-load',
     dataUiLoaded:

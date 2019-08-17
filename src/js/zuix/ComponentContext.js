@@ -131,16 +131,18 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         set: function(target, key, value, path, old) {
             // update bound field if found in the view
             const view = z$(this.context.view());
-            let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
-            if (fld.get() == null) {
-                fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
-            }
-            if (fld.get()) {
-                this.context.dataBind(fld.get(), value);
-            }
-            // call controller's 'update' method
-            if (this.context._c && typeof this.context._c.update === 'function') {
-                this.context._c.update(target, key, value, path, old);
+            if (view.get()) {
+                let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
+                if (fld.get() == null) {
+                    fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
+                }
+                if (fld.get()) {
+                    this.context.dataBind(fld.get(), value);
+                }
+                // call controller's 'update' method
+                if (this.context._c && typeof this.context._c.update === 'function') {
+                    this.context._c.update(target, key, value, path, old);
+                }
             }
         }
     }, {context: this});
@@ -196,7 +198,7 @@ ComponentContext.prototype.view = function(view) {
         const viewDiv = z$.wrapElement('div', view);
         if (viewDiv.firstElementChild != null) {
             // remove data-ui-view attribute from template if present on root node
-            if (viewDiv.firstElementChild.getAttribute(_optionAttributes.dataUiView) != null) {
+            if (util.dom.getAttribute(viewDiv.firstElementChild, _optionAttributes.dataUiView) != null) {
                 if (viewDiv.children.length === 1) {
                     view = viewDiv.firstElementChild.innerHTML;
                 }
