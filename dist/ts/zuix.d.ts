@@ -35,6 +35,7 @@ interface Zuix {
     componentize(element?: Element | ZxQuery): Zuix;
     store(name: String, value: Object): Object;
     getResourcePath(path: String): String;
+    observable(obj: ): ObservableObject;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
     $: ZxQuery;
     dumpCache(): ComponentCache[];
@@ -57,13 +58,13 @@ interface ComponentContext {
     loadCss(options?: Object, enableCaching?: Boolean): ComponentContext;
     loadHtml(options?: Object, enableCaching?: Boolean): ComponentContext;
     viewToModel(): ComponentContext;
-    modelToView(): ComponentContext;
+    dataBind(el: boundData:     modelToView(): ComponentContext;
 }
 interface ContextController {
-    init: Function;
-    create: Function;
-    update: Function;
-    destroy: Function;
+    init: Function(): undefined;
+    create: Function(): undefined;
+    update: Function(Object, string, Object, Object): undefined;
+    destroy: Function(): undefined;
 }
 interface ContextController {
     field(fieldName: String): ZxQuery;

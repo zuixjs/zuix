@@ -29,7 +29,7 @@
 const _log =
     require('../helpers/Logger')('ComponentContext.js');
 const _optionAttributes =
-    require('./OptionAttributes')();
+    require('./OptionAttributes');
 const z$ =
     require('../helpers/ZxQuery');
 const util =
@@ -113,10 +113,37 @@ function ComponentContext(zuixInstance, options, eventCallback) {
     this._behaviorMap = [];
 
     /**
-     * @package
+     * @protected
      * @type {ContextController}
      */
     this._c = null;
+
+    /**
+     * @protected
+     * @type {ObservableListener}
+     */
+    this._modelListener = Object.assign({
+        /** @type {ComponentContext} */
+        context: null,
+        get: function(target, key, value, path) {
+            // TODO: maybe implement a {ContextController} callback for this too
+        },
+        set: function(target, key, value, path, old) {
+            // update bound field if found in the view
+            const view = z$(this.context.view());
+            let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
+            if (fld.get() == null) {
+                fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
+            }
+            if (fld.get()) {
+                this.context.dataBind(fld.get(), value);
+            }
+            // call controller's 'update' method
+            if (this.context._c && typeof this.context._c.update === 'function') {
+                this.context._c.update(target, key, value, path, old);
+            }
+        }
+    }, {context: this});
 
     this.options(options);
 
@@ -187,11 +214,11 @@ ComponentContext.prototype.view = function(view) {
 
         // Run embedded scripts
         z$(this._view).find('script').each(function(i, el) {
-            if (this.attr('zuix-loaded') !== 'true') {
-                this.attr('zuix-loaded', 'true');
+            if (this.attr(_optionAttributes.zuixLoaded) !== 'true') {
+                this.attr(_optionAttributes.zuixLoaded, 'true');
                 /* if (el.src != null && el.src.length > 0) {
                     var clonedScript = document.createElement('script');
-                    clonedScript.setAttribute('zuix-loaded', 'true');
+                    setAttribute(clonedScript, _optionAttributes.zuixLoaded, 'true');
                     clonedScript.onload = function () {
                         // TODO: ...
                     };
@@ -232,7 +259,7 @@ ComponentContext.prototype.view = function(view) {
         v.removeClass('zuix-css-ignore');
     }
     // Disable loading of nested components until the component is ready
-    v.find('['+_optionAttributes.dataUiLoad+']').each(function(i, v) {
+    v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
         this.attr(_optionAttributes.dataUiLoaded, 'false');
     });
 
@@ -305,11 +332,25 @@ ComponentContext.prototype.style = function(css) {
  */
 ComponentContext.prototype.model = function(model) {
     if (typeof model === 'undefined') return this._model;
-    else this._model = model; // model can be set to null
-    this.modelToView();
-    // call controller `update` method when model is updated
-    if (this._c != null && util.isFunction(this._c.update)) {
-        this._c.update.call(this._c, this._c);
+    else if (this._model === model) return this;
+    // unsubscribe previous model observable
+    if (this._model !== null && typeof this._model !== 'function') {
+        zuix.observable(this._model)
+            .unsubscribe(this._modelListener);
+    }
+    this._model = model;
+    if (model != null) {
+        // subscribe to new model observable
+        if (typeof model !== 'function') {
+            this._model = zuix.observable(model)
+                .subscribe(this._modelListener)
+                .proxy;
+        }
+        this.modelToView();
+        // call controller `update` method when whole model is updated
+        if (this._c != null && util.isFunction(this._c.update)) {
+            this._c.update.call(this._c, null, null, null, null, this._c);
+        }
     }
     return this;
 };
@@ -348,12 +389,8 @@ ComponentContext.prototype.options = function(options) {
         return this._options;
     }
     const o = this._options = this._options || {};
-    z$.each(options, function(k, v) {
-        o[k] = v;
-    });
-    if (o.componentId != null) {
-        this.componentId = o.componentId;
-    }
+    Object.assign(o, options);
+    this.componentId = o.componentId || this.componentId;
     this.container(o.container);
     this.view(o.view);
     if (typeof o.css !== 'undefined') {
@@ -491,7 +528,11 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         }
     } else {
         // TODO: check if view caching is working in this case too
-        const inlineView = z$().find('[' + _optionAttributes.dataUiView + '="' + htmlPath + '"]:not([' + _optionAttributes.dataUiComponent + '*=""])');
+        const inlineView = z$().find(util.dom.queryAttribute(
+            _optionAttributes.dataUiView,
+            htmlPath,
+            util.dom.cssNot(_optionAttributes.dataUiComponent, + '')
+        ));
         if (inlineView.length() > 0) {
             const inlineElement = inlineView.get(0);
             inlineViews[htmlPath] = inlineElement.innerHTML;
@@ -551,7 +592,7 @@ ComponentContext.prototype.viewToModel = function() {
     const _t = this;
     this._model = {};
     // create data model from inline view fields
-    z$(this._view).find('['+_optionAttributes.dataUiField+']').each(function(i, el) {
+    z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
         // TODO: this is not so clean
         if (this.parent('pre,code').length() > 0) {
             return true;
@@ -578,6 +619,47 @@ ComponentContext.prototype.viewToModel = function() {
     return this;
 };
 /**
+ // TODO: fill-in missing docs...
+ * @param el
+ * @param boundData
+ */
+ComponentContext.prototype.dataBind = function(el, boundData) {
+    // try to guess target property
+    switch (el.tagName.toLowerCase()) {
+        // TODO: complete binding cases
+        case 'img':
+            el.src = (!util.isNoU(boundData.src) ? boundData.src :
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            if (boundData.alt) el.alt = boundData.alt;
+            break;
+        case 'a':
+            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            if (boundData.title) el.title = boundData.title;
+            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
+                el.innerHTML = boundData.innerHTML;
+            }
+            break;
+        case 'input':
+            el.value = (!util.isNoU(boundData.value) ? boundData.value :
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            break;
+        default:
+            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
+            if (boundData.attributes != null) {
+                for (let i = 0; i < boundData.attributes.length; i++) {
+                    const attr = boundData.attributes[i];
+                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
+                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
+                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
+                        }
+                        util.dom.setAttribute(el, attr.name, attr.value);
+                    }
+                }
+            }
+    }
+};
+/**
  * Copies values from the data model to the ```data-ui-field```
  * elements declared in the component view.
  *
@@ -587,7 +669,7 @@ ComponentContext.prototype.modelToView = function() {
     _log.t(this.componentId, 'model:view', 'timer:mv:start');
     if (this._view != null && this._model != null) {
         const _t = this;
-        z$(this._view).find('['+_optionAttributes.dataUiField+']').each(function(i, el) {
+        z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
             if (this.parent('pre,code').length() > 0) {
                 return true;
             }
@@ -603,40 +685,7 @@ ComponentContext.prototype.modelToView = function() {
                 if (typeof boundData === 'function') {
                     (boundData).call(v, this, boundField, v);
                 } else if (boundData != null) {
-                    // try to guess target property
-                    switch (el.tagName.toLowerCase()) {
-                        // TODO: complete binding cases
-                        case 'img':
-                            el.src = (!util.isNoU(boundData.src) ? boundData.src :
-                                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-                            if (boundData.alt) el.alt = boundData.alt;
-                            break;
-                        case 'a':
-                            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
-                                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-                            if (boundData.title) el.title = boundData.title;
-                            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
-                                el.innerHTML = boundData.innerHTML;
-                            }
-                            break;
-                        case 'input':
-                            el.value = (!util.isNoU(boundData.value) ? boundData.value :
-                                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-                            break;
-                        default:
-                            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
-                            if (boundData.attributes != null) {
-                                for (let i = 0; i < boundData.attributes.length; i++) {
-                                    const attr = boundData.attributes[i];
-                                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
-                                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
-                                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
-                                        }
-                                        el.setAttribute(attr.name, attr.value);
-                                    }
-                                }
-                            }
-                    }
+                    _t.dataBind(el, boundData);
                 }
             }
         });

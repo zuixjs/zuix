@@ -30,33 +30,27 @@ const OptionAttributes = Object.freeze({
     dataBindTo:
         'data-bind-to',
     dataUiComponent:
-        'data-ui-component',
+        'z-component',
     dataUiContext:
-        'data-ui-context',
+        'data-ui-context,z-context',
     dataUiField:
-        'data-ui-field',
+        'data-ui-field,z-field',
     dataUiInclude:
-        'data-ui-include',
+        'data-ui-include,z-include',
     dataUiLazyload:
-        'data-ui-lazyload',
+        'data-ui-lazyload,z-lazyLoad',
     dataUiLoad:
-        'data-ui-load',
+        'data-ui-load,z-load',
     dataUiLoaded:
-        'data-ui-loaded',
+        'z-loaded',
     dataUiOptions:
-        'data-ui-options',
+        'data-ui-options,z-options',
     dataUiPriority:
-        'data-ui-priority',
+        'data-ui-priority,z-priority',
     dataUiView:
-        'data-ui-view',
+        'data-ui-view,z-view',
     zuixLoaded:
         'zuix-loaded'
 });
 
-/**
- * @param root
- * @return {Zuix}
- */
-module.exports = function(root) {
-    return OptionAttributes;
-};
+module.exports = OptionAttributes;

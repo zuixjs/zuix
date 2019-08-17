@@ -28,7 +28,7 @@
 
 const fileSaver = require('./FileSaver');
 const serialize = require('./Serializer');
-const _optionAttributes = require('../zuix/OptionAttributes')();
+const _optionAttributes = require('../zuix/OptionAttributes');
 
 /**
  * Create application bundle containing all components

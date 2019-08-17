@@ -34,6 +34,8 @@ const z$ =
     require('../helpers/ZxQuery');
 const TaskQueue =
     require('../helpers/TaskQueue');
+const ObjectObserver =
+    require('../helpers/ObjectObserver');
 const ComponentContext =
     require('./ComponentContext');
 const ContextController =
@@ -41,7 +43,7 @@ const ContextController =
 const _componentizer =
     require('./Componentizer')();
 const _optionAttributes =
-    require('./OptionAttributes')();
+    require('./OptionAttributes');
 
 require('./ComponentCache');
 
@@ -125,6 +127,8 @@ let _componentCache = [];
 let _contextSeqNum = 0;
 /** @private */
 let _enableHttpCaching = true;
+/** @private */
+const _objectObserver = new ObjectObserver();
 
 /**
  *  zUIx, Javascript library for component-based development.
@@ -185,7 +189,7 @@ function field(fieldName, container, context) {
 
     let el = null;
     if (typeof context._fieldCache[fieldName] === 'undefined') {
-        el = z$(container).find('[' + _optionAttributes.dataUiField + '="' + fieldName + '"]');
+        el = z$(container).find(util.dom.queryAttribute(_optionAttributes.dataUiField, fieldName));
         if (el != null && el.length() > 0) {
             context._fieldCache[fieldName] = el;
             // extend the returned `ZxQuery` object adding the `field` method
@@ -405,6 +409,8 @@ function unload(context) {
                         v.reset();
                     });
                 }
+                // un-register model observable
+                context.model(null);
                 // detach from parent
                 context._c.view().detach();
             }
@@ -440,7 +446,7 @@ function context(contextId, callback) {
     if (contextId instanceof z$.ZxQuery) {
         contextId = contextId.get();
     } else if (typeof contextId === 'string') {
-        const ctx = z$.find('['+_optionAttributes.dataUiContext+'="'+contextId+'"]');
+        const ctx = z$.find(util.dom.queryAttribute(_optionAttributes.dataUiContext, contextId));
         if (ctx.length() > 0) contextId = ctx.get();
     }
     z$.each(_contextRoot, function(k, v) {
@@ -751,9 +757,10 @@ function initController(c) {
     _log.t(c.context.componentId, 'controller:init', 'timer:init:start');
 
     // re-enable nested components loading
-    c.view().find('['+_optionAttributes.dataUiLoaded+'="false"]:not(['+_optionAttributes.dataUiComponent+'])').each(function(i, v) {
-        this.attr(_optionAttributes.dataUiLoaded, null);
-    });
+    c.view().find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
+        .each(function(i, v) {
+            this.attr(_optionAttributes.dataUiLoaded, null);
+        });
 
     // bind {ContextController}.field method
     c.field = function(fieldName) {
@@ -1269,6 +1276,14 @@ Zuix.prototype.getResourcePath = function(path) {
     return getResourcePath(path);
 };
 /**
+ * Get an observable instance of an object for detecting changes.
+ * @param obj
+ * @return {ObservableObject} The observable object
+ */
+Zuix.prototype.observable = function(obj) {
+    return _objectObserver.observable(obj);
+};
+/**
  * Gets/Sets the components data bundle.
  *
  * @param {!Array.<BundleItem>} bundleData A bundle object holding in memory all components data (cache).
@@ -1318,6 +1333,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
  */
 Zuix.prototype.$ = z$;
 Zuix.prototype.TaskQueue = TaskQueue;
+Zuix.prototype.ObjectObserver = ObjectObserver;
 Zuix.prototype.ZxQuery = z$.ZxQuery;
 /**
  * Dumps content of the components cache. Mainly for debugging purpose.

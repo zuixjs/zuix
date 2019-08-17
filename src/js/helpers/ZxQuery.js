@@ -278,16 +278,16 @@ ZxQuery.prototype.attr = function(attr, val) {
     if (typeof attr === 'object') {
         z$.each(attr, function(i, v) {
             _t.each(function(k, el) {
-                el.setAttribute(i, v);
+                util.dom.setAttribute(el, i, v);
             });
         });
     } else if (typeof val == 'undefined') {
-        return this._selection[0].getAttribute(attr);
+        return util.dom.getAttribute(this._selection[0], attr);
     } else if (val === null) {
         this._selection[0].removeAttribute(attr);
     } else {
         this.each(function(k, v) {
-            this.get().setAttribute(attr, val);
+            util.dom.setAttribute(this.get(), attr, val);
         });
     }
     return this;

@@ -33,10 +33,10 @@ const z$ =
  * ContextController user-defined handlers definition
  *
  * @typedef {Object} ContextController
- * @property {function} init Function that gets called after loading and before the component is created.
- * @property {function} create Function that gets called after loading, when the component is actually created and ready.
- * @property {function} update Function called when the data model of the component is updated.
- * @property {function} destroy Function called when the component is destroyed.
+ * @property {function():void} init Function that gets called after loading and before the component is created.
+ * @property {function():void} create Function that gets called after loading, when the component is actually created and ready.
+ * @property {function(Object,string,Object,Object):void} update Function called when the data model of the component is updated.
+ * @property {function():void} destroy Function called when the component is destroyed.
  */
 
 /**

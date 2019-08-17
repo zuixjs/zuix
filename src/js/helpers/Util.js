@@ -91,17 +91,27 @@ module.exports = {
         if (typeof s !== 'string') {
             return;
         }
-        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        s = s.replace(/^\./, ''); // strip a leading dot
-        const a = s.split('.');
-        let ref = o;
-        for (let i = 0; i < a.length; ++i) {
-            const k = a[i];
-            if (typeof ref[k] !== 'undefined') {
-                ref = ref[k];
+        let ref = o; let path = '';
+        const parts = s.match(/\[(".*?"|'.*?'|(.*?))\]|".*?"|'.*?'|[0-9a-zA-Z_$]+/g);
+        for (let i = 0; i < parts.length; i++) {
+            let m = parts[i];
+            if (m.startsWith('[') && m.endsWith(']')) {
+                m = m.substring(1, m.length - 1).trim();
+            }
+            if (m.startsWith('"') && m.endsWith('"')) {
+                m = m.substring(1, m.length - 1);
+            } else if (m.startsWith('\'') && m.endsWith('\'')) {
+                m = m.substring(1, m.length - 1);
+            }
+            path = path + m;
+            if (typeof ref[m] !== 'undefined') {
+                ref = ref[m];
             } else {
+                // TODO: maybe logging?
+                //throw new Error('Undefined property "' + path + '"');
                 return;
             }
+            path = path + '->';
         }
         return ref;
     },
@@ -140,6 +150,69 @@ module.exports = {
             window.removeEventListener('testPassive', null, opts);
         } catch (e) {}
         return supportsPassive;
+    },
+
+    dom: {
+
+        queryAttribute: function(name, value, appendValue) {
+            const fields = name.split(',');
+            let selector = '';
+            fields.forEach(function(v, i) {
+                if (value != null) {
+                    selector += '[' + v + '="' + value + '"]';
+                } else {
+                    selector += '[' + v + ']';
+                }
+                if (appendValue) {
+                    selector += appendValue.get(i);
+                }
+                if (i < fields.length - 1) selector += ',';
+            });
+            return selector;
+        },
+        getAttribute: function(element, name) {
+            let value;
+            if (typeof name === 'string' && name.indexOf(',') !== -1) {
+                const fields = name.split(',');
+                fields.filter(function(v, i) {
+                    const a = element.getAttribute(v);
+                    if (a != null) {
+                        value = a;
+                    }
+                    return value != null;
+                });
+            } else value = element.getAttribute(name);
+            return value;
+        },
+        setAttribute: function(element, name, value) {
+            if (typeof name === 'string' && name.indexOf(',') !== -1) {
+                const fields = name.split(',');
+                fields.forEach(function(f) {
+                    element.setAttribute(f, value);
+                });
+            } else element.setAttribute(name, value);
+        },
+        cssNot: function(name, value) {
+            const fields = name.split(',');
+            let selector = '';
+            fields.forEach(function(v, i) {
+                if (value != null) {
+                    selector += ':not([' + v + '="' + value + '"])';
+                } else {
+                    selector += ':not([' + v + '])';
+                }
+                if (i < fields.length - 1) selector += ',';
+            });
+            return (function(s) {
+                return {
+                    get: function(i) {
+                        const selectors = s.split(',');
+                        return (i >= selectors.length) ? selectors[0] : selectors[i];
+                    }
+                };
+            })(selector);
+        }
+
     }
 
 };

@@ -27,7 +27,7 @@
 'use strict';
 
 const _optionAttributes =
-    require('./OptionAttributes')();
+    require('./OptionAttributes');
 
 const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works only over HTTPS
 
@@ -183,7 +183,11 @@ if (_isCrawlerBotClient) {
     _log.d(navigator.userAgent, 'is a bot, ignoring `lazy-loading` option.');
 }
 
-
+/**
+ *
+ * @class Componentizer
+ * @constructor
+ */
 function Componentizer() {
     // ...
 }
@@ -202,7 +206,7 @@ function lazyLoad(enable, threshold) {
     }
     return !_isCrawlerBotClient && !_disableLazyLoading;
 }
-
+/** @private */
 function addRequest(element) {
     if (element == null) {
         element = document;
@@ -213,12 +217,14 @@ function addRequest(element) {
 }
 
 const _elementCache = [];
+/** @private */
 function setElementCache(element, waiting) {
     _elementCache.push({
         element: element,
         waiting: waiting
     });
 }
+/** @private */
 function getElementCache(element) {
     for (let i = 0; i < _elementCache.length; i++) {
         const cache = _elementCache[i];
@@ -229,6 +235,7 @@ function getElementCache(element) {
     return null;
 }
 
+/** @private */
 function queueLoadables(element) {
     if (element == null && _componentizeRequests.length > 0) {
         element = _componentizeRequests.unshift();
@@ -239,16 +246,16 @@ function queueLoadables(element) {
     // Select all loadable elements
     let waitingLoad = getElementCache(element);
 //    if (waitingLoad == null || waitingLoad.length == 0) {
-    waitingLoad = z$(element).find('['+
-        _optionAttributes.dataUiLoad+']:not(['+_optionAttributes.dataUiLoaded+']),['+
-        _optionAttributes.dataUiInclude+']:not(['+_optionAttributes.dataUiLoaded+'])');
+    const q = util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded)) + ',' +
+        util.dom.queryAttribute(_optionAttributes.dataUiInclude, null, util.dom.cssNot(_optionAttributes.dataUiLoaded));
+    waitingLoad = z$(element).find(q);
     waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
     setElementCache(element, waitingLoad);
 //    }
     const waitingTasks = [];
     for (let w = 0; w < waitingLoad.length; w++) {
         const el = waitingLoad[w];
-        let pri = parseInt(el.getAttribute(_optionAttributes.dataUiPriority));
+        let pri = +(el.getAttribute(_optionAttributes.dataUiPriority));
         if (isNaN(pri)) pri = 0;
         // adjust priority by element level
         let level = 0;
@@ -299,6 +306,7 @@ function queueLoadables(element) {
     }
 }
 
+/** @private */
 function getNextLoadable() {
     // sort by priority (elements with lower pri number get processed first)
     _componentizeQueue.sort(function(a, b) {
@@ -316,7 +324,7 @@ function getNextLoadable() {
             item.lazy = false;
             item.visible = true;
         }
-        if (item != null && item.element != null && item.visible) {
+        if (item.element != null && item.visible) {
             job = {
                 item: item,
                 cancelable: item.lazy
@@ -330,6 +338,7 @@ function getNextLoadable() {
     return job;
 }
 
+/** @private */
 function loadNext(element) {
     queueLoadables(element);
     const job = getNextLoadable();
@@ -404,7 +413,7 @@ function loadInline(element) {
 
     const priority = v.attr(_optionAttributes.dataUiPriority);
     if (!util.isNoU(priority)) {
-        options.priority = parseInt(priority);
+        options.priority = +(priority);
     }
 
     const el = z$(element);
@@ -418,6 +427,7 @@ function loadInline(element) {
     return true;
 }
 
+/** @private */
 function resolvePath(path) {
     if (path[0] === '@') {
         let config = zuix.store('config');
@@ -446,6 +456,7 @@ function resolvePath(path) {
     return path;
 }
 
+/** @private */
 function applyOptions(element, options) {
     if (typeof options === 'string') {
         options = util.propertyFromPath(window, options);
@@ -453,13 +464,13 @@ function applyOptions(element, options) {
     // TODO: should check if options object is valid
     if (element != null && options != null) {
         if (options.lazyLoad != null) {
-            element.setAttribute(_optionAttributes.dataUiLazyload, options.lazyLoad.toString().toLowerCase());
+            util.dom.setAttribute(element, _optionAttributes.dataUiLazyload, options.lazyLoad.toString().toLowerCase());
         }
         if (options.contextId != null) {
-            element.setAttribute(_optionAttributes.dataUiContext, options.contextId.toString().toLowerCase());
+            util.dom.setAttribute(element, _optionAttributes.dataUiContext, options.contextId.toString().toLowerCase());
         }
         if (options.componentId != null) {
-            element.setAttribute(_optionAttributes.dataUiLoad, options.componentId.toString().toLowerCase());
+            util.dom.setAttribute(element, _optionAttributes.dataUiLoad, options.componentId.toString().toLowerCase());
         }
         // TODO: eventually map other attributes from options
     }
@@ -467,6 +478,7 @@ function applyOptions(element, options) {
 
 // ------------ Lazy Loading
 
+/** @private */
 function getLazyElement(el) {
     for (let l = 0; l < _lazyElements.length; l++) {
         const le = _lazyElements[l];
@@ -477,6 +489,7 @@ function getLazyElement(el) {
     return null;
 }
 
+/** @private */
 function addLazyElement(el) {
     const le = {
         element: el
@@ -485,6 +498,7 @@ function addLazyElement(el) {
     return le;
 }
 
+/** @private */
 function getLazyContainer(el) {
     for (let l = 0; l < _lazyContainers.length; l++) {
         const ls = _lazyContainers[l];
@@ -495,6 +509,7 @@ function getLazyContainer(el) {
     return null;
 }
 
+/** @private */
 function addLazyContainer(el) {
     const lc = {
         element: el
@@ -503,6 +518,7 @@ function addLazyContainer(el) {
     return lc;
 }
 
+/** @private */
 function lazyElementCheck(element) {
     // Check if element has explicit lazyLoad=false flag set
     if (element.getAttribute(_optionAttributes.dataUiLazyload) === 'false') {
@@ -512,9 +528,9 @@ function lazyElementCheck(element) {
     let le = getLazyElement(element);
     if (le == null) {
         // Check if element inherits lazy-loading from a parent lazy container/scroll
-        const lazyContainer = z$.getClosest(element.parentNode, '['+
-            _optionAttributes.dataUiLazyload+'=scroll],['+
-            _optionAttributes.dataUiLazyload+'=true]');
+        const q = util.dom.queryAttribute(_optionAttributes.dataUiLazyload, 'scroll') + ',' +
+            util.dom.queryAttribute(_optionAttributes.dataUiLazyload, 'true');
+        const lazyContainer = z$.getClosest(element.parentNode, q);
         if (lazyContainer != null) {
             le = addLazyElement(element);
             // Check if the lazy container is already added to the lazy container list
