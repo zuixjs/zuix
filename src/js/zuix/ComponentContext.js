@@ -137,6 +137,12 @@ function ComponentContext(zuixInstance, options, eventCallback) {
             // TODO: maybe implement a {ContextController} callback for this too
         },
         set: function(target, key, value, path, old) {
+            if (target instanceof Element) {
+                //  use the first part of the "path" as field name (eg. 'text.innerHTML' --> 'text')
+                //  for binding data to view element
+                path = path.split('.')[0];
+                value = target;
+            }
             // update bound field if found in the view
             const view = z$(this.context.view());
             if (view.get()) {
@@ -227,8 +233,12 @@ ComponentContext.prototype.container = function(container) {
  * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function(view) {
-    if (typeof view === 'undefined') return this._view;
-    else if (view instanceof z$.ZxQuery) {
+    if (typeof view === 'undefined') {
+        return this._view;
+    } else if (view === null) {
+        // TODO: add more consistency check on methods parameters in the whole library
+        throw new Error('View cannot be set to null.');
+    } else if (view instanceof z$.ZxQuery) {
         view = view.get();
     }
     if (view === this._view) return this;
@@ -675,8 +685,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
  */
 ComponentContext.prototype.viewToModel = function() {
     _log.t(this.componentId, 'view:model', 'timer:vm:start');
-    const _t = this;
-    this._model = {};
+    const model = {};
     // create data model from inline view fields
     z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
         // TODO: this is not so clean
@@ -691,7 +700,7 @@ ComponentContext.prototype.viewToModel = function() {
         // dotted field path
         if (name.indexOf('.')>0) {
             const path = name.split('.');
-            let cur = _t._model;
+            let cur = model;
             for (let p = 0; p < path.length - 1; p++) {
                 if (typeof cur[path[p]] === 'undefined') {
                     cur[path[p]] = {};
@@ -699,8 +708,12 @@ ComponentContext.prototype.viewToModel = function() {
                 cur = cur[path[p]];
             }
             cur[path[path.length - 1]] = value;
-        } else _t._model[name] = value;
+        } else model[name] = value;
     });
+    this._model = zuix.observable(model)
+        .subscribe(this._modelListener)
+        .proxy;
+    // TODO: should call this._c.update(....)
     _log.t(this.componentId, 'view:model', 'timer:vm:stop');
     return this;
 };
@@ -746,6 +759,7 @@ ComponentContext.prototype.modelToView = function() {
  * @param {Object} boundData Data object to map data from.
  */
 ComponentContext.prototype.dataBind = function(el, boundData) {
+    boundData = boundData.observableTarget || boundData;
     // try to guess target property
     switch (el.tagName.toLowerCase()) {
         // TODO: complete binding cases

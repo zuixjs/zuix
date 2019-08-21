@@ -354,10 +354,27 @@ function getPath(observable) {
         if (observable != null && observable.__path__ != null) {
             path = '[\'' + co.__path__ + '\'].' + path;
         } else {
-            path = co.__path__ + path;
+            path = co.__path__ + (!path.startsWith('[') ? '.' : '') + path;
         }
     }
     return path;
+}
+function getListeners(observable) {
+    const listeners = [];
+    observable.__parents__.forEach(function(po) {
+        listeners.push(...getListeners(po));
+    });
+    listeners.push(...observable.__listeners__);
+    return listeners;
+};
+
+function deleteObservable(targetObservable) {
+    getListeners(targetObservable).forEach(
+        /** @param {ObservableListener} l */
+        function(l) {
+            targetObservable.unsubscribe(l);
+        }
+    );
 }
 
 /**
@@ -376,19 +393,12 @@ ObjectObserver.prototype.observable = function(obj) {
     if (matches.length === 1) {
         observable = matches[0];
     }
-    const getListeners = function(observable) {
-        const listeners = [];
-        observable.__parents__.forEach(function(po) {
-            listeners.push(...getListeners(po));
-        });
-        listeners.push(...observable.__listeners__);
-        return listeners;
-    };
     if (observable == null) {
         const handler = {
             /** @type ObjectObserver */
             context: null,
             get: function(target, key) {
+                if (key === 'observableTarget') return target;
                 let value = target[key];
                 if (typeof value === 'undefined') {
                     return;
@@ -419,6 +429,10 @@ ObjectObserver.prototype.observable = function(obj) {
             },
             set: function(target, key, value) {
                 let old = JSON.parse(JSON.stringify(target));
+                let oldValue = target[key];
+                if (typeof oldValue === 'object') {
+                    deleteObservable(this.context.observable(oldValue));
+                }
                 target[key] = value;
                 const targetObservable = this.context.observable(target);
                 const path = getPath(targetObservable) + key;
@@ -429,6 +443,13 @@ ObjectObserver.prototype.observable = function(obj) {
                     }
                 );
                 return true;
+            },
+            deleteProperty: function(target, property) {
+                let value = target[property];
+                if (typeof value === 'object') {
+                    deleteObservable(this.context.observable(value));
+                }
+                return delete target[property];
             }
         };
         Object.assign(handler, {context: this});
@@ -864,6 +885,8 @@ const util = _dereq_('./Util.js');
  * @typedef {object} ElementPosition
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
+ * @property {{dx: number, dy: number}} frame Position of the element relative to the viewport
+ * @property {string} event Current state change event description ("enter"|"exit"|"scroll"|"off-scroll")
  * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
  */
 
@@ -2150,6 +2173,12 @@ function ComponentContext(zuixInstance, options, eventCallback) {
             // TODO: maybe implement a {ContextController} callback for this too
         },
         set: function(target, key, value, path, old) {
+            if (target instanceof Element) {
+                //  use the first part of the "path" as field name (eg. 'text.innerHTML' --> 'text')
+                //  for binding data to view element
+                path = path.split('.')[0];
+                value = target;
+            }
             // update bound field if found in the view
             const view = z$(this.context.view());
             if (view.get()) {
@@ -2240,8 +2269,12 @@ ComponentContext.prototype.container = function(container) {
  * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.view = function(view) {
-    if (typeof view === 'undefined') return this._view;
-    else if (view instanceof z$.ZxQuery) {
+    if (typeof view === 'undefined') {
+        return this._view;
+    } else if (view === null) {
+        // TODO: add more consistency check on methods parameters in the whole library
+        throw new Error('View cannot be set to null.');
+    } else if (view instanceof z$.ZxQuery) {
         view = view.get();
     }
     if (view === this._view) return this;
@@ -2688,8 +2721,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
  */
 ComponentContext.prototype.viewToModel = function() {
     _log.t(this.componentId, 'view:model', 'timer:vm:start');
-    const _t = this;
-    this._model = {};
+    const model = {};
     // create data model from inline view fields
     z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
         // TODO: this is not so clean
@@ -2704,7 +2736,7 @@ ComponentContext.prototype.viewToModel = function() {
         // dotted field path
         if (name.indexOf('.')>0) {
             const path = name.split('.');
-            let cur = _t._model;
+            let cur = model;
             for (let p = 0; p < path.length - 1; p++) {
                 if (typeof cur[path[p]] === 'undefined') {
                     cur[path[p]] = {};
@@ -2712,8 +2744,12 @@ ComponentContext.prototype.viewToModel = function() {
                 cur = cur[path[p]];
             }
             cur[path[path.length - 1]] = value;
-        } else _t._model[name] = value;
+        } else model[name] = value;
     });
+    this._model = zuix.observable(model)
+        .subscribe(this._modelListener)
+        .proxy;
+    // TODO: should call this._c.update(....)
     _log.t(this.componentId, 'view:model', 'timer:vm:stop');
     return this;
 };
@@ -2759,6 +2795,7 @@ ComponentContext.prototype.modelToView = function() {
  * @param {Object} boundData Data object to map data from.
  */
 ComponentContext.prototype.dataBind = function(el, boundData) {
+    boundData = boundData.observableTarget || boundData;
     // try to guess target property
     switch (el.tagName.toLowerCase()) {
         // TODO: complete binding cases

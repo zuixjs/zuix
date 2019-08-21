@@ -74,10 +74,27 @@ function getPath(observable) {
         if (observable != null && observable.__path__ != null) {
             path = '[\'' + co.__path__ + '\'].' + path;
         } else {
-            path = co.__path__ + path;
+            path = co.__path__ + (!path.startsWith('[') ? '.' : '') + path;
         }
     }
     return path;
+}
+function getListeners(observable) {
+    const listeners = [];
+    observable.__parents__.forEach(function(po) {
+        listeners.push(...getListeners(po));
+    });
+    listeners.push(...observable.__listeners__);
+    return listeners;
+};
+
+function deleteObservable(targetObservable) {
+    getListeners(targetObservable).forEach(
+        /** @param {ObservableListener} l */
+        function(l) {
+            targetObservable.unsubscribe(l);
+        }
+    );
 }
 
 /**
@@ -96,19 +113,12 @@ ObjectObserver.prototype.observable = function(obj) {
     if (matches.length === 1) {
         observable = matches[0];
     }
-    const getListeners = function(observable) {
-        const listeners = [];
-        observable.__parents__.forEach(function(po) {
-            listeners.push(...getListeners(po));
-        });
-        listeners.push(...observable.__listeners__);
-        return listeners;
-    };
     if (observable == null) {
         const handler = {
             /** @type ObjectObserver */
             context: null,
             get: function(target, key) {
+                if (key === 'observableTarget') return target;
                 let value = target[key];
                 if (typeof value === 'undefined') {
                     return;
@@ -139,6 +149,10 @@ ObjectObserver.prototype.observable = function(obj) {
             },
             set: function(target, key, value) {
                 let old = JSON.parse(JSON.stringify(target));
+                let oldValue = target[key];
+                if (typeof oldValue === 'object') {
+                    deleteObservable(this.context.observable(oldValue));
+                }
                 target[key] = value;
                 const targetObservable = this.context.observable(target);
                 const path = getPath(targetObservable) + key;
@@ -149,6 +163,13 @@ ObjectObserver.prototype.observable = function(obj) {
                     }
                 );
                 return true;
+            },
+            deleteProperty: function(target, property) {
+                let value = target[property];
+                if (typeof value === 'object') {
+                    deleteObservable(this.context.observable(value));
+                }
+                return delete target[property];
             }
         };
         Object.assign(handler, {context: this});

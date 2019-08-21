@@ -40,7 +40,7 @@ const util = require('./Util.js');
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
  * @property {{dx: number, dy: number}} frame Position of the element relative to the viewport
- * @property {'enter'|'exit'|'scroll'|'off-scroll'} event Current state change event description
+ * @property {string} event Current state change event description ("enter"|"exit"|"scroll"|"off-scroll")
  * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
  */
 

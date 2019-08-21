@@ -94,6 +94,8 @@ interface BundleItem {
 interface ElementPosition {
     x: Number;
     y: Number;
+    frame: {"dx":["number"],"dy":["number"]};
+    event: String;
     visible: Boolean;
 }
 interface ElementsIterationCallback {
