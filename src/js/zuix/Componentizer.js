@@ -391,7 +391,7 @@ function loadInline(element) {
         if (include != null) {
             componentId = resolvePath(include);
             v.attr(_optionAttributes.dataUiInclude, componentId);
-            v.attr(_optionAttributes.dataUiComponent, componentId);
+            v.attr(_optionAttributes.dataUiComponent, '');
             // Static include hove no controller
             if (util.isNoU(options.controller)) {
                 options.controller = function() {};

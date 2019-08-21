@@ -398,31 +398,7 @@ function unload(context) {
         _componentizer.dequeue(el);
     }
     if (!util.isNoU(context)) {
-        if (!util.isNoU(context._c)) {
-            if (!util.isNoU(context._c.view())) {
-                context._c.view().attr(_optionAttributes.dataUiComponent, null);
-                // un-register event handlers associated to the view
-                context._c.view().reset();
-                // un-register event handlers for all cached fields accessed through cp.field(...) method
-                if (!util.isNoU(context._c._fieldCache)) {
-                    z$.each(context._c._fieldCache, /** @param {ZxQuery} v */ function(k, v) {
-                        v.reset();
-                    });
-                }
-                // un-register model observable
-                context.model(null);
-                // detach from parent
-                context._c.view().detach();
-            }
-            if (util.isFunction(context._c.destroy)) {
-                context._c.destroy.call(context, context);
-            }
-        }
-        // detach the container from the DOM as well
-        const cel = context.container();
-        if (cel != null && cel.parentNode != null) {
-            cel.parentNode.removeChild(cel);
-        }
+        context.dispose();
     }
 }
 
@@ -655,7 +631,7 @@ function createComponent(context, task) {
                 // if it's not null, a controller was already loaded, so we preserve the base controller name
                 // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
                 if (c.view().attr(_optionAttributes.dataUiComponent) == null) {
-                    c.view().attr(_optionAttributes.dataUiComponent, context.componentId);
+                    c.view().attr(_optionAttributes.dataUiComponent, '');
                 }
                 // if no model is supplied, try auto-create from view fields
                 if (util.isNoU(context.model()) && !util.isNoU(context.view())) {

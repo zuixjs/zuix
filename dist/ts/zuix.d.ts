@@ -58,7 +58,8 @@ interface ComponentContext {
     loadCss(options?: Object, enableCaching?: Boolean): ComponentContext;
     loadHtml(options?: Object, enableCaching?: Boolean): ComponentContext;
     viewToModel(): ComponentContext;
-    dataBind(el: boundData:     modelToView(): ComponentContext;
+    modelToView(): ComponentContext;
+    dataBind(el: ElementboundData: Object    getCssId(): String;
 }
 interface ContextController {
     init: Function(): undefined;

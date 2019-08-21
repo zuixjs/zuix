@@ -34,6 +34,8 @@ const z$ =
     require('../helpers/ZxQuery');
 const util =
     require('../helpers/Util');
+const ViewObserver =
+    require('./ViewObserver');
 
 // Custom objects definition used to generate JsDoc
 
@@ -56,10 +58,16 @@ const util =
  * @this {ZxQuery}
  */
 
-// TODO: convert all 'this.<field>' to 'let' variables
+// private 'static' fields and methods
 
 /** @type {Zuix} **/
 let zuix = null;
+
+const _componentIndex = [];
+const _controllerOnlyAttribute = '_ctrl_';
+function getComponentIndex(context) {
+    return _componentIndex[context.componentId];
+}
 
 /**
  * The component context object.
@@ -147,10 +155,48 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         }
     }, {context: this});
 
+    /**
+     * @type {ViewObserver}
+     * @private
+     */
+    this._viewObserver = new ViewObserver(this);
+
     this.options(options);
 
     return this;
 }
+
+ComponentContext.prototype.dispose = function() {
+    // TODO: ... check out for more resources that could be freed
+    this._viewObserver.stop();
+    if (!util.isNoU(this._c)) {
+        if (!util.isNoU(this._c.view())) {
+            // TODO: restore all attributes state to the original state (before component creation)
+            this._c.view().attr(_optionAttributes.dataUiComponent, null);
+            // un-register event handlers associated to the view
+            this._c.view().reset();
+            // un-register event handlers for all cached fields accessed through cp.field(...) method
+            if (!util.isNoU(this._c._fieldCache)) {
+                z$.each(this._c._fieldCache, /** @param {ZxQuery} v */ function(k, v) {
+                    v.reset();
+                });
+            }
+        }
+        if (util.isFunction(this._c.destroy)) {
+            this._c.destroy.call(this, this);
+        }
+    }
+    // un-register model observable
+    this.model(null);
+    // detach from parent
+    this._c.view().detach();
+    // detach the container from the DOM as well
+    const cel = this._container;
+    if (cel != null && cel.parentNode != null) {
+        cel.parentNode.removeChild(cel);
+    }
+};
+
 /**
  * Gets/Sets the container element of the component.
  * Returns the current container element if no
@@ -185,6 +231,7 @@ ComponentContext.prototype.view = function(view) {
     else if (view instanceof z$.ZxQuery) {
         view = view.get();
     }
+    if (view === this._view) return this;
 
     _log.t(this.componentId, 'view:attach', 'timer:view:start');
     if (typeof view === 'string') {
@@ -214,8 +261,9 @@ ComponentContext.prototype.view = function(view) {
             } else this._view = viewDiv;
         }
 
+        const v = z$(this._view);
         // Run embedded scripts
-        z$(this._view).find('script').each(function(i, el) {
+        v.find('script').each(function(i, el) {
             if (this.attr(_optionAttributes.zuixLoaded) !== 'true') {
                 this.attr(_optionAttributes.zuixLoaded, 'true');
                 /* if (el.src != null && el.src.length > 0) {
@@ -239,9 +287,6 @@ ComponentContext.prototype.view = function(view) {
         // trigger `view:process` hook when the view is ready to be processed
         this.trigger(this, 'view:process', z$(this._view));
     } else {
-        if (view instanceof z$.ZxQuery) {
-            view = view.get();
-        }
         // load inline view
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
@@ -252,6 +297,7 @@ ComponentContext.prototype.view = function(view) {
         } else this._view = view;
     }
 
+    // TODO: rewrite this to make it work with new view encapsulation or deprecate this options
     const v = z$(this._view);
     if (this._options.css === false) {
         // disable local css styling for this instance
@@ -264,6 +310,30 @@ ComponentContext.prototype.view = function(view) {
     v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
         this.attr(_optionAttributes.dataUiLoaded, 'false');
     });
+
+    // View mutation observer and style encapsulation
+    const cssId = this.getCssId();
+    v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
+    // if both the container and the style are null
+    // then this is just a controller attached to a pre-existent view
+    if (this._container != null || this._style != null) {
+        // mark all elements for view encapsulation
+        v.find(
+            '*'
+            + util.dom.cssNot(_optionAttributes.dataUiLoad).get()
+            + util.dom.cssNot(_optionAttributes.dataUiInclude).get()
+        ).each(function(i, v) {
+            this.attr(cssId, '');
+        });
+        // start view observer
+        this._viewObserver.start();
+        // since this is a component, remove the 'controller only' flag
+        v.attr(_controllerOnlyAttribute, null);
+    } else {
+        // this is a controller only instance, add the 'controller only' flag
+        // so that this instance view will inherit styles from the parent component
+        v.attr(_controllerOnlyAttribute, '');
+    }
 
     this.modelToView();
 
@@ -308,7 +378,15 @@ ComponentContext.prototype.style = function(css) {
 
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type
-        css = z$.wrapCss('['+_optionAttributes.dataUiComponent+'="' + this.componentId + '"]:not(.zuix-css-ignore)', css);
+        const cssIdAttr = '[' + this.getCssId() + ']';
+        const cssIgnore = ':not(.zuix-css-ignore)';
+        css = z$.wrapCss(
+            cssIdAttr + cssIgnore,
+            css,
+            cssIdAttr + util.dom.queryAttribute(_optionAttributes.dataUiLoad, this.componentId) + cssIgnore
+            + ','
+            + cssIdAttr + util.dom.queryAttribute(_optionAttributes.dataUiInclude, this.componentId) + cssIgnore
+        );
 
         // output css
         this._style = z$.appendCss(css, this._style, this.componentId);
@@ -375,7 +453,8 @@ ComponentContext.prototype.model = function(model) {
  */
 ComponentContext.prototype.controller = function(controller) {
     if (typeof controller === 'undefined') return this._controller;
-    // TODO: should dispose previous context controller first
+    // TODO: should dispose previous context controller first,
+    // TODO: alternatively should not allow _controller reassignment and throw an error
     else this._controller = controller; // can be null
     return this;
 };
@@ -393,6 +472,11 @@ ComponentContext.prototype.options = function(options) {
     const o = this._options = this._options || {};
     Object.assign(o, options);
     this.componentId = o.componentId || this.componentId;
+    // store index for this component type if not already in
+    if (_componentIndex[this.componentId] == null) {
+        _componentIndex[this.componentId] = _componentIndex.length;
+        _componentIndex.length++;
+    }
     this.container(o.container);
     this.view(o.view);
     if (typeof o.css !== 'undefined') {
@@ -533,7 +617,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         const inlineView = z$().find(util.dom.queryAttribute(
             _optionAttributes.dataUiView,
             htmlPath,
-            util.dom.cssNot(_optionAttributes.dataUiComponent, + '')
+            util.dom.cssNot(_optionAttributes.dataUiComponent)
         ));
         if (inlineView.length() > 0) {
             const inlineElement = inlineView.get(0);
@@ -621,9 +705,45 @@ ComponentContext.prototype.viewToModel = function() {
     return this;
 };
 /**
- // TODO: fill-in missing docs...
- * @param el
- * @param boundData
+ * Copies values from the data model to the ```data-ui-field```
+ * elements declared in the component view.
+ *
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+ComponentContext.prototype.modelToView = function() {
+    _log.t(this.componentId, 'model:view', 'timer:mv:start');
+    if (this._view != null && this._model != null) {
+        const _t = this;
+        z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
+            if (this.parent('pre,code').length() > 0) {
+                return true;
+            }
+            let boundField = this.attr(_optionAttributes.dataBindTo);
+            if (boundField == null) {
+                boundField = this.attr(_optionAttributes.dataUiField);
+            }
+            const v = z$(_t._view);
+            if (typeof _t._model === 'function') {
+                (_t._model).call(v, this, boundField, v);
+            } else {
+                const boundData = util.propertyFromPath(_t._model, boundField);
+                if (typeof boundData === 'function') {
+                    (boundData).call(v, this, boundField, v);
+                } else if (boundData != null) {
+                    _t.dataBind(el, boundData);
+                }
+            }
+        });
+    }
+    _log.t(this.componentId, 'model:view', 'timer:mv:stop');
+    return this;
+};
+
+/**
+ * Bind provided data by automatically mapping it to the given element.
+ *
+ * @param {Element} el The element to bind data to.
+ * @param {Object} boundData Data object to map data from.
  */
 ComponentContext.prototype.dataBind = function(el, boundData) {
     // try to guess target property
@@ -661,39 +781,14 @@ ComponentContext.prototype.dataBind = function(el, boundData) {
             }
     }
 };
+
 /**
- * Copies values from the data model to the ```data-ui-field```
- * elements declared in the component view.
+ * Get the CSS identifier attribute.
  *
- * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ * @return {string} The css-id attribute of this component
  */
-ComponentContext.prototype.modelToView = function() {
-    _log.t(this.componentId, 'model:view', 'timer:mv:start');
-    if (this._view != null && this._model != null) {
-        const _t = this;
-        z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
-            if (this.parent('pre,code').length() > 0) {
-                return true;
-            }
-            let boundField = this.attr(_optionAttributes.dataBindTo);
-            if (boundField == null) {
-                boundField = this.attr(_optionAttributes.dataUiField);
-            }
-            const v = z$(_t._view);
-            if (typeof _t._model === 'function') {
-                (_t._model).call(v, this, boundField, v);
-            } else {
-                const boundData = util.propertyFromPath(_t._model, boundField);
-                if (typeof boundData === 'function') {
-                    (boundData).call(v, this, boundField, v);
-                } else if (boundData != null) {
-                    _t.dataBind(el, boundData);
-                }
-            }
-        });
-    }
-    _log.t(this.componentId, 'model:view', 'timer:mv:stop');
-    return this;
+ComponentContext.prototype.getCssId = function() {
+    return '_cmp_' + getComponentIndex(this);
 };
 
 module.exports = ComponentContext;

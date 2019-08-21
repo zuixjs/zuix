@@ -26,29 +26,29 @@
 
 const OptionAttributes = Object.freeze({
     dataBindModel:
-        'data-bind-model',
+        'z-model,data-bind-model',
     dataBindTo:
-        'data-bind-to',
+        'z-bind,data-bind-to',
     dataUiComponent:
         'z-component',
     dataUiContext:
-        'data-ui-context,z-context',
+        'z-context,data-ui-context',
     dataUiField:
-        'data-ui-field,z-field',
+        'z-field,data-ui-field',
     dataUiInclude:
-        'data-ui-include,z-include',
+        'z-include,data-ui-include',
     dataUiLazyload:
-        'data-ui-lazyload,z-lazy',
+        'z-lazy,data-ui-lazyload',
     dataUiLoad:
-        'data-ui-load,z-load',
+        'z-load,data-ui-load',
     dataUiLoaded:
         'z-loaded',
     dataUiOptions:
-        'data-ui-options,z-options',
+        'z-options,data-ui-options',
     dataUiPriority:
-        'data-ui-priority,z-priority',
+        'z-priority,data-ui-priority',
     dataUiView:
-        'data-ui-view,z-view',
+        'z-view,data-ui-view',
     zuixLoaded:
         'zuix-loaded'
 });

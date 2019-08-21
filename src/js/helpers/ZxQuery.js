@@ -39,6 +39,8 @@ const util = require('./Util.js');
  * @typedef {object} ElementPosition
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
+ * @property {{dx: number, dy: number}} frame Position of the element relative to the viewport
+ * @property {'enter'|'exit'|'scroll'|'off-scroll'} event Current state change event description
  * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
  */
 
@@ -797,7 +799,7 @@ z$.wrapElement = function(containerTag, element) {
     }
     return container;
 };
-z$.wrapCss = function(wrapperRule, css) {
+z$.wrapCss = function(wrapperRule, css, rootWrapperRule) {
     const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
     let ruleMatch;
@@ -812,10 +814,10 @@ z$.wrapCss = function(wrapperRule, css) {
                 const classes = ruleParts.split(',');
                 let isMediaQuery = false;
                 z$.each(classes, function(k, v) {
-                    if (v.replace(' ', '') === '.') {
+                    if (v.trim() === '.') {
                         // a single `.` means 'self' (the container itself)
                         // so we just add the wrapperRule
-                        wrappedCss += '\n' + wrapperRule + ' ';
+                        wrappedCss += '\n' + rootWrapperRule + ' ';
                     } else if (v.trim()[0] === '@') {
                         // leave it as is if it's an animation or media rule
                         wrappedCss += v + ' ';
@@ -824,14 +826,14 @@ z$.wrapCss = function(wrapperRule, css) {
                         }
                     } else {
                         // wrap the class name (v)
-                        wrappedCss += '\n' + wrapperRule + '\n' + v + ' ';
+                        wrappedCss += '\n' + v.trim() + wrapperRule + ' ';
                     }
                     if (k < classes.length - 1) {
                         wrappedCss += ', ';
                     }
                 });
                 if (isMediaQuery) {
-                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'));
+                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), rootWrapperRule);
                     wrappedCss += '{\n  '+wrappedMediaQuery+'\n}';
                 } else {
                     wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
@@ -946,6 +948,7 @@ z$.replaceBraces = function(html, callback) {
 };
 z$.getClosest = function(elem, selector) {
     // Get closest match
+    elem = elem.parentNode;
     for (; elem && elem !== document; elem = elem.parentNode) {
         if (elem.matches(selector)) return elem;
     }

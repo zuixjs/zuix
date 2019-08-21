@@ -174,13 +174,14 @@ module.exports = {
             let value;
             if (typeof name === 'string' && name.indexOf(',') !== -1) {
                 const fields = name.split(',');
-                fields.filter(function(v, i) {
-                    const a = element.getAttribute(v);
+                for (let i = 0; i < fields.length; i++) {
+                    const f = fields[i];
+                    const a = element.getAttribute(f);
                     if (a != null) {
                         value = a;
+                        break;
                     }
-                    return value != null;
-                });
+                }
             } else value = element.getAttribute(name);
             return value;
         },
@@ -196,7 +197,9 @@ module.exports = {
             const fields = name.split(',');
             let selector = '';
             fields.forEach(function(v, i) {
-                if (value != null) {
+                if (v.startsWith('.')) {
+                    selector += ':not(' + v + ')';
+                } else if (value != null) {
                     selector += ':not([' + v + '="' + value + '"])';
                 } else {
                     selector += ':not([' + v + '])';
@@ -207,7 +210,7 @@ module.exports = {
                 return {
                     get: function(i) {
                         const selectors = s.split(',');
-                        return (i >= selectors.length) ? selectors[0] : selectors[i];
+                        return (i >= selectors.length || i == null) ? selectors[0] : selectors[i];
                     }
                 };
             })(selector);
