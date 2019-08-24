@@ -26,29 +26,14 @@
 
 'use strict';
 
-/**
- * ObservableObject type definition.
- *
- * @typedef {Object} ObservableObject
- * @property {function(ObservableListener):ObservableObject} subscribe Subscribe a listener to this observable events
- * @property {function(ObservableListener):ObservableObject} unsubscribe Unsubscribe a listener
- * @property {function():void} revoke Revoke this observable
- * @property {Proxy} proxy The proxy object of this observable
- * @property {Object} target The target object
- * @package
- * @property {ObservableListener[]|undefined} __parents__
- * @package
- * @property {ObservableListener[]} __listeners__
- * @package
- * @property {string} __path__
- */
+const ObservableListener =
+    require('./ObservableListener');
+const ObservableObject =
+    require('./ObservableObject');
 
 /**
- * ObservableListener type definition.
- *
- * @typedef ObservableListener
- * @property {function(Object,string,Object,string):void} get Value get callback
- * @property {function(Object,string,Object,string,Object):void} set Value set callback
+ * The DOM Proxy object.
+ * @typedef Proxy
  */
 
 /**
@@ -172,48 +157,7 @@ ObjectObserver.prototype.observable = function(obj) {
                 return delete target[property];
             }
         };
-        Object.assign(handler, {context: this});
-        observable = Proxy.revocable(obj, handler);
-        observable.target = obj;
-        observable.__parents__ = [];
-        observable.__listeners__ = [];
-        observable.subscribe = function(listener) {
-            _t.observableList.forEach(function(p) {
-                if (p !== observable && p.__listeners__.indexOf(listener) !== -1) {
-                    throw new Error('Listener already registered.');
-                }
-            });
-            observable.__listeners__.push(listener);
-            return observable;
-        };
-        observable.unsubscribe = function(listener) {
-            const i = observable.__listeners__.indexOf(listener);
-            if (i !== -1) {
-                observable.__listeners__.splice(i, 1);
-            }
-            if (observable.__listeners__.length === 0) {
-                // this observable has no more direct listeners and can be removed
-                observable.revoke();
-                // TODO: this is untested!!!
-                // remove this observable and parent references to it
-                _t.observableList = _t.observableList.filter(function(p) {
-                    if (p === observable) return false;
-                    const i = p.__parents__.indexOf(observable);
-                    if (i !== -1) {
-                        p.__parents__.splice(i, 1);
-                        // if child has no more parents nor listeners, then remove it as well
-                        if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
-                            // recursive call
-                            p.unsubscribe(null);
-                            return false;
-                        }
-                    }
-                    return true;
-                });
-            }
-            return observable;
-        };
-        this.observableList.push(observable);
+        observable = new ObservableObject(this, obj, handler);
     }
     return observable;
 };

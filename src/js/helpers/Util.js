@@ -152,6 +152,23 @@ module.exports = {
         return supportsPassive;
     },
 
+    deepFreeze: function(o, /** @type {string[]} */ exceptionList, path) {
+        const _t = this;
+        Object.freeze(o);
+        Object.getOwnPropertyNames(o).forEach(function (prop) {
+            if (path == null) path = '';
+            path += (path !== '' ? '.' : '') + prop;
+            if (exceptionList.indexOf(path) === -1 && o.hasOwnProperty(prop)
+                && o[prop] !== null
+                && (typeof o[prop] === 'object' || typeof o[prop] === 'function')
+                && !Object.isFrozen(o[prop])) {
+                _t.deepFreeze(o[prop], exceptionList, path);
+            }
+            path = null;
+        });
+        return o;
+    },
+
     dom: {
 
         queryAttribute: function(name, value, appendValue) {
@@ -188,10 +205,15 @@ module.exports = {
         setAttribute: function(element, name, value) {
             if (typeof name === 'string' && name.indexOf(',') !== -1) {
                 const fields = name.split(',');
+                const _t = this;
                 fields.forEach(function(f) {
-                    element.setAttribute(f, value);
+                    _t.setAttribute(element, f, value);
                 });
-            } else element.setAttribute(name, value);
+            } else if (value === null) {
+                element.removeAttribute(name, value);
+            } else {
+                element.setAttribute(name, value);
+            }
         },
         cssNot: function(name, value) {
             const fields = name.split(',');
@@ -211,6 +233,10 @@ module.exports = {
                     get: function(i) {
                         const selectors = s.split(',');
                         return (i >= selectors.length || i == null) ? selectors[0] : selectors[i];
+                    },
+                    getAll: function(i) {
+                        const selectors = s.split(',');
+                        return selectors.join('');
                     }
                 };
             })(selector);

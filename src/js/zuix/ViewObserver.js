@@ -56,16 +56,16 @@ function ViewObserver(context) {
          */
         function(mutationsList, observer) {
             const zc = util.dom.queryAttribute(_optionAttributes.dataUiComponent);
-            for(let mutation of mutationsList) {
+            for (let mutation of mutationsList) {
                 if (mutation.type === 'childList') {
                     mutation.addedNodes.forEach(function(node) {
                         if (node instanceof Element) {
                             let parent = zuix.$(node).parent(zc);
-                            if (parent.attr('_ctrl_') == null) {
+                            if (_t.options().css !== false && parent.attr(_controllerOnlyAttribute) == null) {
                                 if ((parent.get() === _t._container || parent.get() === _t._view)) {
                                     let found = false;
                                     for (let i = 0; i < node.attributes.length; i++) {
-                                        if (node.attributes[i].name.startsWith('_cmp_')) {
+                                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
                                             found = true;
                                             break;
                                         }
@@ -79,12 +79,12 @@ function ViewObserver(context) {
                                 do {
                                     c++;
                                     parent = parent.parent(zc);
-                                } while (c < 10 && parent.get() != null && parent.attr('_ctrl_') != null);
+                                } while (c < 10 && parent.get() != null && parent.attr(_controllerOnlyAttribute) != null);
                                 if (parent.get()) {
                                     parent = zuix.context(parent);
                                     let found = false;
                                     for (let i = 0; i < node.attributes.length; i++) {
-                                        if (node.attributes[i].name.startsWith('_cmp_')) {
+                                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
                                             found = true;
                                             break;
                                         }
@@ -100,15 +100,16 @@ function ViewObserver(context) {
                         }
                     });
                 }
-                //else if (mutation.type === 'attributes') {
-                //    console.log('The ' + mutation.attributeName + ' attribute was modified.');
-                //}
+                // TODO: this might be used for improving data binding
+                // else if (mutation.type === 'attributes') {
+                //     console.log('The ' + mutation.attributeName + ' attribute was modified.');
+                // }
             }
         };
 }
 ViewObserver.prototype.start = function() {
     this.stop();
-    const config = { attributes: false, childList: true, subtree: true };
+    const config = {attributes: false, childList: true, subtree: true};
     this._mutationObserver = new MutationObserver(this._mutationCallback);
     this._mutationObserver.observe(this._context._view, config);
 };

@@ -7,6 +7,8 @@ interface ContextOptions {
     on?: { [k: string]: EventCallback };
     behavior?: { [k: string]: EventCallback };
     css?: Element | String | Boolean;
+    encapsulation: Boolean;
+    resetCss: Boolean;
     cext?: String;
     html?: Boolean;
     lazyLoad?: Boolean;
@@ -35,7 +37,7 @@ interface Zuix {
     componentize(element?: Element | ZxQuery): Zuix;
     store(name: String, value: Object): Object;
     getResourcePath(path: String): String;
-    observable(obj: ): ObservableObject;
+    observable(obj: Object): ObservableObject;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
     $: ZxQuery;
     dumpCache(): ComponentCache[];
@@ -59,13 +61,25 @@ interface ComponentContext {
     loadHtml(options?: Object, enableCaching?: Boolean): ComponentContext;
     viewToModel(): ComponentContext;
     modelToView(): ComponentContext;
-    dataBind(el: ElementboundData: Object    getCssId(): String;
+    getCssId(): String;
+}
+interface ContextControllerUpdateCallback {
+    (target: Object, key: String, value: Object, path: String, old: Object): void;
+}
+interface ContextControllerInitCallback {
+    (): void;
+}
+interface ContextControllerCreateCallback {
+    (): void;
+}
+interface ContextControllerDestroyCallback {
+    (): void;
 }
 interface ContextController {
-    init: Function(): undefined;
-    create: Function(): undefined;
-    update: Function(Object, string, Object, Object): undefined;
-    destroy: Function(): undefined;
+    init: ContextControllerInitCallback;
+    create: ContextControllerCreateCallback;
+    update: ContextControllerUpdateCallback;
+    destroy: ContextControllerDestroyCallback;
 }
 interface ContextController {
     field(fieldName: String): ZxQuery;
@@ -136,6 +150,19 @@ interface ZxQuery {
     visibility(mode?: String): String | ZxQuery;
     show(mode?: String): ZxQuery;
     hide(): ZxQuery;
+}
+interface Proxy {
+}
+interface ObjectObserver {
+    observable(obj: Proxy | Object): ObservableObject;
+}
+interface ObservableObject {
+    subscribe(observableListener: ObservableListener): void;
+    unsubscribe(observableListener: ObservableListener): void;
+}
+interface ObservableListener {
+    get(target: Object, key: String, value: Object, path: String): void;
+    set(target: Object, key: String, value: Object, path: String, old: Object): void;
 }
 
 declare const zuix: Zuix;

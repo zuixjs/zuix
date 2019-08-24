@@ -64,9 +64,55 @@ const ViewObserver =
 let zuix = null;
 
 const _componentIndex = [];
-const _controllerOnlyAttribute = '_ctrl_';
+window._controllerOnlyAttribute = '_ctrl_';
+window._cssIdAttribute = '_css_';
 function getComponentIndex(context) {
     return _componentIndex[context.componentId];
+}
+
+/**
+ * Bind provided data by automatically mapping it to the given element.
+ *
+ * @param {Element} el The element to bind data to.
+ * @param {Object} boundData Data object to map data from.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+function dataBind(el, boundData) {
+    boundData = boundData.observableTarget || boundData;
+    // try to guess target property
+    switch (el.tagName.toLowerCase()) {
+        // TODO: complete binding cases
+        case 'img':
+            el.src = (!util.isNoU(boundData.src) ? boundData.src :
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            if (boundData.alt) el.alt = boundData.alt;
+            break;
+        case 'a':
+            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            if (boundData.title) el.title = boundData.title;
+            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
+                el.innerHTML = boundData.innerHTML;
+            }
+            break;
+        case 'input':
+            el.value = (!util.isNoU(boundData.value) ? boundData.value :
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            break;
+        default:
+            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
+            if (boundData.attributes != null) {
+                for (let i = 0; i < boundData.attributes.length; i++) {
+                    const attr = boundData.attributes[i];
+                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
+                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
+                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
+                        }
+                        util.dom.setAttribute(el, attr.name, attr.value);
+                    }
+                }
+            }
+    }
 }
 
 /**
@@ -151,7 +197,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
                     fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
                 }
                 if (fld.get()) {
-                    this.context.dataBind(fld.get(), value);
+                    dataBind(fld.get(), value);
                 }
                 // call controller's 'update' method
                 if (this.context._c && typeof this.context._c.update === 'function') {
@@ -242,6 +288,20 @@ ComponentContext.prototype.view = function(view) {
         view = view.get();
     }
     if (view === this._view) return this;
+    this._viewObserver.stop();
+
+    // clean custom attributes added to the old view
+    const cssId = this.getCssId();
+    if (this._view != null) {
+        // view style encapsulation
+        const q = '*'
+            + util.dom.cssNot(_optionAttributes.dataUiLoad).getAll()
+            + util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+        // mark all elements with a css identifier attribute
+        z$(this._view).attr(cssId, null).find(q).each(function(i, v) {
+            this.attr(cssId, null);
+        });
+    }
 
     _log.t(this.componentId, 'view:attach', 'timer:view:start');
     if (typeof view === 'string') {
@@ -301,48 +361,43 @@ ComponentContext.prototype.view = function(view) {
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
             // remove data-ui-view attribute if present on root node
-            this._view.removeAttribute(_optionAttributes.dataUiView);
+            util.dom.setAttribute(this._view,_optionAttributes.dataUiView, null);
             this._container.appendChild(this._view);
             this._view = this._container;
         } else this._view = view;
     }
 
-    // TODO: rewrite this to make it work with new view encapsulation or deprecate this options
     const v = z$(this._view);
-    if (this._options.css === false) {
-        // disable local css styling for this instance
-        v.addClass('zuix-css-ignore');
-    } else {
-        // enable local css styling
-        v.removeClass('zuix-css-ignore');
-    }
+
     // Disable loading of nested components until the component is ready
     v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
         this.attr(_optionAttributes.dataUiLoaded, 'false');
     });
 
-    // View mutation observer and style encapsulation
-    const cssId = this.getCssId();
-    v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
-    // if both the container and the style are null
-    // then this is just a controller attached to a pre-existent view
-    if (this._container != null || this._style != null) {
-        // mark all elements for view encapsulation
-        v.find(
-            '*'
-            + util.dom.cssNot(_optionAttributes.dataUiLoad).get()
-            + util.dom.cssNot(_optionAttributes.dataUiInclude).get()
-        ).each(function(i, v) {
-            this.attr(cssId, '');
-        });
-        // start view observer
-        this._viewObserver.start();
-        // since this is a component, remove the 'controller only' flag
-        v.attr(_controllerOnlyAttribute, null);
-    } else {
-        // this is a controller only instance, add the 'controller only' flag
-        // so that this instance view will inherit styles from the parent component
-        v.attr(_controllerOnlyAttribute, '');
+    // View style encapsulation
+    if (this._options.css !== false) {
+        v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
+        // if both the container and the style are null
+        // then this is just a controller attached to a pre-existent view
+        if (this._container != null || this._style != null) {
+            // view style encapsulation
+            const q = '*'
+                + util.dom.cssNot(_optionAttributes.dataUiLoad).getAll()
+                + util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+            // mark all elements with a css identifier attribute
+            v.find(q).each(function(i, v) {
+                this.attr(cssId, '');
+            });
+            // start view observer for dynamically adding the css identifier
+            // attribute to elements added after view creation
+            this._viewObserver.start();
+            // since this is a component, remove the 'controller only' flag
+            v.attr(_controllerOnlyAttribute, null);
+        } else {
+            // this is a controller only instance, add the 'controller only' flag
+            // so that this instance view will inherit styles from the parent component
+            v.attr(_controllerOnlyAttribute, '');
+        }
     }
 
     this.modelToView();
@@ -386,16 +441,20 @@ ComponentContext.prototype.style = function(css) {
         this.trigger(this, 'css:parse', hookData);
         css = hookData.content;
 
+        // reset css
+        let resetCss = '';
+        if (this.options().resetCss === true) {
+            // from https://jgthms.com/minireset.css/
+            resetCss = /* html,body, */ 'p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}';
+        }
+
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type
         const cssIdAttr = '[' + this.getCssId() + ']';
-        const cssIgnore = ':not(.zuix-css-ignore)';
         css = z$.wrapCss(
-            cssIdAttr + cssIgnore,
-            css,
-            cssIdAttr + util.dom.queryAttribute(_optionAttributes.dataUiLoad, this.componentId) + cssIgnore
-            + ','
-            + cssIdAttr + util.dom.queryAttribute(_optionAttributes.dataUiInclude, this.componentId) + cssIgnore
+            cssIdAttr,
+            resetCss + '\n' + css,
+            this.options().encapsulation === true
         );
 
         // output css
@@ -743,7 +802,7 @@ ComponentContext.prototype.modelToView = function() {
                 if (typeof boundData === 'function') {
                     (boundData).call(v, this, boundField, v);
                 } else if (boundData != null) {
-                    _t.dataBind(el, boundData);
+                    dataBind(el, boundData);
                 }
             }
         });
@@ -753,56 +812,12 @@ ComponentContext.prototype.modelToView = function() {
 };
 
 /**
- * Bind provided data by automatically mapping it to the given element.
- *
- * @param {Element} el The element to bind data to.
- * @param {Object} boundData Data object to map data from.
- */
-ComponentContext.prototype.dataBind = function(el, boundData) {
-    boundData = boundData.observableTarget || boundData;
-    // try to guess target property
-    switch (el.tagName.toLowerCase()) {
-        // TODO: complete binding cases
-        case 'img':
-            el.src = (!util.isNoU(boundData.src) ? boundData.src :
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-            if (boundData.alt) el.alt = boundData.alt;
-            break;
-        case 'a':
-            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-            if (boundData.title) el.title = boundData.title;
-            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
-                el.innerHTML = boundData.innerHTML;
-            }
-            break;
-        case 'input':
-            el.value = (!util.isNoU(boundData.value) ? boundData.value :
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-            break;
-        default:
-            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
-            if (boundData.attributes != null) {
-                for (let i = 0; i < boundData.attributes.length; i++) {
-                    const attr = boundData.attributes[i];
-                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
-                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
-                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
-                        }
-                        util.dom.setAttribute(el, attr.name, attr.value);
-                    }
-                }
-            }
-    }
-};
-
-/**
  * Get the CSS identifier attribute.
  *
  * @return {string} The css-id attribute of this component
  */
 ComponentContext.prototype.getCssId = function() {
-    return '_cmp_' + getComponentIndex(this);
+    return _cssIdAttribute + getComponentIndex(this);
 };
 
 module.exports = ComponentContext;

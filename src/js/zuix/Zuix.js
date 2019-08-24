@@ -63,6 +63,8 @@ require('./ComponentCache');
  * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
  * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
  * @property {Element|string|boolean|undefined} css The stylesheet of the view.
+ * @property {boolean} encapsulation Whether to use style encapsulation or not.
+ * @property {boolean} resetCss Whether to reset view style to prevent inheriting from parent containers.
  * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
  * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
@@ -637,7 +639,6 @@ function createComponent(context, task) {
                 if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
                     context.viewToModel();
                 }
-                c.trigger('view:apply');
                 if (context.options().viewDeferred) {
                     context.options().viewDeferred = false;
                     // save the original inline view
@@ -711,6 +712,8 @@ function createComponent(context, task) {
                     }
                 } else if (task != null) task.end();
             }
+            //util.deepFreeze(context.options(), ['model', 'data']);
+            c.trigger('view:apply');
 
             if (task == null) {
                 _log.d(context.componentId, 'controller:create');
@@ -720,7 +723,7 @@ function createComponent(context, task) {
             _log.w(context.componentId, 'component:controller:undefined');
         }
     } else {
-        // TODO: report error
+        // TODO: should report error or throw an exception
         _log.e(context.componentId, 'component:view:undefined');
     }
 }
@@ -1253,7 +1256,7 @@ Zuix.prototype.getResourcePath = function(path) {
 };
 /**
  * Get an observable instance of an object for detecting changes.
- * @param obj
+ * @param {Object} obj Object to observe
  * @return {ObservableObject} The observable object
  */
 Zuix.prototype.observable = function(obj) {
@@ -1308,6 +1311,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
  * @property {ZxQuery}
  */
 Zuix.prototype.$ = z$;
+// private
 Zuix.prototype.TaskQueue = TaskQueue;
 Zuix.prototype.ObjectObserver = ObjectObserver;
 Zuix.prototype.ZxQuery = z$.ZxQuery;

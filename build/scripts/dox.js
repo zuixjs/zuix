@@ -41,6 +41,9 @@ const inputFiles = [
     'zuix/ComponentContext.js',
     'zuix/ContextController.js',
     'zuix/ComponentCache.js',
+    'helpers/ObjectObserver.js',
+    'helpers/ObservableListener.js',
+    'helpers/ObservableObject.js',
     'helpers/ZxQuery.js',
     'localizer/Localizer.js'
 ];
@@ -63,13 +66,17 @@ function build() {
     // Generate ZUIX TypeScript Definition file
     const targetFolder = path.join(baseFolder, 'dist/ts');
     const targetFile = path.join(targetFolder, 'zuix.d.ts');
-    tlog.br().info('^BTypeScript defs^:')
+    tlog.br()
+        .info('^BTypeScript defs^:')
         .info('   ^w%s^:', targetFile);
     let tsDefs = generateTypescriptDefs('Zuix');
     tsDefs += generateTypescriptDefs('ComponentContext');
     tsDefs += generateTypescriptDefs('ContextController');
     tsDefs += generateTypescriptDefs('ComponentCache');
     tsDefs += generateTypescriptDefs('ZxQuery');
+    tsDefs += generateTypescriptDefs('ObjectObserver');
+    tsDefs += generateTypescriptDefs('ObservableObject');
+    tsDefs += generateTypescriptDefs('ObservableListener');
     tsDefs += '\ndeclare const zuix: Zuix;\n';
     // Write TypeScript definitions to file
     if (!fs.existsSync(targetFolder)) {

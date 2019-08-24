@@ -30,13 +30,43 @@ const z$ =
     require('../helpers/ZxQuery');
 
 /**
- * ContextController user-defined handlers definition
+ * Function called when the data model of the component is updated
+ *
+ * @callback ContextControllerUpdateCallback
+ * @param {Object} target
+ * @param {string} key
+ * @param {Object} value
+ * @param {string} path
+ * @param {Object} old
+ * @returns undefined
+ */
+
+/**
+ * Function that gets called after loading and before the component is created.
+ *
+ * @callback ContextControllerInitCallback
+ */
+
+/**
+ * Function that gets called after loading, when the component is actually created and ready.
+ *
+ * @callback ContextControllerCreateCallback
+ */
+
+/**
+ * Function called when the component is destroyed.
+ *
+ * @callback ContextControllerDestroyCallback
+ */
+
+/**
+ * ContextController user-defined handlers definition (interface)
  *
  * @typedef {Object} ContextController
- * @property {function():void} init Function that gets called after loading and before the component is created.
- * @property {function():void} create Function that gets called after loading, when the component is actually created and ready.
- * @property {function(Object,string,Object,Object):void} update Function called when the data model of the component is updated.
- * @property {function():void} destroy Function called when the component is destroyed.
+ * @property {ContextControllerInitCallback} init Function that gets called after loading and before the component is created.
+ * @property {ContextControllerCreateCallback} create Function that gets called after loading, when the component is actually created and ready.
+ * @property {ContextControllerUpdateCallback} update Function called when the data model of the component is updated.
+ * @property {ContextControllerDestroyCallback} destroy Function called when the component is destroyed.
  */
 
 /**

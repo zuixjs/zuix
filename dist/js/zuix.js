@@ -306,29 +306,14 @@ module.exports = function(ctx) {
 
 'use strict';
 
-/**
- * ObservableObject type definition.
- *
- * @typedef {Object} ObservableObject
- * @property {function(ObservableListener):ObservableObject} subscribe Subscribe a listener to this observable events
- * @property {function(ObservableListener):ObservableObject} unsubscribe Unsubscribe a listener
- * @property {function():void} revoke Revoke this observable
- * @property {Proxy} proxy The proxy object of this observable
- * @property {Object} target The target object
- * @package
- * @property {ObservableListener[]|undefined} __parents__
- * @package
- * @property {ObservableListener[]} __listeners__
- * @package
- * @property {string} __path__
- */
+const ObservableListener =
+    _dereq_('./ObservableListener');
+const ObservableObject =
+    _dereq_('./ObservableObject');
 
 /**
- * ObservableListener type definition.
- *
- * @typedef ObservableListener
- * @property {function(Object,string,Object,string):void} get Value get callback
- * @property {function(Object,string,Object,string,Object):void} set Value set callback
+ * The DOM Proxy object.
+ * @typedef Proxy
  */
 
 /**
@@ -452,54 +437,186 @@ ObjectObserver.prototype.observable = function(obj) {
                 return delete target[property];
             }
         };
-        Object.assign(handler, {context: this});
-        observable = Proxy.revocable(obj, handler);
-        observable.target = obj;
-        observable.__parents__ = [];
-        observable.__listeners__ = [];
-        observable.subscribe = function(listener) {
-            _t.observableList.forEach(function(p) {
-                if (p !== observable && p.__listeners__.indexOf(listener) !== -1) {
-                    throw new Error('Listener already registered.');
-                }
-            });
-            observable.__listeners__.push(listener);
-            return observable;
-        };
-        observable.unsubscribe = function(listener) {
-            const i = observable.__listeners__.indexOf(listener);
-            if (i !== -1) {
-                observable.__listeners__.splice(i, 1);
-            }
-            if (observable.__listeners__.length === 0) {
-                // this observable has no more direct listeners and can be removed
-                observable.revoke();
-                // TODO: this is untested!!!
-                // remove this observable and parent references to it
-                _t.observableList = _t.observableList.filter(function(p) {
-                    if (p === observable) return false;
-                    const i = p.__parents__.indexOf(observable);
-                    if (i !== -1) {
-                        p.__parents__.splice(i, 1);
-                        // if child has no more parents nor listeners, then remove it as well
-                        if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
-                            // recursive call
-                            p.unsubscribe(null);
-                            return false;
-                        }
-                    }
-                    return true;
-                });
-            }
-            return observable;
-        };
-        this.observableList.push(observable);
+        observable = new ObservableObject(this, obj, handler);
     }
     return observable;
 };
 module.exports = ObjectObserver;
 
-},{}],4:[function(_dereq_,module,exports){
+},{"./ObservableListener":4,"./ObservableObject":5}],4:[function(_dereq_,module,exports){
+/*
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ *         https://zuixjs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://zuixjs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+'use strict';
+
+/**
+ * ObservableListener interface.
+ *
+ * @class ObservableListener
+ * @constructor
+ */
+function ObservableListener() {}
+
+/**
+ * This method does...
+ *
+ * @param {Object} target The updated object
+ * @param {string} key The property key
+ * @param {Object} value The value
+ * @param {string} path Full property path
+ * @returns undefined
+ */
+ObservableListener.prototype.get = function(target, key, value, path) {};
+
+/**
+ * This method does...
+ *
+ * @param {Object} target The updated object
+ * @param {string} key The property key
+ * @param {Object} value The value
+ * @param {string} path Full property path
+ * @param {Object} old A copy of the object before the update
+ * @returns undefined
+ */
+ObservableListener.prototype.set = function(target, key, value, path, old) {};
+
+module.export = ObservableListener;
+
+},{}],5:[function(_dereq_,module,exports){
+/*
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ *         https://zuixjs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://zuixjs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+'use strict';
+
+const ObservableListener =
+    _dereq_('./ObservableListener');
+
+/**
+ * ObservableObject class.
+ *
+ * @class ObservableObject
+ * @param {Object} context The observer context
+ * @param {Object} target The target object to observe
+ * @param {ProxyHandler} handler Handler for get/set callbacks
+ * @constructor
+ */
+function ObservableObject(context, target, handler) {
+    Object.assign(handler, {context: context});
+    Object.assign(this, Proxy.revocable(target, handler));
+    /** @private */
+    this.handler = handler;
+    /** @private */
+    this.handler.context.observableList = this.handler.context.observableList || [];
+    this.handler.context.observableList.push(this);
+    /** @private */
+    this.target = target;
+    /** @private */
+    this.__parents__ = [];
+    /** @private */
+    this.__listeners__ = [];
+}
+
+/**
+ * Subscribe a listener to this observable events
+ *
+ * @param {ObservableListener} observableListener
+ * @returns ObservableObject
+ */
+ObservableObject.prototype.subscribe = function(observableListener) {
+    const _t = this;
+    this.handler.context.observableList.forEach(function(p) {
+        if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
+            throw new Error('Listener already registered.');
+        }
+    });
+    this.__listeners__.push(observableListener);
+    return this;
+};
+
+/**
+ * Unsubscribe a listener
+ *
+ * @param {ObservableListener} observableListener
+ * @returns ObservableObject
+ */
+ObservableObject.prototype.unsubscribe = function(observableListener) {
+    const i = this.__listeners__.indexOf(observableListener);
+    if (i !== -1) {
+        this.__listeners__.splice(i, 1);
+    }
+    if (this.__listeners__.length === 0) {
+        // this observable has no more direct listeners and can be removed
+        this.revoke();
+        // TODO: this is untested!!!
+        // remove this observable and parent references to it
+        const _t = this;
+        this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
+            if (p === _t) return false;
+            const i = p.__parents__.indexOf(_t);
+            if (i !== -1) {
+                p.__parents__.splice(i, 1);
+                // if child has no more parents nor listeners, then remove it as well
+                if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
+                    // recursive call
+                    p.unsubscribe(null);
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+    return this;
+};
+
+module.exports = ObservableObject;
+
+},{"./ObservableListener":4}],6:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -620,7 +737,7 @@ TaskQueue.prototype.queue = function(tid, fn, pri) {
 
 module.exports = TaskQueue;
 
-},{"./Logger":2}],5:[function(_dereq_,module,exports){
+},{"./Logger":2}],7:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -775,6 +892,24 @@ module.exports = {
         return supportsPassive;
     },
 
+    deepFreeze: function(o, /** @type {string[]} */ exceptionList, path) {
+        const _t = this;
+        Object.freeze(o);
+        Object.getOwnPropertyNames(o).forEach(function (prop) {
+            if (path == null) path = '';
+            path += (path !== '' ? '.' : '') + prop;
+            if (exceptionList.indexOf(path) === -1 && o.hasOwnProperty(prop)
+                && o[prop] !== null
+                && (typeof o[prop] === 'object' || typeof o[prop] === 'function')
+                && !Object.isFrozen(o[prop])) {
+                console.log(path)
+                _t.deepFreeze(o[prop], exceptionList, path);
+            }
+            path = null;
+        });
+        return o;
+    },
+
     dom: {
 
         queryAttribute: function(name, value, appendValue) {
@@ -811,10 +946,15 @@ module.exports = {
         setAttribute: function(element, name, value) {
             if (typeof name === 'string' && name.indexOf(',') !== -1) {
                 const fields = name.split(',');
+                const _t = this;
                 fields.forEach(function(f) {
-                    element.setAttribute(f, value);
+                    _t.setAttribute(element, f, value);
                 });
-            } else element.setAttribute(name, value);
+            } else if (value === null) {
+                element.removeAttribute(name, value);
+            } else {
+                element.setAttribute(name, value);
+            }
         },
         cssNot: function(name, value) {
             const fields = name.split(',');
@@ -834,6 +974,10 @@ module.exports = {
                     get: function(i) {
                         const selectors = s.split(',');
                         return (i >= selectors.length || i == null) ? selectors[0] : selectors[i];
+                    },
+                    getAll: function(i) {
+                        const selectors = s.split(',');
+                        return selectors.join('');
                     }
                 };
             })(selector);
@@ -843,7 +987,7 @@ module.exports = {
 
 };
 
-},{}],6:[function(_dereq_,module,exports){
+},{}],8:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -1131,8 +1275,6 @@ ZxQuery.prototype.attr = function(attr, val) {
         });
     } else if (typeof val == 'undefined') {
         return util.dom.getAttribute(this._selection[0], attr);
-    } else if (val === null) {
-        this._selection[0].removeAttribute(attr);
     } else {
         this.each(function(k, v) {
             util.dom.setAttribute(this.get(), attr, val);
@@ -1645,7 +1787,7 @@ z$.wrapElement = function(containerTag, element) {
     }
     return container;
 };
-z$.wrapCss = function(wrapperRule, css, rootWrapperRule) {
+z$.wrapCss = function(wrapperRule, css, encapsulate) {
     const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
     let ruleMatch;
@@ -1660,26 +1802,28 @@ z$.wrapCss = function(wrapperRule, css, rootWrapperRule) {
                 const classes = ruleParts.split(',');
                 let isMediaQuery = false;
                 z$.each(classes, function(k, v) {
-                    if (v.trim() === '.') {
+                    if (v.trim() === '.' || v.trim() === ':host') {
                         // a single `.` means 'self' (the container itself)
                         // so we just add the wrapperRule
-                        wrappedCss += '\n' + rootWrapperRule + ' ';
+                        wrappedCss += '\n[z-component]' + wrapperRule + ' ';
                     } else if (v.trim()[0] === '@') {
                         // leave it as is if it's an animation or media rule
                         wrappedCss += v + ' ';
                         if (v.trim().toLowerCase().startsWith('@media')) {
                             isMediaQuery = true;
                         }
-                    } else {
+                    } else if (encapsulate) {
                         // wrap the class name (v)
                         wrappedCss += '\n' + v.trim() + wrapperRule + ' ';
+                    } else {
+                        wrappedCss += '\n[z-component]' + wrapperRule + '\n' + v.trim() + ' ';
                     }
                     if (k < classes.length - 1) {
                         wrappedCss += ', ';
                     }
                 });
                 if (isMediaQuery) {
-                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), rootWrapperRule);
+                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), encapsulate);
                     wrappedCss += '{\n  '+wrappedMediaQuery+'\n}';
                 } else {
                     wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
@@ -1932,7 +2076,7 @@ if (!String.prototype.startsWith) {
 
 module.exports = z$;
 
-},{"./Logger":2,"./Util.js":5}],7:[function(_dereq_,module,exports){
+},{"./Logger":2,"./Util.js":7}],9:[function(_dereq_,module,exports){
 /* eslint-disable */
 /*!
  * @license
@@ -1980,7 +2124,7 @@ module.exports = z$;
     }
 }(this, _dereq_('./zuix/Zuix.js')));
 
-},{"./zuix/Zuix.js":14}],8:[function(_dereq_,module,exports){
+},{"./zuix/Zuix.js":16}],10:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -2033,7 +2177,7 @@ module.exports = function(root) {
     return null;
 };
 
-},{}],9:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -2100,9 +2244,55 @@ const ViewObserver =
 let zuix = null;
 
 const _componentIndex = [];
-const _controllerOnlyAttribute = '_ctrl_';
+window._controllerOnlyAttribute = '_ctrl_';
+window._cssIdAttribute = '_css_';
 function getComponentIndex(context) {
     return _componentIndex[context.componentId];
+}
+
+/**
+ * Bind provided data by automatically mapping it to the given element.
+ *
+ * @param {Element} el The element to bind data to.
+ * @param {Object} boundData Data object to map data from.
+ * @return {ComponentContext} The ```{ComponentContext}``` object itself.
+ */
+function dataBind(el, boundData) {
+    boundData = boundData.observableTarget || boundData;
+    // try to guess target property
+    switch (el.tagName.toLowerCase()) {
+        // TODO: complete binding cases
+        case 'img':
+            el.src = (!util.isNoU(boundData.src) ? boundData.src :
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            if (boundData.alt) el.alt = boundData.alt;
+            break;
+        case 'a':
+            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            if (boundData.title) el.title = boundData.title;
+            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
+                el.innerHTML = boundData.innerHTML;
+            }
+            break;
+        case 'input':
+            el.value = (!util.isNoU(boundData.value) ? boundData.value :
+                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+            break;
+        default:
+            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
+            if (boundData.attributes != null) {
+                for (let i = 0; i < boundData.attributes.length; i++) {
+                    const attr = boundData.attributes[i];
+                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
+                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
+                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
+                        }
+                        util.dom.setAttribute(el, attr.name, attr.value);
+                    }
+                }
+            }
+    }
 }
 
 /**
@@ -2187,7 +2377,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
                     fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
                 }
                 if (fld.get()) {
-                    this.context.dataBind(fld.get(), value);
+                    dataBind(fld.get(), value);
                 }
                 // call controller's 'update' method
                 if (this.context._c && typeof this.context._c.update === 'function') {
@@ -2278,6 +2468,20 @@ ComponentContext.prototype.view = function(view) {
         view = view.get();
     }
     if (view === this._view) return this;
+    this._viewObserver.stop();
+
+    // clean custom attributes added to the old view
+    const cssId = this.getCssId();
+    if (this._view != null) {
+        // view style encapsulation
+        const q = '*'
+            + util.dom.cssNot(_optionAttributes.dataUiLoad).getAll()
+            + util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+        // mark all elements with a css identifier attribute
+        z$(this._view).attr(cssId, null).find(q).each(function(i, v) {
+            this.attr(cssId, null);
+        });
+    }
 
     _log.t(this.componentId, 'view:attach', 'timer:view:start');
     if (typeof view === 'string') {
@@ -2337,48 +2541,43 @@ ComponentContext.prototype.view = function(view) {
         if (this._container != null) {
             this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
             // remove data-ui-view attribute if present on root node
-            this._view.removeAttribute(_optionAttributes.dataUiView);
+            util.dom.setAttribute(this._view,_optionAttributes.dataUiView, null);
             this._container.appendChild(this._view);
             this._view = this._container;
         } else this._view = view;
     }
 
-    // TODO: rewrite this to make it work with new view encapsulation or deprecate this options
     const v = z$(this._view);
-    if (this._options.css === false) {
-        // disable local css styling for this instance
-        v.addClass('zuix-css-ignore');
-    } else {
-        // enable local css styling
-        v.removeClass('zuix-css-ignore');
-    }
+
     // Disable loading of nested components until the component is ready
     v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
         this.attr(_optionAttributes.dataUiLoaded, 'false');
     });
 
-    // View mutation observer and style encapsulation
-    const cssId = this.getCssId();
-    v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
-    // if both the container and the style are null
-    // then this is just a controller attached to a pre-existent view
-    if (this._container != null || this._style != null) {
-        // mark all elements for view encapsulation
-        v.find(
-            '*'
-            + util.dom.cssNot(_optionAttributes.dataUiLoad).get()
-            + util.dom.cssNot(_optionAttributes.dataUiInclude).get()
-        ).each(function(i, v) {
-            this.attr(cssId, '');
-        });
-        // start view observer
-        this._viewObserver.start();
-        // since this is a component, remove the 'controller only' flag
-        v.attr(_controllerOnlyAttribute, null);
-    } else {
-        // this is a controller only instance, add the 'controller only' flag
-        // so that this instance view will inherit styles from the parent component
-        v.attr(_controllerOnlyAttribute, '');
+    // View style encapsulation
+    if (this._options.css !== false) {
+        v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
+        // if both the container and the style are null
+        // then this is just a controller attached to a pre-existent view
+        if (this._container != null || this._style != null) {
+            // view style encapsulation
+            const q = '*'
+                + util.dom.cssNot(_optionAttributes.dataUiLoad).getAll()
+                + util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+            // mark all elements with a css identifier attribute
+            v.find(q).each(function(i, v) {
+                this.attr(cssId, '');
+            });
+            // start view observer for dynamically adding the css identifier
+            // attribute to elements added after view creation
+            this._viewObserver.start();
+            // since this is a component, remove the 'controller only' flag
+            v.attr(_controllerOnlyAttribute, null);
+        } else {
+            // this is a controller only instance, add the 'controller only' flag
+            // so that this instance view will inherit styles from the parent component
+            v.attr(_controllerOnlyAttribute, '');
+        }
     }
 
     this.modelToView();
@@ -2422,16 +2621,20 @@ ComponentContext.prototype.style = function(css) {
         this.trigger(this, 'css:parse', hookData);
         css = hookData.content;
 
+        // reset css
+        let resetCss = '';
+        if (this.options().resetCss === true) {
+            // from https://jgthms.com/minireset.css/
+            resetCss = /* html,body, */ 'p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}';
+        }
+
         // nest the CSS inside [data-ui-component='<componentId>']
         // so that the style is only applied to this component type
         const cssIdAttr = '[' + this.getCssId() + ']';
-        const cssIgnore = ':not(.zuix-css-ignore)';
         css = z$.wrapCss(
-            cssIdAttr + cssIgnore,
-            css,
-            cssIdAttr + util.dom.queryAttribute(_optionAttributes.dataUiLoad, this.componentId) + cssIgnore
-            + ','
-            + cssIdAttr + util.dom.queryAttribute(_optionAttributes.dataUiInclude, this.componentId) + cssIgnore
+            cssIdAttr,
+            resetCss + '\n' + css,
+            this.options().encapsulation === true
         );
 
         // output css
@@ -2779,7 +2982,7 @@ ComponentContext.prototype.modelToView = function() {
                 if (typeof boundData === 'function') {
                     (boundData).call(v, this, boundField, v);
                 } else if (boundData != null) {
-                    _t.dataBind(el, boundData);
+                    dataBind(el, boundData);
                 }
             }
         });
@@ -2789,61 +2992,17 @@ ComponentContext.prototype.modelToView = function() {
 };
 
 /**
- * Bind provided data by automatically mapping it to the given element.
- *
- * @param {Element} el The element to bind data to.
- * @param {Object} boundData Data object to map data from.
- */
-ComponentContext.prototype.dataBind = function(el, boundData) {
-    boundData = boundData.observableTarget || boundData;
-    // try to guess target property
-    switch (el.tagName.toLowerCase()) {
-        // TODO: complete binding cases
-        case 'img':
-            el.src = (!util.isNoU(boundData.src) ? boundData.src :
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-            if (boundData.alt) el.alt = boundData.alt;
-            break;
-        case 'a':
-            el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-            if (boundData.title) el.title = boundData.title;
-            if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
-                el.innerHTML = boundData.innerHTML;
-            }
-            break;
-        case 'input':
-            el.value = (!util.isNoU(boundData.value) ? boundData.value :
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-            break;
-        default:
-            el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
-            if (boundData.attributes != null) {
-                for (let i = 0; i < boundData.attributes.length; i++) {
-                    const attr = boundData.attributes[i];
-                    if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
-                        if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
-                            attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
-                        }
-                        util.dom.setAttribute(el, attr.name, attr.value);
-                    }
-                }
-            }
-    }
-};
-
-/**
  * Get the CSS identifier attribute.
  *
  * @return {string} The css-id attribute of this component
  */
 ComponentContext.prototype.getCssId = function() {
-    return '_cmp_' + getComponentIndex(this);
+    return _cssIdAttribute + getComponentIndex(this);
 };
 
 module.exports = ComponentContext;
 
-},{"../helpers/Logger":2,"../helpers/Util":5,"../helpers/ZxQuery":6,"./OptionAttributes":12,"./ViewObserver":13}],10:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":7,"../helpers/ZxQuery":8,"./OptionAttributes":14,"./ViewObserver":15}],12:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3407,7 +3566,7 @@ function lazyElementCheck(element) {
     return false;
 }
 
-},{"../helpers/Logger":2,"../helpers/Util":5,"../helpers/ZxQuery":6,"./../helpers/AsynChain":1,"./OptionAttributes":12}],11:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":7,"../helpers/ZxQuery":8,"./../helpers/AsynChain":1,"./OptionAttributes":14}],13:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3440,13 +3599,43 @@ const z$ =
     _dereq_('../helpers/ZxQuery');
 
 /**
- * ContextController user-defined handlers definition
+ * Function called when the data model of the component is updated
+ *
+ * @callback ContextControllerUpdateCallback
+ * @param {Object} target
+ * @param {string} key
+ * @param {Object} value
+ * @param {string} path
+ * @param {Object} old
+ * @returns undefined
+ */
+
+/**
+ * Function that gets called after loading and before the component is created.
+ *
+ * @callback ContextControllerInitCallback
+ */
+
+/**
+ * Function that gets called after loading, when the component is actually created and ready.
+ *
+ * @callback ContextControllerCreateCallback
+ */
+
+/**
+ * Function called when the component is destroyed.
+ *
+ * @callback ContextControllerDestroyCallback
+ */
+
+/**
+ * ContextController user-defined handlers definition (interface)
  *
  * @typedef {Object} ContextController
- * @property {function():void} init Function that gets called after loading and before the component is created.
- * @property {function():void} create Function that gets called after loading, when the component is actually created and ready.
- * @property {function(Object,string,Object,Object):void} update Function called when the data model of the component is updated.
- * @property {function():void} destroy Function called when the component is destroyed.
+ * @property {ContextControllerInitCallback} init Function that gets called after loading and before the component is created.
+ * @property {ContextControllerCreateCallback} create Function that gets called after loading, when the component is actually created and ready.
+ * @property {ContextControllerUpdateCallback} update Function called when the data model of the component is updated.
+ * @property {ContextControllerDestroyCallback} destroy Function called when the component is destroyed.
  */
 
 /**
@@ -3852,7 +4041,7 @@ ContextController.prototype.for = function(componentId) {
 
 module.exports = ContextController;
 
-},{"../helpers/ZxQuery":6}],12:[function(_dereq_,module,exports){
+},{"../helpers/ZxQuery":8}],14:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3910,7 +4099,7 @@ const OptionAttributes = Object.freeze({
 
 module.exports = OptionAttributes;
 
-},{}],13:[function(_dereq_,module,exports){
+},{}],15:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3969,16 +4158,16 @@ function ViewObserver(context) {
          */
         function(mutationsList, observer) {
             const zc = util.dom.queryAttribute(_optionAttributes.dataUiComponent);
-            for(let mutation of mutationsList) {
+            for (let mutation of mutationsList) {
                 if (mutation.type === 'childList') {
                     mutation.addedNodes.forEach(function(node) {
                         if (node instanceof Element) {
                             let parent = zuix.$(node).parent(zc);
-                            if (parent.attr('_ctrl_') == null) {
+                            if (_t.options().css !== false && parent.attr(_controllerOnlyAttribute) == null) {
                                 if ((parent.get() === _t._container || parent.get() === _t._view)) {
                                     let found = false;
                                     for (let i = 0; i < node.attributes.length; i++) {
-                                        if (node.attributes[i].name.startsWith('_cmp_')) {
+                                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
                                             found = true;
                                             break;
                                         }
@@ -3992,12 +4181,12 @@ function ViewObserver(context) {
                                 do {
                                     c++;
                                     parent = parent.parent(zc);
-                                } while (c < 10 && parent.get() != null && parent.attr('_ctrl_') != null);
+                                } while (c < 10 && parent.get() != null && parent.attr(_controllerOnlyAttribute) != null);
                                 if (parent.get()) {
                                     parent = zuix.context(parent);
                                     let found = false;
                                     for (let i = 0; i < node.attributes.length; i++) {
-                                        if (node.attributes[i].name.startsWith('_cmp_')) {
+                                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
                                             found = true;
                                             break;
                                         }
@@ -4013,15 +4202,16 @@ function ViewObserver(context) {
                         }
                     });
                 }
-                //else if (mutation.type === 'attributes') {
-                //    console.log('The ' + mutation.attributeName + ' attribute was modified.');
-                //}
+                // TODO: this might be used for improving data binding
+                // else if (mutation.type === 'attributes') {
+                //     console.log('The ' + mutation.attributeName + ' attribute was modified.');
+                // }
             }
         };
 }
 ViewObserver.prototype.start = function() {
     this.stop();
-    const config = { attributes: false, childList: true, subtree: true };
+    const config = {attributes: false, childList: true, subtree: true};
     this._mutationObserver = new MutationObserver(this._mutationCallback);
     this._mutationObserver.observe(this._context._view, config);
 };
@@ -4034,7 +4224,7 @@ ViewObserver.prototype.stop = function() {
 
 module.exports = ViewObserver;
 
-},{"../helpers/Util":5,"./OptionAttributes":12}],14:[function(_dereq_,module,exports){
+},{"../helpers/Util":7,"./OptionAttributes":14}],16:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -4100,6 +4290,8 @@ _dereq_('./ComponentCache');
  * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
  * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
  * @property {Element|string|boolean|undefined} css The stylesheet of the view.
+ * @property {boolean} encapsulation Whether to use style encapsulation or not.
+ * @property {boolean} resetCss Whether to reset view style to prevent inheriting from parent containers.
  * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
  * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
@@ -4674,7 +4866,6 @@ function createComponent(context, task) {
                 if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
                     context.viewToModel();
                 }
-                c.trigger('view:apply');
                 if (context.options().viewDeferred) {
                     context.options().viewDeferred = false;
                     // save the original inline view
@@ -4748,6 +4939,8 @@ function createComponent(context, task) {
                     }
                 } else if (task != null) task.end();
             }
+            //util.deepFreeze(context.options(), ['model', 'data']);
+            c.trigger('view:apply');
 
             if (task == null) {
                 _log.d(context.componentId, 'controller:create');
@@ -4757,7 +4950,7 @@ function createComponent(context, task) {
             _log.w(context.componentId, 'component:controller:undefined');
         }
     } else {
-        // TODO: report error
+        // TODO: should report error or throw an exception
         _log.e(context.componentId, 'component:view:undefined');
     }
 }
@@ -5290,7 +5483,7 @@ Zuix.prototype.getResourcePath = function(path) {
 };
 /**
  * Get an observable instance of an object for detecting changes.
- * @param obj
+ * @param {Object} obj Object to observe
  * @return {ObservableObject} The observable object
  */
 Zuix.prototype.observable = function(obj) {
@@ -5345,6 +5538,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
  * @property {ZxQuery}
  */
 Zuix.prototype.$ = z$;
+// private
 Zuix.prototype.TaskQueue = TaskQueue;
 Zuix.prototype.ObjectObserver = ObjectObserver;
 Zuix.prototype.ZxQuery = z$.ZxQuery;
@@ -5388,5 +5582,5 @@ module.exports = function(root) {
     return zuix;
 };
 
-},{"../helpers/Logger":2,"../helpers/ObjectObserver":3,"../helpers/TaskQueue":4,"../helpers/Util":5,"../helpers/ZxQuery":6,"./ComponentCache":8,"./ComponentContext":9,"./Componentizer":10,"./ContextController":11,"./OptionAttributes":12}]},{},[7])(7)
+},{"../helpers/Logger":2,"../helpers/ObjectObserver":3,"../helpers/TaskQueue":6,"../helpers/Util":7,"../helpers/ZxQuery":8,"./ComponentCache":10,"./ComponentContext":11,"./Componentizer":12,"./ContextController":13,"./OptionAttributes":14}]},{},[9])(9)
 });

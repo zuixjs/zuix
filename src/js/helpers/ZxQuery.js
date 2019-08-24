@@ -285,8 +285,6 @@ ZxQuery.prototype.attr = function(attr, val) {
         });
     } else if (typeof val == 'undefined') {
         return util.dom.getAttribute(this._selection[0], attr);
-    } else if (val === null) {
-        this._selection[0].removeAttribute(attr);
     } else {
         this.each(function(k, v) {
             util.dom.setAttribute(this.get(), attr, val);
@@ -799,7 +797,7 @@ z$.wrapElement = function(containerTag, element) {
     }
     return container;
 };
-z$.wrapCss = function(wrapperRule, css, rootWrapperRule) {
+z$.wrapCss = function(wrapperRule, css, encapsulate) {
     const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
     let ruleMatch;
@@ -814,26 +812,28 @@ z$.wrapCss = function(wrapperRule, css, rootWrapperRule) {
                 const classes = ruleParts.split(',');
                 let isMediaQuery = false;
                 z$.each(classes, function(k, v) {
-                    if (v.trim() === '.') {
+                    if (v.trim() === '.' || v.trim() === ':host') {
                         // a single `.` means 'self' (the container itself)
                         // so we just add the wrapperRule
-                        wrappedCss += '\n' + rootWrapperRule + ' ';
+                        wrappedCss += '\n[z-component]' + wrapperRule + ' ';
                     } else if (v.trim()[0] === '@') {
                         // leave it as is if it's an animation or media rule
                         wrappedCss += v + ' ';
                         if (v.trim().toLowerCase().startsWith('@media')) {
                             isMediaQuery = true;
                         }
-                    } else {
+                    } else if (encapsulate) {
                         // wrap the class name (v)
                         wrappedCss += '\n' + v.trim() + wrapperRule + ' ';
+                    } else {
+                        wrappedCss += '\n[z-component]' + wrapperRule + '\n' + v.trim() + ' ';
                     }
                     if (k < classes.length - 1) {
                         wrappedCss += ', ';
                     }
                 });
                 if (isMediaQuery) {
-                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), rootWrapperRule);
+                    const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), encapsulate);
                     wrappedCss += '{\n  '+wrappedMediaQuery+'\n}';
                 } else {
                     wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
