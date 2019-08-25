@@ -58,10 +58,10 @@ Download and copy the `.js` file to your project folder and include it in your H
 
 ### Hosted
 
-Link the `.js` file as an external resource from *GitHub* site:
+Link the `.js` file as an external resource from *jsDelivr* CDN:
 
 ```html
-<script src="https://zuixjs.github.io/zuix/js/zuix.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/zuix"></script>
 ```
 
 ### NPM
