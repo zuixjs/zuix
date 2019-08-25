@@ -39,7 +39,7 @@ interface Zuix {
     getResourcePath(path: String): String;
     observable(obj: Object): ObservableObject;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
-    $: ZxQuery;
+    $: ZxQueryStatic;
     dumpCache(): ComponentCache[];
     dumpContexts(): ComponentContext[];
 }
@@ -80,8 +80,6 @@ interface ContextController {
     create: ContextControllerCreateCallback;
     update: ContextControllerUpdateCallback;
     destroy: ContextControllerDestroyCallback;
-}
-interface ContextController {
     field(fieldName: String): ZxQuery;
     view(filter?: String): ZxQuery;
     model(model?: Object): ContextController | Object;
@@ -90,6 +88,7 @@ interface ContextController {
     expose(methodName: String | JSON, handler?: Function): ContextController;
     loadCss(options?: Object): ContextController;
     loadHtml(options?: Object): ContextController;
+    log: Logger;
     for(componentId: String): ContextController;
 }
 interface ComponentCache {
@@ -111,6 +110,9 @@ interface ElementPosition {
     frame: {"dx":["number"],"dy":["number"]};
     event: String;
     visible: Boolean;
+}
+interface IterationCallback {
+    (i: Number, item: Object): void;
 }
 interface ElementsIterationCallback {
     (count: Number, item: Element, $item: ZxQuery): void;
@@ -151,10 +153,41 @@ interface ZxQuery {
     show(mode?: String): ZxQuery;
     hide(): ZxQuery;
 }
-interface Proxy {
+interface ZxQueryAjaxBeforeSendCallback {
+    (xhr: XMLHttpRequest): void;
+}
+interface ZxQueryAjaxSuccessCallback {
+    (responseText: String): void;
+}
+interface ZxQueryAjaxErrorCallback {
+    (xhr: XMLHttpRequest, statusText: String, statusCode: Number): void;
+}
+interface ZxQueryAjaxThenCallback {
+    (xhr: XMLHttpRequest): void;
+}
+interface ZxQueryAjaxOptions {
+    url: String;
+    beforeSend?: ZxQueryAjaxBeforeSendCallback;
+    success?: ZxQueryAjaxSuccessCallback;
+    error?: ZxQueryAjaxErrorCallback;
+    then?: ZxQueryAjaxThenCallback;
+}
+interface ZxQueryStatic {
+    (what?: Object | ZxQuery | Node[] | Node | NodeList | String): ZxQuery;
+    find(selector: String): ZxQuery;
+    each(items: Object[] | JSON, iterationCallback: IterationCallback): ZxQuery;
+    ajax(options: ZxQueryAjaxOptions): ZxQueryStatic;
+    hasClass(el: Element, className: String): Boolean;
+    classExists(className: String): Boolean;
+    wrapElement(containerTag: String, element: Element): Element;
+    appendCss(css: String, target: Element, cssId: String): Element;
+    replaceCssVars(css: String, model: Object): String;
+    replaceBraces(html: String, callback: Function): String;
+    getClosest(elem: Element, selector: String): Element;
+    getPosition(el: Element, tolerance?: Number): ElementPosition;
 }
 interface ObjectObserver {
-    observable(obj: Proxy | Object): ObservableObject;
+    observable(obj: Object): ObservableObject;
 }
 interface ObservableObject {
     subscribe(observableListener: ObservableListener): void;
@@ -163,6 +196,18 @@ interface ObservableObject {
 interface ObservableListener {
     get(target: Object, key: String, value: Object, path: String): void;
     set(target: Object, key: String, value: Object, path: String, old: Object): void;
+}
+interface LoggerMonitorCallback {
+    (ctx: Object, level: String, ...args: Object[]): void;
+}
+interface Logger {
+    monitor(callback: LoggerMonitorCallback): void;
+    console(enable: Boolean): void;
+    info(...args: Object[]): Logger;
+    warn(...args: Object[]): Logger;
+    error(...args: Object[]): Logger;
+    debug(...args: Object[]): Logger;
+    trace(...args: Object[]): Logger;
 }
 
 declare const zuix: Zuix;

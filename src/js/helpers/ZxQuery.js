@@ -47,7 +47,6 @@ const util = require('./Util.js');
 /**
  * The `IterationCallback` function.
  *
- * @private
  * @callback IterationCallback
  * @param {number} i Iteration count.
  * @param {object} item Current element (same as `this`).
@@ -665,16 +664,23 @@ ZxQuery.prototype.hide = function() {
 // --- ZxQuery factory members --- //
 
 /**
- * Exported ZxQuery interface.
+ * Creates a ZxQuery wrapped element.
  *
- * @param [what] {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined}
+ * @class {ZxQueryStatic}
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [what] Query target
  * @return {ZxQuery}
  */
-const z$ = function(what) {
+function ZxQueryStatic(what) {
     return new ZxQuery(what);
-};
-z$.find = function(filter) {
-    return z$().find(filter);
+}
+const z$ = ZxQueryStatic;
+/**
+ * @memberOf {ZxQueryStatic}
+ * @param {string} selector A valid *DOM* query selector.
+ * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
+ */
+ZxQueryStatic.find = function(selector) {
+    return z$().find(selector);
 };
 /**
  * Iterate through all objects in the given `items` collection.
@@ -685,11 +691,12 @@ z$.find = function(filter) {
  *
  * If the callback returns *false*, the iteration loop will interrupt.
  *
+ * @memberOf {ZxQueryStatic}
  * @param {Array<Object>|JSON} items Enumerable objects collection.
  * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
- * @return {z$} `this`.
+ * @return {ZxQuery} `this`.
  */
-z$.each = function(items, iterationCallback) {
+ZxQueryStatic.each = function(items, iterationCallback) {
     const len = (items == null ? 0 : Object.keys(items).length);
     if (len > 0) {
         let count = 0;
@@ -711,37 +718,78 @@ z$.each = function(items, iterationCallback) {
     }
     return this;
 };
-z$.ajax = function(opt) {
+/**
+ * @callback ZxQueryAjaxBeforeSendCallback
+ * @param {XMLHttpRequest} xhr
+ * @this {undefined}
+ */
+/**
+ * @callback ZxQueryAjaxSuccessCallback
+ * @param {string} responseText
+ * @this {undefined}
+ */
+/**
+ * @callback ZxQueryAjaxErrorCallback
+ * @param {XMLHttpRequest} xhr
+ * @param {string} statusText
+ * @param {number} statusCode
+ * @this {undefined}
+ */
+/**
+ * @callback ZxQueryAjaxThenCallback
+ * @param {XMLHttpRequest} xhr
+ * @this {undefined}
+ */
+/**
+ * @typedef ZxQueryAjaxOptions
+ * @property {string} url
+ * @property {ZxQueryAjaxBeforeSendCallback} [beforeSend]
+ * @property {ZxQueryAjaxSuccessCallback} [success]
+ * @property {ZxQueryAjaxErrorCallback} [error]
+ * @property {ZxQueryAjaxThenCallback} [then]
+ */
+/**
+ * @memberOf {ZxQueryStatic}
+ * @param {ZxQueryAjaxOptions} options
+ * @return {ZxQueryStatic}
+ */
+ZxQueryStatic.ajax = function(options) {
     let url;
-    if (!util.isNoU(opt) && !util.isNoU(opt.url)) {
-        url = opt.url;
+    if (!util.isNoU(options) && !util.isNoU(options.url)) {
+        url = options.url;
     } else {
-        url = opt;
+        url = options;
     }
     const xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status === 200) {
-            if (util.isFunction(opt.success)) opt.success(xhr.responseText);
+            if (util.isFunction(options.success)) options.success(xhr.responseText);
         } else {
-            if (util.isFunction(opt.error)) opt.error(xhr, xhr.statusText, xhr.status);
+            if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status);
         }
-        if (util.isFunction(opt.then)) opt.then(xhr);
+        if (util.isFunction(options.then)) options.then(xhr);
     };
     xhr.onerror = function(xhr, textStatus, errorThrown) {
-        if (util.isFunction(opt.error)) opt.error(xhr, textStatus, errorThrown);
+        if (util.isFunction(options.error)) options.error(xhr, textStatus, errorThrown);
     };
-    if (typeof opt.beforeSend == 'function') {
-        opt.beforeSend(xhr);
+    if (typeof options.beforeSend == 'function') {
+        options.beforeSend(xhr);
     }
     try {
         xhr.open('GET', url);
         xhr.send();
     } catch (e) {
-        if (util.isFunction(opt.error)) opt.error(xhr, xhr.statusText, xhr.status, e);
+        if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status, e);
     }
     return this;
 };
-z$.hasClass = function(el, className) {
+/**
+ * @memberOf {ZxQueryStatic}
+ * @param {Element} el
+ * @param {string} className
+ * @return {boolean}
+ */
+ZxQueryStatic.hasClass = function(el, className) {
     const classes = className.match(/\S+/g) || [];
     let success = false;
     z$.each(classes, function(k, cl) {
@@ -754,7 +802,14 @@ z$.hasClass = function(el, className) {
     });
     return success;
 };
-z$.classExists = function(className) {
+/**
+ * Check if a class exists by searching for it in all document stylesheets.
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {string} className
+ * @return {boolean}
+ */
+ZxQueryStatic.classExists = function(className) {
     const classes = className.match(/\S+/g) || [];
     let success = false;
     z$.each(classes, function(k, cl) {
@@ -784,7 +839,15 @@ z$.classExists = function(className) {
     });
     return success;
 };
-z$.wrapElement = function(containerTag, element) {
+/**
+ * Wraps an {Element} inside a container specified by a given tag name.
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {string} containerTag Container element tag name
+ * @param {Element} element
+ * @return {Element} The new wrapped element
+ */
+ZxQueryStatic.wrapElement = function(containerTag, element) {
     // $(element).wrap($('<'+containerTag+'/>'));
     // return element;
     /** @type Element */
@@ -797,7 +860,7 @@ z$.wrapElement = function(containerTag, element) {
     }
     return container;
 };
-z$.wrapCss = function(wrapperRule, css, encapsulate) {
+ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
     const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
     let ruleMatch;
@@ -848,7 +911,16 @@ z$.wrapCss = function(wrapperRule, css, encapsulate) {
     }
     return css;
 };
-z$.appendCss = function(css, target, cssId) {
+/**
+ * Append or replace a stylesheet to the document.
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {string} css Stylesheet text
+ * @param {Element|null} target Existing style element to replace
+ * @param {string} cssId id to assign to the stylesheet
+ * @return {Element} The new style element created out of the given css text.
+ */
+ZxQueryStatic.appendCss = function(css, target, cssId) {
     const head = document.head || document.getElementsByTagName('head')[0];
     let style = null;
     // remove old style if already defined
@@ -877,7 +949,15 @@ z$.appendCss = function(css, target, cssId) {
     }
     return style;
 };
-z$.replaceCssVars = function(css, model) {
+/**
+ * Replaces CSS variables with provided values.
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {string} css Stylesheet text
+ * @param {object} model Object containing variables fields and values.
+ * @return {string} The new stylesheet text with variables replaced with values
+ */
+ZxQueryStatic.replaceCssVars = function(css, model) {
     const vars = new RegExp(/\B\$var\[(.*[^\[\]])]/g);
     let outCss = '';
     let matched = 0;
@@ -915,7 +995,16 @@ z$.replaceCssVars = function(css, model) {
     }
     return css;
 };
-z$.replaceBraces = function(html, callback) {
+/**
+ * Parses variables enclosed in single or double braces and calls the given callback for each parsed variable name.
+ * If the callback returns a value, then the variable will be replaced with the given value.
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {string} html The source HTML template.
+ * @param {function} callback A callback function with one argument (the currently parsed variable name).
+ * @return {string|null} The new html code with variables replaced with values or null if no variable was replaced.
+ */
+ZxQueryStatic.replaceBraces = function(html, callback) {
     // TODO: add optional parameter for custom regex
     const tags = new RegExp(/{?{.*?}?}/g); // <-- single/double braces wrapper
     let outHtml = '';
@@ -946,7 +1035,15 @@ z$.replaceBraces = function(html, callback) {
     }
     return null;
 };
-z$.getClosest = function(elem, selector) {
+/**
+ * Gets the closest parent mathing the given query selector
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {Element} elem
+ * @param {string} selector A valid DOM query selector string expression.
+ * @return {Element|null}
+ */
+ZxQueryStatic.getClosest = function(elem, selector) {
     // Get closest match
     elem = elem.parentNode;
     for (; elem && elem !== document; elem = elem.parentNode) {
@@ -954,7 +1051,15 @@ z$.getClosest = function(elem, selector) {
     }
     return null;
 };
-z$.getPosition = function(el, tolerance) {
+/**
+ * Gets the position of an element.
+ *
+ * @memberOf {ZxQueryStatic}
+ * @param {Element} el
+ * @param {number} [tolerance] Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
+ * @return {ElementPosition}
+ */
+ZxQueryStatic.getPosition = function(el, tolerance) {
     const visibleClass = '--ui--visible';
     const position = (function() {
         let x = 0;
@@ -1036,7 +1141,7 @@ z$.getPosition = function(el, tolerance) {
     return position;
 };
 
-z$.ZxQuery = ZxQuery;
+ZxQueryStatic.ZxQuery = ZxQuery;
 
 // Element.matches() polyfill
 if (!Element.prototype.matches) {
@@ -1084,4 +1189,5 @@ if (!String.prototype.startsWith) {
     };
 }
 
+/** @type {ZxQueryStatic} */
 module.exports = z$;

@@ -38,7 +38,7 @@ const z$ =
  * @param {Object} value
  * @param {string} path
  * @param {Object} old
- * @returns undefined
+ * @return undefined
  */
 
 /**
@@ -60,16 +60,6 @@ const z$ =
  */
 
 /**
- * ContextController user-defined handlers definition (interface)
- *
- * @typedef {Object} ContextController
- * @property {ContextControllerInitCallback} init Function that gets called after loading and before the component is created.
- * @property {ContextControllerCreateCallback} create Function that gets called after loading, when the component is actually created and ready.
- * @property {ContextControllerUpdateCallback} update Function called when the data model of the component is updated.
- * @property {ContextControllerDestroyCallback} destroy Function called when the component is destroyed.
- */
-
-/**
  * ContextController constructor.
  *
  * @param {ComponentContext} context
@@ -88,17 +78,6 @@ function ContextController(context) {
      * @type {!Array.<ZxQuery>}
      **/
     this._fieldCache = [];
-
-    // Interface methods
-
-    /** @type {function} */
-    this.init = null;
-    /** @type {function} */
-    this.create = null;
-    /** @type {function} */
-    this.update = null;
-    /** @type {function} */
-    this.destroy = null;
 
     /**
      * @protected
@@ -173,6 +152,15 @@ function ContextController(context) {
 
     return this;
 }
+
+/** @type {ContextControllerInitCallback} */
+ContextController.prototype.init = null;
+/** @type {ContextControllerCreateCallback} */
+ContextController.prototype.create = null;
+/** @type {ContextControllerUpdateCallback} */
+ContextController.prototype.update = null;
+/** @type {ContextControllerDestroyCallback} */
+ContextController.prototype.destroy = null;
 
 // TODO: add jsDoc
 ContextController.prototype.addEvent = function(eventPath, handler) {

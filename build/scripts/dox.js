@@ -45,6 +45,7 @@ const inputFiles = [
     'helpers/ObservableListener.js',
     'helpers/ObservableObject.js',
     'helpers/ZxQuery.js',
+    'helpers/Logger.js',
     'localizer/Localizer.js'
 ];
 
@@ -74,9 +75,11 @@ function build() {
     tsDefs += generateTypescriptDefs('ContextController');
     tsDefs += generateTypescriptDefs('ComponentCache');
     tsDefs += generateTypescriptDefs('ZxQuery');
+    tsDefs += generateTypescriptDefs('ZxQuery', 'ZxQueryStatic');
     tsDefs += generateTypescriptDefs('ObjectObserver');
     tsDefs += generateTypescriptDefs('ObservableObject');
     tsDefs += generateTypescriptDefs('ObservableListener');
+    tsDefs += generateTypescriptDefs('Logger');
     tsDefs += '\ndeclare const zuix: Zuix;\n';
     // Write TypeScript definitions to file
     if (!fs.existsSync(targetFolder)) {
@@ -86,10 +89,13 @@ function build() {
     tlog.br().info(' ^G\u2713^:done\n\n');
 }
 
-function generateTypescriptDefs(objName) {
+function generateTypescriptDefs(objName, innerClass) {
     const json = JSON.parse(fs.readFileSync(path.join(jsonApiFolder, objName+'.json')));
     let output = '';
     let contextOpen = false;
+    if (innerClass != null) {
+        objName = innerClass;
+    }
 
     const openContext = function(name) {
         if (!contextOpen) {
@@ -106,9 +112,12 @@ function generateTypescriptDefs(objName) {
 
     json.map((obj, j)=>{
         const ctx = obj.ctx;
-        if (ctx != null && ctx.type === 'method' && ctx.constructor === objName) {
+        const isClass = obj.isClass;
+        const isConstructor = (ctx && ctx.type === 'method' && ctx.constructor === objName);
+        const isStaticClass = (isClass && ctx && ctx.type === 'function' && ctx.name === objName);
+        if (ctx != null && (isConstructor || isStaticClass)) {
             openContext(objName);
-            output += indentTab() + ctx.name + '(';
+            output += indentTab() + (!isStaticClass ? ctx.name : '') + '(';
             obj.tags.map((tag, t)=>{
                 if (tag.type === 'param') {
                     if (tag.name[0] === '[') {
@@ -137,9 +146,8 @@ function generateTypescriptDefs(objName) {
         } else if (ctx != null && ctx.type === 'property' && ctx.constructor === objName) {
             if (obj.tags.length > 0) {
                 openContext(objName);
-                let t;
-                obj.tags.map((tag, t)=>{
-                    if (tag.type === 'property') {
+                obj.tags.map((tag, t) => {
+                    if (tag.type === 'property' || tag.type === 'type') {
                         output += indentTab() + ctx.name + ': ';
                         output += getTypes(tag.types);
                         output += ';\n';
@@ -152,24 +160,24 @@ function generateTypescriptDefs(objName) {
                 if (key === 'tags' && definitions != null && definitions.length > 0) {
                     const tagType = definitions[0].type;
                     const name = definitions[0].string.replace(/\{.[^\}]+\}\s+/ig, '');
-                    if (tagType === 'typedef') {
+                    if (tagType === 'typedef' && innerClass == null) {
                         closeContext();
                         output += 'interface ' + name + ' {\n';
                         definitions.map((d, i)=>{
                             if (d.type === 'property') {
-                                output += indentTab() + d.name + (d.optional ? '?' : '') + ': ';
+                                output += indentTab() + getName(d) + ': ';
                                 output += getTypes(d.types);
                                 output += ';\n';
                             }
                         });
                         output += '}\n';
-                    } else if (tagType === 'callback') {
+                    } else if (tagType === 'callback' && innerClass == null) {
                         closeContext();
                         output += 'interface ' + name + ' {\n';
                         output += indentTab() + '(';
                         definitions.map((d, i)=>{
                             if (d.type === 'param') {
-                                output += d.name + (d.optional ? '?' : '') + ': ';
+                                output += getName(d) + ': ';
                                 output += getTypes(d.types);
                                 if (i < definitions.length - 2) {
                                     output += ', ';
@@ -178,8 +186,33 @@ function generateTypescriptDefs(objName) {
                         });
                         output += '): void;\n';
                         output += '}\n';
+                    } else if (tagType === 'memberOf' && ctx != null && ctx.receiver === objName) {
+                        // static method
+                        output += indentTab() + ctx.name + '(';
+                        let hasReturnValue = false;
+                        definitions.map((d, i)=>{
+                            if (d.type === 'param') {
+                                output += getName(d) + ': ';
+                                output += getTypes(d.types);
+                                if (i < definitions.length - 2) {
+                                    output += ', ';
+                                }
+                            } else if (d.type === 'return' || d.type === 'returns') {
+                                output += '): ';
+                                let returnTypes = getTypes(d.types);
+                                if (returnTypes === '') {
+                                    returnTypes = 'void';
+                                }
+                                output += returnTypes;
+                                output += ';\n';
+                                hasReturnValue = true;
+                            }
+                        });
+                        if (!hasReturnValue) {
+                            output += ');\n';
+                        }
                     } else {
-                        // console.log('\nWARNING: Unsupported type "' + objType + '"!\n');
+                        //console.log('\nWARNING: Unsupported type "' + tagType + '"!\n');
                     }
                 }
             }
@@ -209,6 +242,13 @@ function getTypes(types) {
     return typesString;
 }
 
+function getName(d) {
+    let name = d.name;
+    if (d.optional) {
+        name = name.replace('[', '').replace(']', '') + '?';
+    }
+    return name;
+}
 function indentTab(n) {
     return '    ';
 }

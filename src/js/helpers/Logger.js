@@ -107,11 +107,30 @@ function Logger(ctx) {
     };
 }
 
+/**
+ * @callback LoggerMonitorCallback
+ * @param {Object} ctx
+ * @param {string} level
+ * @param {Object[]} ...args
+ * @this {object}
+ */
+
+/**
+ * Callback for monitoring all log messages.
+ *
+ * @param {LoggerMonitorCallback} callback
+ * @return undefined
+ */
 Logger.prototype.monitor = function(callback) {
     // global callback for debugging purpose
     _callback = callback;
 };
 
+/**
+ *
+ * @param {boolean} enable
+ * @return undefined
+ */
 Logger.prototype.console = function(enable) {
     if (enable) {
         window.console = _console;
@@ -125,27 +144,51 @@ Logger.prototype.console = function(enable) {
     }
 };
 
-Logger.prototype.i = Logger.prototype.info =
-    Logger.prototype.l = Logger.prototype.log = function() {
-        this.log('INFO', arguments);
-        return this;
-    };
-Logger.prototype.w = Logger.prototype.warn = function() {
+/**
+ * @param {Object[]} ...args
+ * @return {Logger}
+ */
+Logger.prototype.info = function() {
+    this.log('INFO', arguments);
+    return this;
+};
+Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototype.info;
+/**
+ * @param {Object[]} ...args
+ * @return {Logger}
+ */
+Logger.prototype.warn = function() {
     this.log('WARN', arguments);
     return this;
 };
-Logger.prototype.e = Logger.prototype.error = function() {
+Logger.prototype.w = Logger.prototype.warn;
+/**
+ * @param {Object[]} ...args
+ * @return {Logger}
+ */
+Logger.prototype.error = function() {
     this.log('ERROR', arguments);
     return this;
 };
-Logger.prototype.d = Logger.prototype.debug = function() {
+Logger.prototype.e = Logger.prototype.error;
+/**
+ * @param {Object[]} ...args
+ * @return {Logger}
+ */
+Logger.prototype.debug = function() {
     this.log('DEBUG', arguments);
     return this;
 };
-Logger.prototype.t = Logger.prototype.trace = function() {
+Logger.prototype.d = Logger.prototype.debug;
+/**
+ * @param {Object[]} ...args
+ * @return {Logger}
+ */
+Logger.prototype.trace = function() {
     this.log('TRACE', arguments);
     return this;
 };
+Logger.prototype.t = Logger.prototype.trace;
 
 module.exports = function(ctx) {
     return new Logger(ctx);

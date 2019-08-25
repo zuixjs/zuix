@@ -152,23 +152,6 @@ module.exports = {
         return supportsPassive;
     },
 
-    deepFreeze: function(o, /** @type {string[]} */ exceptionList, path) {
-        const _t = this;
-        Object.freeze(o);
-        Object.getOwnPropertyNames(o).forEach(function (prop) {
-            if (path == null) path = '';
-            path += (path !== '' ? '.' : '') + prop;
-            if (exceptionList.indexOf(path) === -1 && o.hasOwnProperty(prop)
-                && o[prop] !== null
-                && (typeof o[prop] === 'object' || typeof o[prop] === 'function')
-                && !Object.isFrozen(o[prop])) {
-                _t.deepFreeze(o[prop], exceptionList, path);
-            }
-            path = null;
-        });
-        return o;
-    },
-
     dom: {
 
         queryAttribute: function(name, value, appendValue) {

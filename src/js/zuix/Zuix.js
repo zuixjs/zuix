@@ -712,7 +712,6 @@ function createComponent(context, task) {
                     }
                 } else if (task != null) task.end();
             }
-            //util.deepFreeze(context.options(), ['model', 'data']);
             c.trigger('view:apply');
 
             if (task == null) {
@@ -1308,7 +1307,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
 };
 
 /**
- * @property {ZxQuery}
+ * @property {ZxQueryStatic}
  */
 Zuix.prototype.$ = z$;
 // private

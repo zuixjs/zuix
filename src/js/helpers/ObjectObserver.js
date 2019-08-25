@@ -32,11 +32,6 @@ const ObservableObject =
     require('./ObservableObject');
 
 /**
- * The DOM Proxy object.
- * @typedef Proxy
- */
-
-/**
  * Object Observer
  *
  * @class ObjectObserver
@@ -85,7 +80,7 @@ function deleteObservable(targetObservable) {
 /**
  * Get an observable instance of an object for detecting changes.
  *
- * @param {Proxy|Object} obj The object to observe
+ * @param {Object} obj The object to observe
  * @return {ObservableObject} The observable object
  */
 ObjectObserver.prototype.observable = function(obj) {
