@@ -31,6 +31,9 @@ const _optionAttributes =
 const util =
     require('../helpers/Util');
 
+const _controllerOnlyAttribute = '_ctrl_';
+const _cssIdAttribute = '_css_';
+
 /**
  *
  * @param {ComponentContext} context

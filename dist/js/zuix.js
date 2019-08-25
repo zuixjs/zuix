@@ -2369,9 +2369,10 @@ const ViewObserver =
 /** @type {Zuix} **/
 let zuix = null;
 
+const _controllerOnlyAttribute = '_ctrl_';
+const _cssIdAttribute = '_css_';
+
 const _componentIndex = [];
-window._controllerOnlyAttribute = '_ctrl_';
-window._cssIdAttribute = '_css_';
 function getComponentIndex(context) {
     return _componentIndex[context.componentId];
 }
@@ -4246,6 +4247,9 @@ const _optionAttributes =
     _dereq_('./OptionAttributes');
 const util =
     _dereq_('../helpers/Util');
+
+const _controllerOnlyAttribute = '_ctrl_';
+const _cssIdAttribute = '_css_';
 
 /**
  *
