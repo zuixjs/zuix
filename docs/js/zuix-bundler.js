@@ -1,4 +1,4 @@
-/* zUIx v1.0.3 19.04.22 10:08:31 */
+/* zUIx v1.0.4 19.08.25 22:49:41 */
 
 /** @typedef {Zuix} window.zuix */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zuixBundler = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
@@ -387,7 +387,7 @@ module.exports = function serialize(obj, options) {
 
 const fileSaver = _dereq_('./FileSaver');
 const serialize = _dereq_('./Serializer');
-const _optionAttributes = _dereq_('../zuix/OptionAttributes')();
+const _optionAttributes = _dereq_('../zuix/OptionAttributes');
 
 /**
  * Create application bundle containing all components
@@ -489,40 +489,34 @@ module.exports = function(root) {
 
 const OptionAttributes = Object.freeze({
     dataBindModel:
-        'data-bind-model',
+        'z-model,data-bind-model',
     dataBindTo:
-        'data-bind-to',
+        'z-bind,data-bind-to',
     dataUiComponent:
-        'data-ui-component',
+        'z-component',
     dataUiContext:
-        'data-ui-context',
+        'z-context,data-ui-context',
     dataUiField:
-        'data-ui-field',
+        'z-field,data-ui-field',
     dataUiInclude:
-        'data-ui-include',
+        'z-include,data-ui-include',
     dataUiLazyload:
-        'data-ui-lazyload',
+        'z-lazy,data-ui-lazyload',
     dataUiLoad:
-        'data-ui-load',
+        'z-load,data-ui-load',
     dataUiLoaded:
-        'data-ui-loaded',
+        'z-loaded',
     dataUiOptions:
-        'data-ui-options',
+        'z-options,data-ui-options',
     dataUiPriority:
-        'data-ui-priority',
+        'z-priority,data-ui-priority',
     dataUiView:
-        'data-ui-view',
+        'z-view,data-ui-view',
     zuixLoaded:
         'zuix-loaded'
 });
 
-/**
- * @param root
- * @return {Zuix}
- */
-module.exports = function(root) {
-    return OptionAttributes;
-};
+module.exports = OptionAttributes;
 
 },{}]},{},[1])(1)
 });
