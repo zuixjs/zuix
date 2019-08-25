@@ -44,6 +44,10 @@ function build(mainFile, baseName, callback) {
         plugin: [ derequire ]
     });
 
+    // copy README.md
+    var fs = require('fs');
+    fs.createReadStream('./README.md').pipe(fs.createWriteStream(path.join(distFolder, 'README.md')));
+
     // prepare main output stream
     const fileName = path.join(distFolder, 'js/', `${baseName}.js`);
     const fileNameMin = path.join(distFolder, 'js/', `${baseName}.min.js`);
