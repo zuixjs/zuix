@@ -1307,7 +1307,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
 };
 
 /**
- * @description Test description
+ * @description Helper class for querying and manipulating the DOM.
  * @property {ZxQueryStatic}
  */
 Zuix.prototype.$ = z$;
