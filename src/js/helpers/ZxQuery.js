@@ -1141,7 +1141,7 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     return position;
 };
 
-ZxQueryStatic.ZxQuery = ZxQuery;
+ZxQueryStatic.prototype.ZxQuery = ZxQuery;
 
 // Element.matches() polyfill
 if (!Element.prototype.matches) {

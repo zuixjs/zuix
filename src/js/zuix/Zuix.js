@@ -35,7 +35,7 @@ const z$ =
 const TaskQueue =
     require('../helpers/TaskQueue');
 const ObjectObserver =
-    require('../helpers/ObjectObserver');
+    require('../observable/ObjectObserver');
 const ComponentContext =
     require('./ComponentContext');
 const ContextController =
@@ -1307,6 +1307,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
 };
 
 /**
+ * @description Test description
  * @property {ZxQueryStatic}
  */
 Zuix.prototype.$ = z$;

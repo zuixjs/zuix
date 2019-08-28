@@ -41,9 +41,9 @@ const inputFiles = [
     'zuix/ComponentContext.js',
     'zuix/ContextController.js',
     'zuix/ComponentCache.js',
-    'helpers/ObjectObserver.js',
-    'helpers/ObservableListener.js',
-    'helpers/ObservableObject.js',
+    'observable/ObjectObserver.js',
+    'observable/ObservableListener.js',
+    'observable/ObservableObject.js',
     'helpers/ZxQuery.js',
     'helpers/Logger.js',
     'localizer/Localizer.js'

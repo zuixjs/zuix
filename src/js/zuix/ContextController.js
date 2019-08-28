@@ -33,11 +33,11 @@ const z$ =
  * Function called when the data model of the component is updated
  *
  * @callback ContextControllerUpdateCallback
- * @param {Object} target
- * @param {string} key
- * @param {Object} value
- * @param {string} path
- * @param {Object} old
+ * @param {Object} target The target object.
+ * @param {string} key The name of the property.
+ * @param {Object} value The value of the property.
+ * @param {string} path The full property path (dotted notation).
+ * @param {Object} old The target object before the update.
  * @return undefined
  */
 
@@ -153,13 +153,25 @@ function ContextController(context) {
     return this;
 }
 
-/** @type {ContextControllerInitCallback} */
+/**
+ * @description If set, this function gets called before component is created and before applying context options.
+ * @type {ContextControllerInitCallback}
+ */
 ContextController.prototype.init = null;
-/** @type {ContextControllerCreateCallback} */
+/**
+ * @description If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
+ * @type {ContextControllerCreateCallback}
+ **/
 ContextController.prototype.create = null;
-/** @type {ContextControllerUpdateCallback} */
+/**
+ * @description If set, this function gets called when the component is destroyed.
+ * @type {ContextControllerUpdateCallback}
+ **/
 ContextController.prototype.update = null;
-/** @type {ContextControllerDestroyCallback} */
+/**
+ * @description If set, this function gets called each time the data model is updated.
+ * @type {ContextControllerDestroyCallback}
+ **/
 ContextController.prototype.destroy = null;
 
 // TODO: add jsDoc
@@ -415,7 +427,7 @@ ContextController.prototype.loadHtml = function(options) {
     return this;
 };
 /**
- * The logger object is "attached" upon controller initialization.
+ * @description The component logger instance.
  *
  * @example
  *
