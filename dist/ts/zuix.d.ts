@@ -7,8 +7,8 @@ interface ContextOptions {
     on?: { [k: string]: EventCallback };
     behavior?: { [k: string]: EventCallback };
     css?: Element | String | Boolean;
-    encapsulation: Boolean;
-    resetCss: Boolean;
+    encapsulation?: Boolean;
+    resetCss?: Boolean;
     cext?: String;
     html?: Boolean;
     lazyLoad?: Boolean;
@@ -104,18 +104,41 @@ interface BundleItem {
     css: String;
     controller: ContextControllerHandler;
 }
+interface ElementsIterationCallback {
+    (count: Number, item: Element, $item: ZxQuery): void;
+}
+interface Position {
+    dx: Number;
+    dy: Number;
+}
 interface ElementPosition {
     x: Number;
     y: Number;
-    frame: {"dx":["number"],"dy":["number"]};
+    frame: Position;
     event: String;
     visible: Boolean;
 }
 interface IterationCallback {
     (i: Number, item: Object): void;
 }
-interface ElementsIterationCallback {
-    (count: Number, item: Element, $item: ZxQuery): void;
+interface ZxQueryHttpBeforeSendCallback {
+    (xhr: XMLHttpRequest): void;
+}
+interface ZxQueryHttpSuccessCallback {
+    (responseText: String): void;
+}
+interface ZxQueryHttpErrorCallback {
+    (xhr: XMLHttpRequest, statusText: String, statusCode: Number): void;
+}
+interface ZxQueryHttpThenCallback {
+    (xhr: XMLHttpRequest): void;
+}
+interface ZxQueryHttpOptions {
+    url: String;
+    beforeSend?: ZxQueryHttpBeforeSendCallback;
+    success?: ZxQueryHttpSuccessCallback;
+    error?: ZxQueryHttpErrorCallback;
+    then?: ZxQueryHttpThenCallback;
 }
 interface ZxQuery {
     length(): Number;
@@ -153,30 +176,11 @@ interface ZxQuery {
     show(mode?: String): ZxQuery;
     hide(): ZxQuery;
 }
-interface ZxQueryAjaxBeforeSendCallback {
-    (xhr: XMLHttpRequest): void;
-}
-interface ZxQueryAjaxSuccessCallback {
-    (responseText: String): void;
-}
-interface ZxQueryAjaxErrorCallback {
-    (xhr: XMLHttpRequest, statusText: String, statusCode: Number): void;
-}
-interface ZxQueryAjaxThenCallback {
-    (xhr: XMLHttpRequest): void;
-}
-interface ZxQueryAjaxOptions {
-    url: String;
-    beforeSend?: ZxQueryAjaxBeforeSendCallback;
-    success?: ZxQueryAjaxSuccessCallback;
-    error?: ZxQueryAjaxErrorCallback;
-    then?: ZxQueryAjaxThenCallback;
-}
 interface ZxQueryStatic {
     (what?: Object | ZxQuery | Node[] | Node | NodeList | String): ZxQuery;
     find(selector: String): ZxQuery;
     each(items: Object[] | JSON, iterationCallback: IterationCallback): ZxQuery;
-    ajax(options: ZxQueryAjaxOptions): ZxQueryStatic;
+    http(options: ZxQueryHttpOptions): ZxQueryStatic;
     hasClass(el: Element, className: String): Boolean;
     classExists(className: String): Boolean;
     wrapElement(containerTag: String, element: Element): Element;

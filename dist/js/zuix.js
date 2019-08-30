@@ -710,12 +710,32 @@ const util = _dereq_('./Util.js');
 // Types definitions for JsDoc
 
 /**
+ * Callback function used with the `each(..)` method.
+ *
+ * @callback ElementsIterationCallback
+ * @param {number} count Iteration count.
+ * @param {Element} item Current element.
+ * @param {ZxQuery} $item ZxQuery wrapped element (same as 'this').
+ * @this {ZxQuery}
+ */
+
+/**
+ * Relative position.
+ *
+ * @typedef {object} Position
+ * @memberOf {ZxQueryStatic}
+ * @property {number} dx
+ * @property {number} dy
+ */
+
+/**
  * The `ElementPosition` object returned by the `position()` method.
  *
  * @typedef {object} ElementPosition
+ * @memberOf {ZxQueryStatic}
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
- * @property {{dx: number, dy: number}} frame Position of the element relative to the viewport
+ * @property {Position} frame Position of the element relative to the viewport
  * @property {string} event Current state change event description ("enter"|"exit"|"scroll"|"off-scroll")
  * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
  */
@@ -724,19 +744,60 @@ const util = _dereq_('./Util.js');
  * The `IterationCallback` function.
  *
  * @callback IterationCallback
+ * @memberOf {ZxQueryStatic}
  * @param {number} i Iteration count.
  * @param {object} item Current element (same as `this`).
  * @this {object}
  */
 
 /**
- * Callback function used with the `each(..)` method.
+ * The `ZxQueryHttpBeforeSendCallback` function.
  *
- * @callback ElementsIterationCallback
- * @param {number} count Iteration count.
- * @param {Element} item Current element.
- * @param {ZxQuery} $item ZxQuery wrapped element (same as 'this').
- * @this {ZxQuery}
+ * @callback ZxQueryHttpBeforeSendCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {XMLHttpRequest} xhr
+ * @this {undefined}
+ */
+
+/**
+ * The `ZxQueryHttpSuccessCallback` function.
+ *
+ * @callback ZxQueryHttpSuccessCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {string} responseText
+ * @this {undefined}
+ */
+
+/**
+ * The `ZxQueryHttpErrorCallback` function.
+ *
+ * @callback ZxQueryHttpErrorCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {XMLHttpRequest} xhr
+ * @param {string} statusText
+ * @param {number} statusCode
+ * @this {undefined}
+ */
+
+/**
+ * The `ZxQueryHttpThenCallback` function.
+ *
+ * @callback ZxQueryHttpThenCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {XMLHttpRequest} xhr
+ * @this {undefined}
+ */
+
+/**
+ * zuix.$.http options object.
+ *
+ * @typedef {object} ZxQueryHttpOptions
+ * @memberOf {ZxQueryStatic}
+ * @property {string} url
+ * @property {ZxQueryHttpBeforeSendCallback|undefined} beforeSend
+ * @property {ZxQueryHttpSuccessCallback|undefined} success
+ * @property {ZxQueryHttpErrorCallback|undefined} error
+ * @property {ZxQueryHttpThenCallback|undefined} then
  */
 
 /** @private */
@@ -1343,6 +1404,8 @@ ZxQuery.prototype.hide = function() {
  * Creates a ZxQuery wrapped element.
  *
  * @class {ZxQueryStatic}
+ * @alias zuix.$
+ * @memberOf {ZxQueryStatic}
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [what] Query target
  * @return {ZxQuery}
  */
@@ -1352,6 +1415,7 @@ function ZxQueryStatic(what) {
 const z$ = ZxQueryStatic;
 /**
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.find
  * @param {string} selector A valid *DOM* query selector.
  * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
  */
@@ -1368,6 +1432,7 @@ ZxQueryStatic.find = function(selector) {
  * If the callback returns *false*, the iteration loop will interrupt.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.each
  * @param {Array<Object>|JSON} items Enumerable objects collection.
  * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} `this`.
@@ -1394,42 +1459,14 @@ ZxQueryStatic.each = function(items, iterationCallback) {
     }
     return this;
 };
-/**
- * @callback ZxQueryAjaxBeforeSendCallback
- * @param {XMLHttpRequest} xhr
- * @this {undefined}
- */
-/**
- * @callback ZxQueryAjaxSuccessCallback
- * @param {string} responseText
- * @this {undefined}
- */
-/**
- * @callback ZxQueryAjaxErrorCallback
- * @param {XMLHttpRequest} xhr
- * @param {string} statusText
- * @param {number} statusCode
- * @this {undefined}
- */
-/**
- * @callback ZxQueryAjaxThenCallback
- * @param {XMLHttpRequest} xhr
- * @this {undefined}
- */
-/**
- * @typedef ZxQueryAjaxOptions
- * @property {string} url
- * @property {ZxQueryAjaxBeforeSendCallback} [beforeSend]
- * @property {ZxQueryAjaxSuccessCallback} [success]
- * @property {ZxQueryAjaxErrorCallback} [error]
- * @property {ZxQueryAjaxThenCallback} [then]
- */
+ZxQueryStatic.ajax =
 /**
  * @memberOf {ZxQueryStatic}
- * @param {ZxQueryAjaxOptions} options
+ * @alias zuix.$.http
+ * @param {ZxQueryHttpOptions} options
  * @return {ZxQueryStatic}
  */
-ZxQueryStatic.ajax = function(options) {
+ZxQueryStatic.http = function(options) {
     let url;
     if (!util.isNoU(options) && !util.isNoU(options.url)) {
         url = options.url;
@@ -1461,6 +1498,7 @@ ZxQueryStatic.ajax = function(options) {
 };
 /**
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.hasClass
  * @param {Element} el
  * @param {string} className
  * @return {boolean}
@@ -1482,6 +1520,7 @@ ZxQueryStatic.hasClass = function(el, className) {
  * Check if a class exists by searching for it in all document stylesheets.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.classExists
  * @param {string} className
  * @return {boolean}
  */
@@ -1519,6 +1558,7 @@ ZxQueryStatic.classExists = function(className) {
  * Wraps an {Element} inside a container specified by a given tag name.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.wrapElement
  * @param {string} containerTag Container element tag name
  * @param {Element} element
  * @return {Element} The new wrapped element
@@ -1536,6 +1576,7 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
     }
     return container;
 };
+// TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
     const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
@@ -1591,6 +1632,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
  * Append or replace a stylesheet to the document.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.appendCss
  * @param {string} css Stylesheet text
  * @param {Element|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
@@ -1629,6 +1671,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId) {
  * Replaces CSS variables with provided values.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.replaceCssVars
  * @param {string} css Stylesheet text
  * @param {object} model Object containing variables fields and values.
  * @return {string} The new stylesheet text with variables replaced with values
@@ -1676,6 +1719,7 @@ ZxQueryStatic.replaceCssVars = function(css, model) {
  * If the callback returns a value, then the variable will be replaced with the given value.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.replaceBraces
  * @param {string} html The source HTML template.
  * @param {function} callback A callback function with one argument (the currently parsed variable name).
  * @return {string|null} The new html code with variables replaced with values or null if no variable was replaced.
@@ -1715,6 +1759,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
  * Gets the closest parent mathing the given query selector
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.getClosest
  * @param {Element} elem
  * @param {string} selector A valid DOM query selector string expression.
  * @return {Element|null}
@@ -1731,6 +1776,7 @@ ZxQueryStatic.getClosest = function(elem, selector) {
  * Gets the position of an element.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.getPosition
  * @param {Element} el
  * @param {number} [tolerance] Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
  * @return {ElementPosition}
@@ -1817,7 +1863,7 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     return position;
 };
 
-ZxQueryStatic.prototype.ZxQuery = ZxQuery;
+ZxQueryStatic.ZxQuery = ZxQuery;
 
 // Element.matches() polyfill
 if (!Element.prototype.matches) {
@@ -4420,8 +4466,8 @@ _dereq_('./ComponentCache');
  * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
  * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
  * @property {Element|string|boolean|undefined} css The stylesheet of the view.
- * @property {boolean} encapsulation Whether to use style encapsulation or not.
- * @property {boolean} resetCss Whether to reset view style to prevent inheriting from parent containers.
+ * @property {boolean|undefined} encapsulation Whether to use style encapsulation or not.
+ * @property {boolean|undefined} resetCss Whether to reset view style to prevent inheriting from parent containers.
  * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
  * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
@@ -5687,7 +5733,7 @@ Zuix.prototype.dumpContexts = function() {
     return _contextRoot;
 };
 
-// TODO: add zuix.options to configure stuff like
+// TODO: add zx.options to configure stuff like
 // TODO: the css/html/js lookup base path (each individually own prop)
 
 /**

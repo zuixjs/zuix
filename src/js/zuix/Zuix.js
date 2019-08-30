@@ -63,8 +63,8 @@ require('./ComponentCache');
  * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
  * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
  * @property {Element|string|boolean|undefined} css The stylesheet of the view.
- * @property {boolean} encapsulation Whether to use style encapsulation or not.
- * @property {boolean} resetCss Whether to reset view style to prevent inheriting from parent containers.
+ * @property {boolean|undefined} encapsulation Whether to use style encapsulation or not.
+ * @property {boolean|undefined} resetCss Whether to reset view style to prevent inheriting from parent containers.
  * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
  * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).

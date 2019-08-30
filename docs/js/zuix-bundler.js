@@ -396,7 +396,7 @@ const _optionAttributes = _dereq_('../zuix/OptionAttributes');
  * only components loaded so far will be bundled (incremental bundle).
  * To force inclusion of all components/resources
  * disable lazy-loading first by calling
- * `zuix.lazyLoad(false)` and then `zuix.saveBundle()`.
+ * `zx.lazyLoad(false)` and then `zx.saveBundle()`.
  * After the bundle is created it will be downloaded
  * by the browser as 'app.bundle.js' file that you can
  * then compress, copy and include in your app.
@@ -407,7 +407,7 @@ const _optionAttributes = _dereq_('../zuix/OptionAttributes');
  */
 function saveBundle() {
     const bundleFileName = 'app.bundle.js';
-    const bundleObj = zuix.bundle();
+    const bundleObj = zx.bundle();
     let headerSummary = '\n/*';
     headerSummary += '\n * zUIx Application Bundle';
     headerSummary += '\n * ';
