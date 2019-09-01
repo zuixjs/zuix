@@ -60,16 +60,16 @@ Download and copy the `.js` file to your project folder and include it in your H
 
 Include **zUIx** in your document using one of the following hosted URLs:
 
-**GitHub**
-
-```html
-<script src="https://zuixjs.github.io/zuix/js/zuix.min.js"></script>
-```
-
 **JsDeliver**
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/zuix"></script>
+```
+
+**GitHub**
+
+```html
+<script src="https://zuixjs.github.io/zuix/js/zuix.min.js"></script>
 ```
 
 ### NPM
@@ -79,19 +79,6 @@ Install from *NPM*
     npm install zuix-dist --save
 
 Copy the library from `node_modules/zuix-dist/js` to your project folder
-and include it in your HTML pages:
-
-```html
-    <script src="js/zuix.min.js"></script>
-```
-
-### Bower
-
-Install from *Bower*
-
-    bower install zuix-dist --save
-
-Copy the library from `bower_components/zuix-dist/js` to your project folder
 and include it in your HTML pages:
 
 ```html

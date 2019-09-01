@@ -64,6 +64,7 @@ function ViewObserver(context) {
                     mutation.addedNodes.forEach(function(node) {
                         if (node instanceof Element) {
                             let parent = zuix.$(node).parent(zc);
+                            if (parent.get() == null) return;
                             if (_t.options().css !== false && parent.attr(_controllerOnlyAttribute) == null) {
                                 if ((parent.get() === _t._container || parent.get() === _t._view)) {
                                     let found = false;
