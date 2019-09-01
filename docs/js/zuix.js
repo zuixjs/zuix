@@ -1,4 +1,4 @@
-/* zUIx v1.0.4 19.08.25 22:49:41 */
+/* zUIx v1.0.5 19.09.01 19:40:57 */
 
 /** @typedef {Zuix} window.zuix */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zuix = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
@@ -236,6 +236,8 @@ function Logger(ctx) {
 }
 
 /**
+ * Callback function for monitoring all log messages.
+ *
  * @callback LoggerMonitorCallback
  * @param {Object} ctx
  * @param {string} level
@@ -244,7 +246,7 @@ function Logger(ctx) {
  */
 
 /**
- * Callback for monitoring all log messages.
+ * Sets a callback function for monitoring all log messages.
  *
  * @param {LoggerMonitorCallback} callback
  * @return undefined
@@ -273,6 +275,8 @@ Logger.prototype.console = function(enable) {
 };
 
 /**
+ * Logs information messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -282,6 +286,8 @@ Logger.prototype.info = function() {
 };
 Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototype.info;
 /**
+ * Logs warning messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -291,6 +297,8 @@ Logger.prototype.warn = function() {
 };
 Logger.prototype.w = Logger.prototype.warn;
 /**
+ * Logs error messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -300,6 +308,8 @@ Logger.prototype.error = function() {
 };
 Logger.prototype.e = Logger.prototype.error;
 /**
+ * Logs debug messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -309,6 +319,8 @@ Logger.prototype.debug = function() {
 };
 Logger.prototype.d = Logger.prototype.debug;
 /**
+ * Logs trace messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -323,340 +335,6 @@ module.exports = function(ctx) {
 };
 
 },{}],3:[function(_dereq_,module,exports){
-/*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  This file is part of
- *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-'use strict';
-
-const ObservableListener =
-    _dereq_('./ObservableListener');
-const ObservableObject =
-    _dereq_('./ObservableObject');
-
-/**
- * Object Observer
- *
- * @class ObjectObserver
- * @constructor
- */
-function ObjectObserver() {
-    /**
-     * @private
-     * @type {ObservableObject[]}
-     */
-    this.observableList = [];
-}
-
-function getPath(observable) {
-    let path = '';
-    while (observable && observable.__path__) {
-        const co = observable;
-        // TODO: this line is perhaps ambiguous how to resolve path if target[key] has more parents?
-        observable = observable.__parents__[0];
-        if (observable != null && observable.__path__ != null) {
-            path = '[\'' + co.__path__ + '\'].' + path;
-        } else {
-            path = co.__path__ + (!path.startsWith('[') ? '.' : '') + path;
-        }
-    }
-    return path;
-}
-function getListeners(observable) {
-    const listeners = [];
-    observable.__parents__.forEach(function(po) {
-        listeners.push(...getListeners(po));
-    });
-    listeners.push(...observable.__listeners__);
-    return listeners;
-};
-
-function deleteObservable(targetObservable) {
-    getListeners(targetObservable).forEach(
-        /** @param {ObservableListener} l */
-        function(l) {
-            targetObservable.unsubscribe(l);
-        }
-    );
-}
-
-/**
- * Get an observable instance of an object for detecting changes.
- *
- * @param {Object} obj The object to observe
- * @return {ObservableObject} The observable object
- */
-ObjectObserver.prototype.observable = function(obj) {
-    const _t = this;
-    /** @type {ObservableObject} */
-    let observable;
-    const matches = this.observableList.filter(function(o) {
-        return obj === o.proxy || obj === o.target;
-    });
-    if (matches.length === 1) {
-        observable = matches[0];
-    }
-    if (observable == null) {
-        const handler = {
-            /** @type ObjectObserver */
-            context: null,
-            get: function(target, key) {
-                if (key === 'observableTarget') return target;
-                let value = target[key];
-                if (typeof value === 'undefined') {
-                    return;
-                }
-                /** @type {ObservableListener[]} */
-                const listeners = [];
-                let targetObservable = this.context.observable(target);
-                if (typeof value === 'object') {
-                    /** @type {ObservableObject} */
-                    const valueObservable = this.context.observable(value);
-                    // link to parent
-                    if (valueObservable.__parents__.indexOf(targetObservable) === -1) {
-                        valueObservable.__parents__.push(targetObservable);
-                        valueObservable.__path__ = key;
-                    }
-                    listeners.push(...getListeners(valueObservable));
-                    // set the return value to the observable value proxy (child)
-                    value = valueObservable.proxy;
-                } else {
-                    listeners.push(...getListeners(targetObservable));
-                }
-                const path = getPath(targetObservable) + key;
-                // propagate to all listeners
-                listeners.forEach(function(l) {
-                    l.get(target, key, value, path);
-                });
-                return value;
-            },
-            set: function(target, key, value) {
-                let old = JSON.parse(JSON.stringify(target));
-                let oldValue = target[key];
-                if (typeof oldValue === 'object') {
-                    deleteObservable(this.context.observable(oldValue));
-                }
-                target[key] = value;
-                const targetObservable = this.context.observable(target);
-                const path = getPath(targetObservable) + key;
-                getListeners(targetObservable).forEach(
-                    /** @param {ObservableListener} l */
-                    function(l) {
-                        l.set(target, key, value, path, old);
-                    }
-                );
-                return true;
-            },
-            deleteProperty: function(target, property) {
-                let value = target[property];
-                if (typeof value === 'object') {
-                    deleteObservable(this.context.observable(value));
-                }
-                return delete target[property];
-            }
-        };
-        observable = new ObservableObject(this, obj, handler);
-    }
-    return observable;
-};
-module.exports = ObjectObserver;
-
-},{"./ObservableListener":4,"./ObservableObject":5}],4:[function(_dereq_,module,exports){
-/*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  This file is part of
- *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-'use strict';
-
-/**
- * ObservableListener interface.
- *
- * @class ObservableListener
- * @constructor
- */
-function ObservableListener() {}
-
-/**
- * This method does...
- *
- * @param {Object} target The updated object
- * @param {string} key The property key
- * @param {Object} value The value
- * @param {string} path Full property path
- * @returns undefined
- */
-ObservableListener.prototype.get = function(target, key, value, path) {};
-
-/**
- * This method does...
- *
- * @param {Object} target The updated object
- * @param {string} key The property key
- * @param {Object} value The value
- * @param {string} path Full property path
- * @param {Object} old A copy of the object before the update
- * @returns undefined
- */
-ObservableListener.prototype.set = function(target, key, value, path, old) {};
-
-module.export = ObservableListener;
-
-},{}],5:[function(_dereq_,module,exports){
-/*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  This file is part of
- *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-'use strict';
-
-const ObservableListener =
-    _dereq_('./ObservableListener');
-
-/**
- * ObservableObject class.
- *
- * @class ObservableObject
- * @param {Object} context The observer context
- * @param {Object} target The target object to observe
- * @param {ProxyHandler} handler Handler for get/set callbacks
- * @constructor
- */
-function ObservableObject(context, target, handler) {
-    Object.assign(handler, {context: context});
-    Object.assign(this, Proxy.revocable(target, handler));
-    /** @private */
-    this.handler = handler;
-    /** @private */
-    this.handler.context.observableList = this.handler.context.observableList || [];
-    this.handler.context.observableList.push(this);
-    /** @private */
-    this.target = target;
-    /** @private */
-    this.__parents__ = [];
-    /** @private */
-    this.__listeners__ = [];
-}
-
-/**
- * Subscribe a listener to this observable events
- *
- * @param {ObservableListener} observableListener
- * @returns ObservableObject
- */
-ObservableObject.prototype.subscribe = function(observableListener) {
-    const _t = this;
-    this.handler.context.observableList.forEach(function(p) {
-        if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
-            throw new Error('Listener already registered.');
-        }
-    });
-    this.__listeners__.push(observableListener);
-    return this;
-};
-
-/**
- * Unsubscribe a listener
- *
- * @param {ObservableListener} observableListener
- * @returns ObservableObject
- */
-ObservableObject.prototype.unsubscribe = function(observableListener) {
-    const i = this.__listeners__.indexOf(observableListener);
-    if (i !== -1) {
-        this.__listeners__.splice(i, 1);
-    }
-    if (this.__listeners__.length === 0) {
-        // this observable has no more direct listeners and can be removed
-        this.revoke();
-        // TODO: this is untested!!!
-        // remove this observable and parent references to it
-        const _t = this;
-        this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
-            if (p === _t) return false;
-            const i = p.__parents__.indexOf(_t);
-            if (i !== -1) {
-                p.__parents__.splice(i, 1);
-                // if child has no more parents nor listeners, then remove it as well
-                if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
-                    // recursive call
-                    p.unsubscribe(null);
-                    return false;
-                }
-            }
-            return true;
-        });
-    }
-    return this;
-};
-
-module.exports = ObservableObject;
-
-},{"./ObservableListener":4}],6:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -777,7 +455,7 @@ TaskQueue.prototype.queue = function(tid, fn, pri) {
 
 module.exports = TaskQueue;
 
-},{"./Logger":2}],7:[function(_dereq_,module,exports){
+},{"./Logger":2}],4:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -1009,7 +687,7 @@ module.exports = {
 
 };
 
-},{}],8:[function(_dereq_,module,exports){
+},{}],5:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -1046,12 +724,32 @@ const util = _dereq_('./Util.js');
 // Types definitions for JsDoc
 
 /**
+ * Callback function used with the `each(..)` method.
+ *
+ * @callback ElementsIterationCallback
+ * @param {number} count Iteration count.
+ * @param {Element} item Current element.
+ * @param {ZxQuery} $item ZxQuery wrapped element (same as 'this').
+ * @this {ZxQuery}
+ */
+
+/**
+ * Relative position.
+ *
+ * @typedef {object} Position
+ * @memberOf {ZxQueryStatic}
+ * @property {number} dx
+ * @property {number} dy
+ */
+
+/**
  * The `ElementPosition` object returned by the `position()` method.
  *
  * @typedef {object} ElementPosition
+ * @memberOf {ZxQueryStatic}
  * @property {number} x X coordinate of the element in the viewport.
  * @property {number} y Y coordinate of the element in the viewport.
- * @property {{dx: number, dy: number}} frame Position of the element relative to the viewport
+ * @property {Position} frame Position of the element relative to the viewport
  * @property {string} event Current state change event description ("enter"|"exit"|"scroll"|"off-scroll")
  * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
  */
@@ -1060,19 +758,60 @@ const util = _dereq_('./Util.js');
  * The `IterationCallback` function.
  *
  * @callback IterationCallback
+ * @memberOf {ZxQueryStatic}
  * @param {number} i Iteration count.
  * @param {object} item Current element (same as `this`).
  * @this {object}
  */
 
 /**
- * Callback function used with the `each(..)` method.
+ * The `ZxQueryHttpBeforeSendCallback` function.
  *
- * @callback ElementsIterationCallback
- * @param {number} count Iteration count.
- * @param {Element} item Current element.
- * @param {ZxQuery} $item ZxQuery wrapped element (same as 'this').
- * @this {ZxQuery}
+ * @callback ZxQueryHttpBeforeSendCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {XMLHttpRequest} xhr
+ * @this {undefined}
+ */
+
+/**
+ * The `ZxQueryHttpSuccessCallback` function.
+ *
+ * @callback ZxQueryHttpSuccessCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {string} responseText
+ * @this {undefined}
+ */
+
+/**
+ * The `ZxQueryHttpErrorCallback` function.
+ *
+ * @callback ZxQueryHttpErrorCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {XMLHttpRequest} xhr
+ * @param {string} statusText
+ * @param {number} statusCode
+ * @this {undefined}
+ */
+
+/**
+ * The `ZxQueryHttpThenCallback` function.
+ *
+ * @callback ZxQueryHttpThenCallback
+ * @memberOf {ZxQueryStatic}
+ * @param {XMLHttpRequest} xhr
+ * @this {undefined}
+ */
+
+/**
+ * zuix.$.http options object.
+ *
+ * @typedef {object} ZxQueryHttpOptions
+ * @memberOf {ZxQueryStatic}
+ * @property {string} url
+ * @property {ZxQueryHttpBeforeSendCallback|undefined} beforeSend
+ * @property {ZxQueryHttpSuccessCallback|undefined} success
+ * @property {ZxQueryHttpErrorCallback|undefined} error
+ * @property {ZxQueryHttpThenCallback|undefined} then
  */
 
 /** @private */
@@ -1679,6 +1418,8 @@ ZxQuery.prototype.hide = function() {
  * Creates a ZxQuery wrapped element.
  *
  * @class {ZxQueryStatic}
+ * @alias zuix.$
+ * @memberOf {ZxQueryStatic}
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [what] Query target
  * @return {ZxQuery}
  */
@@ -1687,7 +1428,10 @@ function ZxQueryStatic(what) {
 }
 const z$ = ZxQueryStatic;
 /**
+ * Selects document elements matching the given *DOM* query selector.
+ *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.find
  * @param {string} selector A valid *DOM* query selector.
  * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
  */
@@ -1704,6 +1448,7 @@ ZxQueryStatic.find = function(selector) {
  * If the callback returns *false*, the iteration loop will interrupt.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.each
  * @param {Array<Object>|JSON} items Enumerable objects collection.
  * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
  * @return {ZxQuery} `this`.
@@ -1730,42 +1475,16 @@ ZxQueryStatic.each = function(items, iterationCallback) {
     }
     return this;
 };
+ZxQueryStatic.ajax =
 /**
- * @callback ZxQueryAjaxBeforeSendCallback
- * @param {XMLHttpRequest} xhr
- * @this {undefined}
- */
-/**
- * @callback ZxQueryAjaxSuccessCallback
- * @param {string} responseText
- * @this {undefined}
- */
-/**
- * @callback ZxQueryAjaxErrorCallback
- * @param {XMLHttpRequest} xhr
- * @param {string} statusText
- * @param {number} statusCode
- * @this {undefined}
- */
-/**
- * @callback ZxQueryAjaxThenCallback
- * @param {XMLHttpRequest} xhr
- * @this {undefined}
- */
-/**
- * @typedef ZxQueryAjaxOptions
- * @property {string} url
- * @property {ZxQueryAjaxBeforeSendCallback} [beforeSend]
- * @property {ZxQueryAjaxSuccessCallback} [success]
- * @property {ZxQueryAjaxErrorCallback} [error]
- * @property {ZxQueryAjaxThenCallback} [then]
- */
-/**
+ * Makes an HTTP request.
+ *
  * @memberOf {ZxQueryStatic}
- * @param {ZxQueryAjaxOptions} options
+ * @alias zuix.$.http
+ * @param {ZxQueryHttpOptions} options
  * @return {ZxQueryStatic}
  */
-ZxQueryStatic.ajax = function(options) {
+ZxQueryStatic.http = function(options) {
     let url;
     if (!util.isNoU(options) && !util.isNoU(options.url)) {
         url = options.url;
@@ -1796,7 +1515,10 @@ ZxQueryStatic.ajax = function(options) {
     return this;
 };
 /**
+ * Checks if an element has got the specified CSS class.
+ *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.hasClass
  * @param {Element} el
  * @param {string} className
  * @return {boolean}
@@ -1815,9 +1537,10 @@ ZxQueryStatic.hasClass = function(el, className) {
     return success;
 };
 /**
- * Check if a class exists by searching for it in all document stylesheets.
+ * Checks if a class exists by searching for it in all document stylesheets.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.classExists
  * @param {string} className
  * @return {boolean}
  */
@@ -1855,6 +1578,7 @@ ZxQueryStatic.classExists = function(className) {
  * Wraps an {Element} inside a container specified by a given tag name.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.wrapElement
  * @param {string} containerTag Container element tag name
  * @param {Element} element
  * @return {Element} The new wrapped element
@@ -1872,6 +1596,7 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
     }
     return container;
 };
+// TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
     const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
     let wrappedCss = '';
@@ -1898,13 +1623,24 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
                             isMediaQuery = true;
                         }
                     } else if (encapsulate) {
-                        // wrap the class name (v)
-                        wrappedCss += '\n' + v.trim() + wrapperRule + ' ';
+                        // wrap the class names (v)
+                        v.split(/\s+/).forEach(function(attr) {
+                            attr = attr.trim();
+                            if (attr.lastIndexOf('.') > 0) {
+                                attr.split('.').forEach(function(attr2) {
+                                    if (attr2 !== '') {
+                                        wrappedCss += '.' + attr2 + wrapperRule;
+                                    }
+                                });
+                            } else if (attr !== '') {
+                                wrappedCss += '\n' + attr + wrapperRule + ' ';
+                            }
+                        });
                     } else {
                         wrappedCss += '\n[z-component]' + wrapperRule + '\n' + v.trim() + ' ';
                     }
                     if (k < classes.length - 1) {
-                        wrappedCss += ', ';
+                        wrappedCss = wrappedCss.trim() + ', ';
                     }
                 });
                 if (isMediaQuery) {
@@ -1924,9 +1660,10 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
     return css;
 };
 /**
- * Append or replace a stylesheet to the document.
+ * Appends or replaces a stylesheet to the document.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.appendCss
  * @param {string} css Stylesheet text
  * @param {Element|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
@@ -1965,6 +1702,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId) {
  * Replaces CSS variables with provided values.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.replaceCssVars
  * @param {string} css Stylesheet text
  * @param {object} model Object containing variables fields and values.
  * @return {string} The new stylesheet text with variables replaced with values
@@ -2012,6 +1750,7 @@ ZxQueryStatic.replaceCssVars = function(css, model) {
  * If the callback returns a value, then the variable will be replaced with the given value.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.replaceBraces
  * @param {string} html The source HTML template.
  * @param {function} callback A callback function with one argument (the currently parsed variable name).
  * @return {string|null} The new html code with variables replaced with values or null if no variable was replaced.
@@ -2051,6 +1790,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
  * Gets the closest parent mathing the given query selector
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.getClosest
  * @param {Element} elem
  * @param {string} selector A valid DOM query selector string expression.
  * @return {Element|null}
@@ -2067,6 +1807,7 @@ ZxQueryStatic.getClosest = function(elem, selector) {
  * Gets the position of an element.
  *
  * @memberOf {ZxQueryStatic}
+ * @alias zuix.$.getPosition
  * @param {Element} el
  * @param {number} [tolerance] Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
  * @return {ElementPosition}
@@ -2204,7 +1945,7 @@ if (!String.prototype.startsWith) {
 /** @type {ZxQueryStatic} */
 module.exports = z$;
 
-},{"./Logger":2,"./Util.js":7}],9:[function(_dereq_,module,exports){
+},{"./Logger":2,"./Util.js":4}],6:[function(_dereq_,module,exports){
 /* eslint-disable */
 /*!
  * @license
@@ -2252,7 +1993,341 @@ module.exports = z$;
     }
 }(this, _dereq_('./zuix/Zuix.js')));
 
-},{"./zuix/Zuix.js":16}],10:[function(_dereq_,module,exports){
+},{"./zuix/Zuix.js":16}],7:[function(_dereq_,module,exports){
+/*
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ *         https://zuixjs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://zuixjs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+'use strict';
+
+const ObservableListener =
+    _dereq_('./ObservableListener');
+const ObservableObject =
+    _dereq_('./ObservableObject');
+
+/**
+ * Object Observer
+ *
+ * @class ObjectObserver
+ * @constructor
+ */
+function ObjectObserver() {
+    /**
+     * @private
+     * @type {ObservableObject[]}
+     */
+    this.observableList = [];
+}
+
+function getPath(observable) {
+    let path = '';
+    while (observable && observable.__path__) {
+        const co = observable;
+        // TODO: this line is perhaps ambiguous how to resolve path if target[key] has more parents?
+        observable = observable.__parents__[0];
+        if (observable != null && observable.__path__ != null) {
+            path = '[\'' + co.__path__ + '\'].' + path;
+        } else {
+            path = co.__path__ + (!path.startsWith('[') ? '.' : '') + path;
+        }
+    }
+    return path;
+}
+function getListeners(observable) {
+    const listeners = [];
+    observable.__parents__.forEach(function(po) {
+        listeners.push(...getListeners(po));
+    });
+    listeners.push(...observable.__listeners__);
+    return listeners;
+};
+
+function deleteObservable(targetObservable) {
+    getListeners(targetObservable).forEach(
+        /** @param {ObservableListener} l */
+        function(l) {
+            targetObservable.unsubscribe(l);
+        }
+    );
+}
+
+/**
+ * Get an observable instance of an object for detecting changes.
+ *
+ * @param {Object} obj The object to observe
+ * @return {ObservableObject} The observable object
+ */
+ObjectObserver.prototype.observable = function(obj) {
+    const _t = this;
+    /** @type {ObservableObject} */
+    let observable;
+    const matches = this.observableList.filter(function(o) {
+        return obj === o.proxy || obj === o.target;
+    });
+    if (matches.length === 1) {
+        observable = matches[0];
+    }
+    if (observable == null) {
+        const handler = {
+            /** @type ObjectObserver */
+            context: null,
+            get: function(target, key) {
+                if (key === 'observableTarget') return target;
+                let value = target[key];
+                if (typeof value === 'undefined') {
+                    return;
+                }
+                /** @type {ObservableListener[]} */
+                const listeners = [];
+                let targetObservable = this.context.observable(target);
+                if (typeof value === 'object') {
+                    /** @type {ObservableObject} */
+                    const valueObservable = this.context.observable(value);
+                    // link to parent
+                    if (valueObservable.__parents__.indexOf(targetObservable) === -1) {
+                        valueObservable.__parents__.push(targetObservable);
+                        valueObservable.__path__ = key;
+                    }
+                    listeners.push(...getListeners(valueObservable));
+                    // set the return value to the observable value proxy (child)
+                    value = valueObservable.proxy;
+                } else {
+                    listeners.push(...getListeners(targetObservable));
+                }
+                const path = getPath(targetObservable) + key;
+                // propagate to all listeners
+                listeners.forEach(function(l) {
+                    l.get(target, key, value, path);
+                });
+                return value;
+            },
+            set: function(target, key, value) {
+                let old = JSON.parse(JSON.stringify(target));
+                let oldValue = target[key];
+                if (typeof oldValue === 'object') {
+                    deleteObservable(this.context.observable(oldValue));
+                }
+                target[key] = value;
+                const targetObservable = this.context.observable(target);
+                const path = getPath(targetObservable) + key;
+                getListeners(targetObservable).forEach(
+                    /** @param {ObservableListener} l */
+                    function(l) {
+                        l.set(target, key, value, path, old);
+                    }
+                );
+                return true;
+            },
+            deleteProperty: function(target, property) {
+                let value = target[property];
+                if (typeof value === 'object') {
+                    deleteObservable(this.context.observable(value));
+                }
+                return delete target[property];
+            }
+        };
+        observable = new ObservableObject(this, obj, handler);
+    }
+    return observable;
+};
+module.exports = ObjectObserver;
+
+},{"./ObservableListener":8,"./ObservableObject":9}],8:[function(_dereq_,module,exports){
+/*
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ *         https://zuixjs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://zuixjs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+'use strict';
+
+/**
+ * ObservableListener interface.
+ *
+ * @class ObservableListener
+ * @constructor
+ */
+function ObservableListener() {}
+
+/**
+ * This method does...
+ *
+ * @param {Object} target The updated object
+ * @param {string} key The property key
+ * @param {Object} value The value
+ * @param {string} path Full property path
+ * @returns undefined
+ */
+ObservableListener.prototype.get = function(target, key, value, path) {};
+
+/**
+ * This method does...
+ *
+ * @param {Object} target The updated object
+ * @param {string} key The property key
+ * @param {Object} value The value
+ * @param {string} path Full property path
+ * @param {Object} old A copy of the object before the update
+ * @returns undefined
+ */
+ObservableListener.prototype.set = function(target, key, value, path, old) {};
+
+module.export = ObservableListener;
+
+},{}],9:[function(_dereq_,module,exports){
+/*
+ * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ *         https://zuixjs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://zuixjs.github.io/zuix
+ *
+ * @author Generoso Martello <generoso@martello.com>
+ */
+
+'use strict';
+
+const ObservableListener =
+    _dereq_('./ObservableListener');
+
+/**
+ * ObservableObject class.
+ *
+ * @class ObservableObject
+ * @param {Object} context The observer context
+ * @param {Object} target The target object to observe
+ * @param {ProxyHandler} handler Handler for get/set callbacks
+ * @constructor
+ */
+function ObservableObject(context, target, handler) {
+    Object.assign(handler, {context: context});
+    Object.assign(this, Proxy.revocable(target, handler));
+    /** @private */
+    this.handler = handler;
+    /** @private */
+    this.handler.context.observableList = this.handler.context.observableList || [];
+    this.handler.context.observableList.push(this);
+    /** @private */
+    this.target = target;
+    /** @private */
+    this.__parents__ = [];
+    /** @private */
+    this.__listeners__ = [];
+}
+
+/**
+ * Subscribe a listener to this observable events
+ *
+ * @param {ObservableListener} observableListener
+ * @returns ObservableObject
+ */
+ObservableObject.prototype.subscribe = function(observableListener) {
+    const _t = this;
+    this.handler.context.observableList.forEach(function(p) {
+        if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
+            throw new Error('Listener already registered.');
+        }
+    });
+    this.__listeners__.push(observableListener);
+    return this;
+};
+
+/**
+ * Unsubscribe a listener
+ *
+ * @param {ObservableListener} observableListener
+ * @returns ObservableObject
+ */
+ObservableObject.prototype.unsubscribe = function(observableListener) {
+    const i = this.__listeners__.indexOf(observableListener);
+    if (i !== -1) {
+        this.__listeners__.splice(i, 1);
+    }
+    if (this.__listeners__.length === 0) {
+        // this observable has no more direct listeners and can be removed
+        this.revoke();
+        // TODO: this is untested!!!
+        // remove this observable and parent references to it
+        const _t = this;
+        this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
+            if (p === _t) return false;
+            const i = p.__parents__.indexOf(_t);
+            if (i !== -1) {
+                p.__parents__.splice(i, 1);
+                // if child has no more parents nor listeners, then remove it as well
+                if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
+                    // recursive call
+                    p.unsubscribe(null);
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+    return this;
+};
+
+module.exports = ObservableObject;
+
+},{"./ObservableListener":8}],10:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3131,7 +3206,7 @@ ComponentContext.prototype.getCssId = function() {
 
 module.exports = ComponentContext;
 
-},{"../helpers/Logger":2,"../helpers/Util":7,"../helpers/ZxQuery":8,"./OptionAttributes":14,"./ViewObserver":15}],12:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./OptionAttributes":14,"./ViewObserver":15}],12:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3695,7 +3770,7 @@ function lazyElementCheck(element) {
     return false;
 }
 
-},{"../helpers/Logger":2,"../helpers/Util":7,"../helpers/ZxQuery":8,"./../helpers/AsynChain":1,"./OptionAttributes":14}],13:[function(_dereq_,module,exports){
+},{"../helpers/Logger":2,"../helpers/Util":4,"../helpers/ZxQuery":5,"./../helpers/AsynChain":1,"./OptionAttributes":14}],13:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -3731,11 +3806,11 @@ const z$ =
  * Function called when the data model of the component is updated
  *
  * @callback ContextControllerUpdateCallback
- * @param {Object} target
- * @param {string} key
- * @param {Object} value
- * @param {string} path
- * @param {Object} old
+ * @param {Object} target The target object.
+ * @param {string} key The name of the property.
+ * @param {Object} value The value of the property.
+ * @param {string} path The full property path (dotted notation).
+ * @param {Object} old The target object before the update.
  * @return undefined
  */
 
@@ -3851,13 +3926,25 @@ function ContextController(context) {
     return this;
 }
 
-/** @type {ContextControllerInitCallback} */
+/**
+ * @description If set, this function gets called before component is created and before applying context options.
+ * @type {ContextControllerInitCallback}
+ */
 ContextController.prototype.init = null;
-/** @type {ContextControllerCreateCallback} */
+/**
+ * @description If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
+ * @type {ContextControllerCreateCallback}
+ **/
 ContextController.prototype.create = null;
-/** @type {ContextControllerUpdateCallback} */
+/**
+ * @description If set, this function gets called when the component is destroyed.
+ * @type {ContextControllerUpdateCallback}
+ **/
 ContextController.prototype.update = null;
-/** @type {ContextControllerDestroyCallback} */
+/**
+ * @description If set, this function gets called each time the data model is updated.
+ * @type {ContextControllerDestroyCallback}
+ **/
 ContextController.prototype.destroy = null;
 
 // TODO: add jsDoc
@@ -4113,7 +4200,7 @@ ContextController.prototype.loadHtml = function(options) {
     return this;
 };
 /**
- * The logger object is "attached" upon controller initialization.
+ * @description The component logger instance.
  *
  * @example
  *
@@ -4158,7 +4245,7 @@ ContextController.prototype.for = function(componentId) {
 
 module.exports = ContextController;
 
-},{"../helpers/ZxQuery":8}],14:[function(_dereq_,module,exports){
+},{"../helpers/ZxQuery":5}],14:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -4283,6 +4370,7 @@ function ViewObserver(context) {
                     mutation.addedNodes.forEach(function(node) {
                         if (node instanceof Element) {
                             let parent = zuix.$(node).parent(zc);
+                            if (parent.get() == null) return;
                             if (_t.options().css !== false && parent.attr(_controllerOnlyAttribute) == null) {
                                 if ((parent.get() === _t._container || parent.get() === _t._view)) {
                                     let found = false;
@@ -4344,7 +4432,7 @@ ViewObserver.prototype.stop = function() {
 
 module.exports = ViewObserver;
 
-},{"../helpers/Util":7,"./OptionAttributes":14}],16:[function(_dereq_,module,exports){
+},{"../helpers/Util":4,"./OptionAttributes":14}],16:[function(_dereq_,module,exports){
 /*
  * Copyright 2015-2019 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
@@ -4382,7 +4470,7 @@ const z$ =
 const TaskQueue =
     _dereq_('../helpers/TaskQueue');
 const ObjectObserver =
-    _dereq_('../helpers/ObjectObserver');
+    _dereq_('../observable/ObjectObserver');
 const ComponentContext =
     _dereq_('./ComponentContext');
 const ContextController =
@@ -4410,8 +4498,8 @@ _dereq_('./ComponentCache');
  * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
  * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
  * @property {Element|string|boolean|undefined} css The stylesheet of the view.
- * @property {boolean} encapsulation Whether to use style encapsulation or not.
- * @property {boolean} resetCss Whether to reset view style to prevent inheriting from parent containers.
+ * @property {boolean|undefined} encapsulation Whether to use style encapsulation or not.
+ * @property {boolean|undefined} resetCss Whether to reset view style to prevent inheriting from parent containers.
  * @property {string|undefined} cext When loading content of the view, appends the specified extension instead of `.html`.
  * @property {boolean|undefined} html Enables or disables HTML auto-loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
@@ -5654,6 +5742,7 @@ Zuix.prototype.bundle = function(bundleData, callback) {
 };
 
 /**
+ * @description Helper class for querying and manipulating the DOM.
  * @property {ZxQueryStatic}
  */
 Zuix.prototype.$ = z$;
@@ -5701,5 +5790,5 @@ module.exports = function(root) {
     return zuix;
 };
 
-},{"../helpers/Logger":2,"../helpers/ObjectObserver":3,"../helpers/TaskQueue":6,"../helpers/Util":7,"../helpers/ZxQuery":8,"./ComponentCache":10,"./ComponentContext":11,"./Componentizer":12,"./ContextController":13,"./OptionAttributes":14}]},{},[9])(9)
+},{"../helpers/Logger":2,"../helpers/TaskQueue":3,"../helpers/Util":4,"../helpers/ZxQuery":5,"../observable/ObjectObserver":7,"./ComponentCache":10,"./ComponentContext":11,"./Componentizer":12,"./ContextController":13,"./OptionAttributes":14}]},{},[6])(6)
 });
