@@ -234,6 +234,8 @@ function Logger(ctx) {
 }
 
 /**
+ * Callback function for monitoring all log messages.
+ *
  * @callback LoggerMonitorCallback
  * @param {Object} ctx
  * @param {string} level
@@ -242,7 +244,7 @@ function Logger(ctx) {
  */
 
 /**
- * Callback for monitoring all log messages.
+ * Sets a callback function for monitoring all log messages.
  *
  * @param {LoggerMonitorCallback} callback
  * @return undefined
@@ -271,6 +273,8 @@ Logger.prototype.console = function(enable) {
 };
 
 /**
+ * Logs information messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -280,6 +284,8 @@ Logger.prototype.info = function() {
 };
 Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototype.info;
 /**
+ * Logs warning messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -289,6 +295,8 @@ Logger.prototype.warn = function() {
 };
 Logger.prototype.w = Logger.prototype.warn;
 /**
+ * Logs error messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -298,6 +306,8 @@ Logger.prototype.error = function() {
 };
 Logger.prototype.e = Logger.prototype.error;
 /**
+ * Logs debug messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -307,6 +317,8 @@ Logger.prototype.debug = function() {
 };
 Logger.prototype.d = Logger.prototype.debug;
 /**
+ * Logs trace messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -1414,6 +1426,8 @@ function ZxQueryStatic(what) {
 }
 const z$ = ZxQueryStatic;
 /**
+ * Selects document elements matching the given *DOM* query selector.
+ *
  * @memberOf {ZxQueryStatic}
  * @alias zuix.$.find
  * @param {string} selector A valid *DOM* query selector.
@@ -1461,6 +1475,8 @@ ZxQueryStatic.each = function(items, iterationCallback) {
 };
 ZxQueryStatic.ajax =
 /**
+ * Makes an HTTP request.
+ *
  * @memberOf {ZxQueryStatic}
  * @alias zuix.$.http
  * @param {ZxQueryHttpOptions} options
@@ -1497,6 +1513,8 @@ ZxQueryStatic.http = function(options) {
     return this;
 };
 /**
+ * Checks if an element has got the specified CSS class.
+ *
  * @memberOf {ZxQueryStatic}
  * @alias zuix.$.hasClass
  * @param {Element} el
@@ -1517,7 +1535,7 @@ ZxQueryStatic.hasClass = function(el, className) {
     return success;
 };
 /**
- * Check if a class exists by searching for it in all document stylesheets.
+ * Checks if a class exists by searching for it in all document stylesheets.
  *
  * @memberOf {ZxQueryStatic}
  * @alias zuix.$.classExists
@@ -1603,13 +1621,24 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
                             isMediaQuery = true;
                         }
                     } else if (encapsulate) {
-                        // wrap the class name (v)
-                        wrappedCss += '\n' + v.trim() + wrapperRule + ' ';
+                        // wrap the class names (v)
+                        v.split(/\s+/).forEach(function(attr) {
+                            attr = attr.trim();
+                            if (attr.lastIndexOf('.') > 0) {
+                                attr.split('.').forEach(function(attr2) {
+                                    if (attr2 !== '') {
+                                        wrappedCss += '.' + attr2 + wrapperRule;
+                                    }
+                                });
+                            } else if (attr !== '') {
+                                wrappedCss += '\n' + attr + wrapperRule + ' ';
+                            }
+                        });
                     } else {
                         wrappedCss += '\n[z-component]' + wrapperRule + '\n' + v.trim() + ' ';
                     }
                     if (k < classes.length - 1) {
-                        wrappedCss += ', ';
+                        wrappedCss = wrappedCss.trim() + ', ';
                     }
                 });
                 if (isMediaQuery) {
@@ -1629,7 +1658,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
     return css;
 };
 /**
- * Append or replace a stylesheet to the document.
+ * Appends or replaces a stylesheet to the document.
  *
  * @memberOf {ZxQueryStatic}
  * @alias zuix.$.appendCss
@@ -5733,7 +5762,7 @@ Zuix.prototype.dumpContexts = function() {
     return _contextRoot;
 };
 
-// TODO: add zx.options to configure stuff like
+// TODO: add zuix.options to configure stuff like
 // TODO: the css/html/js lookup base path (each individually own prop)
 
 /**

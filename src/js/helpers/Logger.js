@@ -108,6 +108,8 @@ function Logger(ctx) {
 }
 
 /**
+ * Callback function for monitoring all log messages.
+ *
  * @callback LoggerMonitorCallback
  * @param {Object} ctx
  * @param {string} level
@@ -116,7 +118,7 @@ function Logger(ctx) {
  */
 
 /**
- * Callback for monitoring all log messages.
+ * Sets a callback function for monitoring all log messages.
  *
  * @param {LoggerMonitorCallback} callback
  * @return undefined
@@ -145,6 +147,8 @@ Logger.prototype.console = function(enable) {
 };
 
 /**
+ * Logs information messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -154,6 +158,8 @@ Logger.prototype.info = function() {
 };
 Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototype.info;
 /**
+ * Logs warning messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -163,6 +169,8 @@ Logger.prototype.warn = function() {
 };
 Logger.prototype.w = Logger.prototype.warn;
 /**
+ * Logs error messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -172,6 +180,8 @@ Logger.prototype.error = function() {
 };
 Logger.prototype.e = Logger.prototype.error;
 /**
+ * Logs debug messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
@@ -181,6 +191,8 @@ Logger.prototype.debug = function() {
 };
 Logger.prototype.d = Logger.prototype.debug;
 /**
+ * Logs trace messages.
+ *
  * @param {Object[]} ...args
  * @return {Logger}
  */
