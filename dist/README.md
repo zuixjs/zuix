@@ -91,6 +91,9 @@ To use zUIx in a TypeScript project you can download and include the auto-genera
 [module definition file](https://raw.githubusercontent.com/zuixjs/zuix/master/dist/ts/zuix.d.ts)
 which is located in the distribution folder of the master repo.
 
+```typescript
+import zuix from 'zuix-dist';
+```
 
 ## Contributing
 

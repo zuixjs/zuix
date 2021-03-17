@@ -1,4 +1,4 @@
-interface ContextOptions {
+export interface ContextOptions {
     contextId?: Object;
     container?: Element;
     model?: JSON;
@@ -16,13 +16,13 @@ interface ContextOptions {
     ready?: ContextReadyCallback;
     error?: ContextErrorCallback;
 }
-interface ContextErrorCallback {
+export interface ContextErrorCallback {
     (error: Object, ctx: ComponentContext): void;
 }
-interface ContextReadyCallback {
+export interface ContextReadyCallback {
     (ctx: ComponentContext): void;
 }
-interface Zuix {
+export interface Zuix {
     field(fieldName: String, container?: Element): ZxQuery;
     load(componentId: String, options?: ContextOptions): ComponentContext;
     unload(context: ComponentContext | Element): Zuix;
@@ -43,13 +43,13 @@ interface Zuix {
     dumpCache(): ComponentCache[];
     dumpContexts(): ComponentContext[];
 }
-interface ContextControllerHandler {
+export interface ContextControllerHandler {
     (cp: ContextController): void;
 }
-interface EventCallback {
+export interface EventCallback {
     (event: String, data: Object, $el: ZxQuery): void;
 }
-interface ComponentContext {
+export interface ComponentContext {
     container(container?: Element): ComponentContext | Element;
     view(view?: Element | String): ComponentContext | Element;
     style(css?: String | Element): ComponentContext | Element;
@@ -63,19 +63,19 @@ interface ComponentContext {
     modelToView(): ComponentContext;
     getCssId(): String;
 }
-interface ContextControllerUpdateCallback {
+export interface ContextControllerUpdateCallback {
     (target: Object, key: String, value: Object, path: String, old: Object): void;
 }
-interface ContextControllerInitCallback {
+export interface ContextControllerInitCallback {
     (): void;
 }
-interface ContextControllerCreateCallback {
+export interface ContextControllerCreateCallback {
     (): void;
 }
-interface ContextControllerDestroyCallback {
+export interface ContextControllerDestroyCallback {
     (): void;
 }
-interface ContextController {
+export interface ContextController {
     init: ContextControllerInitCallback;
     create: ContextControllerCreateCallback;
     update: ContextControllerUpdateCallback;
@@ -91,7 +91,7 @@ interface ContextController {
     log: Logger;
     for(componentId: String): ContextController;
 }
-interface ComponentCache {
+export interface ComponentCache {
     componentId: String;
     view: Element;
     css: String;
@@ -99,48 +99,48 @@ interface ComponentCache {
     controller: ContextControllerHandler;
     using: String;
 }
-interface BundleItem {
+export interface BundleItem {
     view: Element;
     css: String;
     controller: ContextControllerHandler;
 }
-interface ElementsIterationCallback {
+export interface ElementsIterationCallback {
     (count: Number, item: Element, $item: ZxQuery): void;
 }
-interface Position {
+export interface Position {
     dx: Number;
     dy: Number;
 }
-interface ElementPosition {
+export interface ElementPosition {
     x: Number;
     y: Number;
     frame: Position;
     event: String;
     visible: Boolean;
 }
-interface IterationCallback {
+export interface IterationCallback {
     (i: Number, item: Object): void;
 }
-interface ZxQueryHttpBeforeSendCallback {
+export interface ZxQueryHttpBeforeSendCallback {
     (xhr: XMLHttpRequest): void;
 }
-interface ZxQueryHttpSuccessCallback {
+export interface ZxQueryHttpSuccessCallback {
     (responseText: String): void;
 }
-interface ZxQueryHttpErrorCallback {
+export interface ZxQueryHttpErrorCallback {
     (xhr: XMLHttpRequest, statusText: String, statusCode: Number): void;
 }
-interface ZxQueryHttpThenCallback {
+export interface ZxQueryHttpThenCallback {
     (xhr: XMLHttpRequest): void;
 }
-interface ZxQueryHttpOptions {
+export interface ZxQueryHttpOptions {
     url: String;
     beforeSend?: ZxQueryHttpBeforeSendCallback;
     success?: ZxQueryHttpSuccessCallback;
     error?: ZxQueryHttpErrorCallback;
     then?: ZxQueryHttpThenCallback;
 }
-interface ZxQuery {
+export interface ZxQuery {
     length(): Number;
     parent(filter?: String): ZxQuery;
     children(filter?: String): ZxQuery;
@@ -176,7 +176,7 @@ interface ZxQuery {
     show(mode?: String): ZxQuery;
     hide(): ZxQuery;
 }
-interface ZxQueryStatic {
+export interface ZxQueryStatic {
     (what?: Object | ZxQuery | Node[] | Node | NodeList | String): ZxQuery;
     find(selector: String): ZxQuery;
     each(items: Object[] | JSON, iterationCallback: IterationCallback): ZxQuery;
@@ -190,21 +190,21 @@ interface ZxQueryStatic {
     getClosest(elem: Element, selector: String): Element;
     getPosition(el: Element, tolerance?: Number): ElementPosition;
 }
-interface ObjectObserver {
+export interface ObjectObserver {
     observable(obj: Object): ObservableObject;
 }
-interface ObservableObject {
+export interface ObservableObject {
     subscribe(observableListener: ObservableListener): void;
     unsubscribe(observableListener: ObservableListener): void;
 }
-interface ObservableListener {
+export interface ObservableListener {
     get(target: Object, key: String, value: Object, path: String): void;
     set(target: Object, key: String, value: Object, path: String, old: Object): void;
 }
-interface LoggerMonitorCallback {
+export interface LoggerMonitorCallback {
     (ctx: Object, level: String, ...args: Object[]): void;
 }
-interface Logger {
+export interface Logger {
     monitor(callback: LoggerMonitorCallback): void;
     console(enable: Boolean): void;
     info(...args: Object[]): Logger;
@@ -215,3 +215,4 @@ interface Logger {
 }
 
 declare const zuix: Zuix;
+export default zuix;

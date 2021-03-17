@@ -360,7 +360,11 @@ function loadInline(element) {
     /** @type {ContextOptions} */
     let options = v.attr(_optionAttributes.dataUiOptions);
     if (!util.isNoU(options)) {
-        options = util.propertyFromPath(window, options);
+        if (typeof options === 'string') {
+            if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
+                options = eval('var o = ' + options + '; o;');
+            } else options = util.propertyFromPath(window, options);
+        }
         // copy passed options
         options = util.cloneObject(options) || {};
     } else {
@@ -458,8 +462,11 @@ function resolvePath(path) {
 
 /** @private */
 function applyOptions(element, options) {
+    // TODO: add parseOptions method
     if (typeof options === 'string') {
-        options = util.propertyFromPath(window, options);
+        if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
+            options = eval('var o = ' + options + '; o;');
+        } else options = util.propertyFromPath(window, options);
     }
     // TODO: should check if options object is valid
     if (element != null && options != null) {

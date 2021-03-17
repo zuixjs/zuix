@@ -80,7 +80,7 @@ function build() {
     tsDefs += generateTypescriptDefs('ObservableObject');
     tsDefs += generateTypescriptDefs('ObservableListener');
     tsDefs += generateTypescriptDefs('Logger');
-    tsDefs += '\ndeclare const zuix: Zuix;\n';
+    tsDefs += '\ndeclare const zuix: Zuix;\nexport default zuix;';
     // Write TypeScript definitions to file
     if (!fs.existsSync(targetFolder)) {
         fs.mkdirSync(targetFolder);
@@ -99,7 +99,7 @@ function generateTypescriptDefs(objName, innerClass) {
 
     const openContext = function(name) {
         if (!contextOpen) {
-            output += 'interface ' + name + ' {\n';
+            output += 'export interface ' + name + ' {\n';
             contextOpen = true;
         }
     };
@@ -162,7 +162,7 @@ function generateTypescriptDefs(objName, innerClass) {
                     const name = definitions[0].string.replace(/\{.[^\}]+\}\s+/ig, '');
                     if (tagType === 'typedef' && innerClass == null) {
                         closeContext();
-                        output += 'interface ' + name + ' {\n';
+                        output += 'export interface ' + name + ' {\n';
                         definitions.map((d, i)=>{
                             if (d.type === 'property') {
                                 output += indentTab() + getName(d) + ': ';
@@ -173,7 +173,7 @@ function generateTypescriptDefs(objName, innerClass) {
                         output += '}\n';
                     } else if (tagType === 'callback' && innerClass == null) {
                         closeContext();
-                        output += 'interface ' + name + ' {\n';
+                        output += 'export interface ' + name + ' {\n';
                         output += indentTab() + '(';
                         definitions.map((d, i)=>{
                             if (d.type === 'param') {

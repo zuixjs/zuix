@@ -1,5 +1,3 @@
-/* zUIx v1.0.5 19.09.01 19:40:57 */
-
 /** @typedef {Zuix} window.zuix */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zuix = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
 /*
@@ -3569,7 +3567,11 @@ function loadInline(element) {
     /** @type {ContextOptions} */
     let options = v.attr(_optionAttributes.dataUiOptions);
     if (!util.isNoU(options)) {
-        options = util.propertyFromPath(window, options);
+        if (typeof options === 'string') {
+            if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
+                options = eval('var o = ' + options + '; o;');
+            } else options = util.propertyFromPath(window, options);
+        }
         // copy passed options
         options = util.cloneObject(options) || {};
     } else {
@@ -3667,8 +3669,11 @@ function resolvePath(path) {
 
 /** @private */
 function applyOptions(element, options) {
+    // TODO: add parseOptions method
     if (typeof options === 'string') {
-        options = util.propertyFromPath(window, options);
+        if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
+            options = eval('var o = ' + options + '; o;');
+        } else options = util.propertyFromPath(window, options);
     }
     // TODO: should check if options object is valid
     if (element != null && options != null) {
@@ -5252,15 +5257,15 @@ function replaceCache(c) {
  *
 <small>**Example - HTML**</small>
 ```html
-<div data-ui-field="container-div">
+<div data-ui-field="sample-container">
    <!-- container HTML -->
 </div>
 ```
 
 <small>**Example - JavaScript**</small>
 ```js
-var containerDiv = zuix.field('container-div');
-containerDiv.html('Hello World!');
+var container = zuix.field('sample-container');
+container.html('Hello World!');
 ```
  *
  * @param {!string} fieldName Value of `data-ui-field` to look for.
@@ -5274,7 +5279,7 @@ Zuix.prototype.field = function(fieldName, container) {
     return field.call(this, fieldName, container);
 };
 /**
- * Loads a component with the given options.
+ * Loads a component.
  * This is the programmatic equivalent of `data-ui-include`
  * or `data-ui-load` attributes used to
  * include content or load components from the HTML code.
@@ -5283,29 +5288,40 @@ Zuix.prototype.field = function(fieldName, container) {
  *
 <small>**Example - JavaScript**</small>
 ```js
-var exampleController = zuix.controller(function(cp){
-    cp.create = function() {
+// declare inline the controller for component 'example/component'
+const exampleController = zuix.controller((cp) => {
+    // declare `create` life-cycle callback
+    cp.create = () => {
+        // expose a public method
         cp.expose('test', testMethod);
+        // set the content of the view
         cp.view().html('Helllo World!');
     }
     function testMethod() {
-        console.log("Method exposing test");
+        cp.log.i("Method exposing test");
         cp.view().html('A simple test.');
     }
-});
-var componentOptions = {
-    container: zuix.field('container-div');
-    controller: exampleController,
-    ready: function () {
-        console.log("Loading complete.");
-        console.log("Component instance context", this);
+}).for('example/component');
+
+// store a reference to the container
+const container = zuix.field('sample-container');
+
+ // declare loading options
+const componentOptions = {
+    view: container,
+    // callback called after the component is loaded
+    ready: (ctx) => {
+        ctx..log("Loading complete.");
+        ctx.log("Component instance context", this);
+        // call the `test` method after 1s
+        setTimeout(ctx.test, 1000);
     },
-    error: function(error) {
+    // callback called if an error occurs
+    error: (error) => {
         console.log("Loading error!", error);
     }
 };
-var ctx = zuix.load('path/to/component_name', componentOptions);
-ctx.test();
+zuix.load('example/component', componentOptions);
 ```
  *
  * @param {!string} componentId The identifier name of the component to be loaded.
