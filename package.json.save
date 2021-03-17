@@ -1,6 +1,6 @@
 {
   "name": "zuix",
-  "version": "1.0.6",
+  "version": "1.0.5",
   "description": "zUIx is a JavaScript library for creating component-based websites and applications.",
   "main": "dist/js/zuix.min.js",
   "typings": "dist/ts/zuix.d.ts",
@@ -27,13 +27,13 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "browserify": "^16.5.0",
-    "browserify-derequire": "^1.1.1",
+    "browserify-derequire": "^0.9.6",
     "dox": "^0.9.0",
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.9.1",
     "fs-readdir-recursive": "^1.1.0",
     "google-closure-compiler": "^20180805.0.0",
-    "replace": "^1.2.0",
+    "replace": "^1.1.0",
     "terminal-kit": "^1.31.1"
   }
 }
