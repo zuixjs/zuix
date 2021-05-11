@@ -103,5 +103,5 @@ See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTIN
 
 [JetBrains WebStorm](https://www.jetbrains.com/webstorm/) is the official IDE employed for developing this project.
 
-![JetBrains Logo](https://raw.githubusercontent.com/zuixjs/zuix/docs/images/github/jetbrains.svg)
-![JetBrains WebStorm Logo](https://raw.githubusercontent.com/zuixjs/zuix/docs/images/github/webstorm-logo.svg)
+![JetBrains Logo](https://raw.githubusercontent.com/zuixjs/zuix/master/docs/images/github/jetbrains.svg)
+![JetBrains WebStorm Logo](https://raw.githubusercontent.com/zuixjs/zuix/master/docs/images/github/icon-webstorm.svg)
