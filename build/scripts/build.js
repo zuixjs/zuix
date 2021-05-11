@@ -94,7 +94,7 @@ function build(mainFile, baseName, callback) {
             output.end();
             tlog.info(' ^G\u2713^:done\n\n');
             if (exitCode != 0) {
-                tlog.err(exitCode, stdOut, stdErr);
+                tlog.error('ERROR', exitCode, stdOut, stdErr);
             }
             callback(exitCode);
         });
