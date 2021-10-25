@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,18 +41,18 @@ function Localizer() {
  * @constructor
  */
 Localizer.prototype.Localize = function(container) {
-    const localizables = container.querySelectorAll('[data-locale-id]');
-    for (let l = 0; l < localizables.length; l++) {
-        const localeId = localizables[l].getAttribute('data-locale-id');
-        const text = this.getLocaleString(localeId);
-        if (text != null) {
-            const target = localizables[l].getAttribute('data-locale-target');
-            localizables[l][target] = text;
-        } else {
-            // map value to innerHTML property by default
-            localizables[l].innerHTML = text;
-        }
+  const localizables = container.querySelectorAll('[data-locale-id]');
+  for (let l = 0; l < localizables.length; l++) {
+    const localeId = localizables[l].getAttribute('data-locale-id');
+    const text = this.getLocaleString(localeId);
+    if (text != null) {
+      const target = localizables[l].getAttribute('data-locale-target');
+      localizables[l][target] = text;
+    } else {
+      // map value to innerHTML property by default
+      localizables[l].innerHTML = text;
     }
+  }
 };
 
 /**
@@ -64,23 +64,23 @@ Localizer.prototype.Localize = function(container) {
  * @return {string} The translated text.
  */
 Localizer.prototype.getLocaleString = function(localeId, defaultText, localeDictionary) {
-    let retval = null;
-    // try user provided locale if passed
-    if (localeDictionary) {
-        retval = getDictionaryItem(localeId, localeDictionary);
-    }
-    // try current locale
-    if (retval == null) {
-        retval = getDictionaryItem(localeId, localesDictionary.global[currentLanguage]);
-    }
-    // fallback to default locale
-    if (retval == null && localesDictionary.global[currentLanguage] !== localesDictionary.global['default'] && localesDictionary.global['default'] != null) {
-        retval = getDictionaryItem(localeId, localesDictionary.global['default']);
-    }
-    if (retval == null) {
-        _log.w('WARNING (Locales.GetLocaleString): "' + localeId + '" is undefined.');
-    }
-    return (retval == null && defaultText ? defaultText : retval);
+  let retval = null;
+  // try user provided locale if passed
+  if (localeDictionary) {
+    retval = getDictionaryItem(localeId, localeDictionary);
+  }
+  // try current locale
+  if (retval == null) {
+    retval = getDictionaryItem(localeId, localesDictionary.global[currentLanguage]);
+  }
+  // fallback to default locale
+  if (retval == null && localesDictionary.global[currentLanguage] !== localesDictionary.global['default'] && localesDictionary.global['default'] != null) {
+    retval = getDictionaryItem(localeId, localesDictionary.global['default']);
+  }
+  if (retval == null) {
+    _log.w('WARNING (Locales.GetLocaleString): "' + localeId + '" is undefined.');
+  }
+  return (retval == null && defaultText ? defaultText : retval);
 };
 
 /**
@@ -89,9 +89,9 @@ Localizer.prototype.getLocaleString = function(localeId, defaultText, localeDict
  * @return {string} Locale identifier string (eg. 'en' ,'fr', 'it', ...)
  */
 Localizer.prototype.getUserLanguage = function() {
-    let userLang = (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage));
-    if (userLang.length > 2) userLang = userLang.substring(0, 2);
-    return userLang;
+  let userLang = (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage));
+  if (userLang.length > 2) userLang = userLang.substring(0, 2);
+  return userLang;
 };
 
 /**
@@ -99,13 +99,13 @@ Localizer.prototype.getUserLanguage = function() {
  * @return {string} 'L' if date format is 'Little Endian -> DMY' or 'M' for 'Middle Endian -> MDY'
  */
 Localizer.prototype.getDateEndianType = function() {
-    const testDate = new Date(98326800000);
-    const localeDateParts = testDate.toLocaleDateString().replace(/[\u200E]/g, '').split('/');
-    let endianType = 'L';
-    if (localeDateParts[0] == '2') endianType = 'M';
-    // L = Little Endian -> DMY
-    // M = Middle Endian -> MDY
-    return endianType;
+  const testDate = new Date(98326800000);
+  const localeDateParts = testDate.toLocaleDateString().replace(/[\u200E]/g, '').split('/');
+  let endianType = 'L';
+  if (localeDateParts[0] == '2') endianType = 'M';
+  // L = Little Endian -> DMY
+  // M = Middle Endian -> MDY
+  return endianType;
 };
 
 // TODO: Add the following missing methods...
@@ -129,7 +129,7 @@ module.exports = Localizer;
 // ---------------------------------------------
 
 
-let currentLanguage = 'default';
+const currentLanguage = 'default';
 const localesDictionary = {};
 
 /*
@@ -154,9 +154,9 @@ localesDictionary['other-scope'] = {
 */
 
 function getDictionaryItem(localeId, localeDictionary) {
-    for (let id in localeDictionary) {
-        if (id == localeId) {
-            return localeDictionary[id];
-        }
+  for (const id in localeDictionary) {
+    if (id == localeId) {
+      return localeDictionary[id];
     }
+  }
 }

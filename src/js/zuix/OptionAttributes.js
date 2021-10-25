@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,31 +25,31 @@
  */
 
 const OptionAttributes = Object.freeze({
-    dataBindModel:
+  dataBindModel:
         'z-model,data-bind-model',
-    dataBindTo:
+  dataBindTo:
         'z-bind,data-bind-to',
-    dataUiComponent:
+  dataUiComponent:
         'z-component',
-    dataUiContext:
+  dataUiContext:
         'z-context,data-ui-context',
-    dataUiField:
+  dataUiField:
         'z-field,data-ui-field',
-    dataUiInclude:
+  dataUiInclude:
         'z-include,data-ui-include',
-    dataUiLazyload:
+  dataUiLazyload:
         'z-lazy,data-ui-lazyload',
-    dataUiLoad:
+  dataUiLoad:
         'z-load,data-ui-load',
-    dataUiLoaded:
+  dataUiLoaded:
         'z-loaded',
-    dataUiOptions:
+  dataUiOptions:
         'z-options,data-ui-options',
-    dataUiPriority:
+  dataUiPriority:
         'z-priority,data-ui-priority',
-    dataUiView:
+  dataUiView:
         'z-view,data-ui-view',
-    zuixLoaded:
+  zuixLoaded:
         'zuix-loaded'
 });
 

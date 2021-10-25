@@ -1,11 +1,17 @@
-/* zUIx v1.0.6 21.03.17 22:57:46 */
+/* zUIx v1.0.8 21.10.25 19:40:44 */
 
-/** @typedef {Zuix} window.zuix */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zuixBundler = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
-/* eslint-disable */
+var zuix;
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 460:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
 /*!
  * @license
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,26 +37,26 @@
 
 /* global define */
 
-'use strict';
+
 
 // TODO: detect whether running in a browser environment or not
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define('zuix', function() {
-            return (root.zuix = (factory).call(root));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        // Node
-        module.exports = (factory).call(root);
-    } else {
-        // Browser globals
-        root.zuix = (factory).call(root);
-    }
-}(this, _dereq_('./zuix-bundler/ZuixBundler.js')));
+  if (true) {
+    // AMD. Register as an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+      return (root.zuix = (factory).call(root));
+    }).call(exports, __webpack_require__, exports, module),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+}(this, __webpack_require__(94)));
 
-},{"./zuix-bundler/ZuixBundler.js":4}],2:[function(_dereq_,module,exports){
-/* FileSaver.js
+
+/***/ }),
+
+/***/ 35:
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
  * A saveAs() FileSaver implementation.
  * 1.3.2
  * 2016-06-16 18:25:19
@@ -233,15 +239,21 @@ var saveAs = saveAs || (function(view) {
 // while `this` is nsIContentFrameMessageManager
 // with an attribute `content` that corresponds to the window
 
-if (typeof module !== "undefined" && module.exports) {
+if ( true && module.exports) {
   module.exports.saveAs = saveAs;
-} else if ((typeof define !== "undefined" && define !== null) && (define.amd !== null)) {
-  define("FileSaver.js", function() {
+} else if (( true && __webpack_require__.amdD !== null) && (__webpack_require__.amdO !== null)) {
+  !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
     return saveAs;
-  });
+  }).call(exports, __webpack_require__, exports, module),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 }
 
-},{}],3:[function(_dereq_,module,exports){
+
+/***/ }),
+
+/***/ 458:
+/***/ ((module) => {
+
 /*
  Copyright (c) 2014, Yahoo! Inc. All rights reserved.
  Copyrights licensed under the New BSD License.
@@ -252,7 +264,7 @@ if (typeof module !== "undefined" && module.exports) {
  */
 
 const isRegExp = function(re) {
-    return Object.prototype.toString.call(re) === '[object RegExp]';
+  return Object.prototype.toString.call(re) === '[object RegExp]';
 };
 
 const UID = Math.floor(Math.random() * 0x10000000000).toString(16);
@@ -264,101 +276,107 @@ const UNSAFE_CHARS_REGEXP = /[<>\/\u2028\u2029]/g;
 // Mapping of unsafe HTML and invalid JavaScript line terminator chars to their
 // Unicode char counterparts which are safe to use in JavaScript strings.
 const ESCAPED_CHARS = {
-    '<': '\\u003C',
-    '>': '\\u003E',
-    '/': '\\u002F',
-    '\u2028': '\\u2028',
-    '\u2029': '\\u2029'
+  '<': '\\u003C',
+  '>': '\\u003E',
+  '/': '\\u002F',
+  '\u2028': '\\u2028',
+  '\u2029': '\\u2029'
 };
 
 function escapeUnsafeChars(unsafeChar) {
-    return ESCAPED_CHARS[unsafeChar];
+  return ESCAPED_CHARS[unsafeChar];
 }
 
 module.exports = function serialize(obj, options) {
-    options || (options = {});
+  options || (options = {});
 
-    // component item serialization
+  // component item serialization
 
-    // Backwards-compatability for `space` as the second argument.
-    if (typeof options === 'number' || typeof options === 'string') {
-        options = {space: options};
+  // Backwards-compatability for `space` as the second argument.
+  if (typeof options === 'number' || typeof options === 'string') {
+    options = {space: options};
+  }
+
+  const functions = [];
+  const regexps = [];
+
+  // Returns placeholders for functions and regexps (identified by index)
+  // which are later replaced by their string representation.
+  function replacer(key, value) {
+    if (!value) {
+      return value;
     }
 
-    const functions = [];
-    const regexps = [];
+    const type = typeof value;
 
-    // Returns placeholders for functions and regexps (identified by index)
-    // which are later replaced by their string representation.
-    function replacer(key, value) {
-        if (!value) {
-            return value;
-        }
+    if (type === 'object') {
+      if (isRegExp(value)) {
+        return '@__R-' + UID + '-' + (regexps.push(value) - 1) + '__@';
+      }
 
-        const type = typeof value;
-
-        if (type === 'object') {
-            if (isRegExp(value)) {
-                return '@__R-' + UID + '-' + (regexps.push(value) - 1) + '__@';
-            }
-
-            return value;
-        }
-
-        if (type === 'function') {
-            return '@__F-' + UID + '-' + (functions.push(value) - 1) + '__@';
-        }
-
-        return value;
+      return value;
     }
 
-    let str;
-
-    // Creates a JSON string representation of the value.
-    // NOTE: Node 0.12 goes into slow mode with extra JSON.stringify() args.
-    if (options.isJSON && !options.space) {
-        str = JSON.stringify(obj);
-    } else {
-        str = JSON.stringify(obj, options.isJSON ? null : replacer, options.space);
+    if (type === 'function') {
+      return '@__F-' + UID + '-' + (functions.push(value) - 1) + '__@';
     }
 
-    // Protects against `JSON.stringify()` returning `undefined`, by serializing
-    // to the literal string: "undefined".
-    if (typeof str !== 'string') {
-        return String(str);
+    return value;
+  }
+
+  let str;
+
+  // Creates a JSON string representation of the value.
+  // NOTE: Node 0.12 goes into slow mode with extra JSON.stringify() args.
+  if (options.isJSON && !options.space) {
+    str = JSON.stringify(obj);
+  } else {
+    str = JSON.stringify(obj, options.isJSON ? null : replacer, options.space);
+  }
+
+  // Protects against `JSON.stringify()` returning `undefined`, by serializing
+  // to the literal string: "undefined".
+  if (typeof str !== 'string') {
+    return String(str);
+  }
+
+  // Replace unsafe HTML and invalid JavaScript line terminator chars with
+  // their safe Unicode char counterpart. This _must_ happen before the
+  // regexps and functions are serialized and added back to the string.
+  str = str.replace(UNSAFE_CHARS_REGEXP, escapeUnsafeChars);
+
+  if (functions.length === 0 && regexps.length === 0) {
+    return str;
+  }
+
+  // Replaces all occurrences of function and regexp placeholders in the JSON
+  // string with their string representations. If the original value can not
+  // be found, then `undefined` is used.
+  return str.replace(PLACE_HOLDER_REGEXP, function(match, type, valueIndex) {
+    if (type === 'R') {
+      return regexps[valueIndex].toString();
     }
 
-    // Replace unsafe HTML and invalid JavaScript line terminator chars with
-    // their safe Unicode char counterpart. This _must_ happen before the
-    // regexps and functions are serialized and added back to the string.
-    str = str.replace(UNSAFE_CHARS_REGEXP, escapeUnsafeChars);
+    const fn = functions[valueIndex];
+    const serializedFn = fn.toString();
 
-    if (functions.length === 0 && regexps.length === 0) {
-        return str;
+    if (IS_NATIVE_CODE_REGEXP.test(serializedFn)) {
+      throw new TypeError('Serializing native function: ' + fn.name);
     }
 
-    // Replaces all occurrences of function and regexp placeholders in the JSON
-    // string with their string representations. If the original value can not
-    // be found, then `undefined` is used.
-    return str.replace(PLACE_HOLDER_REGEXP, function(match, type, valueIndex) {
-        if (type === 'R') {
-            return regexps[valueIndex].toString();
-        }
-
-        const fn = functions[valueIndex];
-        const serializedFn = fn.toString();
-
-        if (IS_NATIVE_CODE_REGEXP.test(serializedFn)) {
-            throw new TypeError('Serializing native function: ' + fn.name);
-        }
-
-        return serializedFn;
-    });
+    return serializedFn;
+  });
 };
 
-},{}],4:[function(_dereq_,module,exports){
+
+/***/ }),
+
+/***/ 94:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -383,11 +401,11 @@ module.exports = function serialize(obj, options) {
  * @author Generoso Martello <generoso@martello.com>
  */
 
-'use strict';
 
-const fileSaver = _dereq_('./FileSaver');
-const serialize = _dereq_('./Serializer');
-const _optionAttributes = _dereq_('../zuix/OptionAttributes');
+
+const fileSaver = __webpack_require__(35);
+const serialize = __webpack_require__(458);
+const _optionAttributes = __webpack_require__(541);
 
 /**
  * Create application bundle containing all components
@@ -406,63 +424,68 @@ const _optionAttributes = _dereq_('../zuix/OptionAttributes');
  * @return {string} bundle
  */
 function saveBundle() {
-    const bundleFileName = 'app.bundle.js';
-    const bundleObj = zuix.bundle();
-    let headerSummary = '\n/*';
-    headerSummary += '\n * zUIx Application Bundle';
-    headerSummary += '\n * ';
-    headerSummary += '\n * '+bundleFileName+' generated by *zuix-bundler*';
-    headerSummary += '\n *   on '+new Date().toISOString();
-    headerSummary += '\n * ';
-    headerSummary += '\n * Resource list ('+bundleObj.length+'):';
-    headerSummary += '\n * ';
-    for (let i = 0; i < bundleObj.length; i++) {
-        const b = bundleObj[i];
-        let ctype = '';
-        if (b.view != null) {
-            ctype += '[html] ';
-        }
-        if (b.css != null) {
-            ctype += '[css] ';
-        }
-        if (b.controller != null) {
-            ctype += '[js] ';
-        }
-        let cpath = b.componentId;
-        if (b.using != null) {
-            cpath = b.using+' ('+cpath+')';
-        }
-        headerSummary += '\n * - '+ctype;
-        headerSummary += '\n *   '+cpath;
-        headerSummary += '\n * ';
+  const bundleFileName = 'app.bundle.js';
+  const bundleObj = zuix.bundle();
+  let headerSummary = '\n/*';
+  headerSummary += '\n * zUIx Application Bundle';
+  headerSummary += '\n * ';
+  headerSummary += '\n * '+bundleFileName+' generated by *zuix-bundler*';
+  headerSummary += '\n *   on '+new Date().toISOString();
+  headerSummary += '\n * ';
+  headerSummary += '\n * Resource list ('+bundleObj.length+'):';
+  headerSummary += '\n * ';
+  for (let i = 0; i < bundleObj.length; i++) {
+    const b = bundleObj[i];
+    let ctype = '';
+    if (b.view != null) {
+      ctype += '[html] ';
     }
+    if (b.css != null) {
+      ctype += '[css] ';
+    }
+    if (b.controller != null) {
+      ctype += '[js] ';
+    }
+    let cpath = b.componentId;
+    if (b.using != null) {
+      cpath = b.using+' ('+cpath+')';
+    }
+    headerSummary += '\n * - '+ctype;
+    headerSummary += '\n *   '+cpath;
     headerSummary += '\n * ';
-    headerSummary += '\n*/';
-    headerSummary += '\n\n';
-    let bundle = headerSummary + serialize(zuix.bundle());
-    // revert loaded status before exporting
-    bundle = bundle.replace(new RegExp(_optionAttributes.dataUiLoaded+'="true"', 'g'),
-        _optionAttributes.dataUiLoaded+'="false"');
-    bundle = bundle.replace(new RegExp(_optionAttributes.zuixLoaded+'="true"', 'g'),
-        _optionAttributes.zuixLoaded+'="false"');
-    // save bundle
-    const blob = new Blob(['zuix.bundle(' + bundle + ');'], {type: 'text/plain;charset=utf-8'});
-    fileSaver.saveAs(blob, bundleFileName);
-    return bundle;
+  }
+  headerSummary += '\n * ';
+  headerSummary += '\n*/';
+  headerSummary += '\n\n';
+  let bundle = headerSummary + serialize(zuix.bundle());
+  // revert loaded status before exporting
+  bundle = bundle.replace(new RegExp(_optionAttributes.dataUiLoaded+'="true"', 'g'),
+      _optionAttributes.dataUiLoaded+'="false"');
+  bundle = bundle.replace(new RegExp(_optionAttributes.zuixLoaded+'="true"', 'g'),
+      _optionAttributes.zuixLoaded+'="false"');
+  // save bundle
+  const blob = new Blob(['zuix.bundle(' + bundle + ');'], {type: 'text/plain;charset=utf-8'});
+  fileSaver.saveAs(blob, bundleFileName);
+  return bundle;
 }
 
 module.exports = function(root) {
-    if (zuix == null) {
-        alert('Error: ZuixBundler requires Zuix to be included first.');
-        return;
-    }
-    zuix.saveBundle = saveBundle;
-    return zuix;
+  if (zuix == null) {
+    alert('Error: ZuixBundler requires Zuix to be included first.');
+    return;
+  }
+  zuix.saveBundle = saveBundle;
+  return zuix;
 };
 
-},{"../zuix/OptionAttributes":5,"./FileSaver":2,"./Serializer":3}],5:[function(_dereq_,module,exports){
+
+/***/ }),
+
+/***/ 541:
+/***/ ((module) => {
+
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -488,35 +511,85 @@ module.exports = function(root) {
  */
 
 const OptionAttributes = Object.freeze({
-    dataBindModel:
+  dataBindModel:
         'z-model,data-bind-model',
-    dataBindTo:
+  dataBindTo:
         'z-bind,data-bind-to',
-    dataUiComponent:
+  dataUiComponent:
         'z-component',
-    dataUiContext:
+  dataUiContext:
         'z-context,data-ui-context',
-    dataUiField:
+  dataUiField:
         'z-field,data-ui-field',
-    dataUiInclude:
+  dataUiInclude:
         'z-include,data-ui-include',
-    dataUiLazyload:
+  dataUiLazyload:
         'z-lazy,data-ui-lazyload',
-    dataUiLoad:
+  dataUiLoad:
         'z-load,data-ui-load',
-    dataUiLoaded:
+  dataUiLoaded:
         'z-loaded',
-    dataUiOptions:
+  dataUiOptions:
         'z-options,data-ui-options',
-    dataUiPriority:
+  dataUiPriority:
         'z-priority,data-ui-priority',
-    dataUiView:
+  dataUiView:
         'z-view,data-ui-view',
-    zuixLoaded:
+  zuixLoaded:
         'zuix-loaded'
 });
 
 module.exports = OptionAttributes;
 
-},{}]},{},[1])(1)
-});
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/amd define */
+/******/ 	(() => {
+/******/ 		__webpack_require__.amdD = function () {
+/******/ 			throw new Error('define cannot be used indirect');
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/amd options */
+/******/ 	(() => {
+/******/ 		__webpack_require__.amdO = {};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(460);
+/******/ 	zuix = __webpack_exports__;
+/******/ 	
+/******/ })()
+;

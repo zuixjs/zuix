@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,9 +27,9 @@
 'use strict';
 
 const _console_m = [
-    'log', 'info', 'warn', 'error', 'debug', 'trace', 'dir', 'group',
-    'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd',
-    'dirxml', 'assert', 'count', 'markTimeline', 'timeStamp', 'clear'
+  'log', 'info', 'warn', 'error', 'debug', 'trace', 'dir', 'group',
+  'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd',
+  'dirxml', 'assert', 'count', 'markTimeline', 'timeStamp', 'clear'
 ];
 const _bc = 'background-color:rgba(200,200,200,0.2);';
 const _bt = 'background-color:transparent;';
@@ -52,59 +52,59 @@ let _callback = null;
  * @constructor
  */
 function Logger(ctx) {
-    _console = window ? window.console : {};
-    _global = window ? window : {};
-    this._timers = {};
-    this.args = function(context, level, args) {
-        let logHeader = '%c '+level+' %c'+(new Date().toISOString())+' %c'+context;
-        const colors = [_bc+_c1, _bc+_c2, _bc+_c3];
-        for (let i = 0; i < args.length; i++) {
-            if (typeof args[i] == 'string' && args[i].indexOf('timer:') === 0) {
-                const t = args[i].split(':');
-                if (t.length === 3) {
-                    let elapsed;
-                    switch (t[2]) {
-                        case 'start':
-                            this._timers[t[1]] = new Date().getTime();
-                            logHeader += ' %cSTART '+t[1];
-                            colors.push(_bc+_c_start);
-                            break;
-                        case 'stop':
-                            elapsed = (new Date().getTime() - this._timers[t[1]]);
-                            logHeader += ' %cSTOP '+t[1]+' '+elapsed+' ms';
-                            if (elapsed > 200) {
-                                colors.push(_bc+_c_end_very_slow);
-                            } else if (elapsed > 100) {
-                                colors.push(_bc+_c_end_slow);
-                            } else {
-                                colors.push(_bc+_c_end);
-                            }
-                            break;
-                    }
-                }
-            }
+  _console = window ? window.console : {};
+  _global = window ? window : {};
+  this._timers = {};
+  this.args = function(context, level, args) {
+    let logHeader = '%c '+level+' %c'+(new Date().toISOString())+' %c'+context;
+    const colors = [_bc+_c1, _bc+_c2, _bc+_c3];
+    for (let i = 0; i < args.length; i++) {
+      if (typeof args[i] == 'string' && args[i].indexOf('timer:') === 0) {
+        const t = args[i].split(':');
+        if (t.length === 3) {
+          let elapsed;
+          switch (t[2]) {
+            case 'start':
+              this._timers[t[1]] = new Date().getTime();
+              logHeader += ' %cSTART '+t[1];
+              colors.push(_bc+_c_start);
+              break;
+            case 'stop':
+              elapsed = (new Date().getTime() - this._timers[t[1]]);
+              logHeader += ' %cSTOP '+t[1]+' '+elapsed+' ms';
+              if (elapsed > 200) {
+                colors.push(_bc+_c_end_very_slow);
+              } else if (elapsed > 100) {
+                colors.push(_bc+_c_end_slow);
+              } else {
+                colors.push(_bc+_c_end);
+              }
+              break;
+          }
         }
-        logHeader += ' \n%c '; colors.push(_bt+'color:inherit;');
-        // if (typeof args[0] == 'string') {
-        //     logHeader += ' %c' + args[0];
-        //     Array.prototype.shift.call(args);
-        // }
-        for (let c = colors.length-1; c >= 0; c--) {
-            Array.prototype.unshift.call(args, colors[c]);
-        }
-        Array.prototype.unshift.call(args, logHeader);
-        Array.prototype.push.call(args, '\n\n');
-    };
-    this.log = function(level, args) {
-        if (typeof _callback === 'function') {
-            _callback.call(ctx, level, args);
-        }
-        // route event
-        if (!_global.zuixNoConsoleOutput) {
-            this.args(ctx, level, args);
-            _console.log.apply(_console, args);
-        }
-    };
+      }
+    }
+    logHeader += ' \n%c '; colors.push(_bt+'color:inherit;');
+    // if (typeof args[0] == 'string') {
+    //     logHeader += ' %c' + args[0];
+    //     Array.prototype.shift.call(args);
+    // }
+    for (let c = colors.length-1; c >= 0; c--) {
+      Array.prototype.unshift.call(args, colors[c]);
+    }
+    Array.prototype.unshift.call(args, logHeader);
+    Array.prototype.push.call(args, '\n\n');
+  };
+  this.log = function(level, args) {
+    if (typeof _callback === 'function') {
+      _callback.call(ctx, level, args);
+    }
+    // route event
+    if (!_global.zuixNoConsoleOutput) {
+      this.args(ctx, level, args);
+      _console.log.apply(_console, args);
+    }
+  };
 }
 
 /**
@@ -124,8 +124,8 @@ function Logger(ctx) {
  * @return undefined
  */
 Logger.prototype.monitor = function(callback) {
-    // global callback for debugging purpose
-    _callback = callback;
+  // global callback for debugging purpose
+  _callback = callback;
 };
 
 /**
@@ -134,16 +134,16 @@ Logger.prototype.monitor = function(callback) {
  * @return undefined
  */
 Logger.prototype.console = function(enable) {
-    if (enable) {
-        window.console = _console;
-    } else {
-        window.console = {};
-        for (let i = 0; i < _console_m.length; i++) {
-            if (!window.console[_console_m[i]]) {
-                window.console[_console_m[i]] = function() { };
-            }
-        }
+  if (enable) {
+    window.console = _console;
+  } else {
+    window.console = {};
+    for (let i = 0; i < _console_m.length; i++) {
+      if (!window.console[_console_m[i]]) {
+        window.console[_console_m[i]] = function() { };
+      }
     }
+  }
 };
 
 /**
@@ -153,8 +153,8 @@ Logger.prototype.console = function(enable) {
  * @return {Logger}
  */
 Logger.prototype.info = function() {
-    this.log('INFO', arguments);
-    return this;
+  this.log('INFO', arguments);
+  return this;
 };
 Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototype.info;
 /**
@@ -164,8 +164,8 @@ Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototyp
  * @return {Logger}
  */
 Logger.prototype.warn = function() {
-    this.log('WARN', arguments);
-    return this;
+  this.log('WARN', arguments);
+  return this;
 };
 Logger.prototype.w = Logger.prototype.warn;
 /**
@@ -175,8 +175,8 @@ Logger.prototype.w = Logger.prototype.warn;
  * @return {Logger}
  */
 Logger.prototype.error = function() {
-    this.log('ERROR', arguments);
-    return this;
+  this.log('ERROR', arguments);
+  return this;
 };
 Logger.prototype.e = Logger.prototype.error;
 /**
@@ -186,8 +186,8 @@ Logger.prototype.e = Logger.prototype.error;
  * @return {Logger}
  */
 Logger.prototype.debug = function() {
-    this.log('DEBUG', arguments);
-    return this;
+  this.log('DEBUG', arguments);
+  return this;
 };
 Logger.prototype.d = Logger.prototype.debug;
 /**
@@ -197,11 +197,11 @@ Logger.prototype.d = Logger.prototype.debug;
  * @return {Logger}
  */
 Logger.prototype.trace = function() {
-    this.log('TRACE', arguments);
-    return this;
+  this.log('TRACE', arguments);
+  return this;
 };
 Logger.prototype.t = Logger.prototype.trace;
 
 module.exports = function(ctx) {
-    return new Logger(ctx);
+  return new Logger(ctx);
 };

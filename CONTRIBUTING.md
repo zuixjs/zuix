@@ -54,12 +54,11 @@ Build source and create minified version in `./dist/js` folder:
 
     npm run build
 
-this will also generate, starting from JSDoc comments, the JSON formatted **API** files
-in the `./docs/app/content/api/data` folder and **TypeScript** definition file in the `./dist/js` folder.
-
 To submit a new release
 
     npm run release <newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease
+
+If for instance current published version is 1.0.6, `npm run release patch` will build library, bump version to 1.0.7 and publish it.
 
 if passing *CI* tests, new release files will be copied to the CDN website (`./docs` folder) and the version number in the `README.md` file will be updated.
 Also the new API data files will be updated in the `./docs/api` folder.

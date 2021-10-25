@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,6 @@
 
 /** */
 module.exports = function(root) {
-    // dummy module for JsDocs/Closure Compiler
-    return null;
+  // dummy module for JsDocs/Closure Compiler
+  return null;
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,19 +39,19 @@ const ObservableListener =
  * @constructor
  */
 function ObservableObject(context, target, handler) {
-    Object.assign(handler, {context: context});
-    Object.assign(this, Proxy.revocable(target, handler));
-    /** @private */
-    this.handler = handler;
-    /** @private */
-    this.handler.context.observableList = this.handler.context.observableList || [];
-    this.handler.context.observableList.push(this);
-    /** @private */
-    this.target = target;
-    /** @private */
-    this.__parents__ = [];
-    /** @private */
-    this.__listeners__ = [];
+  Object.assign(handler, {context: context});
+  Object.assign(this, Proxy.revocable(target, handler));
+  /** @private */
+  this.handler = handler;
+  /** @private */
+  this.handler.context.observableList = this.handler.context.observableList || [];
+  this.handler.context.observableList.push(this);
+  /** @private */
+  this.target = target;
+  /** @private */
+  this.__parents__ = [];
+  /** @private */
+  this.__listeners__ = [];
 }
 
 /**
@@ -61,14 +61,14 @@ function ObservableObject(context, target, handler) {
  * @returns ObservableObject
  */
 ObservableObject.prototype.subscribe = function(observableListener) {
-    const _t = this;
-    this.handler.context.observableList.forEach(function(p) {
-        if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
-            throw new Error('Listener already registered.');
-        }
-    });
-    this.__listeners__.push(observableListener);
-    return this;
+  const _t = this;
+  this.handler.context.observableList.forEach(function(p) {
+    if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
+      throw new Error('Listener already registered.');
+    }
+  });
+  this.__listeners__.push(observableListener);
+  return this;
 };
 
 /**
@@ -78,32 +78,32 @@ ObservableObject.prototype.subscribe = function(observableListener) {
  * @returns ObservableObject
  */
 ObservableObject.prototype.unsubscribe = function(observableListener) {
-    const i = this.__listeners__.indexOf(observableListener);
-    if (i !== -1) {
-        this.__listeners__.splice(i, 1);
-    }
-    if (this.__listeners__.length === 0) {
-        // this observable has no more direct listeners and can be removed
-        this.revoke();
-        // TODO: this is untested!!!
-        // remove this observable and parent references to it
-        const _t = this;
-        this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
-            if (p === _t) return false;
-            const i = p.__parents__.indexOf(_t);
-            if (i !== -1) {
-                p.__parents__.splice(i, 1);
-                // if child has no more parents nor listeners, then remove it as well
-                if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
-                    // recursive call
-                    p.unsubscribe(null);
-                    return false;
-                }
-            }
-            return true;
-        });
-    }
-    return this;
+  const i = this.__listeners__.indexOf(observableListener);
+  if (i !== -1) {
+    this.__listeners__.splice(i, 1);
+  }
+  if (this.__listeners__.length === 0) {
+    // this observable has no more direct listeners and can be removed
+    this.revoke();
+    // TODO: this is untested!!!
+    // remove this observable and parent references to it
+    const _t = this;
+    this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
+      if (p === _t) return false;
+      const i = p.__parents__.indexOf(_t);
+      if (i !== -1) {
+        p.__parents__.splice(i, 1);
+        // if child has no more parents nor listeners, then remove it as well
+        if (p.__parents__.length === 0 && p.__listeners__.length === 0) {
+          // recursive call
+          p.unsubscribe(null);
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+  return this;
 };
 
 module.exports = ObservableObject;

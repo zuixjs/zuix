@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,90 +67,90 @@ const z$ =
  * @constructor
  */
 function ContextController(context) {
-    const _t = this;
+  const _t = this;
 
-    this._view = null;
+  this._view = null;
 
-    this.context = context;
+  this.context = context;
 
-    /**
+  /**
      * @package
      * @type {!Array.<ZxQuery>}
      **/
-    this._fieldCache = [];
+  this._fieldCache = [];
 
-    /**
+  /**
      * @protected
      * @type {!Array.<Element>}
      * */
-    this._childNodes = [];
-    /** @type {function} */
-    this.saveView = function() {
-        this.restoreView();
-        this.view().children().each(function(i, el) {
-            _t._childNodes.push(el);
-        });
-    };
-    this.restoreView = function() {
-        if (this._childNodes.length > 0) {
-            _t.view().html('');
-            z$.each(_t._childNodes, function(i, el) {
-                _t.view().append(el);
-            });
-            this._childNodes.length = 0;
-        }
-    };
-
-    this.on = function(eventPath, handler) {
-        this.addEvent(eventPath, handler);
-        return this;
-    };
-    /** @protected */
-    this.mapEvent = function(eventMap, target, eventPath, handler) {
-        if (target != null) {
-            target.off(eventPath, this.eventRouter);
-            eventMap[eventPath] = handler;
-            target.on(eventPath, this.eventRouter);
-        } else {
-            // TODO: should report missing target
-        }
-    };
-    /** @protected */
-    this.eventRouter = function(e) {
-        const v = _t.view();
-        if (typeof context._behaviorMap[e.type] === 'function') {
-            context._behaviorMap[e.type].call(v, e, e.detail, v);
-        }
-        if (typeof context._eventMap[e.type] === 'function') {
-            context._eventMap[e.type].call(v, e, e.detail, v);
-        }
-        // TODO: else-> should report anomaly
-    };
-
-    // create event map from context options
-    const options = context.options();
-    let handler = null;
-    if (options.on != null) {
-        for (let ep in options.on) {
-            if (options.on.hasOwnProperty(ep)) {
-                handler = options.on[ep];
-                _t.addEvent(ep, handler);
-            }
-        }
+  this._childNodes = [];
+  /** @type {function} */
+  this.saveView = function() {
+    this.restoreView();
+    this.view().children().each(function(i, el) {
+      _t._childNodes.push(el);
+    });
+  };
+  this.restoreView = function() {
+    if (this._childNodes.length > 0) {
+      _t.view().html('');
+      z$.each(_t._childNodes, function(i, el) {
+        _t.view().append(el);
+      });
+      this._childNodes.length = 0;
     }
-    // create behavior map from context options
-    if (options.behavior != null) {
-        for (let bp in options.behavior) {
-            if (options.behavior.hasOwnProperty(bp)) {
-                handler = options.behavior[bp];
-                _t.addBehavior(bp, handler);
-            }
-        }
-    }
+  };
 
-    context.controller().call(this, this);
-
+  this.on = function(eventPath, handler) {
+    this.addEvent(eventPath, handler);
     return this;
+  };
+  /** @protected */
+  this.mapEvent = function(eventMap, target, eventPath, handler) {
+    if (target != null) {
+      target.off(eventPath, this.eventRouter);
+      eventMap[eventPath] = handler;
+      target.on(eventPath, this.eventRouter);
+    } else {
+      // TODO: should report missing target
+    }
+  };
+  /** @protected */
+  this.eventRouter = function(e) {
+    const v = _t.view();
+    if (typeof context._behaviorMap[e.type] === 'function') {
+      context._behaviorMap[e.type].call(v, e, e.detail, v);
+    }
+    if (typeof context._eventMap[e.type] === 'function') {
+      context._eventMap[e.type].call(v, e, e.detail, v);
+    }
+    // TODO: else-> should report anomaly
+  };
+
+  // create event map from context options
+  const options = context.options();
+  let handler = null;
+  if (options.on != null) {
+    for (const ep in options.on) {
+      if (options.on.hasOwnProperty(ep)) {
+        handler = options.on[ep];
+        _t.addEvent(ep, handler);
+      }
+    }
+  }
+  // create behavior map from context options
+  if (options.behavior != null) {
+    for (const bp in options.behavior) {
+      if (options.behavior.hasOwnProperty(bp)) {
+        handler = options.behavior[bp];
+        _t.addBehavior(bp, handler);
+      }
+    }
+  }
+
+  context.controller().call(this, this);
+
+  return this;
 }
 
 /**
@@ -176,14 +176,14 @@ ContextController.prototype.destroy = null;
 
 // TODO: add jsDoc
 ContextController.prototype.addEvent = function(eventPath, handler) {
-    this.mapEvent(this.context._eventMap, this.view(), eventPath, handler);
-    return this;
+  this.mapEvent(this.context._eventMap, this.view(), eventPath, handler);
+  return this;
 };
 
 // TODO: add jsDoc
 ContextController.prototype.addBehavior = function(eventPath, handler) {
-    this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler);
-    return this;
+  this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler);
+  return this;
 };
 
 /**
@@ -213,11 +213,11 @@ ContextController.prototype.addBehavior = function(eventPath, handler) {
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
  */
 ContextController.prototype.field = function(fieldName) {
-    // this method is "attached" from Zuix.js on controller initialization
-    return null;
+  // this method is "attached" from Zuix.js on controller initialization
+  return null;
 };
 ContextController.prototype.clearCache = function() {
-    this._fieldCache.length = 0;
+  this._fieldCache.length = 0;
 };
 /**
  * Gets the component view or if `filter` argument is passed,
@@ -239,21 +239,21 @@ ContextController.prototype.clearCache = function() {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function(filter) {
-    // context view changed, dispose cached fields from previous attacched view
-    if (this.context.view() != null || this._view !== this.context.view()) {
-        this.clearCache();
-        // TODO: !!!!
-        // TODO: dispose also events on view change (!!!)
-        // TODO: !!!!
-        this._view = z$(this.context.view());
-    }
-    if (filter != null) {
-        return this._view.find(filter);
-    } else if (this._view !== null) {
-        return this._view;
-    } else {
-        throw new Error('Not attached to a view yet.');
-    }
+  // context view changed, dispose cached fields from previous attacched view
+  if (this.context.view() != null || this._view !== this.context.view()) {
+    this.clearCache();
+    // TODO: !!!!
+    // TODO: dispose also events on view change (!!!)
+    // TODO: !!!!
+    this._view = z$(this.context.view());
+  }
+  if (filter != null) {
+    return this._view.find(filter);
+  } else if (this._view !== null) {
+    return this._view;
+  } else {
+    throw new Error('Not attached to a view yet.');
+  }
 };
 /**
  * Gets/Sets the data model of the component.
@@ -275,10 +275,10 @@ ContextController.prototype.view = function(filter) {
  * @return {ContextController|object}
  */
 ContextController.prototype.model = function(model) {
-    if (model == null) {
-        return this.context.model();
-    } else this.context.model(model);
-    return this;
+  if (model == null) {
+    return this.context.model();
+  } else this.context.model(model);
+  return this;
 };
 /**
  * Gets the component options.
@@ -286,7 +286,7 @@ ContextController.prototype.model = function(model) {
  * @return {object} The component options.
  */
 ContextController.prototype.options = function() {
-    return this.context.options();
+  return this.context.options();
 };
 /**
  * Triggers the component event `eventPath` with the given
@@ -315,22 +315,22 @@ zuix.context('my-slide-show')
  * @return {ContextController}
  */
 ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
-    if (this.context._eventMap[eventPath] == null && isHook !== true) {
-        this.addEvent(eventPath, null);
+  if (this.context._eventMap[eventPath] == null && isHook !== true) {
+    this.addEvent(eventPath, null);
+  }
+  // TODO: ...
+  if (isHook === true) {
+    let target = this.context.container();
+    if (target == null) target = this.context.view();
+    if (target != null) {
+      z$(target)
+          .trigger(eventPath, eventData);
     }
-    // TODO: ...
-    if (isHook === true) {
-        let target = this.context.container();
-        if (target == null) target = this.context.view();
-        if (target != null) {
-            z$(target)
-                .trigger(eventPath, eventData);
-        }
-        this.context.trigger(this.context, eventPath, eventData);
-    } else {
-        this.view().trigger(eventPath, eventData);
-    }
-    return this;
+    this.context.trigger(this.context, eventPath, eventData);
+  } else {
+    this.view().trigger(eventPath, eventData);
+  }
+  return this;
 };
 /**
  * Exposes a method or property declared in the private
@@ -363,13 +363,13 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.expose = function(methodName, handler) {
-    if (typeof methodName === 'object') {
-        const _t = this;
-        z$.each(methodName, function(k, v) {
-            _t.context[k] = v;
-        });
-    } else this.context[methodName] = handler;
-    return this;
+  if (typeof methodName === 'object') {
+    const _t = this;
+    z$.each(methodName, function(k, v) {
+      _t.context[k] = v;
+    });
+  } else this.context[methodName] = handler;
+  return this;
 };
 /**
  * Loads the `.css` file and replace the current view style of the component.
@@ -395,8 +395,8 @@ ContextController.prototype.expose = function(methodName, handler) {
  * @return {ContextController} The ```{ContextController}``` object itself.
  */
 ContextController.prototype.loadCss = function(options) {
-    this.context.loadCss(options);
-    return this;
+  this.context.loadCss(options);
+  return this;
 };
 /**
  * Loads the `.html` file and replace the view markup of the component.
@@ -422,9 +422,9 @@ ContextController.prototype.loadCss = function(options) {
  * @return {ContextController} The ```{ContextController}``` object itself.
  */
 ContextController.prototype.loadHtml = function(options) {
-    this.saveView();
-    this.context.loadHtml(options);
-    return this;
+  this.saveView();
+  this.context.loadHtml(options);
+  return this;
 };
 /**
  * @description The component logger instance.
@@ -466,8 +466,8 @@ var ctrl = zuix.controller(function(cp) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.for = function(componentId) {
-    // this method is "attached" from Zuix.js on controller initialization
-    return this;
+  // this method is "attached" from Zuix.js on controller initialization
+  return this;
 };
 
 module.exports = ContextController;

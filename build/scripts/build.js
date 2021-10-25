@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 G-Labs. All Rights Reserved.
+ * Copyright 2015-2021 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,77 +31,31 @@ const baseFolder = process.cwd();
 const distFolder = path.join(baseFolder, 'dist');
 // logging
 const tlog = require(path.join(baseFolder, 'src/lib/logger'));
-// Browserify
-const browserify = require('browserify');
-const derequire = require('browserify-derequire');
-// Google Closure Compiler
-const ClosureCompiler = require('google-closure-compiler').compiler;
 
-function build(mainFile, baseName, callback) {
+const webpack = require('webpack');
 
-    const browserifyTask = browserify({
-        standalone: baseName,
-        plugin: [ derequire ]
+function build(configFile, callback) {
+  const config = require(path.join(baseFolder, configFile));
+  const compiler = webpack(config);
+
+  // `compiler.run()` doesn't support promises yet, only callbacks
+  new Promise((resolve, reject) => {
+    compiler.run((err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(res);
     });
-
-    // copy README.md
-    var fs = require('fs');
-    fs.createReadStream('./README.md').pipe(fs.createWriteStream(path.join(distFolder, 'README.md')));
-
-    // prepare main output stream
-    const fileName = path.join(distFolder, 'js/', `${baseName}.js`);
-    const fileNameMin = path.join(distFolder, 'js/', `${baseName}.min.js`);
-    const output = fs.createWriteStream(fileName);
-
-    // add jsDoc header to declare zuix object as {Zuix}
-    output.write('/** @typedef {Zuix} window.zuix */\n');
-
-    tlog.info('^B%s^:', baseName)
-        .info('   ^yBrowserify^:')
-        .info('     %s', fileName);
-
-    browserifyTask.add(mainFile);
-    browserifyTask.bundle().pipe(output).on('error', (err) => {
-        // TODO: not sure this event is implemented by browserify...
-        output.end();
-        tlog.error(err);
-        //process.exit(-1);
-        callback(-1);
-    });
-
-    // start compile process once browserify finished writing output file
-    output.on('finish', ()=>{
-        tlog.info('   ^yGoogle Closure Compiler^:')
-            .info('     %s', fileNameMin)
-            .info('     %s.map', fileNameMin);
-        new ClosureCompiler({
-            js: fileName,
-            js_output_file: fileNameMin,
-            // debug: true, // <-- DO NOT ACTIVATE, causes errors in generated js
-            warning_level: 'QUIET',
-            compilation_level: 'SIMPLE',
-            language_in: 'ECMASCRIPT6_STRICT',
-            language_out: 'ES6_STRICT',
-            // useTypesForOptimization: true,
-            // define: [
-            //  "goog.DEBUG=false"
-            // ],
-            create_source_map: `${fileNameMin}.map`,
-            source_map_location_mapping: 'dist/js/|./',
-            output_wrapper: `%output%\n//# sourceMappingURL=${baseName}.min.js.map`
-        }).run((exitCode, stdOut, stdErr) => {
-            //compilation complete
-            output.end();
-            tlog.info(' ^G\u2713^:done\n\n');
-            if (exitCode != 0) {
-                tlog.error('ERROR', exitCode, stdOut, stdErr);
-            }
-            callback(exitCode);
-        });
-    });
-
+  }).then((res) => {
+    if (res.compilation.errors && res.compilation.errors.length > 0) {
+      console.log(res.compilation.errors, 'ERROR');
+      callback(-1);
+    } else {
+      callback(0);
+    }
+  });
 }
 
 module.exports = {
-    build: build
+  build: build
 };

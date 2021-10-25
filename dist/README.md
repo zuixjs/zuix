@@ -53,7 +53,7 @@ Download and copy the `.js` file to your project folder and include it in your H
 <script src="js/zuix.min.js"></script>
 ```
 
-[Download **zUIx v1.0.5**](https://zuixjs.github.io/zuix/js/zuix.min.js)
+[Download **zUIx v1.0.6**](https://zuixjs.github.io/zuix/js/zuix.min.js)
 *~15 kB (gzipped)*
 
 ### Hosted
@@ -98,3 +98,10 @@ import zuix from 'zuix-dist';
 ## Contributing
 
 See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md#contributing) document.
+
+### Integrated Development Environment
+
+[JetBrains WebStorm](https://www.jetbrains.com/webstorm/) is the official IDE employed for developing this project.
+
+![JetBrains Logo](https://raw.githubusercontent.com/zuixjs/zuix/master/docs/images/github/jetbrains.svg)
+![JetBrains WebStorm Logo](https://raw.githubusercontent.com/zuixjs/zuix/master/docs/images/github/icon-webstorm.svg)
