@@ -395,7 +395,7 @@ function loadInline(element) {
     if (include != null) {
       componentId = resolvePath(include);
       v.attr(_optionAttributes.dataUiInclude, componentId);
-      v.attr(_optionAttributes.dataUiComponent, '');
+      v.attr(_optionAttributes.dataUiComponent, null);
       // Static include hove no controller
       if (util.isNoU(options.controller)) {
         options.controller = function() {};
@@ -406,6 +406,19 @@ function loadInline(element) {
   } else {
     componentId = resolvePath(componentId);
     v.attr(_optionAttributes.dataUiLoad, componentId);
+    // check for `view` and `ctrl` type attributes
+    if (v.attr(_optionAttributes.resourceType.view) !== null) {
+      v.attr(_optionAttributes.dataUiComponent, null);
+      // Static includes have no controller
+      if (util.isNoU(options.controller)) {
+        options.controller = function() {};
+      }
+    } else if (v.attr(_optionAttributes.resourceType.controller) !== null) {
+      options.view = element;
+      options.viewDeferred = true;
+      options.html = false;
+      options.css = false;
+    }
   }
 
   // inline attributes have precedence over ```options```

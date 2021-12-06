@@ -84,7 +84,6 @@ function deleteObservable(targetObservable) {
  * @return {ObservableObject} The observable object
  */
 ObjectObserver.prototype.observable = function(obj) {
-  const _t = this;
   /** @type {ObservableObject} */
   let observable;
   const matches = this.observableList.filter(function(o) {
@@ -99,7 +98,12 @@ ObjectObserver.prototype.observable = function(obj) {
       context: null,
       get: function(target, key) {
         if (key === 'observableTarget') return target;
-        let value = target[key];
+        let value;
+        try {
+          value = target[key];
+        } catch (e) {
+          // TODO: proxy has been revoked
+        }
         if (typeof value === 'undefined') {
           return;
         }

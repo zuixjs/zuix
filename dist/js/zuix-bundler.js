@@ -1,5 +1,3 @@
-/* zUIx v1.0.8 21.10.25 19:40:44 */
-
 var zuix;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -536,7 +534,18 @@ const OptionAttributes = Object.freeze({
   dataUiView:
         'z-view,data-ui-view',
   zuixLoaded:
-        'zuix-loaded'
+        'zuix-loaded',
+  dataUiReady:
+        'z-ready',
+  // Types attributes
+  resourceType: {
+    view: 'view',
+    controller: 'ctrl',
+    file: 'file'
+  },
+  // Identifiers attributes
+  cssIdPrefix:
+      'z-css-'
 });
 
 module.exports = OptionAttributes;

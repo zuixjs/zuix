@@ -104,8 +104,14 @@ module.exports = {
         m = m.substring(1, m.length - 1);
       }
       path = path + m;
-      if (typeof ref[m] !== 'undefined') {
-        ref = ref[m];
+      let propertyReference;
+      try {
+        propertyReference = ref[m];
+      } catch (e) {
+        // TODO: proxy has been revoked
+      }
+      if (typeof propertyReference !== 'undefined') {
+        ref = propertyReference;
       } else {
         // TODO: maybe logging?
         // throw new Error('Undefined property "' + path + '"');

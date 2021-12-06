@@ -712,7 +712,6 @@ function createComponent(context, task) {
           }
         } else if (task != null) task.end();
       }
-      c.trigger('view:apply');
 
       if (task == null) {
         _log.d(context.componentId, 'controller:create');
@@ -721,6 +720,7 @@ function createComponent(context, task) {
     } else {
       _log.w(context.componentId, 'component:controller:undefined');
     }
+    v.attr(_optionAttributes.dataUiReady, 'true');
   } else {
     // TODO: should report error or throw an exception
     _log.e(context.componentId, 'component:view:undefined');
@@ -756,7 +756,7 @@ function initController(c) {
   };
 
   if (util.isFunction(c.create)) c.create();
-  c.trigger('view:create');
+  c.trigger('view:create', c.view());
 
   if (util.isFunction(c.context.ready)) {
     (c.context.ready).call(c.context, c.context);

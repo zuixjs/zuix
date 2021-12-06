@@ -50,7 +50,18 @@ const OptionAttributes = Object.freeze({
   dataUiView:
         'z-view,data-ui-view',
   zuixLoaded:
-        'zuix-loaded'
+        'zuix-loaded',
+  dataUiReady:
+        'z-ready',
+  // Types attributes
+  resourceType: {
+    view: 'view',
+    controller: 'ctrl',
+    file: 'file'
+  },
+  // Identifiers attributes
+  cssIdPrefix:
+      'z-css-'
 });
 
 module.exports = OptionAttributes;

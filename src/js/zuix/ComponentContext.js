@@ -63,9 +63,6 @@ const ViewObserver =
 /** @type {Zuix} **/
 let zuix = null;
 
-const _controllerOnlyAttribute = '_ctrl_';
-const _cssIdAttribute = '_css_';
-
 const _componentIndex = [];
 function getComponentIndex(context) {
   return _componentIndex[context.componentId];
@@ -241,8 +238,13 @@ ComponentContext.prototype.dispose = function() {
   }
   // un-register model observable
   this.model(null);
-  // detach from parent
-  this._c.view().detach();
+  // detach component view from its container (parent element)
+  if (!util.isNoU(this._c)) {
+    if (!util.isNoU(this._c.view())) {
+      // detach from parent
+      this._c.view().detach();
+    }
+  }
   // detach the container from the DOM as well
   const cel = this._container;
   if (cel != null && cel.parentNode != null) {
@@ -393,11 +395,11 @@ ComponentContext.prototype.view = function(view) {
       // attribute to elements added after view creation
       this._viewObserver.start();
       // since this is a component, remove the 'controller only' flag
-      v.attr(_controllerOnlyAttribute, null);
+      v.attr(_optionAttributes.resourceType.controller, null);
     } else {
       // this is a controller only instance, add the 'controller only' flag
       // so that this instance view will inherit styles from the parent component
-      v.attr(_controllerOnlyAttribute, '');
+      v.attr(_optionAttributes.resourceType.controller, '');
     }
   }
 
@@ -445,8 +447,7 @@ ComponentContext.prototype.style = function(css) {
     // reset css
     let resetCss = '';
     if (this.options().resetCss === true) {
-      // from https://jgthms.com/minireset.css/
-      resetCss = /* html,body, */ 'p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}';
+      resetCss = ':host { all: initial; }';
     }
 
     // nest the CSS inside [data-ui-component='<componentId>']
@@ -818,7 +819,7 @@ ComponentContext.prototype.modelToView = function() {
  * @return {string} The css-id attribute of this component
  */
 ComponentContext.prototype.getCssId = function() {
-  return _cssIdAttribute + getComponentIndex(this);
+  return _optionAttributes.cssIdPrefix + getComponentIndex(this);
 };
 
 module.exports = ComponentContext;

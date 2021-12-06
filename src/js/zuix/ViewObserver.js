@@ -31,9 +31,6 @@ const _optionAttributes =
 const util =
     require('../helpers/Util');
 
-const _controllerOnlyAttribute = '_ctrl_';
-const _cssIdAttribute = '_css_';
-
 /**
  *
  * @param {ComponentContext} context
@@ -65,11 +62,11 @@ function ViewObserver(context) {
                 if (node instanceof Element) {
                   let parent = zuix.$(node).parent(zc);
                   if (parent.get() == null) return;
-                  if (_t.options().css !== false && parent.attr(_controllerOnlyAttribute) == null) {
+                  if (_t.options().css !== false && parent.attr(_optionAttributes.resourceType.controller) == null) {
                     if ((parent.get() === _t._container || parent.get() === _t._view)) {
                       let found = false;
                       for (let i = 0; i < node.attributes.length; i++) {
-                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
+                        if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
                           found = true;
                           break;
                         }
@@ -83,12 +80,12 @@ function ViewObserver(context) {
                     do {
                       c++;
                       parent = parent.parent(zc);
-                    } while (c < 10 && parent.get() != null && parent.attr(_controllerOnlyAttribute) != null);
+                    } while (c < 10 && parent.get() != null && parent.attr(_optionAttributes.resourceType.controller) != null);
                     if (parent.get()) {
                       parent = zuix.context(parent);
                       let found = false;
                       for (let i = 0; i < node.attributes.length; i++) {
-                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
+                        if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
                           found = true;
                           break;
                         }
