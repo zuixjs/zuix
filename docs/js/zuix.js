@@ -1,4 +1,4 @@
-/* zUIx v1.0.8 21.10.25 19:40:44 */
+/* zUIx v1.0.9 21.12.06 16:08:23 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -586,8 +586,14 @@ module.exports = {
         m = m.substring(1, m.length - 1);
       }
       path = path + m;
-      if (typeof ref[m] !== 'undefined') {
-        ref = ref[m];
+      let propertyReference;
+      try {
+        propertyReference = ref[m];
+      } catch (e) {
+        // TODO: proxy has been revoked
+      }
+      if (typeof propertyReference !== 'undefined') {
+        ref = propertyReference;
       } else {
         // TODO: maybe logging?
         // throw new Error('Undefined property "' + path + '"');
@@ -2117,7 +2123,6 @@ function deleteObservable(targetObservable) {
  * @return {ObservableObject} The observable object
  */
 ObjectObserver.prototype.observable = function(obj) {
-  const _t = this;
   /** @type {ObservableObject} */
   let observable;
   const matches = this.observableList.filter(function(o) {
@@ -2132,7 +2137,12 @@ ObjectObserver.prototype.observable = function(obj) {
       context: null,
       get: function(target, key) {
         if (key === 'observableTarget') return target;
-        let value = target[key];
+        let value;
+        try {
+          value = target[key];
+        } catch (e) {
+          // TODO: proxy has been revoked
+        }
         if (typeof value === 'undefined') {
           return;
         }
@@ -2507,9 +2517,6 @@ const ViewObserver =
 /** @type {Zuix} **/
 let zuix = null;
 
-const _controllerOnlyAttribute = '_ctrl_';
-const _cssIdAttribute = '_css_';
-
 const _componentIndex = [];
 function getComponentIndex(context) {
   return _componentIndex[context.componentId];
@@ -2685,8 +2692,13 @@ ComponentContext.prototype.dispose = function() {
   }
   // un-register model observable
   this.model(null);
-  // detach from parent
-  this._c.view().detach();
+  // detach component view from its container (parent element)
+  if (!util.isNoU(this._c)) {
+    if (!util.isNoU(this._c.view())) {
+      // detach from parent
+      this._c.view().detach();
+    }
+  }
   // detach the container from the DOM as well
   const cel = this._container;
   if (cel != null && cel.parentNode != null) {
@@ -2837,11 +2849,11 @@ ComponentContext.prototype.view = function(view) {
       // attribute to elements added after view creation
       this._viewObserver.start();
       // since this is a component, remove the 'controller only' flag
-      v.attr(_controllerOnlyAttribute, null);
+      v.attr(_optionAttributes.resourceType.controller, null);
     } else {
       // this is a controller only instance, add the 'controller only' flag
       // so that this instance view will inherit styles from the parent component
-      v.attr(_controllerOnlyAttribute, '');
+      v.attr(_optionAttributes.resourceType.controller, '');
     }
   }
 
@@ -2889,8 +2901,7 @@ ComponentContext.prototype.style = function(css) {
     // reset css
     let resetCss = '';
     if (this.options().resetCss === true) {
-      // from https://jgthms.com/minireset.css/
-      resetCss = /* html,body, */ 'p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}';
+      resetCss = ':host { all: initial; }';
     }
 
     // nest the CSS inside [data-ui-component='<componentId>']
@@ -3262,7 +3273,7 @@ ComponentContext.prototype.modelToView = function() {
  * @return {string} The css-id attribute of this component
  */
 ComponentContext.prototype.getCssId = function() {
-  return _cssIdAttribute + getComponentIndex(this);
+  return _optionAttributes.cssIdPrefix + getComponentIndex(this);
 };
 
 module.exports = ComponentContext;
@@ -3671,7 +3682,7 @@ function loadInline(element) {
     if (include != null) {
       componentId = resolvePath(include);
       v.attr(_optionAttributes.dataUiInclude, componentId);
-      v.attr(_optionAttributes.dataUiComponent, '');
+      v.attr(_optionAttributes.dataUiComponent, null);
       // Static include hove no controller
       if (util.isNoU(options.controller)) {
         options.controller = function() {};
@@ -3682,6 +3693,19 @@ function loadInline(element) {
   } else {
     componentId = resolvePath(componentId);
     v.attr(_optionAttributes.dataUiLoad, componentId);
+    // check for `view` and `ctrl` type attributes
+    if (v.attr(_optionAttributes.resourceType.view) !== null) {
+      v.attr(_optionAttributes.dataUiComponent, null);
+      // Static includes have no controller
+      if (util.isNoU(options.controller)) {
+        options.controller = function() {};
+      }
+    } else if (v.attr(_optionAttributes.resourceType.controller) !== null) {
+      options.view = element;
+      options.viewDeferred = true;
+      options.html = false;
+      options.css = false;
+    }
   }
 
   // inline attributes have precedence over ```options```
@@ -4383,7 +4407,18 @@ const OptionAttributes = Object.freeze({
   dataUiView:
         'z-view,data-ui-view',
   zuixLoaded:
-        'zuix-loaded'
+        'zuix-loaded',
+  dataUiReady:
+        'z-ready',
+  // Types attributes
+  resourceType: {
+    view: 'view',
+    controller: 'ctrl',
+    file: 'file'
+  },
+  // Identifiers attributes
+  cssIdPrefix:
+      'z-css-'
 });
 
 module.exports = OptionAttributes;
@@ -4428,9 +4463,6 @@ const _optionAttributes =
 const util =
     __webpack_require__(826);
 
-const _controllerOnlyAttribute = '_ctrl_';
-const _cssIdAttribute = '_css_';
-
 /**
  *
  * @param {ComponentContext} context
@@ -4462,11 +4494,11 @@ function ViewObserver(context) {
                 if (node instanceof Element) {
                   let parent = zuix.$(node).parent(zc);
                   if (parent.get() == null) return;
-                  if (_t.options().css !== false && parent.attr(_controllerOnlyAttribute) == null) {
+                  if (_t.options().css !== false && parent.attr(_optionAttributes.resourceType.controller) == null) {
                     if ((parent.get() === _t._container || parent.get() === _t._view)) {
                       let found = false;
                       for (let i = 0; i < node.attributes.length; i++) {
-                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
+                        if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
                           found = true;
                           break;
                         }
@@ -4480,12 +4512,12 @@ function ViewObserver(context) {
                     do {
                       c++;
                       parent = parent.parent(zc);
-                    } while (c < 10 && parent.get() != null && parent.attr(_controllerOnlyAttribute) != null);
+                    } while (c < 10 && parent.get() != null && parent.attr(_optionAttributes.resourceType.controller) != null);
                     if (parent.get()) {
                       parent = zuix.context(parent);
                       let found = false;
                       for (let i = 0; i < node.attributes.length; i++) {
-                        if (node.attributes[i].name.startsWith(_cssIdAttribute)) {
+                        if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
                           found = true;
                           break;
                         }
@@ -5244,7 +5276,6 @@ function createComponent(context, task) {
           }
         } else if (task != null) task.end();
       }
-      c.trigger('view:apply');
 
       if (task == null) {
         _log.d(context.componentId, 'controller:create');
@@ -5253,6 +5284,7 @@ function createComponent(context, task) {
     } else {
       _log.w(context.componentId, 'component:controller:undefined');
     }
+    v.attr(_optionAttributes.dataUiReady, 'true');
   } else {
     // TODO: should report error or throw an exception
     _log.e(context.componentId, 'component:view:undefined');
@@ -5288,7 +5320,7 @@ function initController(c) {
   };
 
   if (util.isFunction(c.create)) c.create();
-  c.trigger('view:create');
+  c.trigger('view:create', c.view());
 
   if (util.isFunction(c.context.ready)) {
     (c.context.ready).call(c.context, c.context);
