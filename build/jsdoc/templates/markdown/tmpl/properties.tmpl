@@ -1,0 +1,48 @@
+<?js
+    var props = obj;
+
+    /* sort subprops under their parent props (like opts.classname) */
+    var parentProp = null;
+    props.forEach(function(prop, i) {
+        if (!prop) { return; }
+        if ( parentProp && prop.name && prop.name.indexOf(parentProp.name + '.') === 0 ) {
+            prop.name = prop.name.substr(parentProp.name.length+1);
+            parentProp.subprops = parentProp.subprops || [];
+            parentProp.subprops.push(prop);
+            props[i] = null;
+        }
+        else {
+            parentProp = prop;
+        }
+    });
+
+    /* determine if we need extra columns, "attributes" and "default" */
+    props.hasAttributes = false;
+    props.hasDefault = false;
+    props.hasName = false;
+
+    props.forEach(function(prop) {
+        if (!prop) { return; }
+
+        if (prop.optional || prop.nullable) {
+            props.hasAttributes = true;
+        }
+
+        if (prop.name) {
+            props.hasName = true;
+        }
+
+        if (typeof prop.defaultvalue !== 'undefined') {
+            props.hasDefault = true;
+        }
+    });
+?>
+
+
+|<?js if (props.hasName) {?>Name|<?js } ?>Type|<?js if (props.hasAttributes) {?>Argument|<?js } ?><?js if (props.hasDefault) {?>Default|<?js } ?>Description|
+|<?js if (props.hasName) {?>----|<?js } ?>----|<?js if (props.hasAttributes) {?>--------|<?js } ?><?js if (props.hasDefault) {?>-------|<?js } ?>-----------|
+|<?js
+    var self = this;
+    props.forEach(function(prop) {
+        if (!prop) { return; }
+?><?js if (props.hasName) {?>`<?js= prop.name ?>`<?js } ?><?js if (prop.type && prop.type.names) {?><?js= prop.type.names ?><?js } ?>|<?js if (props.hasAttributes) {?><?js if (prop.optional) { ?>*optional*<br><?js } ?> <?js if (prop.nullable) { ?>*nullable*<br><?js } ?>|<?js } ?><?js if (props.hasDefault) {?><?js if (typeof prop.defaultvalue !== 'undefined') { ?><?js= self.htmlsafe(prop.defaultvalue) ?><?js } ?>|<?js } ?><?js= prop.description ?><?js if (prop.subprops) { ?>**Properties** <?js= self.partial('properties.tmpl', prop.subprops) ?><?js } ?><?js }); ?>

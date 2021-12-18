@@ -8,13 +8,14 @@
     "info": "echo 'zUIx.js, friendly component-based web development.'",
     "test": "echo \"Error: not implemented\" && exit 1",
     "build": "echo '=> running build' && node build",
+    "docs": "jsdoc -c jsdoc.conf.json -t ./build/jsdoc/templates/markdown -a public",
     "release": "./build/release_post.sh",
     "deploy": "./build/release_deploy.sh"
   },
   "author": "Generoso Martello",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zuixjs/zuix.git"
+    "url": "git://github.com/zuixjs/zuix.git"
   },
   "contributors": [],
   "bugs": {
@@ -29,6 +30,7 @@
     "eslint": "^8.1.0",
     "eslint-config-google": "^0.14.0",
     "fs-readdir-recursive": "^1.1.0",
+    "jsdoc": "^3.6.7",
     "replace": "^1.2.0",
     "terminal-kit": "^2.1.8",
     "webpack": "^5.59.1",

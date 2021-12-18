@@ -1,5 +1,3 @@
-/* zUIx v1.0.9 21.12.06 16:08:23 */
-
 var zuix;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -572,6 +570,9 @@ module.exports = {
   propertyFromPath: function(o, s) {
     if (typeof s !== 'string') {
       return;
+    }
+    if (typeof o[s] !== 'undefined') {
+      return o[s];
     }
     let ref = o; let path = '';
     const parts = s.match(/\[(".*?"|'.*?'|(.*?))\]|".*?"|'.*?'|[0-9a-zA-Z_$]+/g);
@@ -2518,6 +2519,12 @@ const ViewObserver =
 let zuix = null;
 
 const _componentIndex = [];
+
+/**
+ * @private
+ * @param {ComponentContext} context
+ * @returns {number}
+ */
 function getComponentIndex(context) {
   return _componentIndex[context.componentId];
 }
@@ -2531,40 +2538,58 @@ function getComponentIndex(context) {
  */
 function dataBind(el, boundData) {
   boundData = boundData.observableTarget || boundData;
+  const processed = [];
   // try to guess target property
   switch (el.tagName.toLowerCase()) {
     // TODO: complete binding cases
     case 'img':
       el.src = (!util.isNoU(boundData.src) ? boundData.src :
                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-      if (boundData.alt) el.alt = boundData.alt;
+      processed.push('src');
       break;
     case 'a':
       el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-      if (boundData.title) el.title = boundData.title;
       if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
-        el.innerHTML = boundData.innerHTML;
+        // won't replace innerHTML if it contains inner bound fields
+        const t = zuix.$(boundData);
+        if (t.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).length() === 0) {
+          el.innerHTML = boundData.innerHTML;
+        }
       }
+      processed.push('href', 'innerHTML');
       break;
     case 'input':
       el.value = (!util.isNoU(boundData.value) ? boundData.value :
                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+      processed.push('value');
       break;
     default:
       el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
-      if (boundData.attributes != null) {
-        for (let i = 0; i < boundData.attributes.length; i++) {
-          const attr = boundData.attributes[i];
-          if (attr.specified && attr.name !== _optionAttributes.dataUiField) {
-            if (attr.value[0] === '+' && el.hasAttribute(attr.name)) {
-              attr.value = el.getAttribute(attr.name) + ' ' + attr.value.substring(1);
-            }
-            util.dom.setAttribute(el, attr.name, attr.value);
-          }
-        }
-      }
+      processed.push('innerHTML');
   }
+  /* TODO: maybe deprecate this (tag's attributes mapping)
+  // copy not already processed attributes from `boundData` to `el`
+  if (boundData instanceof Element && boundData.attributes != null) {
+    for (let i = 0; i < boundData.attributes.length; i++) {
+      const attr = boundData.attributes[i];
+      let attrValue = attr.value;
+      const process = attrValue[0] === '=' || attrValue[0] === '-' || attrValue[0] === '+';
+      if (process && processed.indexOf(attr.name) < 0 && attr.specified &&
+          _optionAttributes.dataUiField.split(',').indexOf(attr.name) < 0 &&
+          !attr.name.startsWith('z-')) {
+        if (attrValue[0] === '+' && el.hasAttribute(attr.name)) {
+          // append
+          attrValue = el.getAttribute(attr.name) + attrValue.substring(1);
+        } else if (attrValue[0] === '-' && el.hasAttribute(attr.name)) {
+          // prepend
+          attrValue = attrValue.substring(1) + ' ' + el.getAttribute(attr.name);
+        }
+        util.dom.setAttribute(el, attr.name, attrValue);
+      }
+    }
+  }
+  */
 }
 
 /**
@@ -2648,8 +2673,8 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         if (fld.get() == null) {
           fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
         }
-        if (fld.get()) {
-          dataBind(fld.get(), value);
+        if (fld.length() > 0) {
+          fld.each((i, f) => dataBind(f, value));
         }
         // call controller's 'update' method
         if (this.context._c && typeof this.context._c.update === 'function') {
@@ -2664,6 +2689,11 @@ function ComponentContext(zuixInstance, options, eventCallback) {
      * @private
      */
   this._viewObserver = new ViewObserver(this);
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this._disposed = false;
 
   this.options(options);
 
@@ -2671,12 +2701,25 @@ function ComponentContext(zuixInstance, options, eventCallback) {
 }
 
 ComponentContext.prototype.dispose = function() {
+  if (this._disposed) {
+    return;
+  }
+  this._disposed = true;
   // TODO: ... check out for more resources that could be freed
   this._viewObserver.stop();
   if (!util.isNoU(this._c)) {
     if (!util.isNoU(this._c.view())) {
       // TODO: restore all attributes state to the original state (before component creation)
-      this._c.view().attr(_optionAttributes.dataUiComponent, null);
+      this._c.view()
+          .attr(_optionAttributes.dataUiComponent, null)
+          .attr(_optionAttributes.dataUiContext, null)
+          .attr(_optionAttributes.dataUiLoad, null)
+          .attr(_optionAttributes.dataUiLoaded, null)
+          .attr(_optionAttributes.dataUiReady, null)
+          .attr(_optionAttributes.resourceType.view, null)
+          .attr(_optionAttributes.resourceType.controller, null)
+          .attr(_optionAttributes.resourceType.file, null) // not implemented yet
+          .attr(this.getCssId(), null);
       // un-register event handlers associated to the view
       this._c.view().reset();
       // un-register event handlers for all cached fields accessed through cp.field(...) method
@@ -2694,16 +2737,24 @@ ComponentContext.prototype.dispose = function() {
   this.model(null);
   // detach component view from its container (parent element)
   if (!util.isNoU(this._c)) {
-    if (!util.isNoU(this._c.view())) {
-      // detach from parent
-      this._c.view().detach();
-    }
+    this._c.view().html('');
+    this._c.restoreView();
+    //if (!util.isNoU(this._c.view())) {
+    //  // detach from parent
+    //  this._c.view().detach();
+    //}
   }
   // detach the container from the DOM as well
-  const cel = this._container;
-  if (cel != null && cel.parentNode != null) {
-    cel.parentNode.removeChild(cel);
-  }
+  //const cel = this._container;
+  //if (cel != null && cel.parentNode != null) {
+  //  cel.parentNode.removeChild(cel);
+  //}
+  // TODO: provide a better way to do this
+  //       maybe a callback or something
+  // remove contexts from zuix contexts list
+  const contexts = zuix.dumpContexts();
+  const idx = contexts.indexOf(this);
+  contexts.splice(idx, 1);
 };
 
 /**
@@ -2832,6 +2883,21 @@ ComponentContext.prototype.view = function(view) {
   });
 
   // View style encapsulation
+  this.checkEncapsulation();
+
+  this.modelToView();
+
+  _log.t(this.componentId, 'view:attach', 'timer:view:stop');
+  return this;
+};
+
+/**
+ * View style encapsulation
+ * @private
+ */
+ComponentContext.prototype.checkEncapsulation = function() {
+  const v = z$(this._view);
+  const cssId = this.getCssId();
   if (this._options.css !== false) {
     v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
     // if both the container and the style are null
@@ -2839,8 +2905,8 @@ ComponentContext.prototype.view = function(view) {
     if (this._container != null || this._style != null) {
       // view style encapsulation
       const q = '*' +
-                util.dom.cssNot(_optionAttributes.dataUiLoad).getAll() +
-                util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+          util.dom.cssNot(_optionAttributes.dataUiLoad).getAll() +
+          util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
       // mark all elements with a css identifier attribute
       v.find(q).each(function(i, v) {
         this.attr(cssId, '');
@@ -2856,11 +2922,6 @@ ComponentContext.prototype.view = function(view) {
       v.attr(_optionAttributes.resourceType.controller, '');
     }
   }
-
-  this.modelToView();
-
-  _log.t(this.componentId, 'view:attach', 'timer:view:stop');
-  return this;
 };
 
 /**
@@ -2916,6 +2977,7 @@ ComponentContext.prototype.style = function(css) {
     // output css
     this._style = z$.appendCss(css, this._style, this.componentId);
   }
+  this.checkEncapsulation();
   // TODO: should throw error if ```css``` is not a valid type
   _log.t(this.componentId, 'view:style', 'timer:view:stop');
   return this;
@@ -3004,7 +3066,7 @@ ComponentContext.prototype.options = function(options) {
   }
   this.container(o.container);
   this.view(o.view);
-  if (typeof o.css !== 'undefined') {
+  if (typeof o.css === 'string') {
     this.style(o.css);
   }
   this.controller(o.controller);
@@ -3060,33 +3122,65 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
   if (!util.isNoU(options.caching)) {
     enableCaching = options.caching;
   }
-  let cssPath = context.componentId + '.css';
+  let cssPath = context.componentId;
   if (!util.isNoU(options.path)) {
+    // path override with explicit option
     cssPath = options.path;
   }
-  if (!enableCaching) {
-    cssPath += '?'+new Date().getTime();
+
+  // lookup for inline cached css
+  let inlineStyles = zuix.store('zuix.inlineStyles');
+  if (inlineStyles == null) {
+    inlineStyles = [];
+    zuix.store('zuix.inlineStyles', inlineStyles);
   }
-  z$.ajax({
-    url: zuix.getResourcePath(cssPath),
-    success: function(viewCss) {
+  if (inlineStyles[cssPath] != null) {
+    context.style(inlineStyles[cssPath]);
+    if (util.isFunction(options.success)) {
+      (options.success).call(context, inlineStyles[cssPath], context);
+    }
+    if (util.isFunction(options.then)) {
+      (options.then).call(context, context);
+    }
+  } else {
+    const inlineStyle = z$().find('style[media="' + cssPath + '"]');
+    if (inlineStyle.length() > 0) {
+      const styleElement = inlineStyle.get(0);
+      const viewCss = styleElement.innerText;
       context.style(viewCss);
+      inlineStyle.detach();
       if (util.isFunction(options.success)) {
         (options.success).call(context, viewCss, context);
       }
-    },
-    error: function(err) {
-      _log.e(err, context);
-      if (util.isFunction(options.error)) {
-        (options.error).call(context, err, context);
-      }
-    },
-    then: function() {
       if (util.isFunction(options.then)) {
         (options.then).call(context, context);
       }
+    } else {
+      if (cssPath == context.componentId) {
+        cssPath += '.css' + (!enableCaching ? '?' + new Date().getTime() : '');
+      }
+      z$.ajax({
+        url: zuix.getResourcePath(cssPath),
+        success: function(viewCss) {
+          context.style(viewCss);
+          if (util.isFunction(options.success)) {
+            (options.success).call(context, viewCss, context);
+          }
+        },
+        error: function(err) {
+          _log.e(err, context);
+          if (util.isFunction(options.error)) {
+            (options.error).call(context, err, context);
+          }
+        },
+        then: function() {
+          if (util.isFunction(options.then)) {
+            (options.then).call(context, context);
+          }
+        }
+      });
     }
-  });
+  }
   return this;
 };
 /**
@@ -3121,6 +3215,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     enableCaching = options.caching;
   }
   if (!util.isNoU(options.path)) {
+    // path override with explicit option
     htmlPath = options.path;
   }
   // cache inline "data-ui-view" html
@@ -3212,7 +3307,10 @@ ComponentContext.prototype.viewToModel = function() {
             // TODO: this is a work around for IE where "el.innerHTML" is lost after view replacing
             (!util.isNoU(el.innerHTML) && util.isIE()) ?
                 el.cloneNode(true) : el;
-    // dotted field path
+    // TODO: the following code is disabled because
+    //       causes "proxy revoked" exception when unloading and reloading a component
+    // dotted field path to nested objects
+    /*
     if (name.indexOf('.')>0) {
       const path = name.split('.');
       let cur = model;
@@ -3223,7 +3321,7 @@ ComponentContext.prototype.viewToModel = function() {
         cur = cur[path[p]];
       }
       cur[path[path.length - 1]] = value;
-    } else model[name] = value;
+    } else*/ model[name] = value;
   });
   this._model = zuix.observable(model)
       .subscribe(this._modelListener)
@@ -3268,12 +3366,38 @@ ComponentContext.prototype.modelToView = function() {
 };
 
 /**
- * Get the CSS identifier attribute.
+ * Gets the CSS identifier attribute.
  *
  * @return {string} The css-id attribute of this component
  */
 ComponentContext.prototype.getCssId = function() {
   return _optionAttributes.cssIdPrefix + getComponentIndex(this);
+};
+/**
+ * Gets the base path of this component
+ *
+ * @return {string} The base path of this component
+ */
+ComponentContext.prototype.path = function() {
+  const cid = this.componentId;
+  const pathIndex = cid.lastIndexOf('/');
+  if (pathIndex < 0) {
+    return cid;
+  }
+  return cid.substring(0, pathIndex + 1);
+};
+/**
+ * Gets the name of this component (last part of the path)
+ *
+ * @return {string} The name of this component
+ */
+ComponentContext.prototype.name = function() {
+  const cid = this.componentId;
+  const pathIndex = cid.lastIndexOf('/');
+  if (pathIndex < 0) {
+    return cid;
+  }
+  return cid.substring(pathIndex + 1);
 };
 
 module.exports = ComponentContext;
@@ -3647,11 +3771,7 @@ function loadInline(element) {
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.dataUiOptions);
   if (!util.isNoU(options)) {
-    if (typeof options === 'string') {
-      if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
-        options = eval('var o = ' + options + '; o;');
-      } else options = util.propertyFromPath(window, options);
-    }
+    options = parseOptions(options);
     // copy passed options
     options = util.cloneObject(options) || {};
   } else {
@@ -3701,10 +3821,10 @@ function loadInline(element) {
         options.controller = function() {};
       }
     } else if (v.attr(_optionAttributes.resourceType.controller) !== null) {
-      options.view = element;
+      options.view = options.view || element;
       options.viewDeferred = true;
-      options.html = false;
-      options.css = false;
+      options.html = options.html || false;
+      options.css = options.css || false;
     }
   }
 
@@ -3712,7 +3832,7 @@ function loadInline(element) {
 
   const model = v.attr(_optionAttributes.dataBindModel);
   if (!util.isNoU(model) && model.length > 0) {
-    options.model = util.propertyFromPath(window, model);
+    options.model = parseOptions(model);
   }
 
   const priority = v.attr(_optionAttributes.dataUiPriority);
@@ -3761,13 +3881,18 @@ function resolvePath(path) {
 }
 
 /** @private */
-function applyOptions(element, options) {
-  // TODO: add parseOptions method
-  if (typeof options === 'string') {
-    if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
-      options = eval('var o = ' + options + '; o;');
-    } else options = util.propertyFromPath(window, options);
+function parseOptions(attributeValue) {
+  if (typeof attributeValue === 'string') {
+    if (attributeValue.trim().startsWith('{') && attributeValue.trim().endsWith('}')) {
+      attributeValue = eval('var o = ' + attributeValue + '; o;');
+    } else attributeValue = util.propertyFromPath(window, attributeValue);
   }
+  return attributeValue;
+}
+
+/** @private */
+function applyOptions(element, options) {
+  options = parseOptions(options);
   // TODO: should check if options object is valid
   if (element != null && options != null) {
     if (options.lazyLoad != null) {
@@ -4862,12 +4987,11 @@ function getResourcePath(path) {
 /**
  * @private
  * @param {ComponentContext} ctx Component context
- * @param {JSON} options Context loading options
+ * @param {ContextOptions|JSON} options Context loading options
  * @return {ComponentContext}
  */
 function loadResources(ctx, options) {
   // pick it from cache if found
-  /** @type {ComponentCache} */
   let cachedComponent = getCachedComponent(ctx.componentId);
   if (cachedComponent !== null && options.controller == null && ctx.controller() == null) {
     ctx.controller(cachedComponent.controller);
@@ -4909,7 +5033,10 @@ function loadResources(ctx, options) {
             }
             cachedComponent.view = html;
             delete cachedComponent.controller;
-            if (options.css !== false) {
+            if (typeof options.css === 'string') {
+              cachedComponent.css = options.css;
+              loadController(ctx, resourceLoadTask[ctx.componentId]);
+            } else if (options.css !== false) {
               resourceLoadTask[ctx.componentId].step(ctx.componentId+':css');
               ctx.loadCss({
                 caching: _enableHttpCaching,
@@ -4953,18 +5080,25 @@ function loadResources(ctx, options) {
 /**
  *
  * @private
- * @param context {ComponentContext|Element}
+ * @param context {ComponentContext|ZxQuery|Element}
  */
 function unload(context) {
-  if (context instanceof Element) {
-    const el = context;
-    context = zuix.context(el);
-    // remove element from componentizer queue if
-    // it's a lazy-loadable element not yet loaded
-    _componentizer.dequeue(el);
-  }
-  if (!util.isNoU(context)) {
-    context.dispose();
+  const dispose = function(ctx) {
+    if (ctx instanceof Element) {
+      const el = ctx;
+      ctx = zuix.context(el);
+      // remove element from componentizer queue if
+      // it's a lazy-loadable element not yet loaded
+      _componentizer.dequeue(el);
+    }
+    if (!util.isNoU(ctx)) {
+      ctx.dispose();
+    }
+  };
+  if (context && context.each) {
+    context.each((i, el) => dispose(el));
+  } else {
+    dispose(context);
   }
 }
 
@@ -4978,8 +5112,7 @@ function createContext(options) {
 /**
  *
  * @private
- * @param {Element|ZxQuery|object} contextId The `contextId` object
- * (usually a string) or the container/view element of the component.
+ * @param {Element|ZxQuery|object} contextId The `contextId` object (usually a string) or the container/view element of the component.
  * @param {function} [callback] The callback function that will pass the context object once it is ready.
  * @return {ComponentContext} The matching component context or `null` if the context does not exists or it is not yet loaded.
  */
@@ -5061,10 +5194,10 @@ function removeCachedComponent(componentId) {
 /**
  * @private
  * @param {Object} componentId
- * @return {ComponentCache}
+ * @return {ComponentCache | null}
  */
 function getCachedComponent(componentId) {
-  /** @type {ComponentCache|null} */
+  /** @type {ComponentCache | null} */
   let cached = null;
   z$.each(_componentCache, function(k, v) {
     if (util.objectEquals(v.componentId, componentId)) {
@@ -5223,6 +5356,9 @@ function createComponent(context, task) {
 
           let pending = -1;
           if (context.options().css !== false) {
+            if (cached.css == null && typeof context.options().css === 'string') {
+              cached.css = context.options().css;
+            }
             if (cached.css == null) {
               if (pending === -1) pending = 0;
               pending++;
@@ -5354,7 +5490,7 @@ function getController(javascriptCode) {
   let instance = function(ctx) { };
   if (typeof javascriptCode === 'string') {
     try {
-      instance = (eval).call(this, javascriptCode);
+      instance = (eval).call(this, 'module={};\n'+javascriptCode);
     } catch (e) {
       // TODO: should trigger a global hook
       // eg. 'controller:error'
@@ -5379,14 +5515,14 @@ function replaceCache(c) {
  *
  * @example
  *
-<small>**Example - HTML**</small>
+<small>**HTML**</small>
 ```html
 <div data-ui-field="sample-container">
    <!-- container HTML -->
 </div>
 ```
 
-<small>**Example - JavaScript**</small>
+<small>**JavaScript**</small>
 ```js
 var container = zuix.field('sample-container');
 container.html('Hello World!');
@@ -5410,7 +5546,7 @@ Zuix.prototype.field = function(fieldName, container) {
  *
  * @example
  *
-<small>**Example - JavaScript**</small>
+<small>**JavaScript**</small>
 ```js
 // declare inline the controller for component 'example/component'
 const exampleController = zuix.controller((cp) => {
@@ -5456,17 +5592,16 @@ Zuix.prototype.load = function(componentId, options) {
   return load.call(this, componentId, options);
 };
 /**
- * Unloads the given component context releasing all allocated resources.
+ * Unloads the given component context(s) releasing all allocated resources.
  *
  * @example
  *
-<small>**Example - JavaScript**</small>
+<small>**JavaScript**</small>
 ```js
 zuix.unload(ctx);
 ```
  *
- * @param {ComponentContext|Element} context The instance of the component to be unloaded or its container element.
- * Pass *Element* type if the underlying component is lazy-loadable and it might not have been instantiated yet.
+ * @param {ComponentContext|ZxQuery|Element} context The instance of the component to be unloaded, a `ZxQuery` selection or the component's host element.
  * @return {Zuix} The ```{Zuix}``` object itself.
  */
 Zuix.prototype.unload = function(context) {
@@ -5479,7 +5614,7 @@ Zuix.prototype.unload = function(context) {
  *
  * @example
  *
- <small>**Example - JavaScript**</small>
+ <small>**JavaScript**</small>
  <pre data-line="2"><code class="language-js">
  // Allocates the controller handler to be used for the component 'path/to/component_name'
  var ctrl = zuix.controller(function(cp) {
@@ -5501,12 +5636,12 @@ Zuix.prototype.controller = function(handler) {
  *
  * @example
  *
-<small>**Example - HTML**</small>
+<small>**HTML**</small>
 ```html
 <div data-ui-load="site/components/slideshow"
      data-ui-context="my-slide-show">...</div>
 ```
-<small>**Example - JavaScript**</small>
+<small>**JavaScript**</small>
 ```js
 var slideShowDiv = zuix.$.find('[data-ui-context="my-slide-show"]');
 var ctx = zuix.context(slideShowDiv);
@@ -5524,8 +5659,7 @@ zuix.context('my-slide-show', function(c) {
 });
 ```
  *
- * @param {Element|ZxQuery|object} contextId The `contextId` object
- * (usually a string) or the container/view element of the component.
+ * @param {Element|ZxQuery|object} contextId The `contextId` object (usually a string) or the container/view element of the component.
  * @param {function} [callback] The callback function that will be called once the component is loaded. The {ComponentContext} object will be passed as argument of this callback.
  * @return {ComponentContext} The matching component context or `null` if the component does not exists or it is not yet loaded.
  */
@@ -5575,7 +5709,7 @@ Zuix.prototype.trigger = function(context, eventPath, eventData) {
  *
  * @example
  *
-<small>**Example - JavaScript**</small>
+<small>**JavaScript**</small>
 ```js
 // The context `this` in the event handlers will be
 // the {ComponentContext} object that sourced the event.
@@ -5631,29 +5765,18 @@ Zuix.prototype.hook = function(eventPath, eventHandler) {
   return this;
 };
 /**
- * Loads a CSS or Javascript resource. All CSS styles and Javascript scripts
- * loaded with this method will be also included in the application bundle.
- * If a resource is already loaded, the request will be ignored.
- * This command is also meant to be used inside a components' controller.
- * This enables the loading of a component without the need of manually including
- * all of its dependencies since those will be automatically fetched as required.
+ * Loads a CSS, Script or singleton Component resource. Resources loaded
+ * with this method are available in the global scope and will be also included
+ * in the application bundle.
  *
  * @example
  *
- <small>**Example - JavaScript**</small>
+ <small>**JavaScript**</small>
  <pre><code class="language-js">
- // Controller of component 'path/to/component_name'
- zuix.controller(function(cp) {
-    cp.init = function() {
-        zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
-            // can start using moment.js
-        });
-    };
-    cp.create = function() { ... };
-    cp.destroy = function() { ... }
-});
+  zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
+      // can start using moment.js
+  });
  </code></pre>
- *
  *
  * @param {string} resourceType Either `style`, `script` or `component`.
  * @param {string} resourcePath Relative or absolute resource url path
@@ -5663,7 +5786,7 @@ Zuix.prototype.hook = function(eventPath, eventHandler) {
 Zuix.prototype.using = function(resourceType, resourcePath, callback) {
   resourcePath = _componentizer.resolvePath(resourcePath);
   resourceType = resourceType.toLowerCase();
-  const hashId = resourceType+'-'+resourcePath.hashCode();
+  const hashId = resourceType + '-' + resourcePath.hashCode();
 
   if (resourceType === 'component') {
     const c = context(hashId);
@@ -5796,7 +5919,7 @@ Zuix.prototype.httpCaching = function(enable) {
  *
  * @example
  *
- <small>**Example - JavaScript**</small>
+ <small>**JavaScript**</small>
  ```js
  zuix.componentize(document);
  ```

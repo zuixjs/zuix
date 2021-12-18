@@ -6,8 +6,8 @@
 
 <p align="center">
   <a href="https://travis-ci.org/zuixjs/zuix"><img src="https://img.shields.io/travis/zuixjs/zuix.svg?style=for-the-badge" alt="Build Status"></a>
-  <a href="https://www.npmjs.com/package/zuix-dist"><img src="https://img.shields.io/npm/v/zuix.svg?style=for-the-badge" alt="npm dist"></a>
-  <a href="https://github.com/zuixjs/zuix/blob/master/LICENSE.TXT"><img src="https://img.shields.io/npm/l/zuix.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://www.npmjs.com/package/zuix-dist"><img src="https://img.shields.io/npm/v/zuix-dist.svg?style=for-the-badge" alt="npm dist"></a>
+  <a href="https://github.com/zuixjs/zuix/blob/master/LICENSE.TXT"><img src="https://img.shields.io/npm/l/zuix-dist.svg?style=for-the-badge" alt="License"></a>
 </p>
 
 # [zUIx](https://zuixjs.github.io/zuixjs.org)

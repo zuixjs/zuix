@@ -91,6 +91,9 @@ module.exports = {
     if (typeof s !== 'string') {
       return;
     }
+    if (typeof o[s] !== 'undefined') {
+      return o[s];
+    }
     let ref = o; let path = '';
     const parts = s.match(/\[(".*?"|'.*?'|(.*?))\]|".*?"|'.*?'|[0-9a-zA-Z_$]+/g);
     for (let i = 0; i < parts.length; i++) {

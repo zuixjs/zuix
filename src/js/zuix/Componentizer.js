@@ -360,11 +360,7 @@ function loadInline(element) {
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.dataUiOptions);
   if (!util.isNoU(options)) {
-    if (typeof options === 'string') {
-      if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
-        options = eval('var o = ' + options + '; o;');
-      } else options = util.propertyFromPath(window, options);
-    }
+    options = parseOptions(options);
     // copy passed options
     options = util.cloneObject(options) || {};
   } else {
@@ -414,10 +410,10 @@ function loadInline(element) {
         options.controller = function() {};
       }
     } else if (v.attr(_optionAttributes.resourceType.controller) !== null) {
-      options.view = element;
+      options.view = options.view || element;
       options.viewDeferred = true;
-      options.html = false;
-      options.css = false;
+      options.html = options.html || false;
+      options.css = options.css || false;
     }
   }
 
@@ -425,7 +421,7 @@ function loadInline(element) {
 
   const model = v.attr(_optionAttributes.dataBindModel);
   if (!util.isNoU(model) && model.length > 0) {
-    options.model = util.propertyFromPath(window, model);
+    options.model = parseOptions(model);
   }
 
   const priority = v.attr(_optionAttributes.dataUiPriority);
@@ -474,13 +470,18 @@ function resolvePath(path) {
 }
 
 /** @private */
-function applyOptions(element, options) {
-  // TODO: add parseOptions method
-  if (typeof options === 'string') {
-    if (options.trim().startsWith('{') && options.trim().endsWith('}')) {
-      options = eval('var o = ' + options + '; o;');
-    } else options = util.propertyFromPath(window, options);
+function parseOptions(attributeValue) {
+  if (typeof attributeValue === 'string') {
+    if (attributeValue.trim().startsWith('{') && attributeValue.trim().endsWith('}')) {
+      attributeValue = eval('var o = ' + attributeValue + '; o;');
+    } else attributeValue = util.propertyFromPath(window, attributeValue);
   }
+  return attributeValue;
+}
+
+/** @private */
+function applyOptions(element, options) {
+  options = parseOptions(options);
   // TODO: should check if options object is valid
   if (element != null && options != null) {
     if (options.lazyLoad != null) {
