@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,7 @@ const ObservableObject =
 /**
  * Object Observer
  *
- * @class ObjectObserver
+ * @class
  * @constructor
  */
 function ObjectObserver() {
@@ -98,6 +98,9 @@ ObjectObserver.prototype.observable = function(obj) {
       context: null,
       get: function(target, key) {
         if (key === 'observableTarget') return target;
+        if (key.toString() === 'Symbol(Symbol.toStringTag)') {
+          return;
+        }
         let value;
         try {
           value = target[key];
@@ -127,7 +130,9 @@ ObjectObserver.prototype.observable = function(obj) {
         const path = getPath(targetObservable) + key;
         // propagate to all listeners
         listeners.forEach(function(l) {
-          l.get(target, key, value, path);
+          if (l.get) {
+            l.get(target, key, value, path);
+          }
         });
         return value;
       },
@@ -143,7 +148,12 @@ ObjectObserver.prototype.observable = function(obj) {
         getListeners(targetObservable).forEach(
             /** @param {ObservableListener} l */
             function(l) {
-              l.set(target, key, value, path, old);
+              if (l.set) {
+                l.set(target, key, value, path, old);
+              }
+              if (old[path] !== value && l.change) {
+                l.change(target, key, value, path, old);
+              }
             }
         );
         return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,7 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  */
 Componentizer.prototype.componentize = function(element, child) {
   zuix.trigger(this, 'componentize:begin');
+  zuix.resolveImplicitLoad(element);
   if (child != null) {
     const cache = getElementCache(element);
     if (cache == null) {
@@ -55,6 +56,10 @@ Componentizer.prototype.componentize = function(element, child) {
 Componentizer.prototype.applyOptions = function(element, options) {
   applyOptions(element, options);
   return this;
+};
+
+Componentizer.prototype.loadInline = function(element, options) {
+  loadInline(element, options);
 };
 
 Componentizer.prototype.resolvePath = function(path) {
@@ -122,6 +127,8 @@ const _componentizeRequests = [];
 /** @private */
 const _componentizeQueue = [];
 /** @private */
+const _componentizeStats = {};
+/** @private */
 const _lazyElements = [];
 /** @private */
 const _lazyContainers = [];
@@ -129,13 +136,13 @@ const _lazyContainers = [];
 /** @private */
 const TaskItem = function() {
   return {
-    /** @typedef {Element} */
+    /** @type {Element} */
     element: null,
-    /** @typedef {number} */
+    /** @type {number} */
     priority: 0,
-    /** @typedef {boolean} */
+    /** @type {boolean} */
     visible: true,
-    /** @typedef {boolean} */
+    /** @type {boolean} */
     lazy: false
   };
 };
@@ -185,7 +192,7 @@ if (_isCrawlerBotClient) {
 
 /**
  *
- * @class Componentizer
+ * @class
  * @constructor
  */
 function Componentizer() {
@@ -299,7 +306,12 @@ function queueLoadables(element) {
     }
   }
 
-  _log.t('componentize:count', _componentizeQueue.length, added);
+
+  if (_componentizeStats.queued !== _componentizeQueue.length || _componentizeStats.added !== added) {
+    _log.t('componentize:count', _componentizeQueue.length, added);
+    _componentizeStats.queued = _componentizeQueue.length;
+    _componentizeStats.added = added;
+  }
 
   if (added === 0 || (_componentizeRequests.length === 0 && _componentizeQueue.length === 0)) {
     zuix.trigger(this, 'componentize:end');
@@ -348,7 +360,7 @@ function loadNext(element) {
 }
 
 /** @protected */
-function loadInline(element) {
+function loadInline(element, opts) {
   const v = z$(element);
   if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
     // _log.w("Skipped", element);
@@ -365,6 +377,10 @@ function loadInline(element) {
     options = util.cloneObject(options) || {};
   } else {
     options = {};
+  }
+
+  if (opts) {
+    Object.assign(options, opts);
   }
 
   const contextId = v.attr(_optionAttributes.dataUiContext);
@@ -403,17 +419,20 @@ function loadInline(element) {
     componentId = resolvePath(componentId);
     v.attr(_optionAttributes.dataUiLoad, componentId);
     // check for `view` and `ctrl` type attributes
-    if (v.attr(_optionAttributes.resourceType.view) !== null) {
+    if (componentId !== 'default' && v.attr(_optionAttributes.resourceType.view) !== null) {
       v.attr(_optionAttributes.dataUiComponent, null);
       // Static includes have no controller
       if (util.isNoU(options.controller)) {
         options.controller = function() {};
       }
-    } else if (v.attr(_optionAttributes.resourceType.controller) !== null) {
+    } else if (componentId === 'default' || v.attr(_optionAttributes.resourceType.controller) !== null) {
       options.view = options.view || element;
       options.viewDeferred = true;
       options.html = options.html || false;
       options.css = options.css || false;
+      if (componentId === 'default') {
+        options.controller = options.controller || function() {};
+      }
     }
   }
 
@@ -422,6 +441,16 @@ function loadInline(element) {
   const model = v.attr(_optionAttributes.dataBindModel);
   if (!util.isNoU(model) && model.length > 0) {
     options.model = parseOptions(model);
+  }
+
+  const behavior = v.attr(_optionAttributes.dataUiBehavior);
+  if (!util.isNoU(behavior) && behavior.length > 0) {
+    options.behavior = parseOptions(behavior);
+  }
+
+  const on = v.attr(_optionAttributes.dataUiOn);
+  if (!util.isNoU(on) && on.length > 0) {
+    options.on = parseOptions(on);
   }
 
   const priority = v.attr(_optionAttributes.dataUiPriority);
@@ -473,7 +502,7 @@ function resolvePath(path) {
 function parseOptions(attributeValue) {
   if (typeof attributeValue === 'string') {
     if (attributeValue.trim().startsWith('{') && attributeValue.trim().endsWith('}')) {
-      attributeValue = eval('var o = ' + attributeValue + '; o;');
+      attributeValue = Function('return ' + attributeValue)();
     } else attributeValue = util.propertyFromPath(window, attributeValue);
   }
   return attributeValue;
@@ -562,11 +591,16 @@ function lazyElementCheck(element) {
         if (util.dom.getAttribute(lazyContainer, _optionAttributes.dataUiLazyload) === 'scroll') {
           (function(instance, lc) {
             let lastScroll = new Date().getTime();
+            let timeout;
             z$(lc === document.body ? window : lc).on('scroll', function() {
               const now = new Date().getTime();
               if (now - lastScroll > 100) {
                 lastScroll = now;
                 loadNext(lc);
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                  loadNext(lc);
+                }, 100);
               }
             });
           })(this, lazyContainer);

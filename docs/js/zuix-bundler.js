@@ -11,7 +11,7 @@ var zuix;
 var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
 /*!
  * @license
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -376,7 +376,7 @@ module.exports = function serialize(obj, options) {
 
 "use strict";
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -485,7 +485,7 @@ module.exports = function(root) {
 /***/ ((module) => {
 
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

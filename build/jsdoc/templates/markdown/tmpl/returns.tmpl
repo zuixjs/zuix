@@ -1,4 +1,4 @@
 <?js var data = obj || {}; ?>
 <?js if (data.type && data.type.names) {?>
-`<?js= data.type.names ?>`
-<?js } ?><?js if (data.description) { ?><?js= description ?><?js } ?>
+<?js= data.type.names.map(p => '*'+this.linkto(p)+'*').join(' \\| ') ?><?js } ?>
+<?js if (data.description) { ?> &dash; <?js= description ?><?js } ?>

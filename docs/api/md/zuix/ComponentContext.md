@@ -1,144 +1,120 @@
-# Class: ComponentContext
+---
+layout: page
+icon: construction
+title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
+description: "zUIx.js API documentation: Class: ComponentContext"
+keywords:
+- Documentation
+- API
+---
 
-## ComponentContext
+<style>
+/* BEGIN: MARKDOWN JSDOC */
+main .content {
+    padding-top: 24px;
+}
+main h2 code {
+    font-weight: 400;
+}
+main h2 {
+    margin-top: 0;
+    font-size: 220%;
+}
+main h3 {
+    margin-top: 72px;
+    font-size: 200%;
+    color: #525252;
+}
+main h4 {
+    margin-top: 72px;
+    margin-bottom: 0;
+    font-size: 180%;
+    font-weight: 500;
+    color: #16641c;
+}
+main h5 {
+    color: #7c3422;
+    text-transform: uppercase;
+    font-size: 100%;
+    font-weight: bold;
+}
+main h6 {
+    font-size: 220%;
+}
+main p {
+    margin-top: 12px !important;
+}
+main em {
+    font-family: monospace;
+    font-size: 95%;
+}
+main table {
+    border: solid 1px lightgray;
+}
+main table td {
+    border: 1px solid whitesmoke;
+    padding: 6px;
+    margin: 0;
+    vertical-align: top;
+}
+main table code {
+    color: #8d5802;
+}
+/* END: MARKDOWN JSDOC */
+</style>
 
-#### new ComponentContext(zuixInstance, options, eventCallback) &rarr; {[ComponentContext](ComponentContext.md)}
+## `ComponentContext` class
 
-The component context object.
+### Constructor
+
+<a name="ComponentContext"></a>
+#### new ComponentContext(zuixInstance, options, eventCallback) &rarr; {[ComponentContext](../../zuix/ComponentContext)}
+
+The component context object represents the component instance itself, and it holds
+all of its data such as the view template, the style, the controller, the data model.
 
 ##### Parameters
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`zuixInstance`|*[Zuix](Zuix.md)*|  ||
-|`options`|*[ContextOptions](global.md#ContextOptions)*|  |The context options.|
-|`eventCallback`|*function*|*optional*  |Event routing callback.|
+|`zuixInstance`|*[Zuix](../../zuix/Zuix)*|  ||
+|`options`|*[ContextOptions](#ContextOptions)*|  |Options to create this component context|
+|`eventCallback`|*function*|*optional*  |Event routing callback|
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 134](zuix/ComponentContext.js#L134)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 195](../../zuix/ComponentContext.js#L195)
 
 -->
 
 ##### Returns
 
-`ComponentContext`
-The component context instance.
+*[ComponentContext](../../zuix/ComponentContext)*
+ &dash; The component context instance.
 
----------------
+### Properties
 
-### Members
+#### $ &rarr; *[ZxQuery](../../helpers/ZxQuery)*
 
-#### &lt;_package_&gt; _behaviorMap
+Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
 
-<!--
+#### path &rarr; *string*
 
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 174](zuix/ComponentContext.js#L174)
+Gets the base path of this component.
 
--->
+#### name &rarr; *string*
 
-#### &lt;_protected_&gt; _c :[ContextController](ContextController.md)
-
-##### Type:
-_*[ContextController](ContextController.md)*
-_
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 180](zuix/ComponentContext.js#L180)
-
--->
-
-#### &lt;_protected_&gt; _container
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 146](zuix/ComponentContext.js#L146)
-
--->
-
-#### &lt;_protected_&gt; _controller :[ContextControllerHandler](global.md#ContextControllerHandler)
-
-##### Type:
-_*[ContextControllerHandler](global.md#ContextControllerHandler)*
-_
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 160](zuix/ComponentContext.js#L160)
-
--->
-
-#### &lt;_protected_&gt; _css
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 153](zuix/ComponentContext.js#L153)
-
--->
-
-#### &lt;_package_&gt; _eventMap
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 172](zuix/ComponentContext.js#L172)
-
--->
-
-#### &lt;_protected_&gt; _model
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 149](zuix/ComponentContext.js#L149)
-
--->
-
-#### &lt;_protected_&gt; _modelListener :[ObservableListener](ObservableListener.md)
-
-##### Type:
-_*[ObservableListener](ObservableListener.md)*
-_
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 186](zuix/ComponentContext.js#L186)
-
--->
-
-#### &lt;_protected_&gt; _style
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 155](zuix/ComponentContext.js#L155)
-
--->
-
-#### &lt;_protected_&gt; _view
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 151](zuix/ComponentContext.js#L151)
-
--->
+Gets the name of this component (last part of the path).
 
 ### Methods
 
-#### container(container) &rarr; {[ComponentContext](ComponentContext.md)|Element}
+<a name="container"></a>
+#### container(container) &rarr; {[ComponentContext](../../zuix/ComponentContext)|Element}
 
 Gets/Sets the container element of the component.
 Returns the current container element if no
-argument is passed, the {ComponentContext} itself
+argument is passed, the `ComponentContext` itself
 otherwise.
 
 ##### Parameters
@@ -150,128 +126,211 @@ otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 299](zuix/ComponentContext.js#L299)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 371](../../zuix/ComponentContext.js#L371)
 
 -->
 
 ##### Returns
 
-`ComponentContext,Element`
+*[ComponentContext](../../zuix/ComponentContext)* \| *Element*
 
-#### controller(controller) &rarr; {[ComponentContext](ComponentContext.md)|[ContextControllerHandler](global.md#ContextControllerHandler)}
+<a name="controller"></a>
+#### controller(controller) &rarr; {[ComponentContext](../../zuix/ComponentContext)|[ContextControllerHandler](#ContextControllerHandler)}
 
-Gets/Sets the handler function of the controller.
+Gets/Sets the component's controller handler.
 
 ##### Parameters
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`controller`|*[ContextControllerHandler](global.md#ContextControllerHandler)* \| *undefined*|*optional*  |The handler function of the controller.|
+|`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|*optional*  |The controller's handler function|
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 574](zuix/ComponentContext.js#L574)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 744](../../zuix/ComponentContext.js#L744)
 
 -->
 
 ##### Returns
 
-`ComponentContext,ContextControllerHandler`
+*[ComponentContext](../../zuix/ComponentContext)* \| *[ContextControllerHandler](#ContextControllerHandler)*
+
+<a name="dispose"></a>
+#### dispose()
+
+Disposes the component context and all of its allocated resources.
+
+<!--
+
+*Source:*
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 304](../../zuix/ComponentContext.js#L304)
+
+-->
+
+<a name="field"></a>
+#### field(fieldName) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Gets in the component's view, elements with `z-field`
+attribute matching the given `fieldName`.
+This method implements a caching mechanism and automatic
+disposal of allocated objects and events.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`fieldName`|*string*|Value to match in the *z-field* attribute|
+
+<!--
+
+*Source:*
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 549](../../zuix/ComponentContext.js#L549)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
+ &dash; A `{ZxQuery}` object wrapping the matching element(s).
 
 ##### Example
 
-<small>Example - JavaScript</small>
-<pre><code class="language-js">
-ctx.controller(function(cp) {
-     cp.create = function() {
-          cp.view().html('Hello World!');
-     };
-     // ...
- });
-</code></pre>
+```html
+<div z-load="default" z-context="field-test">
+  <h1 z-field="title">Loading context...</h1>
+</div>
 
+<script>
+zuix.context('field-test', (ctx) => {
+  ctx.field('title')
+     .html('Context ready.');
+});
+</script>
+```
+<h5>Result</h5>
+<div z-load="default" z-context="field-test">
+  <h6 z-field="title">Loading context...</h6>
+</div>
+<script>
+zuix.context('field-test', (ctx) => {
+  ctx.field('title')
+     .html('Context ready.');
+});
+</script>
+
+<a name="getCssId"></a>
 #### getCssId() &rarr; {string}
 
-Gets the CSS identifier attribute.
+Gets the CSS identifier of this component's style.
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 906](zuix/ComponentContext.js#L906)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1108](../../zuix/ComponentContext.js#L1108)
 
 -->
 
 ##### Returns
 
-`string`
-The css-id attribute of this component
+*string*
+ &dash; The css-id attribute of this component.
 
-#### model(model) &rarr; {[ComponentContext](ComponentContext.md)|object}
+<a name="model"></a>
+#### model(model) &rarr; {object}
 
-Gets/Sets the data model of the component.
+Gets/Sets the data model of the component. When getting `model()`,
+the returned object is an *observable* wrapped instance of the
+originally provided `model`, that will automatically trigger
+the update of any bound field when a property in the model's
+changes.
 
 ##### Parameters
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`model`|*object* \| *undefined*|*optional*  |The model object.|
+|`model`|*object* \| *undefined*|*optional*  |The model object|
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 533](zuix/ComponentContext.js#L533)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 713](../../zuix/ComponentContext.js#L713)
 
 -->
 
 ##### Returns
 
-`ComponentContext,object`
+*object*
 
 ##### Example
 
-<small>Example - JavaScript</small>
-<pre><code class="language-js">
-ctx.model({
-     title: 'Thoughts',
-     message: 'She stared through the window at the stars.'
- });
-</code></pre>
+```html
+<div z-load="default" z-context="model-test">
+  <h1 z-field="title"></h1>
+  <label>Update title</label>
+  <input type="text" z-field="title-input" />
+</div>
 
-#### modelToView() &rarr; {[ComponentContext](ComponentContext.md)}
+<script>
+zuix.context('model-test', (ctx) => {
+  const model = ctx.model({
+    title: 'Test title'
+  });
+  ctx.field('title-input')
+     .value(model.title)
+     .on('input', (e, input) =>
+        { model.title = input.value(); });
+});
+</script>
+```
 
-Copies values from the data model to the ```data-ui-field```
-elements declared in the component view.
+In this example, when the text in the input box is changed, the
+new value is assigned to *model.title* property, and this will
+automatically trigger the update of the *h1* element's content
+in the view, because it is bound to the *title*'s field (`z-field="title"`).
+For further info, see [Data binding](../../../view/#data_binding) in the View's chapter.
+
+<h5>Result</h5>
+<div z-load="default" z-context="model-test">
+  <h6 z-field="title" style="min-height:24px"></h6>
+  <label for="title_input">Update title</label>
+  <input type="text" id="title_input" z-field="title-input" maxlength="30" />
+</div>
+<script>
+zuix.context('model-test', (ctx) => {
+  const model = ctx.model({
+    title: 'Test title'
+  });
+  ctx.field('title-input')
+     .value(model.title)
+     .on('input', (e, input) => {
+        model.title = input.value().replace(/[\u00A0-\u9999<>\&]/g, function(i) {
+           return '&#'+i.charCodeAt(0)+';';
+        });
+     });
+});
+</script>
+
+<a name="modelToView"></a>
+#### modelToView() &rarr; {[ComponentContext](../../zuix/ComponentContext)}
+
+Triggers the update of all `z-field` elements in the view
+that are bound to the model's fields.
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 872](zuix/ComponentContext.js#L872)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1037](../../zuix/ComponentContext.js#L1037)
 
 -->
 
 ##### Returns
 
-`ComponentContext`
-The ```{ComponentContext}``` object itself.
+*[ComponentContext](../../zuix/ComponentContext)*
+ &dash; The ```{ComponentContext}``` object itself.
 
-#### name() &rarr; {string}
-
-Gets the name of this component (last part of the path)
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 927](zuix/ComponentContext.js#L927)
-
--->
-
-##### Returns
-
-`string`
-The name of this component
-
-#### on(eventPath, eventHandler) &rarr; {[ComponentContext](ComponentContext.md)}
+<a name="on"></a>
+#### on(eventPath, eventHandler) &rarr; {[ComponentContext](../../zuix/ComponentContext)}
 
 Listens for a component event.
 
@@ -279,74 +338,50 @@ Listens for a component event.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`eventPath`|*string*|The event path.|
-|`eventHandler`|*[EventCallback](global.md#EventCallback)*|The event handling function.|
+|`eventPath`|*string*|The event path|
+|`eventHandler`|*[EventCallback](#EventCallback)*|The event handler function|
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 623](zuix/ComponentContext.js#L623)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 787](../../zuix/ComponentContext.js#L787)
 
 -->
 
 ##### Returns
 
-`ComponentContext`
-The ```{ComponentContext}``` object itself.
+*[ComponentContext](../../zuix/ComponentContext)*
+ &dash; The ```{ComponentContext}``` object itself.
 
-##### Example
+<a name="options"></a>
+#### options(options) &rarr; {[ComponentContext](../../zuix/ComponentContext)|object}
 
-<small>Example - JavaScript</small>
-<pre><code class="language-js">
-ctx.on('item:share', function(evt, data) { ... });
-</code></pre>
-
-#### options(options) &rarr; {[ComponentContext](ComponentContext.md)|object}
-
-Gets/Sets the component options.
+Gets/Sets the component's options.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`options`|*[ContextOptions](global.md#ContextOptions)* \| *undefined*|The JSON options object.|
+|`options`|*[ContextOptions](#ContextOptions)* \| *undefined*|The JSON options object.|
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 588](zuix/ComponentContext.js#L588)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 758](../../zuix/ComponentContext.js#L758)
 
 -->
 
 ##### Returns
 
-`ComponentContext,object`
+*[ComponentContext](../../zuix/ComponentContext)* \| *object*
 
-#### path() &rarr; {string}
+<a name="style"></a>
+#### style(css) &rarr; {[ComponentContext](../../zuix/ComponentContext)|Element}
 
-Gets the base path of this component
-
-<!--
-
-*Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 914](zuix/ComponentContext.js#L914)
-
--->
-
-##### Returns
-
-`string`
-The base path of this component
-
-#### style(css) &rarr; {[ComponentContext](ComponentContext.md)|Element}
-
-Gets/Sets the view style of the component.
+Gets/Sets the style of the component's view.
 The `css` argument can be a string containing all
 styles definitions or a reference to a style
-element. When a string is passed the css
-is linked to the `componentId` attribute so that
-its styles will be only applied to the component
-container.
+element.
 If no argument is given, then the current style
 element is returned.
 
@@ -354,33 +389,33 @@ element is returned.
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`css`|*string* \| *Element* \| *undefined*|*optional*  |The CSS string or element.|
+|`css`|*string* \| *Element* \| *undefined*|*optional*  |The CSS string or style element|
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 481](zuix/ComponentContext.js#L481)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 616](../../zuix/ComponentContext.js#L616)
 
 -->
 
 ##### Returns
 
-`ComponentContext,Element`
+*[ComponentContext](../../zuix/ComponentContext)* \| *Element*
 
 ##### Example
 
-<small>Example - JavaScript</small>
-<pre><code class="language-js">
+```js
 ctx.style("p { font-size: 120%; } .hidden { display: 'none'; }");
-</code></pre>
+```
 
-#### view(view) &rarr; {[ComponentContext](ComponentContext.md)|Element}
+<a name="view"></a>
+#### view(view) &rarr; {[ComponentContext](../../zuix/ComponentContext)|Element}
 
 Gets/Sets the view element of the component.
 If an *HTML* string is passed, then the view element
 will be a new `div` wrapping the given markup.
 Returns the current view element if no
-argument is passed, the {ComponentContext} itself otherwise.
+argument is passed, the *ComponentContext* itself otherwise.
 
 ##### Parameters
 
@@ -391,27 +426,578 @@ argument is passed, the {ComponentContext} itself otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 319](zuix/ComponentContext.js#L319)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 391](../../zuix/ComponentContext.js#L391)
 
 -->
 
 ##### Returns
 
-`ComponentContext,Element`
+*[ComponentContext](../../zuix/ComponentContext)* \| *Element*
 
-#### viewToModel() &rarr; {[ComponentContext](ComponentContext.md)}
+<a name="viewToModel"></a>
+#### viewToModel() &rarr; {[ComponentContext](../../zuix/ComponentContext)}
 
-Creates the data model starting from ```data-ui-field```
-elements declared in the component view.
+Creates the data model out of all `z-field` elements
+declared in the component's view.
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](zuix/ComponentContext.js), [line 829](zuix/ComponentContext.js#L829)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 994](../../zuix/ComponentContext.js#L994)
 
 -->
 
 ##### Returns
 
-`ComponentContext`
-The ```{ComponentContext}``` object itself.
+*[ComponentContext](../../zuix/ComponentContext)*
+ &dash; The ```{ComponentContext}``` object itself.
+
+### Type Definitions
+
+<a name="ActiveRefreshCallback"></a>
+#### ActiveRefreshCallback(data, refreshMs, forceActive)
+
+The callback for setting data and delay of next refresh request.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`data`|*object*|*optional*  |Data to be passed to next refresh call|
+|`refreshMs`|*number*|*optional*  |Delay in milliseconds before the next refresh call|
+|`forceActive`|*boolean* \| *undefined*|*optional*  |Ignore visibility, schedule anyway|
+
+<!--
+
+*Source:*
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 39](../../zuix/ActiveRefresh.js#L39)
+
+-->
+
+<a name="ActiveRefreshHandler"></a>
+#### ActiveRefreshHandler($view, $element, data, nextCallback)
+
+The Active-Refresh function that will be called for each refresh request.
+
+##### This
+- {HTMLElement}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element as *ZxQuery* object|
+|`data`|*object*|Custom data that ca be passed from call to call|
+|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|Callback for scheduling the next refresh call|
+
+<!--
+
+*Source:*
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 28](../../zuix/ActiveRefresh.js#L28)
+
+-->
+
+<a name="BindingAdapterCallback"></a>
+#### BindingAdapterCallback($element, fieldName, $view, refreshCallback)
+
+Binding adapter callback.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|  |The view's element bound to the data model's *fieldName*|
+|`fieldName`|*string*|  |The element's bound field name|
+|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|  |The view|
+|`refreshCallback`|*[BindingAdapterRefreshCallback](#BindingAdapterRefreshCallback)*|*optional*  |Refresh loop callback|
+
+<!--
+
+*Source:*
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 62](../../zuix/ComponentContext.js#L62)
+
+-->
+
+<a name="BindingAdapterRefreshCallback"></a>
+#### BindingAdapterRefreshCallback(refreshMs)
+
+Binding adapter refresh callback
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`refreshMs`|*number*|*optional*  |Milliseconds to wait before refresh (**default**: *500ms*)|
+
+<!--
+
+*Source:*
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 72](../../zuix/ComponentContext.js#L72)
+
+-->
+
+<a name="BundleItem"></a>
+#### BundleItem
+
+Bundle item object.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`view`|*Element*||
+|`css`|*string*||
+|`controller`|*[ContextControllerHandler](#ContextControllerHandler)*||
+
+<!--
+
+*Source:*
+[zuix/ComponentCache.js](../../zuix/ComponentCache.js), [line 38](../../zuix/ComponentCache.js#L38)
+
+-->
+
+<a name="ComponentCache"></a>
+#### ComponentCache
+
+Component cache object.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`componentId`|*string*|The id of the cached component.|
+|`view`|*Element*|The view element.|
+|`css`|*string*|The CSS style text.|
+|`css_applied`|*boolean*|Whether the CSS style has been applied to the view or not.|
+|`controller`|*[ContextControllerHandler](#ContextControllerHandler)*|The controller handler function.|
+|`using`|*string*|The url/path if this is a resource loaded with `zuix.using(..)` method.|
+
+<!--
+
+*Source:*
+[zuix/ComponentCache.js](../../zuix/ComponentCache.js), [line 26](../../zuix/ComponentCache.js#L26)
+
+-->
+
+<a name="ContextControllerCreateCallback"></a>
+#### ContextControllerCreateCallback()
+
+Function that gets called after loading, when the component is actually created and ready.
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 50](../../zuix/ContextController.js#L50)
+
+-->
+
+<a name="ContextControllerDisposeCallback"></a>
+#### ContextControllerDisposeCallback()
+
+Function called when the component is disposed.
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 56](../../zuix/ContextController.js#L56)
+
+-->
+
+<a name="ContextControllerHandler"></a>
+#### ContextControllerHandler(cp)
+
+This function is called after the component is loaded
+and it is used to initialize its controller.
+
+##### This
+- {<a href="../../zuix/ContextController">ContextController</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`cp`|*[ContextController](../../zuix/ContextController)*|The component controller object|
+
+<!--
+
+*Source:*
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 42](../../zuix/ComponentContext.js#L42)
+
+-->
+
+<a name="ContextControllerInitCallback"></a>
+#### ContextControllerInitCallback()
+
+Function that gets called after loading and before the component is created.
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 44](../../zuix/ContextController.js#L44)
+
+-->
+
+<a name="ContextControllerUpdateCallback"></a>
+#### ContextControllerUpdateCallback(target, key, value, path, old)
+
+Function called when the data model of the component is updated
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`target`|*Object*|The target object.|
+|`key`|*string*|The name of the property.|
+|`value`|*Object*|The value of the property.|
+|`path`|*string*|The full property path (dotted notation).|
+|`old`|*Object*|The target object before the update.|
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 32](../../zuix/ContextController.js#L32)
+
+-->
+
+##### Returns
+
+ &dash; undefined
+
+<a name="ContextErrorCallback"></a>
+#### ContextErrorCallback(error, ctx)
+
+Callback function triggered if an error occurs when loading a component.
+
+##### This
+- {<a href="../../zuix/ComponentContext">ComponentContext</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`error`|*Object*||
+|`ctx`|*[ComponentContext](../../zuix/ComponentContext)*|The component context object (same as `this`).|
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 78](../../zuix/Zuix.js#L78)
+
+-->
+
+<a name="ContextOptions"></a>
+#### ContextOptions
+
+This object can be supplied when loading a component. It can be either passed as argument for the
+`zuix.load(...)` method in the javascript code, or in the `z-options` attribute of the HTML code
+of the component container.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.|
+|`container`|*Element* \| *undefined*|The container element.|
+|`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
+|`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
+|`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
+|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`css`|*Element* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
+|`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
+|`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
+|`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|
+|`html`|*boolean* \| *undefined*|Enables or disables HTML template loading (**default:** true).|
+|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false).|
+|`priority`|*number* \| *undefined*|Loading priority (**default:** 0).|
+|`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once the component is successfully loaded.|
+|`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 54](../../zuix/Zuix.js#L54)
+
+-->
+
+<a name="ContextReadyCallback"></a>
+#### ContextReadyCallback(ctx)
+
+Callback function triggered when a component has been successfully loaded.
+
+##### This
+- {<a href="../../zuix/ComponentContext">ComponentContext</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`ctx`|*[ComponentContext](../../zuix/ComponentContext)*|The component context (same as `this`).|
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 87](../../zuix/Zuix.js#L87)
+
+-->
+
+<a name="ElementPosition"></a>
+#### ElementPosition
+
+The `ElementPosition` object returned by the `position()` method.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`x`|*number*|X coordinate of the element in the viewport|
+|`y`|*number*|Y coordinate of the element in the viewport|
+|`frame`|*[Position](#Position)*|Position of the element relative to the viewport|
+|`event`|*string*|Current state change event description (*enter*, *exit*, *scroll*, *off-scroll*)|
+|`visible`|*boolean*|Boolean value indicating whether the element is visible in the viewport|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 54](../../helpers/ZxQuery.js#L54)
+
+-->
+
+<a name="ElementsIterationCallback"></a>
+#### ElementsIterationCallback(count, item, $item)
+
+Callback function used with the `each(..)` method.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`count`|*number*|Iteration count.|
+|`item`|*Element*|Current element.|
+|`$item`|*[ZxQuery](../../helpers/ZxQuery)*|ZxQuery wrapped element (same as 'this').|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 36](../../helpers/ZxQuery.js#L36)
+
+-->
+
+<a name="EventCallback"></a>
+#### EventCallback(event, data, $el)
+
+Callback function triggered when an event registered
+with the `on` method occurs.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`event`|*string*|Event name|
+|`data`|*Object*|Event data|
+|`$el`|*[ZxQuery](../../helpers/ZxQuery)*|ZxQuery wrapped element that sourced the event (same as `this`)|
+
+<!--
+
+*Source:*
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 51](../../zuix/ComponentContext.js#L51)
+
+-->
+
+<a name="IterationCallback"></a>
+#### IterationCallback(i, item)
+
+The `IterationCallback` function.
+
+##### This
+- {object}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`i`|*number*|Iteration count.|
+|`item`|*object*|Current element (same as `this`).|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 65](../../helpers/ZxQuery.js#L65)
+
+-->
+
+<a name="LoggerMonitorCallback"></a>
+#### LoggerMonitorCallback(ctx, level)
+
+Callback function for monitoring all log messages.
+
+##### This
+- {object}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`ctx`|*Object*||
+|`level`|*string*||
+|`...args`|*Array.&lt;Object>*||
+
+<!--
+
+*Source:*
+[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+
+-->
+
+<a name="Position"></a>
+#### Position
+
+Relative position.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`dx`|*number*||
+|`dy`|*number*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 46](../../helpers/ZxQuery.js#L46)
+
+-->
+
+<a name="ResourceUsingCallback"></a>
+#### ResourceUsingCallback(resourcePath, hashIdOrContext)
+
+Callback in response to a `zuix.using` request.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`resourcePath`|*string*||
+|`hashIdOrContext`|*string* \| *object*||
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 95](../../zuix/Zuix.js#L95)
+
+-->
+
+<a name="ZxQueryHttpBeforeSendCallback"></a>
+#### ZxQueryHttpBeforeSendCallback(xhr)
+
+The `ZxQueryHttpBeforeSendCallback` function.
+
+##### This
+- {undefined}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`xhr`|*XMLHttpRequest*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 74](../../helpers/ZxQuery.js#L74)
+
+-->
+
+<a name="ZxQueryHttpErrorCallback"></a>
+#### ZxQueryHttpErrorCallback(xhr, statusText, statusCode)
+
+The `ZxQueryHttpErrorCallback` function.
+
+##### This
+- {undefined}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`xhr`|*XMLHttpRequest*||
+|`statusText`|*string*||
+|`statusCode`|*number*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 90](../../helpers/ZxQuery.js#L90)
+
+-->
+
+<a name="ZxQueryHttpOptions"></a>
+#### ZxQueryHttpOptions
+
+zuix.$.http options object.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`url`|*string*||
+|`beforeSend`|*[ZxQueryHttpBeforeSendCallback](#ZxQueryHttpBeforeSendCallback)* \| *undefined*||
+|`success`|*[ZxQueryHttpSuccessCallback](#ZxQueryHttpSuccessCallback)* \| *undefined*||
+|`error`|*[ZxQueryHttpErrorCallback](#ZxQueryHttpErrorCallback)* \| *undefined*||
+|`then`|*[ZxQueryHttpThenCallback](#ZxQueryHttpThenCallback)* \| *undefined*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 108](../../helpers/ZxQuery.js#L108)
+
+-->
+
+<a name="ZxQueryHttpSuccessCallback"></a>
+#### ZxQueryHttpSuccessCallback(responseText)
+
+The `ZxQueryHttpSuccessCallback` function.
+
+##### This
+- {undefined}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`responseText`|*string*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 82](../../helpers/ZxQuery.js#L82)
+
+-->
+
+<a name="ZxQueryHttpThenCallback"></a>
+#### ZxQueryHttpThenCallback(xhr)
+
+The `ZxQueryHttpThenCallback` function.
+
+##### This
+- {undefined}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`xhr`|*XMLHttpRequest*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 100](../../helpers/ZxQuery.js#L100)
+
+-->

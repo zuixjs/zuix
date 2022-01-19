@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,6 @@ const util = require('./Util.js');
  * Relative position.
  *
  * @typedef {object} Position
- * @memberOf {ZxQueryStatic}
  * @property {number} dx
  * @property {number} dy
  */
@@ -56,19 +55,17 @@ const util = require('./Util.js');
  * The `ElementPosition` object returned by the `position()` method.
  *
  * @typedef {object} ElementPosition
- * @memberOf {ZxQueryStatic}
- * @property {number} x X coordinate of the element in the viewport.
- * @property {number} y Y coordinate of the element in the viewport.
+ * @property {number} x X coordinate of the element in the viewport
+ * @property {number} y Y coordinate of the element in the viewport
  * @property {Position} frame Position of the element relative to the viewport
- * @property {string} event Current state change event description ("enter"|"exit"|"scroll"|"off-scroll")
- * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport.
+ * @property {string} event Current state change event description (*enter*, *exit*, *scroll*, *off-scroll*)
+ * @property {boolean} visible Boolean value indicating whether the element is visible in the viewport
  */
 
 /**
  * The `IterationCallback` function.
  *
  * @callback IterationCallback
- * @memberOf {ZxQueryStatic}
  * @param {number} i Iteration count.
  * @param {object} item Current element (same as `this`).
  * @this {object}
@@ -78,7 +75,6 @@ const util = require('./Util.js');
  * The `ZxQueryHttpBeforeSendCallback` function.
  *
  * @callback ZxQueryHttpBeforeSendCallback
- * @memberOf {ZxQueryStatic}
  * @param {XMLHttpRequest} xhr
  * @this {undefined}
  */
@@ -87,7 +83,6 @@ const util = require('./Util.js');
  * The `ZxQueryHttpSuccessCallback` function.
  *
  * @callback ZxQueryHttpSuccessCallback
- * @memberOf {ZxQueryStatic}
  * @param {string} responseText
  * @this {undefined}
  */
@@ -96,7 +91,6 @@ const util = require('./Util.js');
  * The `ZxQueryHttpErrorCallback` function.
  *
  * @callback ZxQueryHttpErrorCallback
- * @memberOf {ZxQueryStatic}
  * @param {XMLHttpRequest} xhr
  * @param {string} statusText
  * @param {number} statusCode
@@ -107,7 +101,6 @@ const util = require('./Util.js');
  * The `ZxQueryHttpThenCallback` function.
  *
  * @callback ZxQueryHttpThenCallback
- * @memberOf {ZxQueryStatic}
  * @param {XMLHttpRequest} xhr
  * @this {undefined}
  */
@@ -116,7 +109,6 @@ const util = require('./Util.js');
  * zuix.$.http options object.
  *
  * @typedef {object} ZxQueryHttpOptions
- * @memberOf {ZxQueryStatic}
  * @property {string} url
  * @property {ZxQueryHttpBeforeSendCallback|undefined} beforeSend
  * @property {ZxQueryHttpSuccessCallback|undefined} success
@@ -142,7 +134,7 @@ function addEventHandler(el, path, handler, options) {
     }
   });
   if (!found) {
-    _zuix_events_mapping.push({element: el, path: path, handler: handler, opgions: options});
+    _zuix_events_mapping.push({element: el, path, handler, options});
     el.addEventListener(path, routeEvent, supportsPassive && (options == null || options.passive !== false) ? {passive: true} : false);
   }
 }
@@ -150,9 +142,9 @@ function removeEventHandler(el, path, handler) {
   let left = 1;
   let index = -1;
   z$.each(_zuix_events_mapping, function(i) {
-    if (this.element === el && this.path === path && this.handler === handler) {
+    if (this.element === el && this.path === path) {
       left--;
-      index = i;
+      if (this.handler === handler) index = i;
     }
   });
   if (index !== -1) {
@@ -172,7 +164,7 @@ function triggerEventHandlers(el, path, evt) {
   });
 }
 function removeAllEventHandlers(el) {
-  z$.each(_zuix_events_mapping, function() {
+  z$.each(_zuix_events_mapping.slice(), function() {
     if (this.element === el) {
       _log.t('Removing event handler', this.element, this.path, this.handler);
       removeEventHandler(this.element, this.path, this.handler);
@@ -181,18 +173,15 @@ function removeAllEventHandlers(el) {
 }
 
 /**
- * ZxQuery, a very lite subset of jQuery-like functions
- * internally used in Zuix for DOM operations.
- *
  * The constructor takes one optional argument that can be
  * a DOM element, a node list or a valid DOM query selector string expression.
  * If no parameter is given, the resulting ZxQuery object will wrap the
  * root *document* element.
  *
  * @class ZxQuery
- * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element] Element or list of elements to include in the ZxQuery object.
- * @return {ZxQuery} The *ZxQuery* object containing the given element(s).
  * @constructor
+ * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [element] Element or list of elements to include in the ZxQuery object or any valid DOM query selector string
+ * @return {ZxQuery} The *ZxQuery* object containing the given element(s).
  */
 function ZxQuery(element) {
   /** @protected */
@@ -273,7 +262,7 @@ ZxQuery.prototype.reverse = function() {
  * If no index is provided, the default element will be returned.
  *
  * @param {number} [i] Position of element (**default:** 0).
- * @return {Node|Element} The *DOM* element.
+ * @return {Node|Element|HTMLElement} The *DOM* element.
  */
 ZxQuery.prototype.get = function(i) {
   if (util.isNoU(i)) i = 0;
@@ -300,6 +289,42 @@ ZxQuery.prototype.eq = function(i) {
   return new ZxQuery(resultSet);
 };
 /**
+ * Moves to the previous sibling in the DOM.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
+ */
+ZxQuery.prototype.prev = function() {
+  return new ZxQuery(this._selection[0].previousElementSibling);
+};
+/**
+ * Moves to the next sibling in the DOM.
+ * This only applies to the first element in the ZxQuery object.
+ *
+ * @return {ZxQuery} A new *ZxQuery* object containing the next sibling element.
+ */
+ZxQuery.prototype.next = function() {
+  return new ZxQuery(this._selection[0].nextElementSibling);
+};
+/**
+ * If no `el` is given, returns the position of the first element in the ZxQuery object
+ * relative to its parent's children list, otherwise the position of the given `el` in the
+ * ZxQuery object selection.
+ *
+ * @param {ZxQuery} [el]
+ * @returns {number}
+ */
+ZxQuery.prototype.index = function(el) {
+  const target = this._selection[0];
+  if (this.length() === 1 && el == null) {
+    const elements = Array.from(this.parent().children()._selection);
+    return elements.indexOf(target);
+  } else if (this.length() > 0 && el != null) {
+    return this._selection.indexOf(el.get());
+  }
+  return -1;
+};
+/**
  * Selects all descendants matching the given *DOM* query selector filter.
  * This only applies to the first element in the ZxQuery object.
  *
@@ -307,7 +332,8 @@ ZxQuery.prototype.eq = function(i) {
  * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
  */
 ZxQuery.prototype.find = function(selector) {
-  return new ZxQuery(this._selection[0].querySelectorAll(selector));
+  const q = this._selection[0];
+  return q ? new ZxQuery(this._selection[0].querySelectorAll(selector)) : new ZxQuery();
 };
 /**
  * Iterates through all *DOM* elements in the selection.
@@ -381,12 +407,14 @@ ZxQuery.prototype.trigger = function(eventPath, eventData) {
  */
 ZxQuery.prototype.one = function(eventPath, eventHandler) {
   let fired = false;
-  this.on(eventPath, function(a, b) {
+  const _t = this;
+  const h = function(a, b) {
     if (fired) return;
     fired = true;
-    z$(this).off(eventPath, eventHandler);
-    (eventHandler).call(this, a, b, this);
-  });
+    z$(_t).off(eventPath, h);
+    (eventHandler).call(_t, a, b, _t);
+  };
+  this.on(eventPath, h);
   return this;
 };
 /**
@@ -426,7 +454,7 @@ ZxQuery.prototype.off = function(eventPath, eventHandler) {
   return this;
 };
 /**
- * De-register all event handlers of all elements in the ZxQuery object.
+ * De-registers all event handlers of all elements in the ZxQuery object.
  *
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
@@ -527,24 +555,6 @@ ZxQuery.prototype.removeClass = function(className) {
   return this;
 };
 /**
- * Moves to the previous sibling in the DOM.
- * This only applies to the first element in the ZxQuery object.
- *
- * @return {ZxQuery} A new *ZxQuery* object containing the previous sibling element.
- */
-ZxQuery.prototype.prev = function() {
-  return new ZxQuery(this._selection[0].previousElementSibling);
-};
-/**
- * Moves to the next sibling in the DOM.
- * This only applies to the first element in the ZxQuery object.
- *
- * @return {ZxQuery} A new *ZxQuery* object containing the next sibling element.
- */
-ZxQuery.prototype.next = function() {
-  return new ZxQuery(this._selection[0].nextElementSibling);
-};
-/**
  * Gets the HTML string of the first element in the ZxQuery object,
  * or sets the HTML string for all elements in the ZxQuery object.
  *
@@ -603,7 +613,7 @@ ZxQuery.prototype.append = function(el) {
   if (typeof el === 'string') {
     this._selection[0].innerHTML += el;
   } else {
-    this._selection[0].appendChild(el);
+    this._selection[0].appendChild((el instanceof ZxQuery) ? el.get() : el);
   }
   return this;
 };
@@ -616,6 +626,7 @@ ZxQuery.prototype.append = function(el) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.insert = function(index, el) {
+  el = (el instanceof ZxQuery) ? el.get() : el;
   const target = this.children().get(index);
   if (target !== null) {
     this._selection[0].insertBefore(el, target);
@@ -634,12 +645,12 @@ ZxQuery.prototype.prepend = function(el) {
   if (typeof el === 'string') {
     this._selection[0].innerHTML = el + this._selection[0].innerHTML;
   } else {
-    this._selection[0].insertBefore(el, this._selection[0].firstElementChild);
+    this._selection[0].insertBefore((el instanceof ZxQuery) ? el.get() : el, this._selection[0].firstElementChild);
   }
   return this;
 };
 /**
- * Detach from its parent the first element in the ZxQuery object.
+ * Detaches from its parent the first element in the ZxQuery object.
  *
  * @return {ZxQuery}
  */
@@ -655,7 +666,7 @@ ZxQuery.prototype.detach = function() {
   return this;
 };
 /**
- * Re-attach to its parent the first element in the ZxQuery object.
+ * Re-attaches to its parent the first element in the ZxQuery object.
  *
  * @return {ZxQuery}
  */
@@ -727,9 +738,10 @@ ZxQuery.prototype.hide = function() {
 /**
  * Creates a ZxQuery wrapped element.
  *
- * @class {ZxQueryStatic}
- * @alias zuix.$
- * @memberOf {ZxQueryStatic}
+ * @class ZxQueryStatic
+ * @hideconstructor
+ * @constructor
+ * @static
  * @param {Object|ZxQuery|Array<Node>|Node|NodeList|string|undefined} [what] Query target
  * @return {ZxQuery}
  */
@@ -740,7 +752,8 @@ const z$ = ZxQueryStatic;
 /**
  * Selects document elements matching the given *DOM* query selector.
  *
- * @memberOf {ZxQueryStatic}
+ * @method find
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.find
  * @param {string} selector A valid *DOM* query selector.
  * @return {ZxQuery} A new *ZxQuery* object containing the selected elements.
@@ -749,7 +762,7 @@ ZxQueryStatic.find = function(selector) {
   return z$().find(selector);
 };
 /**
- * Iterate through all objects in the given `items` collection.
+ * Iterates through all objects in the given `items` collection.
  * The context object *this*, passed to the
  * *iterationCallback*`(index, item)`, will be the
  * object corresponding the current iteration and
@@ -757,7 +770,8 @@ ZxQueryStatic.find = function(selector) {
  *
  * If the callback returns *false*, the iteration loop will interrupt.
  *
- * @memberOf {ZxQueryStatic}
+ * @method each
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.each
  * @param {Array<Object>|JSON} items Enumerable objects collection.
  * @param {IterationCallback} iterationCallback The callback *fn* to call at each iteration
@@ -786,50 +800,51 @@ ZxQueryStatic.each = function(items, iterationCallback) {
   return this;
 };
 ZxQueryStatic.ajax =
-/**
- * Makes an HTTP request.
- *
- * @memberOf {ZxQueryStatic}
- * @alias zuix.$.http
- * @param {ZxQueryHttpOptions} options
- * @return {ZxQueryStatic}
- */
-ZxQueryStatic.http = function(options) {
-  let url;
-  if (!util.isNoU(options) && !util.isNoU(options.url)) {
-    url = options.url;
-  } else {
-    url = options;
-  }
-  const xhr = new XMLHttpRequest();
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      if (util.isFunction(options.success)) options.success(xhr.responseText);
-    } else {
-      if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status);
-    }
-    if (util.isFunction(options.then)) options.then(xhr);
-  };
-  xhr.onerror = function(xhr, textStatus, errorThrown) {
-    if (util.isFunction(options.error)) options.error(xhr, textStatus, errorThrown);
-  };
-  if (typeof options.beforeSend == 'function') {
-    options.beforeSend(xhr);
-  }
-  try {
-    xhr.open('GET', url);
-    xhr.send();
-  } catch (e) {
-    if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status, e);
-  }
-  return this;
-};
+    /**
+     * Makes an HTTP request.
+     * @method http
+     * @memberOf ZxQueryStatic
+     * @alias zuix.$.http
+     * @param {ZxQueryHttpOptions} options
+     * @return {ZxQueryStatic}
+     */
+    ZxQueryStatic.http = function(options) {
+      let url;
+      if (!util.isNoU(options) && !util.isNoU(options.url)) {
+        url = options.url;
+      } else {
+        url = options;
+      }
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          if (util.isFunction(options.success)) options.success(xhr.responseText);
+        } else {
+          if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status);
+        }
+        if (util.isFunction(options.then)) options.then(xhr);
+      };
+      xhr.onerror = function(xhr, textStatus, errorThrown) {
+        if (util.isFunction(options.error)) options.error(xhr, textStatus, errorThrown);
+      };
+      if (typeof options.beforeSend == 'function') {
+        options.beforeSend(xhr);
+      }
+      try {
+        xhr.open('GET', url);
+        xhr.send();
+      } catch (e) {
+        if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status, e);
+      }
+      return this;
+    };
 /**
  * Checks if an element has got the specified CSS class.
  *
- * @memberOf {ZxQueryStatic}
+ * @method hasClass
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.hasClass
- * @param {Element} el
+ * @param {Element|HTMLElement} el
  * @param {string} className
  * @return {boolean}
  */
@@ -849,7 +864,8 @@ ZxQueryStatic.hasClass = function(el, className) {
 /**
  * Checks if a class exists by searching for it in all document stylesheets.
  *
- * @memberOf {ZxQueryStatic}
+ * @method classExists
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.classExists
  * @param {string} className
  * @return {boolean}
@@ -885,18 +901,19 @@ ZxQueryStatic.classExists = function(className) {
   return success;
 };
 /**
- * Wraps an {Element} inside a container specified by a given tag name.
+ * Wraps an `Element` inside a container specified by a given tag name.
  *
- * @memberOf {ZxQueryStatic}
+ * @method wrapElement
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.wrapElement
  * @param {string} containerTag Container element tag name
- * @param {Element} element
- * @return {Element} The new wrapped element
+ * @param {Element|HTMLElement} element
+ * @return {Element|HTMLElement} The new wrapped element
  */
 ZxQueryStatic.wrapElement = function(containerTag, element) {
   // $(element).wrap($('<'+containerTag+'/>'));
   // return element;
-  /** @type Element */
+  /** @type {HTMLElement} */
   const container = document.createElement(containerTag);
   if (typeof element === 'string') {
     container.innerHTML = element;
@@ -908,7 +925,7 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
 };
 // TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
-  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_\n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
+  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.@]+.\n*){([^{}]|((.*){([^}]+)[}]))*})/g;
   let wrappedCss = '';
   let ruleMatch;
   // remove comments
@@ -922,6 +939,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
         const classes = ruleParts.split(',');
         let isMediaQuery = false;
         z$.each(classes, function(k, v) {
+          // TODO: deprecate the 'single dot' notation
           if (v.trim() === '.' || v.trim() === ':host') {
             // a single `.` means 'self' (the container itself)
             // so we just add the wrapperRule
@@ -947,7 +965,13 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
               }
             });
           } else {
-            wrappedCss += '\n[z-component]' + wrapperRule + '\n' + v.trim() + ' ';
+            let val = v.trim();
+            if (val.startsWith(':host')) {
+              val = val.substring(5);
+            } else {
+              val = '\n' + val;
+            }
+            wrappedCss += '\n[z-component]' + wrapperRule + val + ' ';
           }
           if (k < classes.length - 1) {
             wrappedCss = wrappedCss.trim() + ', ';
@@ -972,12 +996,13 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
 /**
  * Appends or replaces a stylesheet to the document.
  *
- * @memberOf {ZxQueryStatic}
+ * @method appendCss
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.appendCss
  * @param {string} css Stylesheet text
- * @param {Element|null} target Existing style element to replace
+ * @param {Element|HTMLElement|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
- * @return {Element} The new style element created out of the given css text.
+ * @return {Element|HTMLElement} The new style element created out of the given css text.
  */
 ZxQueryStatic.appendCss = function(css, target, cssId) {
   const head = document.head || document.getElementsByTagName('head')[0];
@@ -1011,7 +1036,8 @@ ZxQueryStatic.appendCss = function(css, target, cssId) {
 /**
  * Replaces CSS variables with provided values.
  *
- * @memberOf {ZxQueryStatic}
+ * @method replaceCssVars
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.replaceCssVars
  * @param {string} css Stylesheet text
  * @param {object} model Object containing variables fields and values.
@@ -1059,7 +1085,8 @@ ZxQueryStatic.replaceCssVars = function(css, model) {
  * Parses variables enclosed in single or double braces and calls the given callback for each parsed variable name.
  * If the callback returns a value, then the variable will be replaced with the given value.
  *
- * @memberOf {ZxQueryStatic}
+ * @method replaceBraces
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.replaceBraces
  * @param {string} html The source HTML template.
  * @param {function} callback A callback function with one argument (the currently parsed variable name).
@@ -1099,11 +1126,12 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
 /**
  * Gets the closest parent mathing the given query selector
  *
- * @memberOf {ZxQueryStatic}
+ * @method getClosest
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.getClosest
- * @param {Element} elem
+ * @param {Element|HTMLElement} elem
  * @param {string} selector A valid DOM query selector string expression.
- * @return {Element|null}
+ * @return {Element|HTMLElement|null}
  */
 ZxQueryStatic.getClosest = function(elem, selector) {
   // Get closest match
@@ -1116,9 +1144,10 @@ ZxQueryStatic.getClosest = function(elem, selector) {
 /**
  * Gets the position of an element.
  *
- * @memberOf {ZxQueryStatic}
+ * @method getPosition
+ * @memberOf ZxQueryStatic
  * @alias zuix.$.getPosition
- * @param {Element} el
+ * @param {Element|HTMLElement} el
  * @param {number} [tolerance] Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
  * @return {ElementPosition}
  */
@@ -1178,9 +1207,9 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     const r2 = el.getBoundingClientRect();
     // visible status
     const visible = !(r2.left-1 > r1.right - tolerance ||
-            r2.right+1 < r1.left + tolerance ||
-            r2.top-1 > r1.bottom - tolerance ||
-            r2.bottom+1 < r1.top + tolerance);
+        r2.right+1 < r1.left + tolerance ||
+        r2.top-1 > r1.bottom - tolerance ||
+        r2.bottom+1 < r1.top + tolerance);
     position.visible = visible;
     // viewport-relative frame position
     position.frame = {
@@ -1209,18 +1238,18 @@ ZxQueryStatic.ZxQuery = ZxQuery;
 // Element.matches() polyfill
 if (!Element.prototype.matches) {
   Element.prototype.matches =
-        Element.prototype.matchesSelector ||
-        Element.prototype.mozMatchesSelector ||
-        Element.prototype.msMatchesSelector ||
-        Element.prototype.oMatchesSelector ||
-        Element.prototype.webkitMatchesSelector ||
-        function(s) {
-          const matches = (this.document || this.ownerDocument).querySelectorAll(s);
-          let i = matches.length;
-          while (--i >= 0 && matches.item(i) !== this) {
-          }
-          return i > -1;
-        };
+      Element.prototype.matchesSelector ||
+      Element.prototype.mozMatchesSelector ||
+      Element.prototype.msMatchesSelector ||
+      Element.prototype.oMatchesSelector ||
+      Element.prototype.webkitMatchesSelector ||
+      function(s) {
+        const matches = (this.document || this.ownerDocument).querySelectorAll(s);
+        let i = matches.length;
+        while (--i >= 0 && matches.item(i) !== this) {
+        }
+        return i > -1;
+      };
 }
 // window.CustomEvent polyfill for IE>=9
 (function() {

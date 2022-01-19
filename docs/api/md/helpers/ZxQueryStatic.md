@@ -2,7 +2,7 @@
 layout: page
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: Componentizer"
+description: "zUIx.js API documentation: Class: ZxQueryStatic"
 keywords:
 - Documentation
 - API
@@ -63,102 +63,295 @@ main table code {
 /* END: MARKDOWN JSDOC */
 </style>
 
-## `Componentizer` class
+## `ZxQueryStatic` class
 
-### Constructor
+<a name="ZxQueryStatic"></a>
+#### ZxQueryStatic(what) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
 
-<a name="Componentizer"></a>
-#### new Componentizer()
+Creates a ZxQuery wrapped element.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`what`|*Object* \| *[ZxQuery](../../helpers/ZxQuery)* \| *Array.&lt;Node>* \| *Node* \| *NodeList* \| *string* \| *undefined*|*optional*  |Query target|
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 198](../../zuix/Componentizer.js#L198)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 748](../../helpers/ZxQuery.js#L748)
 
 -->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
 
 ### Methods
 
-<a name="componentize"></a>
-#### componentize(element, child) &rarr; {[Componentizer](../../zuix/Componentizer)}
+<a name="appendCss"></a>
+#### appendCss(css, target, cssId) &rarr; {Element|HTMLElement}
 
-TODO: describe this...
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *undefined*|*optional*  |Scan and process loadable elements inside `element`.|
-|`child`|*Element* \| *undefined*|*optional*  |Process only the specified `child` of `element`.|
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 41](../../zuix/Componentizer.js#L41)
-
--->
-
-##### Returns
-
-*[Componentizer](../../zuix/Componentizer)*
-
-<a name="lazyLoad"></a>
-#### lazyLoad(enable, threshold) &rarr; {boolean}
-
-Enable/Disable lazy-loading, or get current value.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`enable`|*boolean*|*optional*  |Enable or disable lazy loading.|
-|`threshold`|*number*|*optional*  |Load-ahead threshold (default is 1.0 => 100% of view size).|
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
-
--->
-
-##### Returns
-
-*boolean*
- &dash; *true* if lazy-loading is enabled, *false* otherwise.
-
-<a name="setHost"></a>
-#### setHost(zuixInstance) &rarr; {[Componentizer](../../zuix/Componentizer)}
+Appends or replaces a stylesheet to the document.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`zuixInstance`|*[Zuix](../../zuix/Zuix)*||
+|`css`|*string*|Stylesheet text|
+|`target`|*Element* \| *HTMLElement* \| *null*|Existing style element to replace|
+|`cssId`|*string*|id to assign to the stylesheet|
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 105](../../zuix/Componentizer.js#L105)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 996](../../helpers/ZxQuery.js#L996)
 
 -->
 
 ##### Returns
 
-*[Componentizer](../../zuix/Componentizer)*
+*Element* \| *HTMLElement*
+ &dash; The new style element created out of the given css text.
 
-<a name="willLoadMore"></a>
-#### willLoadMore() &rarr; {boolean}
+<a name="classExists"></a>
+#### classExists(className) &rarr; {boolean}
+
+Checks if a class exists by searching for it in all document stylesheets.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`className`|*string*||
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 73](../../zuix/Componentizer.js#L73)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 864](../../helpers/ZxQuery.js#L864)
 
 -->
 
 ##### Returns
 
 *boolean*
+
+<a name="each"></a>
+#### each(items, iterationCallback) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Iterates through all objects in the given `items` collection.
+The context object *this*, passed to the
+*iterationCallback*`(index, item)`, will be the
+object corresponding the current iteration and
+the `index` passed to the callback will be the iteration count.
+
+If the callback returns *false*, the iteration loop will interrupt.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`items`|*Array.&lt;Object>* \| *JSON*|Enumerable objects collection.|
+|`iterationCallback`|*[IterationCallback](#IterationCallback)*|The callback *fn* to call at each iteration|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 764](../../helpers/ZxQuery.js#L764)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
+ &dash; `this`.
+
+<a name="find"></a>
+#### find(selector) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Selects document elements matching the given *DOM* query selector.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`selector`|*string*|A valid *DOM* query selector.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 752](../../helpers/ZxQuery.js#L752)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
+ &dash; A new *ZxQuery* object containing the selected elements.
+
+<a name="getClosest"></a>
+#### getClosest(elem, selector) &rarr; {Element|HTMLElement|null}
+
+Gets the closest parent mathing the given query selector
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`elem`|*Element* \| *HTMLElement*||
+|`selector`|*string*|A valid DOM query selector string expression.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1126](../../helpers/ZxQuery.js#L1126)
+
+-->
+
+##### Returns
+
+*Element* \| *HTMLElement* \| *null*
+
+<a name="getPosition"></a>
+#### getPosition(el, tolerance) &rarr; {[ElementPosition](#ElementPosition)}
+
+Gets the position of an element.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`el`|*Element* \| *HTMLElement*|  ||
+|`tolerance`|*number*|*optional*  |Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1144](../../helpers/ZxQuery.js#L1144)
+
+-->
+
+##### Returns
+
+*[ElementPosition](#ElementPosition)*
+
+<a name="hasClass"></a>
+#### hasClass(el, className) &rarr; {boolean}
+
+Checks if an element has got the specified CSS class.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`el`|*Element* \| *HTMLElement*||
+|`className`|*string*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 841](../../helpers/ZxQuery.js#L841)
+
+-->
+
+##### Returns
+
+*boolean*
+
+<a name="http"></a>
+#### http(options) &rarr; {[ZxQueryStatic](../../helpers/ZxQueryStatic)}
+
+Makes an HTTP request.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`options`|*[ZxQueryHttpOptions](#ZxQueryHttpOptions)*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 803](../../helpers/ZxQuery.js#L803)
+
+-->
+
+##### Returns
+
+*[ZxQueryStatic](../../helpers/ZxQueryStatic)*
+
+<a name="replaceBraces"></a>
+#### replaceBraces(html, callback) &rarr; {string|null}
+
+Parses variables enclosed in single or double braces and calls the given callback for each parsed variable name.
+If the callback returns a value, then the variable will be replaced with the given value.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`html`|*string*|The source HTML template.|
+|`callback`|*function*|A callback function with one argument (the currently parsed variable name).|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1084](../../helpers/ZxQuery.js#L1084)
+
+-->
+
+##### Returns
+
+*string* \| *null*
+ &dash; The new html code with variables replaced with values or null if no variable was replaced.
+
+<a name="replaceCssVars"></a>
+#### replaceCssVars(css, model) &rarr; {string}
+
+Replaces CSS variables with provided values.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`css`|*string*|Stylesheet text|
+|`model`|*object*|Object containing variables fields and values.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1036](../../helpers/ZxQuery.js#L1036)
+
+-->
+
+##### Returns
+
+*string*
+ &dash; The new stylesheet text with variables replaced with values
+
+<a name="wrapElement"></a>
+#### wrapElement(containerTag, element) &rarr; {Element|HTMLElement}
+
+Wraps an `Element` inside a container specified by a given tag name.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`containerTag`|*string*|Container element tag name|
+|`element`|*Element* \| *HTMLElement*||
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 903](../../helpers/ZxQuery.js#L903)
+
+-->
+
+##### Returns
+
+*Element* \| *HTMLElement*
+ &dash; The new wrapped element
 
 ### Type Definitions
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,6 +48,17 @@ let _callback = null;
 /**
  * Simple Logging Helper
  *
+ * @example
+```js
+// same as log.info (...)
+log.i('Component view', ctx.view());
+// same as log.error(...)
+log.e('Error loading data', dataUrl);
+// other methods are:
+// log.w(...) / log.warn (...)
+// log.d(...) / log.debug(...)
+// log.t(...) / log.trace(...)
+```
  * @class Logger
  * @constructor
  */
@@ -202,6 +213,11 @@ Logger.prototype.trace = function() {
 };
 Logger.prototype.t = Logger.prototype.trace;
 
+/**
+ * Simple logger.
+ * @param ctx
+ * @return {Logger}
+ */
 module.exports = function(ctx) {
   return new Logger(ctx);
 };

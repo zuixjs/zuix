@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,16 +29,19 @@
 const _log =
     require('../helpers/Logger')('Localizer.js');
 
-function Localizer() {
-
-}
+/**
+ * Localization helper class.
+ *
+ * @class
+ * @constructor
+ */
+function Localizer() { }
 
 /**
  * Localize the specified element by replacing all `data-locale-id` fields
  * with the translated text.
  *
  * @param {Element} container
- * @constructor
  */
 Localizer.prototype.Localize = function(container) {
   const localizables = container.querySelectorAll('[data-locale-id]');

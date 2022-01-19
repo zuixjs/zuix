@@ -15,10 +15,6 @@ lint((stats)=>{
 console.log('Building zuix and zuix-bundler ...');
 build('webpack.config.js', (code)=>{
   checkResult(code);
-  console.log('Building minified zuix and zuix-bundler...');
-  build('webpack-min.config.js', (code)=>{
-    checkResult(code);
-  });
 });
 
 function checkResult(code) {

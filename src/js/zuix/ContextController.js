@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,17 +54,19 @@ const z$ =
  */
 
 /**
- * Function called when the component is destroyed.
+ * Function called when the component is disposed.
  *
- * @callback ContextControllerDestroyCallback
+ * @callback ContextControllerDisposeCallback
  */
 
 /**
  * ContextController constructor.
  *
+ * @class
+ * @property {Logger} log The component's built-in logger.
+ * @constructor
  * @param {ComponentContext} context
  * @return {ContextController}
- * @constructor
  */
 function ContextController(context) {
   const _t = this;
@@ -74,17 +76,14 @@ function ContextController(context) {
   this.context = context;
 
   /**
-     * @package
-     * @type {!Array.<ZxQuery>}
-     **/
-  this._fieldCache = [];
-
-  /**
      * @protected
      * @type {!Array.<Element>}
      * */
   this._childNodes = [];
-  /** @type {function} */
+  /**
+   * @type {function}
+   * @ignore
+   */
   this.saveView = function() {
     this.restoreView();
     this.view().children().each(function(i, el) {
@@ -105,7 +104,10 @@ function ContextController(context) {
     this.addEvent(eventPath, handler);
     return this;
   };
-  /** @protected */
+  /**
+   * @protected
+   * @ignore
+   */
   this.mapEvent = function(eventMap, target, eventPath, handler) {
     if (target != null) {
       target.off(eventPath, this.eventRouter);
@@ -115,7 +117,10 @@ function ContextController(context) {
       // TODO: should report missing target
     }
   };
-  /** @protected */
+  /**
+   * @protected
+   * @ignore
+   */
   this.eventRouter = function(e) {
     const v = _t.view();
     if (typeof context._behaviorMap[e.type] === 'function') {
@@ -164,15 +169,15 @@ ContextController.prototype.init = null;
  **/
 ContextController.prototype.create = null;
 /**
- * @description If set, this function gets called when the component is destroyed.
+ * @description If set, this function gets called each time the data model is updated.
  * @type {ContextControllerUpdateCallback}
  **/
 ContextController.prototype.update = null;
 /**
- * @description If set, this function gets called each time the data model is updated.
- * @type {ContextControllerDestroyCallback}
+ * @description If set, this function gets called when the component is disposed.
+ * @type {ContextControllerDisposeCallback}
  **/
-ContextController.prototype.destroy = null;
+ContextController.prototype.dispose = null;
 
 // TODO: add jsDoc
 ContextController.prototype.addEvent = function(eventPath, handler) {
@@ -187,37 +192,17 @@ ContextController.prototype.addBehavior = function(eventPath, handler) {
 };
 
 /**
- * Gets elements in the component view with `data-ui-field`
- * matching the given `fieldName`.
- * This method implements a caching mechanism and automatic
- * disposal of allocated objects and events.
+ * Gets view's field(s) with the specified name.
+ * Same as [ComponentContext&ndash;field](../ComponentContext/#field).
  *
- * @example
- *
- * <small>**Example - HTML code of the view**</small>
- * <pre><code class="language-html">
- * <h1 data-ui-field="title">...</h1>
- * <p data-ui-field="description">...</p>
- * </code></pre>
- *
- * <small>**Example - JavaScript**</small>
- * <pre><code class="language-js">
- * cp.field('title')
- *   .html('Hello World!');
- * var desc = cp.field('description');
- * desc.html('The spectacle before us was indeed sublime.');
- * </code></pre>
- *
- *
- * @param {!string} fieldName Value to match in the `data-ui-field` attribute.
- * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element.
+ * @param {!string} fieldName Value to match in the *z-field* attribute
+ * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  */
 ContextController.prototype.field = function(fieldName) {
-  // this method is "attached" from Zuix.js on controller initialization
-  return null;
+  return this.context.field(fieldName);
 };
 ContextController.prototype.clearCache = function() {
-  this._fieldCache.length = 0;
+  this.context._fieldCache = {};
 };
 /**
  * Gets the component view or if `filter` argument is passed,
@@ -225,27 +210,27 @@ ContextController.prototype.clearCache = function() {
  * (shorthand for `cp.view().find(filter)`).
  *
  * @example
- *
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
+```js
  * // get all `checkbox` elements with `.checked` class.
  * var choices = cp.view('input[type="checkbox"].checked');
  * choices.removeClass('.checked');
+ * // ...
  * // hide the component's view
  * cp.view().hide();
- * </code></pre>
+```
  *
  * @param {(string|undefined)} [filter]
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function(filter) {
-  // context view changed, dispose cached fields from previous attacched view
+  // context view changed, dispose cached fields from previous attached view
   if (this.context.view() != null || this._view !== this.context.view()) {
     this.clearCache();
     // TODO: !!!!
     // TODO: dispose also events on view change (!!!)
     // TODO: !!!!
     this._view = z$(this.context.view());
+    this._view.field = (fieldName) => this.context.field(fieldName);
   }
   if (filter != null) {
     return this._view.find(filter);
@@ -257,21 +242,9 @@ ContextController.prototype.view = function(filter) {
 };
 /**
  * Gets/Sets the data model of the component.
+ * Same as [ComponentContext&ndash;model](../ComponentContext/#model).
  *
- * @example
- *
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * var m = {
- *      title: 'Thoughts',
- *      message: 'She stared through the window at the stars.'
- *  };
- * cp.model(m);
- * cp.model().title = 'Changes';
- * console.log(cp.model().title);
- * </code></pre>
- *
- * @param {object|undefined} [model] The model object.
+ * @param {object|undefined} [model] The model object
  * @return {ContextController|object}
  */
 ContextController.prototype.model = function(model) {
@@ -282,8 +255,9 @@ ContextController.prototype.model = function(model) {
 };
 /**
  * Gets the component options.
+ * Same as [ComponentContext&ndash;options](../ComponentContext/#options).
  *
- * @return {object} The component options.
+ * @return {ContextOptions|any} The component options.
  */
 ContextController.prototype.options = function() {
   return this.context.options();
@@ -296,9 +270,7 @@ ContextController.prototype.options = function() {
  * `zuix.hook(eventPath, handler)` method (global hook event).
  *
  * @example
- *
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
+```js
 // somewhere inside the slide-show component controller
 cp.trigger('slide:change', slideIndex);
 
@@ -307,11 +279,11 @@ cp.trigger('slide:change', slideIndex);
 zuix.context('my-slide-show')
   .on('slide:change', function(slideIndex) { ... })
   .on(...);
- * </code></pre>
+```
  *
- * @param {string} eventPath The event path.
- * @param {object} eventData The event data.
- * @param {boolean} [isHook] Trigger as global hook event.
+ * @param {string} eventPath The event path
+ * @param {object} eventData The event data
+ * @param {boolean} [isHook] Trigger as global hook event
  * @return {ContextController}
  */
 ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
@@ -334,41 +306,29 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
 };
 /**
  * Exposes a method or property declared in the private
- * scope of the controller as a public member of the
+ * scope of the controller, as a public member of the
  * component context object.
  *
- * @example
- *
- * <small>Example - JavaScript</small>
- * <pre data-line="5"><code class="language-js">
- * // somewhere in the `create` method of the {ContextController}
- * zuix.controller(function(cp){
- *   cp.create = function() {
- *     // ....
- *     cp.expose('setSlide', slide);
- *   }
- *   // ...
- *   function slide(slideIndex) { ... }
- *   // ...
- * });
- * // ...
- * // calling the exposed method
- * // from the component context
- * var ctx = zuix.context('my-slide-show');
- * ctx.setSlide(2);
- * </code></pre>
- *
- * @param {string|JSON} methodName Name of the exposed function, or list of method-name/function pairs.
- * @param {function} [handler] Reference to the controller member to expose.
+ * @param {string|JSON} name Name of the exposed method/property, or list of name/value pairs
+ * @param {function} [handler] Function or property descriptor.
  * @return {ContextController} The `{ContextController}` itself.
  */
-ContextController.prototype.expose = function(methodName, handler) {
-  if (typeof methodName === 'object') {
-    const _t = this;
-    z$.each(methodName, function(k, v) {
-      _t.context[k] = v;
+ContextController.prototype.expose = function(name, handler) {
+  const _t = this;
+  const expose = function(m, h) {
+    if (h && (h.get || h.set)) {
+      Object.defineProperty(_t.context, m, h);
+    } else {
+      _t.context[m] = h;
+    }
+  };
+  if (typeof name === 'object') {
+    z$.each(name, function(k, v) {
+      expose(k, v);
     });
-  } else this.context[methodName] = handler;
+  } else {
+    expose(name, handler);
+  }
   return this;
 };
 /**
@@ -377,21 +337,19 @@ ContextController.prototype.expose = function(methodName, handler) {
  * the file with the same base-name as the `componentId`.
  *
  * @example
+```js
+// loads 'path/to/component_name.css' by default
+cp.loadCss();
+// or loads the view css with provided options
+cp.loadCss({
+    path: 'url/of/style/file.css',
+    success: function() { ... },
+    error: function(err) { ... },
+    then: function() { ... }
+});
+```
  *
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * // loads 'path/to/component_name.css' by default
- * cp.loadCss();
- * // or loads the view css with provided options
- * cp.loadCss({
- *     path: 'url/of/style/file.css',
- *     success: function() { ... },
- *     error: function(err) { ... },
- *     then: function() { ... }
- * });
- * </code></pre>
- *
- * @param {object} [options] The options object.
+ * @param {object} [options] The options object
  * @return {ContextController} The ```{ContextController}``` object itself.
  */
 ContextController.prototype.loadCss = function(options) {
@@ -404,21 +362,19 @@ ContextController.prototype.loadCss = function(options) {
  * file with the same base-name as the `componentId`.
  *
  * @example
+```js
+// loads 'path/to/component_name.html' by default
+cp.loadHtml();
+// or loads the view html with provided options
+cp.loadHtml({
+    path: 'url/of/view/file.html',
+    success: function() { ... },
+    error: function(err) { ... },
+    then: function() { ... }
+});
+```
  *
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * // loads 'path/to/component_name.html' by default
- * cp.loadHtml();
- * // or loads the view html with provided options
- * cp.loadHtml({
- *     path: 'url/of/view/file.html',
- *     success: function() { ... },
- *     error: function(err) { ... },
- *     then: function() { ... }
- * });
- * </code></pre>
- *
- * @param {object} [options] The options object.
+ * @param {object} [options] The options object
  * @return {ContextController} The ```{ContextController}``` object itself.
  */
 ContextController.prototype.loadHtml = function(options) {
@@ -427,42 +383,27 @@ ContextController.prototype.loadHtml = function(options) {
   return this;
 };
 /**
- * @description The component logger instance.
- *
- * @example
- *
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * // same as log.info (...)
- * log.i('Component view', ctx.view());
- * // same as log.error(...)
- * log.e('Error loading data', dataUrl);
- * // other methods are:
- * // log.w(...) / log.warn (...)
- * // log.d(...) / log.debug(...)
- * // log.t(...) / log.trace(...)
- * </code></pre>
+ * The component's built-in logger.
  *
  * @type {Logger}
  */
-ContextController.prototype.log = {};
+ContextController.prototype.log = /** @type {Logger} */ {};
 /**
- * Register this one as the default controller
+ * Registers this one as the default controller
  * for the given component type.
  *
  * @example
  *
-<small>**Example - JavaScript**</small>
-<pre data-line="6"><code class="language-js">
+```js
 // Controller of component 'path/to/component_name'
 var ctrl = zuix.controller(function(cp) {
     // `cp` is the {ContextController}
     cp.create = function() { ... };
-    cp.destroy = function() { ... }
+    cp.dispose = function() { ... }
 }).for('path/to/component_name');
-</pre></code>
+```
  *
- * @param {!string} componentId Component identifier.
+ * @param {!string} componentId Component identifier
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.for = function(componentId) {

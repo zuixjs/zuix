@@ -1,15 +1,15 @@
+<a name="<?js= name ?>"></a>
 <?js
 var data = obj;
 var self = this;
-?>
-#### <?js= data.attribs + name + (data.signature ? data.signature : '') ?>
+?>#### <?js= data.attribs + name + (data.signature ? data.signature : '') ?>
 <?js if (data.summary) { ?>
 <?js= summary ?>
 <?js } ?>
 <?js if (data.description) { ?>
 <?js= data.description ?>
 <?js } ?>
-<?js if (data.type && data.type.names) {?>
+<?js if (false && data.type && data.type.names) {?>
 ##### Type:
 _<?js= self.partial('type.tmpl', data.type.names) ?>_
 <?js } ?>

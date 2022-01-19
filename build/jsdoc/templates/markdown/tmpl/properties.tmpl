@@ -40,9 +40,32 @@
 
 
 |<?js if (props.hasName) {?>Name|<?js } ?>Type|<?js if (props.hasAttributes) {?>Argument|<?js } ?><?js if (props.hasDefault) {?>Default|<?js } ?>Description|
-|<?js if (props.hasName) {?>----|<?js } ?>----|<?js if (props.hasAttributes) {?>--------|<?js } ?><?js if (props.hasDefault) {?>-------|<?js } ?>-----------|
-|<?js
+|<?js if (props.hasName) {?>----|<?js } ?>----|<?js if (props.hasAttributes) {?>--------|<?js } ?><?js if (props.hasDefault) {?>-------|<?js } ?>-----------|<?js
     var self = this;
     props.forEach(function(prop) {
         if (!prop) { return; }
-?><?js if (props.hasName) {?>`<?js= prop.name ?>`<?js } ?><?js if (prop.type && prop.type.names) {?><?js= prop.type.names ?><?js } ?>|<?js if (props.hasAttributes) {?><?js if (prop.optional) { ?>*optional*<br><?js } ?> <?js if (prop.nullable) { ?>*nullable*<br><?js } ?>|<?js } ?><?js if (props.hasDefault) {?><?js if (typeof prop.defaultvalue !== 'undefined') { ?><?js= self.htmlsafe(prop.defaultvalue) ?><?js } ?>|<?js } ?><?js= prop.description ?><?js if (prop.subprops) { ?>**Properties** <?js= self.partial('properties.tmpl', prop.subprops) ?><?js } ?><?js }); ?>
+?><?js  if (props.hasName) {
+          ?>
+|`<?js= prop.name ?>`<?js
+        } ?><?js
+        if (prop.type && prop.type.names) {
+           ?>|<?js= prop.type.names.map(p => '*'+self.linkto(p)+'*').join(' \\| ') ?>|<?js
+        } ?><?js
+        if (props.hasAttributes) {
+           ?>|<?js if (prop.optional) {
+             ?>*optional*<br><?js
+           } ?>
+           <?js if (prop.nullable) {
+               ?>*nullable*<br><?js
+           } ?>|<?js
+        } ?><?js
+        if (props.hasDefault) {
+           ?><?js if (typeof prop.defaultvalue !== 'undefined') {
+                  ?>|<?js= self.htmlsafe(prop.defaultvalue) ?><?js
+           } ?><?js
+        } ?><?js= prop.description ?>|<?js
+        if (prop.subprops) {
+              ?>**Properties**
+                <?js= self.partial('properties.tmpl', prop.subprops) ?><?js
+        } ?><?js
+    }); ?>

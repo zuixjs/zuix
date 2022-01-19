@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -91,7 +91,7 @@ function worker() {
   const doWork = function() {
     resetAsynCallback();
     if (!listener.doWork(job.item, function() {
-      lazyThread = requestAnimationFrame(next);
+      lazyThread = setTimeout(next);
     })) {
       next();
     }
@@ -100,7 +100,7 @@ function worker() {
     if (listener.willBreak()) {
       done('stopped');
     } else if (lazyThread == null) {
-      lazyThread = requestAnimationFrame(doWork);
+      lazyThread = setTimeout(doWork);
     } else {
       return false;
     }
@@ -112,7 +112,7 @@ function worker() {
 
 function resetAsynCallback() {
   if (lazyThread !== null) {
-    cancelAnimationFrame(lazyThread);
+    clearTimeout(lazyThread);
     lazyThread = null;
   }
 }

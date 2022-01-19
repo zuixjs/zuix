@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,18 +44,36 @@ const ViewObserver =
  * and it is used to initialize its controller.
  *
  * @callback ContextControllerHandler
- * @param {ContextController} cp The component controller object.
+ * @param {ContextController} cp The component controller object
  * @this {ContextController}
  */
 
 /**
- * Callback function triggered when an event registered with the `on` method occurs.
+ * Callback function triggered when an event registered
+ * with the `on` method occurs.
  *
  * @callback EventCallback
- * @param {string} event Event name.
- * @param {Object} data Event data.
- * @param {ZxQuery} $el ZxQuery wrapped element that sourced the event (same as `this`).
+ * @param {string} event Event name
+ * @param {Object} data Event data
+ * @param {ZxQuery} $el ZxQuery wrapped element that sourced the event (same as `this`)
  * @this {ZxQuery}
+ */
+
+/**
+ * Binding adapter callback.
+ *
+ * @callback BindingAdapterCallback
+ * @param {ZxQuery} $element The view's element bound to the data model's *fieldName*
+ * @param {string} fieldName The element's bound field name
+ * @param {ZxQuery} $view The view
+ * @param {BindingAdapterRefreshCallback} [refreshCallback] Refresh loop callback
+ */
+
+/**
+ * Binding adapter refresh callback
+ *
+ * @callback BindingAdapterRefreshCallback
+ * @param {number} [refreshMs] Milliseconds to wait before refresh (**default**: *500ms*)
  */
 
 // private 'static' fields and methods
@@ -64,6 +82,7 @@ const ViewObserver =
 let zuix = null;
 
 const _componentIndex = [];
+const _queryAdapterRefreshTimeout = [];
 
 /**
  * @private
@@ -77,12 +96,14 @@ function getComponentIndex(context) {
 /**
  * Bind provided data by automatically mapping it to the given element.
  *
- * @param {Element} el The element to bind data to.
- * @param {Object} boundData Data object to map data from.
+ * @param {Element} el The element to bind data to
+ * @param {Object} boundData Data object to map data from
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 function dataBind(el, boundData) {
   boundData = boundData.observableTarget || boundData;
+  const value = (!util.isNoU(boundData.value) ? boundData.value :
+      (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
   const processed = [];
   // try to guess target property
   switch (el.tagName.toLowerCase()) {
@@ -99,18 +120,37 @@ function dataBind(el, boundData) {
         // won't replace innerHTML if it contains inner bound fields
         const t = zuix.$(boundData);
         if (t.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).length() === 0) {
-          el.innerHTML = boundData.innerHTML;
+          z$(el).html('').append(document.createTextNode(boundData.innerHTML));
         }
       }
       processed.push('href', 'innerHTML');
       break;
     case 'input':
-      el.value = (!util.isNoU(boundData.value) ? boundData.value :
-                (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
+      switch (el.type) {
+        case 'checkbox':
+        case 'radio':
+          if (el.value == value) {
+            el.checked = true;
+          }
+          processed.push('checked');
+          break;
+        default:
+          el.value = value;
+          processed.push('value');
+      }
+      break;
+    case 'select':
+      z$.each(el.options, (i, opt, $opt) => {
+        if (opt.value == value) {
+          el.selectedIndex = i;
+          return false;
+        }
+      });
       processed.push('value');
       break;
     default:
-      el.innerHTML = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData);
+      const v = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : document.createTextNode(boundData));
+      z$(el).html('').append(v);
       processed.push('innerHTML');
   }
   /* TODO: maybe deprecate this (tag's attributes mapping)
@@ -138,13 +178,19 @@ function dataBind(el, boundData) {
 }
 
 /**
- * The component context object.
+ * The component context object represents the component instance itself, and it holds
+ * all of its data such as the view template, the style, the controller, the data model.
  *
- * @param {Zuix} zuixInstance
- * @param {ContextOptions} options The context options.
- * @param {function} [eventCallback] Event routing callback.
- * @return {ComponentContext} The component context instance.
+ * @class
+ * @property {ZxQuery} $ Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+ * @property {string} path Gets the base path of this component.
+ * @property {string} name Gets the name of this component (last part of the path).
+ *
  * @constructor
+ * @param {Zuix} zuixInstance
+ * @param {ContextOptions} options Options to create this component context
+ * @param {function} [eventCallback] Event routing callback
+ * @return {ComponentContext} The component context instance.
  */
 function ComponentContext(zuixInstance, options, eventCallback) {
   zuix = zuixInstance;
@@ -189,6 +235,12 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   this._behaviorMap = [];
 
   /**
+   * @package
+   * @type {!Array.<ZxQuery>}
+   **/
+  this._fieldCache = [];
+
+  /**
      * @protected
      * @type {ContextController}
      */
@@ -215,10 +267,11 @@ function ComponentContext(zuixInstance, options, eventCallback) {
       const view = z$(this.context.view());
       if (view.get()) {
         let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
-        if (fld.get() == null) {
-          fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
+        if (fld.get() != null) {
+          fld.each((i, f) => dataBind(f, value));
         }
-        if (fld.length() > 0) {
+        fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
+        if (fld.get() != null) {
           fld.each((i, f) => dataBind(f, value));
         }
         // call controller's 'update' method
@@ -245,6 +298,9 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   return this;
 }
 
+/**
+ * Disposes the component context and all of its allocated resources.
+ */
 ComponentContext.prototype.dispose = function() {
   if (this._disposed) {
     return;
@@ -254,6 +310,7 @@ ComponentContext.prototype.dispose = function() {
   this._viewObserver.stop();
   if (!util.isNoU(this._c)) {
     if (!util.isNoU(this._c.view())) {
+      this._c.trigger('component:dispose', this._c.view(), true);
       // TODO: restore all attributes state to the original state (before component creation)
       this._c.view()
           .attr(_optionAttributes.dataUiComponent, null)
@@ -274,14 +331,14 @@ ComponentContext.prototype.dispose = function() {
         });
       }
     }
-    if (util.isFunction(this._c.destroy)) {
-      this._c.destroy.call(this, this);
+    if (util.isFunction(this._c.dispose)) {
+      this._c.dispose.call(this, this);
     }
   }
   // un-register model observable
   this.model(null);
   // detach component view from its container (parent element)
-  if (!util.isNoU(this._c)) {
+  if (!util.isNoU(this._c) && this._c._childNodes.length > 0) {
     this._c.view().html('');
     this._c.restoreView();
     //if (!util.isNoU(this._c.view())) {
@@ -305,7 +362,7 @@ ComponentContext.prototype.dispose = function() {
 /**
  * Gets/Sets the container element of the component.
  * Returns the current container element if no
- * argument is passed, the {ComponentContext} itself
+ * argument is passed, the `ComponentContext` itself
  * otherwise.
  *
  * @param {Element} [container] The container element.
@@ -326,7 +383,7 @@ ComponentContext.prototype.container = function(container) {
  * If an *HTML* string is passed, then the view element
  * will be a new `div` wrapping the given markup.
  * Returns the current view element if no
- * argument is passed, the {ComponentContext} itself otherwise.
+ * argument is passed, the *ComponentContext* itself otherwise.
  *
  * @param {Element|string|undefined} [view] The *HTML* string or element of the view.
  * @return {ComponentContext|Element}
@@ -356,6 +413,22 @@ ComponentContext.prototype.view = function(view) {
     });
   }
 
+  const initializeTemplateFields = function(v) {
+    v.find('*').each((i, el, $el) => {
+      //if (!zuix.isDirectComponentElement(v, $el)) return;
+      // add `z-field` from '#<field_name>' attributes
+      for (let j = 0; j < el.attributes.length; j++) {
+        const a = el.attributes.item(j);
+        const attributeName = a.name;
+        if (attributeName.length > 1 && attributeName.startsWith('#')) {
+          if ($el.attr('z-field') == null) {
+            $el.attr('z-field', attributeName.substring(1));
+          }
+        }
+      }
+    });
+  };
+
   _log.t(this.componentId, 'view:attach', 'timer:view:start');
   if (typeof view === 'string') {
     // load view from HTML source
@@ -367,7 +440,7 @@ ComponentContext.prototype.view = function(view) {
 
     const viewDiv = z$.wrapElement('div', view);
     if (viewDiv.firstElementChild != null) {
-      // remove data-ui-view attribute from template if present on root node
+      // remove z-view attribute from template if present on root node
       if (util.dom.getAttribute(viewDiv.firstElementChild, _optionAttributes.dataUiView) != null) {
         if (viewDiv.children.length === 1) {
           view = viewDiv.firstElementChild.innerHTML;
@@ -386,7 +459,7 @@ ComponentContext.prototype.view = function(view) {
 
     const v = z$(this._view);
     // Run embedded scripts
-    v.find('script').each(function(i, el) {
+    v.find('script:not([type=jscript])').each(function(i, el) {
       if (this.attr(_optionAttributes.zuixLoaded) !== 'true') {
         this.attr(_optionAttributes.zuixLoaded, 'true');
         /* if (el.src != null && el.src.length > 0) {
@@ -403,17 +476,19 @@ ComponentContext.prototype.view = function(view) {
                         clonedScript.src = this.src;
                     this.get().parentNode.insertBefore(clonedScript, this.get());
                 } else */
-        (eval).call(window, el.innerHTML);
+        Function(el.innerHTML).call(window);
       }
     });
 
+    initializeTemplateFields(v);
+
     // trigger `view:process` hook when the view is ready to be processed
-    this.trigger(this, 'view:process', z$(this._view));
+    this.trigger(this, 'view:process', v);
   } else {
     // load inline view
-    if (this._container != null) {
+    if (this._container != null && this.componentId !== 'default') {
       this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
-      // remove data-ui-view attribute if present on root node
+      // remove z-view attribute if present on root node
       util.dom.setAttribute(this._view, _optionAttributes.dataUiView, null);
       this._container.appendChild(this._view);
       this._view = this._container;
@@ -421,6 +496,8 @@ ComponentContext.prototype.view = function(view) {
   }
 
   const v = z$(this._view);
+
+  initializeTemplateFields(v);
 
   // Disable loading of nested components until the component is ready
   v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
@@ -437,13 +514,64 @@ ComponentContext.prototype.view = function(view) {
 };
 
 /**
+ * Gets in the component's view, elements with `z-field`
+ * attribute matching the given `fieldName`.
+ * This method implements a caching mechanism and automatic
+ * disposal of allocated objects and events.
+ *
+ * @example
+```html
+<div z-load="default" z-context="field-test">
+  <h1 z-field="title">Loading context...</h1>
+</div>
+
+<script>
+zuix.context('field-test', (ctx) => {
+  ctx.field('title')
+     .html('Context ready.');
+});
+</script>
+```
+<h5>Result</h5>
+<div z-load="default" z-context="field-test">
+  <h6 z-field="title">Loading context...</h6>
+</div>
+<script>
+zuix.context('field-test', (ctx) => {
+  ctx.field('title')
+     .html('Context ready.');
+});
+</script>
+ *
+ * @param {!string} fieldName Value to match in the *z-field* attribute
+ * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
+ */
+ComponentContext.prototype.field = function(fieldName) {
+  const _t = this;
+  const el = zuix.field(fieldName, this._view, this);
+  el.on = function(eventPath, eventHandler, eventData, isHook) {
+    // route to another event (-> linked to another event)
+    if (typeof eventHandler === 'string') {
+      const eh = eventHandler;
+      eventHandler = function() {
+        if (_t._c) {
+          _t._c.trigger(eh, eventData, isHook);
+        }
+      };
+    }
+    return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
+  };
+  return el;
+};
+
+/**
  * View style encapsulation
  * @private
  */
 ComponentContext.prototype.checkEncapsulation = function() {
   const v = z$(this._view);
   const cssId = this.getCssId();
-  if (this._options.css !== false) {
+  if (v.length() > 0 && this._options.css !== false) {
     v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
     // if both the container and the style are null
     // then this is just a controller attached to a pre-existent view
@@ -470,31 +598,28 @@ ComponentContext.prototype.checkEncapsulation = function() {
 };
 
 /**
- * Gets/Sets the view style of the component.
+ * Gets/Sets the style of the component's view.
  * The `css` argument can be a string containing all
  * styles definitions or a reference to a style
- * element. When a string is passed the css
- * is linked to the `componentId` attribute so that
- * its styles will be only applied to the component
- * container.
+ * element.
  * If no argument is given, then the current style
  * element is returned.
  *
  * @example
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * ctx.style("p { font-size: 120%; } .hidden { display: 'none'; }");
- * </code></pre>
+```js
+ctx.style("p { font-size: 120%; } .hidden { display: 'none'; }");
+```
  *
- * @param {string|Element|undefined} [css] The CSS string or element.
+ * @param {string|Element|undefined} [css] The CSS string or style element
  * @return {ComponentContext|Element}
  */
 ComponentContext.prototype.style = function(css) {
   if (typeof css === 'undefined') return this._style;
-  _log.t(this.componentId, 'view:style', 'timer:view:start');
+  const cssId = this.getCssId();
+  _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
-    this._style = z$.appendCss(css, this._style, this.componentId);
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId);
   } else if (typeof css === 'string') {
     // store original unparsed css (might be useful for debugging)
     this._css = css;
@@ -510,9 +635,9 @@ ComponentContext.prototype.style = function(css) {
       resetCss = ':host { all: initial; }';
     }
 
-    // nest the CSS inside [data-ui-component='<componentId>']
+    // nest the CSS inside [z-component='<componentId>']
     // so that the style is only applied to this component type
-    const cssIdAttr = '[' + this.getCssId() + ']';
+    const cssIdAttr = '[' + cssId + ']';
     css = z$.wrapCss(
         cssIdAttr,
         resetCss + '\n' + css,
@@ -520,31 +645,75 @@ ComponentContext.prototype.style = function(css) {
     );
 
     // output css
-    this._style = z$.appendCss(css, this._style, this.componentId);
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId);
   }
   this.checkEncapsulation();
   // TODO: should throw error if ```css``` is not a valid type
-  _log.t(this.componentId, 'view:style', 'timer:view:stop');
+  _log.t(this.componentId, 'view:style', 'timer:view:stop', cssId);
   return this;
 };
 /**
- * Gets/Sets the data model of the component.
+ * Gets/Sets the data model of the component. When getting `model()`,
+ * the returned object is an *observable* wrapped instance of the
+ * originally provided `model`, that will automatically trigger
+ * the update of any bound field when a property in the model's
+ * changes.
  *
  * @example
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * ctx.model({
- *      title: 'Thoughts',
- *      message: 'She stared through the window at the stars.'
- *  });
- * </code></pre>
+```html
+<div z-load="default" z-context="model-test">
+  <h1 z-field="title"></h1>
+  <label>Update title</label>
+  <input type="text" z-field="title-input" />
+</div>
+
+<script>
+zuix.context('model-test', (ctx) => {
+  const model = ctx.model({
+    title: 'Test title'
+  });
+  ctx.field('title-input')
+     .value(model.title)
+     .on('input', (e, input) =>
+        { model.title = input.value(); });
+});
+</script>
+```
+
+In this example, when the text in the input box is changed, the
+new value is assigned to *model.title* property, and this will
+automatically trigger the update of the *h1* element's content
+in the view, because it is bound to the *title*'s field (`z-field="title"`).
+For further info, see [Data binding](../../../view/#data_binding) in the View's chapter.
+
+<h5>Result</h5>
+<div z-load="default" z-context="model-test">
+  <h6 z-field="title" style="min-height:24px"></h6>
+  <label for="title_input">Update title</label>
+  <input type="text" id="title_input" z-field="title-input" maxlength="30" />
+</div>
+<script>
+zuix.context('model-test', (ctx) => {
+  const model = ctx.model({
+    title: 'Test title'
+  });
+  ctx.field('title-input')
+     .value(model.title)
+     .on('input', (e, input) => {
+        model.title = input.value().replace(/[\u00A0-\u9999<>\&]/g, function(i) {
+           return '&#'+i.charCodeAt(0)+';';
+        });
+     });
+});
+</script>
  *
- * @param {object|undefined} [model] The model object.
- * @return {ComponentContext|object}
+ * @param {object|undefined} [model] The model object
+ * @return {object}
  */
 ComponentContext.prototype.model = function(model) {
-  if (typeof model === 'undefined') return this._model;
-  else if (this._model === model) return this;
+  if (typeof model === 'undefined' || this._model === model) {
+    return this._model;
+  }
   // unsubscribe previous model observable
   if (this._model !== null && typeof this._model !== 'function') {
     zuix.observable(this._model)
@@ -564,23 +733,12 @@ ComponentContext.prototype.model = function(model) {
       this._c.update.call(this._c, null, null, null, null, this._c);
     }
   }
-  return this;
+  return this._model;
 };
 /**
- * Gets/Sets the handler function of the controller.
+ * Gets/Sets the component's controller handler.
  *
- * @example
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * ctx.controller(function(cp) {
- *      cp.create = function() {
- *           cp.view().html('Hello World!');
- *      };
- *      // ...
- *  });
- * </code></pre>
- *
- * @param {ContextControllerHandler|undefined} [controller] The handler function of the controller.
+ * @param {ContextControllerHandler|undefined} [controller] The controller's handler function
  * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function(controller) {
@@ -592,7 +750,7 @@ ComponentContext.prototype.controller = function(controller) {
 };
 
 /**
- * Gets/Sets the component options.
+ * Gets/Sets the component's options.
  *
  * @param {ContextOptions|undefined} options The JSON options object.
  * @return {ComponentContext|object}
@@ -622,14 +780,8 @@ ComponentContext.prototype.options = function(options) {
 /**
  * Listens for a component event.
  *
- * @example
- * <small>Example - JavaScript</small>
- * <pre><code class="language-js">
- * ctx.on('item:share', function(evt, data) { ... });
- * </code></pre>
- *
- * @param {string} eventPath The event path.
- * @param {EventCallback} eventHandler The event handling function.
+ * @param {string} eventPath The event path
+ * @param {EventCallback} eventHandler The event handler function
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.on = function(eventPath, eventHandler) {
@@ -688,12 +840,13 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
       (options.then).call(context, context);
     }
   } else {
-    const inlineStyle = z$().find('style[media="' + cssPath + '"]');
+    const inlineStyle = z$().find('style[media="#' + cssPath + '"],style[media="' + cssPath + '"]');
     if (inlineStyle.length() > 0) {
       const styleElement = inlineStyle.get(0);
       const viewCss = styleElement.innerText;
       context.style(viewCss);
       inlineStyle.detach();
+      inlineStyles[cssPath] = viewCss;
       if (util.isFunction(options.success)) {
         (options.success).call(context, viewCss, context);
       }
@@ -763,7 +916,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     // path override with explicit option
     htmlPath = options.path;
   }
-  // cache inline "data-ui-view" html
+  // cache inline "z-view" html
   let inlineViews = zuix.store('zuix.inlineViews');
   if (inlineViews == null) {
     inlineViews = [];
@@ -833,18 +986,18 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
   return this;
 };
 /**
- * Creates the data model starting from ```data-ui-field```
- * elements declared in the component view.
+ * Creates the data model out of all `z-field` elements
+ * declared in the component's view.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.viewToModel = function() {
   _log.t(this.componentId, 'view:model', 'timer:vm:start');
   const model = {};
+  const $view = z$(this._view);
   // create data model from inline view fields
-  z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
-    // TODO: this is not so clean
-    if (this.parent('pre,code').length() > 0) {
+  $view.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el, $el) {
+    if (!zuix.isDirectComponentElement($view, $el)) {
       return true;
     }
     const name = this.attr(_optionAttributes.dataUiField);
@@ -876,31 +1029,68 @@ ComponentContext.prototype.viewToModel = function() {
   return this;
 };
 /**
- * Copies values from the data model to the ```data-ui-field```
- * elements declared in the component view.
+ * Triggers the update of all `z-field` elements in the view
+ * that are bound to the model's fields.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.modelToView = function() {
   _log.t(this.componentId, 'model:view', 'timer:mv:start');
-  if (this._view != null && this._model != null) {
+  if (this._view != null) {
     const _t = this;
-    z$(this._view).find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el) {
-      if (this.parent('pre,code').length() > 0) {
+    // the '#' member contains all `z-field` mapped as a context['#'] property (ZxQuery object)
+    _t['#'] = {};
+    const $view = z$(this._view);
+    $view.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el, $el) {
+      if (!zuix.isDirectComponentElement($view, $el)) {
         return true;
       }
-      let boundField = this.attr(_optionAttributes.dataBindTo);
+      let boundField = $el.attr(_optionAttributes.dataBindTo);
       if (boundField == null) {
-        boundField = this.attr(_optionAttributes.dataUiField);
+        boundField = $el.attr(_optionAttributes.dataUiField);
       }
       const v = z$(_t._view);
+      // map `z-field`s as properties of the context's member '#' if the variable name is valid
+      try {
+        Function('function testName(){ const ' + boundField + ' = "test"; }');
+        _t['#'][boundField] = _t.field(boundField);
+      } catch (e) {
+        // TODO: should at least log a 'Warning: unscriptable field name'
+        //console.log('ERROR', e);
+      }
+      /**
+       * Query binding adapter for resolving `boundField`->$el mapping
+       * @param {BindingAdapterCallback} fn The binding adapter callback
+       * @param {string} field Bound field name
+       */
+      const queryAdapter = (fn, field) => {
+        if (fn && !_t._disposed) {
+          (fn).call(v, $el, field, v, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
+            // data adapter is not ready, retry after 1s
+            if (!_t._disposed) {
+              const timeoutId = $el.get().dataset.__zuix_refreshTimeout;
+              if (timeoutId && _queryAdapterRefreshTimeout[timeoutId]) {
+                clearTimeout(_queryAdapterRefreshTimeout[timeoutId]);
+              }
+              $el.get().dataset.__zuix_refreshTimeout =
+                  setTimeout(() => queryAdapter(fn, field), retryMs ? retryMs : 500);
+            }
+          });
+        }
+      };
       if (typeof _t._model === 'function') {
-        (_t._model).call(v, this, boundField, v);
+        // use a data model binding adapter
+        // to resolve all model fields' values
+        queryAdapter(_t._model, boundField);
       } else {
         const boundData = util.propertyFromPath(_t._model, boundField);
         if (typeof boundData === 'function') {
-          (boundData).call(v, this, boundField, v);
+          // use data model's field binding adapter
+          // to resolve boundField's value
+          queryAdapter(boundData, boundField);
         } else if (boundData != null) {
+          // use default binding method
+          // to resolve boundField's value
           dataBind(el, boundData);
         }
       }
@@ -911,38 +1101,58 @@ ComponentContext.prototype.modelToView = function() {
 };
 
 /**
- * Gets the CSS identifier attribute.
+ * Gets the CSS identifier of this component's style.
  *
- * @return {string} The css-id attribute of this component
+ * @return {string} The css-id attribute of this component.
  */
 ComponentContext.prototype.getCssId = function() {
-  return _optionAttributes.cssIdPrefix + getComponentIndex(this);
-};
-/**
- * Gets the base path of this component
- *
- * @return {string} The base path of this component
- */
-ComponentContext.prototype.path = function() {
-  const cid = this.componentId;
-  const pathIndex = cid.lastIndexOf('/');
-  if (pathIndex < 0) {
-    return cid;
+  let override = '';
+  if (typeof this._options.css === 'string') {
+    override = '_' + this.contextId;
   }
-  return cid.substring(0, pathIndex + 1);
+  return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;
 };
+
 /**
- * Gets the name of this component (last part of the path)
- *
- * @return {string} The name of this component
+ * Gets the base path of this component.
+ * @property ComponentContext.prototype.path
+ * @type {string}
  */
-ComponentContext.prototype.name = function() {
-  const cid = this.componentId;
-  const pathIndex = cid.lastIndexOf('/');
-  if (pathIndex < 0) {
-    return cid;
+Object.defineProperty(ComponentContext.prototype, 'path', {
+  get: function path() {
+    const cid = this.componentId;
+    const pathIndex = cid.lastIndexOf('/');
+    if (pathIndex < 0) {
+      return cid;
+    }
+    return cid.substring(0, pathIndex + 1);
   }
-  return cid.substring(pathIndex + 1);
-};
+});
+/**
+ * Gets the name of this component (last part of the path).
+ * @property ComponentContext.prototype.name
+ * @type {string}
+ */
+Object.defineProperty(ComponentContext.prototype, 'name', {
+  get: function name() {
+    const cid = this.componentId;
+    const pathIndex = cid.lastIndexOf('/');
+    if (pathIndex < 0) {
+      return cid;
+    }
+    return cid.substring(pathIndex + 1);
+  }
+});
+
+/**
+ * Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+ * @property ComponentContext.prototype.$
+ * @type {ZxQuery}
+ */
+Object.defineProperty(ComponentContext.prototype, '$', {
+  get: function $() {
+    return this._c && this._c.view();
+  }
+});
 
 module.exports = ComponentContext;

@@ -2,7 +2,7 @@
 layout: page
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: Componentizer"
+description: "zUIx.js API documentation: Class: ActiveRefresh"
 keywords:
 - Documentation
 - API
@@ -63,102 +63,80 @@ main table code {
 /* END: MARKDOWN JSDOC */
 </style>
 
-## `Componentizer` class
+## `ActiveRefresh` class
 
 ### Constructor
 
-<a name="Componentizer"></a>
-#### new Componentizer()
+<a name="ActiveRefresh"></a>
+#### new ActiveRefresh($v, $el, refreshCallback, data)
 
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 198](../../zuix/Componentizer.js#L198)
-
--->
-
-### Methods
-
-<a name="componentize"></a>
-#### componentize(element, child) &rarr; {[Componentizer](../../zuix/Componentizer)}
-
-TODO: describe this...
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *undefined*|*optional*  |Scan and process loadable elements inside `element`.|
-|`child`|*Element* \| *undefined*|*optional*  |Process only the specified `child` of `element`.|
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 41](../../zuix/Componentizer.js#L41)
-
--->
-
-##### Returns
-
-*[Componentizer](../../zuix/Componentizer)*
-
-<a name="lazyLoad"></a>
-#### lazyLoad(enable, threshold) &rarr; {boolean}
-
-Enable/Disable lazy-loading, or get current value.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`enable`|*boolean*|*optional*  |Enable or disable lazy loading.|
-|`threshold`|*number*|*optional*  |Load-ahead threshold (default is 1.0 => 100% of view size).|
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
-
--->
-
-##### Returns
-
-*boolean*
- &dash; *true* if lazy-loading is enabled, *false* otherwise.
-
-<a name="setHost"></a>
-#### setHost(zuixInstance) &rarr; {[Componentizer](../../zuix/Componentizer)}
+The active-refresh object.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`zuixInstance`|*[Zuix](../../zuix/Zuix)*||
+|`$v`|*[ZxQuery](../../helpers/ZxQuery)*|View element|
+|`$el`|*[ZxQuery](../../helpers/ZxQuery)*|Target element|
+|`refreshCallback`|*[ActiveRefreshHandler](#ActiveRefreshHandler)*|The refresh handler function|
+|`data`|*object*|Custom data passed from call to call|
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 105](../../zuix/Componentizer.js#L105)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 49](../../zuix/ActiveRefresh.js#L49)
 
 -->
 
-##### Returns
+### Methods
 
-*[Componentizer](../../zuix/Componentizer)*
+<a name="pause"></a>
+#### pause()
 
-<a name="willLoadMore"></a>
-#### willLoadMore() &rarr; {boolean}
+Pauses the refresh loop.
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 73](../../zuix/Componentizer.js#L73)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 124](../../zuix/ActiveRefresh.js#L124)
 
 -->
 
-##### Returns
+<a name="resume"></a>
+#### resume()
 
-*boolean*
+Resumes the refresh loop.
+
+<!--
+
+*Source:*
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 132](../../zuix/ActiveRefresh.js#L132)
+
+-->
+
+<a name="start"></a>
+#### start()
+
+Starts the refresh loop.
+
+<!--
+
+*Source:*
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 112](../../zuix/ActiveRefresh.js#L112)
+
+-->
+
+<a name="stop"></a>
+#### stop()
+
+Disposes this "ActiveRefresh" instance
+
+<!--
+
+*Source:*
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 101](../../zuix/ActiveRefresh.js#L101)
+
+-->
 
 ### Type Definitions
 

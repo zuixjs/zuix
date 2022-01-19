@@ -11,9 +11,9 @@ if (data.defaultvalue && data.defaultvaluetype === 'object') {
 ?>
 <?js
     var properties = data.properties;
-    if (properties && properties.length && properties.forEach) {
+    if (data.kind !== 'class' && properties && properties.length && properties.forEach) {
 ?>
-##### Properties:
+##### Properties
 <?js= this.partial('properties.tmpl', properties) ?>
 <?js } ?>
 

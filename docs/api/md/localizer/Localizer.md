@@ -2,7 +2,7 @@
 layout: page
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: Componentizer"
+description: "zUIx.js API documentation: Class: Localizer"
 keywords:
 - Documentation
 - API
@@ -63,102 +63,101 @@ main table code {
 /* END: MARKDOWN JSDOC */
 </style>
 
-## `Componentizer` class
+## `Localizer` class
 
 ### Constructor
 
-<a name="Componentizer"></a>
-#### new Componentizer()
+<a name="Localizer"></a>
+#### new Localizer()
+
+Localization helper class.
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 198](../../zuix/Componentizer.js#L198)
+[localizer/Localizer.js](../../localizer/Localizer.js), [line 38](../../localizer/Localizer.js#L38)
 
 -->
 
 ### Methods
 
-<a name="componentize"></a>
-#### componentize(element, child) &rarr; {[Componentizer](../../zuix/Componentizer)}
+<a name="getDateEndianType"></a>
+#### getDateEndianType() &rarr; {string}
 
-TODO: describe this...
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *undefined*|*optional*  |Scan and process loadable elements inside `element`.|
-|`child`|*Element* \| *undefined*|*optional*  |Process only the specified `child` of `element`.|
+Get client date format endian type. This value can be used as a rough-guess of other locale settings such as measuring units.
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 41](../../zuix/Componentizer.js#L41)
+[localizer/Localizer.js](../../localizer/Localizer.js), [line 104](../../localizer/Localizer.js#L104)
 
 -->
 
 ##### Returns
 
-*[Componentizer](../../zuix/Componentizer)*
+*string*
+ &dash; 'L' if date format is 'Little Endian -> DMY' or 'M' for 'Middle Endian -> MDY'
 
-<a name="lazyLoad"></a>
-#### lazyLoad(enable, threshold) &rarr; {boolean}
+<a name="getLocaleString"></a>
+#### getLocaleString(localeId, defaultText, localeDictionary) &rarr; {string}
 
-Enable/Disable lazy-loading, or get current value.
+Get translated text for element with the specified `data-locale-id` attribute.
 
 ##### Parameters
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`enable`|*boolean*|*optional*  |Enable or disable lazy loading.|
-|`threshold`|*number*|*optional*  |Load-ahead threshold (default is 1.0 => 100% of view size).|
+|`localeId`|*string*|  |The `data-locale-id` identifier.|
+|`defaultText`|*string* \| *undefined*|*optional*  |Use this value as default if no translated text if found.|
+|`localeDictionary`|*object* \| *undefined*|*optional*  |Use the provided locale dictionary.|
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
+[localizer/Localizer.js](../../localizer/Localizer.js), [line 69](../../localizer/Localizer.js#L69)
 
 -->
 
 ##### Returns
 
-*boolean*
- &dash; *true* if lazy-loading is enabled, *false* otherwise.
+*string*
+ &dash; The translated text.
 
-<a name="setHost"></a>
-#### setHost(zuixInstance) &rarr; {[Componentizer](../../zuix/Componentizer)}
+<a name="getUserLanguage"></a>
+#### getUserLanguage() &rarr; {string}
+
+Get client language settings.
+
+<!--
+
+*Source:*
+[localizer/Localizer.js](../../localizer/Localizer.js), [line 94](../../localizer/Localizer.js#L94)
+
+-->
+
+##### Returns
+
+*string*
+ &dash; Locale identifier string (eg. 'en' ,'fr', 'it', ...)
+
+<a name="Localize"></a>
+#### Localize(container)
+
+Localize the specified element by replacing all `data-locale-id` fields
+with the translated text.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`zuixInstance`|*[Zuix](../../zuix/Zuix)*||
+|`container`|*Element*||
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 105](../../zuix/Componentizer.js#L105)
+[localizer/Localizer.js](../../localizer/Localizer.js), [line 46](../../localizer/Localizer.js#L46)
 
 -->
-
-##### Returns
-
-*[Componentizer](../../zuix/Componentizer)*
-
-<a name="willLoadMore"></a>
-#### willLoadMore() &rarr; {boolean}
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 73](../../zuix/Componentizer.js#L73)
-
--->
-
-##### Returns
-
-*boolean*
 
 ### Type Definitions
 

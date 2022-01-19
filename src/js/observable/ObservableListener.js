@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,13 +29,13 @@
 /**
  * ObservableListener interface.
  *
- * @class ObservableListener
+ * @class
  * @constructor
  */
 function ObservableListener() {}
 
 /**
- * This method does...
+ * TODO: add description
  *
  * @param {Object} target The updated object
  * @param {string} key The property key
@@ -46,7 +46,7 @@ function ObservableListener() {}
 ObservableListener.prototype.get = function(target, key, value, path) {};
 
 /**
- * This method does...
+ * TODO: add description
  *
  * @param {Object} target The updated object
  * @param {string} key The property key
@@ -56,5 +56,17 @@ ObservableListener.prototype.get = function(target, key, value, path) {};
  * @returns undefined
  */
 ObservableListener.prototype.set = function(target, key, value, path, old) {};
+
+/**
+ * TODO: add description
+ *
+ * @param {Object} target The updated object
+ * @param {string} key The property key
+ * @param {Object} value The value
+ * @param {string} path Full property path
+ * @param {Object} old A copy of the object before the update
+ * @returns undefined
+ */
+ObservableListener.prototype.change = function(target, key, value, path, old) {};
 
 module.export = ObservableListener;

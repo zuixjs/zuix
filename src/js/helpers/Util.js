@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,7 +88,7 @@ module.exports = {
   },
 
   propertyFromPath: function(o, s) {
-    if (typeof s !== 'string') {
+    if (typeof s !== 'string' || o == null) {
       return;
     }
     if (typeof o[s] !== 'undefined') {

@@ -7,13 +7,25 @@ docs.forEach(function(doc, i) {
 <?js } else if (doc.kind === 'source') { ?>
 <?js= self.partial('source.tmpl', doc) ?>
 <?js } else { ?>
-## <?js if (doc.ancestors && doc.ancestors.length) { ?><?js= doc.ancestors.join('') ?><?js } ?><?js= doc.name ?>
+## <?js if (doc.ancestors && doc.ancestors.length) { ?><?js= doc.ancestors.join('') ?><?js } ?>`<?js= doc.name ?>` class
 <?js if (doc.variation) { ?>*<?js= doc.variation ?>*<?js } ?>
-<?js if (doc.classdesc) { ?>**<?js= doc.classdesc ?>**<?js } ?>
 <?js if (doc.kind === 'module' && doc.module) { ?><?js= self.partial('method.tmpl', doc.module) ?><?js } ?>
-<?js if (doc.kind === 'class') { ?><?js= self.partial('method.tmpl', doc) ?>
+<?js if (doc.kind === 'class') { ?>
+<?js if (!doc.hideconstructor) { ?>
+### Constructor
+<?js } ?>
+<?js= self.partial('method.tmpl', doc) ?>
+
+<?js
+    var properties = doc.properties;
+    if (properties && properties.length && properties.forEach) {
+?>
+### Properties
+<?js= self.partial('properties_class.tmpl', properties) ?>
+<?js } ?>
+
 <?js } else { ?>
-<?js if (doc.description) { ?>&gt; <?js= doc.description ?><?js } ?>
+<?js if (doc.description) { ?><?js= doc.description ?><?js } ?>
 <?js= self.partial('details.tmpl', doc) ?>
 
 <?js if (doc.examples && doc.examples.length) { ?>
@@ -21,7 +33,7 @@ docs.forEach(function(doc, i) {
 <?js= self.partial('examples.tmpl', doc.examples) ?>
 <?js } ?>
 <?js } ?>
----------------
+
 <?js if (doc.augments && doc.augments.length) { ?>
 ### Extends
 <?js doc.augments.forEach(function(a) { ?>
@@ -62,7 +74,7 @@ if (doc.kind !== 'globalobj' && namespaces && namespaces.length) {
 
 <?js
 var members = self.find({kind: 'member', memberof: title === 'Global' ? {isUndefined: true} : doc.longname});
-if (members && members.length && members.forEach) {
+if (false && members && members.length && members.forEach) {
 ?>
 ### Members
 <?js members.forEach(function(p) { ?>
@@ -81,7 +93,7 @@ if (methods && methods.length && methods.forEach) {
 <?js } ?>
 
 <?js
-var typedefs = self.find({kind: 'typedef', memberof: title === 'Global' ? {isUndefined: true} : doc.longname});
+var typedefs = self.find({kind: 'typedef'});
 if (typedefs && typedefs.length && typedefs.forEach) {
 ?>
 ### Type Definitions

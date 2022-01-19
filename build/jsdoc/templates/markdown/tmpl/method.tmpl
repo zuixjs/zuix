@@ -1,8 +1,8 @@
-<?js
+<a name="<?js= name ?>"></a><?js
 var data = obj;
 var self = this;
 ?>
-#### <?js= data.attribs + (kind === 'class' ? 'new ' : '') + name + (kind !== 'event' ? data.signature : '') ?>
+#### <?js= data.attribs + (kind === 'class' && !data.hideconstructor ? 'new ' : '') + name + (kind !== 'event' ? data.signature : '') ?>
 
 <?js if (data.summary) { ?><?js= summary ?><?js } ?>
 <?js if (data.description) { ?><?js= data.description ?><?js } ?>

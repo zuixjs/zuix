@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 G-Labs. All Rights Reserved.
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
  *         https://zuixjs.github.io/zuix
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,7 @@ function build(configFile, callback) {
       resolve(res);
     });
   }).then((res) => {
-    if (res.compilation.errors && res.compilation.errors.length > 0) {
+    if (res.compilation && res.compilation.errors && res.compilation.errors.length > 0) {
       console.log(res.compilation.errors, 'ERROR');
       callback(-1);
     } else {

@@ -2,7 +2,7 @@
 layout: page
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: Componentizer"
+description: "zUIx.js API documentation: Class: $"
 keywords:
 - Documentation
 - API
@@ -63,151 +63,35 @@ main table code {
 /* END: MARKDOWN JSDOC */
 </style>
 
-## `Componentizer` class
+## [zuix](#zuix).`$` class
 
 ### Constructor
+<a name="$"></a>
+#### zuix.$new $(what) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
 
-<a name="Componentizer"></a>
-#### new Componentizer()
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 198](../../zuix/Componentizer.js#L198)
-
--->
-
-### Methods
-
-<a name="componentize"></a>
-#### componentize(element, child) &rarr; {[Componentizer](../../zuix/Componentizer)}
-
-TODO: describe this...
+Creates a ZxQuery wrapped element.
 
 ##### Parameters
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *undefined*|*optional*  |Scan and process loadable elements inside `element`.|
-|`child`|*Element* \| *undefined*|*optional*  |Process only the specified `child` of `element`.|
+|`what`|*Object* \| *[ZxQuery](../../helpers/ZxQuery)* \| *Array.&lt;Node>* \| *Node* \| *NodeList* \| *string* \| *undefined*|*optional*  |Query target|
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 41](../../zuix/Componentizer.js#L41)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 748](../../helpers/ZxQuery.js#L748)
 
 -->
 
 ##### Returns
 
-*[Componentizer](../../zuix/Componentizer)*
-
-<a name="lazyLoad"></a>
-#### lazyLoad(enable, threshold) &rarr; {boolean}
-
-Enable/Disable lazy-loading, or get current value.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`enable`|*boolean*|*optional*  |Enable or disable lazy loading.|
-|`threshold`|*number*|*optional*  |Load-ahead threshold (default is 1.0 => 100% of view size).|
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
-
--->
-
-##### Returns
-
-*boolean*
- &dash; *true* if lazy-loading is enabled, *false* otherwise.
-
-<a name="setHost"></a>
-#### setHost(zuixInstance) &rarr; {[Componentizer](../../zuix/Componentizer)}
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`zuixInstance`|*[Zuix](../../zuix/Zuix)*||
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 105](../../zuix/Componentizer.js#L105)
-
--->
-
-##### Returns
-
-*[Componentizer](../../zuix/Componentizer)*
-
-<a name="willLoadMore"></a>
-#### willLoadMore() &rarr; {boolean}
-
-<!--
-
-*Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 73](../../zuix/Componentizer.js#L73)
-
--->
-
-##### Returns
-
-*boolean*
+*[ZxQuery](../../helpers/ZxQuery)*
 
 ### Type Definitions
 
-<a name="ActiveRefreshCallback"></a>
-#### ActiveRefreshCallback(data, refreshMs, forceActive)
-
-The callback for setting data and delay of next refresh request.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`data`|*object*|*optional*  |Data to be passed to next refresh call|
-|`refreshMs`|*number*|*optional*  |Delay in milliseconds before the next refresh call|
-|`forceActive`|*boolean* \| *undefined*|*optional*  |Ignore visibility, schedule anyway|
-
-<!--
-
-*Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 39](../../zuix/ActiveRefresh.js#L39)
-
--->
-
-<a name="ActiveRefreshHandler"></a>
-#### ActiveRefreshHandler($view, $element, data, nextCallback)
-
-The Active-Refresh function that will be called for each refresh request.
-
-##### This
-- {HTMLElement}
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
-|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element as *ZxQuery* object|
-|`data`|*object*|Custom data that ca be passed from call to call|
-|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|Callback for scheduling the next refresh call|
-
-<!--
-
-*Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 28](../../zuix/ActiveRefresh.js#L28)
-
--->
-
 <a name="BindingAdapterCallback"></a>
-#### BindingAdapterCallback($element, fieldName, $view, refreshCallback)
+#### undefinedBindingAdapterCallback($element, fieldName, $view, refreshCallback)
 
 Binding adapter callback.
 
@@ -228,7 +112,7 @@ Binding adapter callback.
 -->
 
 <a name="BindingAdapterRefreshCallback"></a>
-#### BindingAdapterRefreshCallback(refreshMs)
+#### undefinedBindingAdapterRefreshCallback(refreshMs)
 
 Binding adapter refresh callback
 
@@ -289,7 +173,7 @@ Component cache object.
 -->
 
 <a name="ContextControllerCreateCallback"></a>
-#### ContextControllerCreateCallback()
+#### undefinedContextControllerCreateCallback()
 
 Function that gets called after loading, when the component is actually created and ready.
 
@@ -301,7 +185,7 @@ Function that gets called after loading, when the component is actually created 
 -->
 
 <a name="ContextControllerDisposeCallback"></a>
-#### ContextControllerDisposeCallback()
+#### undefinedContextControllerDisposeCallback()
 
 Function called when the component is disposed.
 
@@ -313,7 +197,7 @@ Function called when the component is disposed.
 -->
 
 <a name="ContextControllerHandler"></a>
-#### ContextControllerHandler(cp)
+#### undefinedContextControllerHandler(cp)
 
 This function is called after the component is loaded
 and it is used to initialize its controller.
@@ -335,7 +219,7 @@ and it is used to initialize its controller.
 -->
 
 <a name="ContextControllerInitCallback"></a>
-#### ContextControllerInitCallback()
+#### undefinedContextControllerInitCallback()
 
 Function that gets called after loading and before the component is created.
 
@@ -347,7 +231,7 @@ Function that gets called after loading and before the component is created.
 -->
 
 <a name="ContextControllerUpdateCallback"></a>
-#### ContextControllerUpdateCallback(target, key, value, path, old)
+#### undefinedContextControllerUpdateCallback(target, key, value, path, old)
 
 Function called when the data model of the component is updated
 
@@ -373,7 +257,7 @@ Function called when the data model of the component is updated
  &dash; undefined
 
 <a name="ContextErrorCallback"></a>
-#### ContextErrorCallback(error, ctx)
+#### undefinedContextErrorCallback(error, ctx)
 
 Callback function triggered if an error occurs when loading a component.
 
@@ -390,7 +274,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 78](../../zuix/Zuix.js#L78)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 76](../../zuix/Zuix.js#L76)
 
 -->
 
@@ -405,32 +289,32 @@ of the component container.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.|
+|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: `z-context`.|
 |`container`|*Element* \| *undefined*|The container element.|
-|`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
-|`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
+|`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: `z-model`.|
+|`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: `z-view`.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`css`|*Element* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
-|`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
-|`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
-|`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|
+|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *undefined*|The handling map for events.|
+|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *undefined*|The handling map for behaviors.|
+|`css`|*Element* \| *string* \| *boolean* \| *undefined*|The stylesheet of the view.|
+|`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not.|
+|`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers.|
+|`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of `.html`.|
 |`html`|*boolean* \| *undefined*|Enables or disables HTML template loading (**default:** true).|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false).|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0).|
-|`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once the component is successfully loaded.|
+|`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once the component is succesfully loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 54](../../zuix/Zuix.js#L54)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 52](../../zuix/Zuix.js#L52)
 
 -->
 
 <a name="ContextReadyCallback"></a>
-#### ContextReadyCallback(ctx)
+#### undefinedContextReadyCallback(ctx)
 
 Callback function triggered when a component has been successfully loaded.
 
@@ -446,7 +330,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 87](../../zuix/Zuix.js#L87)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 85](../../zuix/Zuix.js#L85)
 
 -->
 
@@ -473,7 +357,7 @@ The `ElementPosition` object returned by the `position()` method.
 -->
 
 <a name="ElementsIterationCallback"></a>
-#### ElementsIterationCallback(count, item, $item)
+#### undefinedElementsIterationCallback(count, item, $item)
 
 Callback function used with the `each(..)` method.
 
@@ -496,7 +380,7 @@ Callback function used with the `each(..)` method.
 -->
 
 <a name="EventCallback"></a>
-#### EventCallback(event, data, $el)
+#### undefinedEventCallback(event, data, $el)
 
 Callback function triggered when an event registered
 with the `on` method occurs.
@@ -509,7 +393,7 @@ with the `on` method occurs.
 |Name|Type|Description|
 |----|----|-----------|
 |`event`|*string*|Event name|
-|`data`|*Object*|Event data|
+|`data`|*Object*|Event dat|
 |`$el`|*[ZxQuery](../../helpers/ZxQuery)*|ZxQuery wrapped element that sourced the event (same as `this`)|
 
 <!--
@@ -520,7 +404,7 @@ with the `on` method occurs.
 -->
 
 <a name="IterationCallback"></a>
-#### IterationCallback(i, item)
+#### undefinedIterationCallback(i, item)
 
 The `IterationCallback` function.
 
@@ -542,7 +426,7 @@ The `IterationCallback` function.
 -->
 
 <a name="LoggerMonitorCallback"></a>
-#### LoggerMonitorCallback(ctx, level)
+#### undefinedLoggerMonitorCallback(ctx, level)
 
 Callback function for monitoring all log messages.
 
@@ -584,7 +468,7 @@ Relative position.
 -->
 
 <a name="ResourceUsingCallback"></a>
-#### ResourceUsingCallback(resourcePath, hashIdOrContext)
+#### undefinedResourceUsingCallback(resourcePath, hashIdOrContext)
 
 Callback in response to a `zuix.using` request.
 
@@ -598,12 +482,12 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 95](../../zuix/Zuix.js#L95)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 93](../../zuix/Zuix.js#L93)
 
 -->
 
 <a name="ZxQueryHttpBeforeSendCallback"></a>
-#### ZxQueryHttpBeforeSendCallback(xhr)
+#### undefinedZxQueryHttpBeforeSendCallback(xhr)
 
 The `ZxQueryHttpBeforeSendCallback` function.
 
@@ -624,7 +508,7 @@ The `ZxQueryHttpBeforeSendCallback` function.
 -->
 
 <a name="ZxQueryHttpErrorCallback"></a>
-#### ZxQueryHttpErrorCallback(xhr, statusText, statusCode)
+#### undefinedZxQueryHttpErrorCallback(xhr, statusText, statusCode)
 
 The `ZxQueryHttpErrorCallback` function.
 
@@ -669,7 +553,7 @@ zuix.$.http options object.
 -->
 
 <a name="ZxQueryHttpSuccessCallback"></a>
-#### ZxQueryHttpSuccessCallback(responseText)
+#### undefinedZxQueryHttpSuccessCallback(responseText)
 
 The `ZxQueryHttpSuccessCallback` function.
 
@@ -690,7 +574,7 @@ The `ZxQueryHttpSuccessCallback` function.
 -->
 
 <a name="ZxQueryHttpThenCallback"></a>
-#### ZxQueryHttpThenCallback(xhr)
+#### undefinedZxQueryHttpThenCallback(xhr)
 
 The `ZxQueryHttpThenCallback` function.
 
