@@ -4624,8 +4624,8 @@ __webpack_require__(854);
  * @property {JSON|undefined} model The data model.  HTML attribute equivalent: `data-bind-model`.
  * @property {Element|undefined} view The view element. HTML attribute equivalent: `data-ui-view`.
  * @property {ContextControllerHandler|undefined} controller The controller handler.
- * @property {Array.<Object.<string, EventCallback>>|undefined} on The handling map for events.
- * @property {Array.<Object.<string, EventCallback>>|undefined} behavior The handling map for behaviors.
+ * @property {Object.<string, EventCallback>|undefined} on The handling map for events.
+ * @property {Object.<string, EventCallback>|undefined} behavior The handling map for behaviors.
  * @property {Element|string|boolean|undefined} css The stylesheet of the view.
  * @property {boolean|undefined} encapsulation Whether to use style encapsulation or not.
  * @property {boolean|undefined} resetCss Whether to reset view style to prevent inheriting from parent containers.
@@ -5937,7 +5937,7 @@ module.exports = function(root) {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -5951,17 +5951,17 @@ module.exports = function(root) {
 /******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/node module decorator */
 /******/ 	(() => {
@@ -5971,14 +5971,14 @@ module.exports = function(root) {
 /******/ 			return module;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(693);
 /******/ 	zuix = __webpack_exports__;
-/******/ 	
+/******/
 /******/ })()
 ;

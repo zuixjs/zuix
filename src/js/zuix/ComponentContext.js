@@ -140,7 +140,7 @@ function dataBind(el, boundData) {
       }
       break;
     case 'select':
-      z$.each(el.options, (i, opt, $opt) => {
+      z$.each(el.options, function(i, opt, $opt) {
         if (opt.value == value) {
           el.selectedIndex = i;
           return false;
@@ -182,9 +182,11 @@ function dataBind(el, boundData) {
  * all of its data such as the view template, the style, the controller, the data model.
  *
  * @class
- * @property {ZxQuery} $ Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+ * @property {string} componentId The component identifier "`[<path>/]<name>`".
  * @property {string} path Gets the base path of this component.
  * @property {string} name Gets the name of this component (last part of the path).
+ * @property {ZxQuery} $ Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+ * @property {Object.<string, ActiveRefreshHandler>} handlers List component-local `@` handlers.
  *
  * @constructor
  * @param {Zuix} zuixInstance
@@ -197,6 +199,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   this._options = null;
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
+  this.handlers = {refresh: function($view, $el, contextData, refreshCallback) {}};
   this.trigger = function(context, eventPath, eventValue) {
     if (typeof eventCallback === 'function') {
       eventCallback(context, eventPath, eventValue);
@@ -268,11 +271,15 @@ function ComponentContext(zuixInstance, options, eventCallback) {
       if (view.get()) {
         let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
         if (fld.get() != null) {
-          fld.each((i, f) => dataBind(f, value));
+          fld.each(function(i, f) {
+            dataBind(f, value);
+          });
         }
         fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
         if (fld.get() != null) {
-          fld.each((i, f) => dataBind(f, value));
+          fld.each(function(i, f) {
+            dataBind(f, value);
+          });
         }
         // call controller's 'update' method
         if (this.context._c && typeof this.context._c.update === 'function') {
@@ -414,15 +421,18 @@ ComponentContext.prototype.view = function(view) {
   }
 
   const initializeTemplateFields = function(v) {
-    v.find('*').each((i, el, $el) => {
+    v.find('*').each(function(i, el, $el) {
       //if (!zuix.isDirectComponentElement(v, $el)) return;
       // add `z-field` from '#<field_name>' attributes
       for (let j = 0; j < el.attributes.length; j++) {
         const a = el.attributes.item(j);
         const attributeName = a.name;
         if (attributeName.length > 1 && attributeName.startsWith('#')) {
-          if ($el.attr('z-field') == null) {
-            $el.attr('z-field', attributeName.substring(1));
+          if ($el.attr(_optionAttributes.dataUiField) == null) {
+            $el.attr(_optionAttributes.dataUiField, attributeName.substring(1));
+          }
+          if ($el.attr(_optionAttributes.dataBindTo) == null && a.value != null && a.value.length > 0) {
+            $el.attr(_optionAttributes.dataBindTo, a.value);
           }
         }
       }
@@ -1052,8 +1062,9 @@ ComponentContext.prototype.modelToView = function() {
       const v = z$(_t._view);
       // map `z-field`s as properties of the context's member '#' if the variable name is valid
       try {
-        Function('function testName(){ const ' + boundField + ' = "test"; }');
-        _t['#'][boundField] = _t.field(boundField);
+        const f = util.hyphensToCamelCase(boundField);
+        Function('function testName(){ const ' + f + ' = "test"; }');
+        _t['#'][f] = _t.field(boundField);
       } catch (e) {
         // TODO: should at least log a 'Warning: unscriptable field name'
         //console.log('ERROR', e);
@@ -1063,7 +1074,7 @@ ComponentContext.prototype.modelToView = function() {
        * @param {BindingAdapterCallback} fn The binding adapter callback
        * @param {string} field Bound field name
        */
-      const queryAdapter = (fn, field) => {
+      const queryAdapter = function(fn, field) {
         if (fn && !_t._disposed) {
           (fn).call(v, $el, field, v, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
             // data adapter is not ready, retry after 1s
@@ -1073,7 +1084,9 @@ ComponentContext.prototype.modelToView = function() {
                 clearTimeout(_queryAdapterRefreshTimeout[timeoutId]);
               }
               $el.get().dataset.__zuix_refreshTimeout =
-                  setTimeout(() => queryAdapter(fn, field), retryMs ? retryMs : 500);
+                  setTimeout(function() {
+                    queryAdapter(fn, field);
+                  }, retryMs ? retryMs : 500);
             }
           });
         }
@@ -1083,7 +1096,13 @@ ComponentContext.prototype.modelToView = function() {
         // to resolve all model fields' values
         queryAdapter(_t._model, boundField);
       } else {
-        const boundData = util.propertyFromPath(_t._model, boundField);
+        let boundData = util.propertyFromPath(_t._model, boundField);
+        const altField = util.hyphensToCamelCase(boundField);
+        const altData = util.propertyFromPath(_t._model, altField);
+        if (boundData == null && altData != null) {
+          boundField = altField;
+          boundData = util.propertyFromPath(_t._model, boundData);
+        }
         if (typeof boundData === 'function') {
           // use data model's field binding adapter
           // to resolve boundField's value

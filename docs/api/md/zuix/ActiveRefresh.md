@@ -84,7 +84,7 @@ The active-refresh object.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 49](../../zuix/ActiveRefresh.js#L49)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 52](../../zuix/ActiveRefresh.js#L52)
 
 -->
 
@@ -98,7 +98,7 @@ Pauses the refresh loop.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 124](../../zuix/ActiveRefresh.js#L124)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 127](../../zuix/ActiveRefresh.js#L127)
 
 -->
 
@@ -110,7 +110,7 @@ Resumes the refresh loop.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 132](../../zuix/ActiveRefresh.js#L132)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 135](../../zuix/ActiveRefresh.js#L135)
 
 -->
 
@@ -122,7 +122,7 @@ Starts the refresh loop.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 112](../../zuix/ActiveRefresh.js#L112)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 115](../../zuix/ActiveRefresh.js#L115)
 
 -->
 
@@ -134,7 +134,7 @@ Disposes this "ActiveRefresh" instance
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 101](../../zuix/ActiveRefresh.js#L101)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 104](../../zuix/ActiveRefresh.js#L104)
 
 -->
 
@@ -156,12 +156,12 @@ The callback for setting data and delay of next refresh request.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 39](../../zuix/ActiveRefresh.js#L39)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 40](../../zuix/ActiveRefresh.js#L40)
 
 -->
 
 <a name="ActiveRefreshHandler"></a>
-#### ActiveRefreshHandler($view, $element, data, nextCallback)
+#### ActiveRefreshHandler($view, $element, data, nextCallback, attributeName)
 
 The Active-Refresh function that will be called for each refresh request.
 
@@ -170,12 +170,13 @@ The Active-Refresh function that will be called for each refresh request.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
-|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element as *ZxQuery* object|
-|`data`|*object*|Custom data that ca be passed from call to call|
-|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|Callback for scheduling the next refresh call|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|  |The component's view|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|  |The target element as *ZxQuery* object|
+|`data`|*object*|  |Custom data that ca be passed from call to call|
+|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|  |Callback for scheduling the next refresh call|
+|`attributeName`|*string*|*optional*  |Source attribute name if it's a '@' handler|
 
 <!--
 
@@ -388,9 +389,9 @@ of the component container.
 |`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
 |`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`css`|*Element* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|

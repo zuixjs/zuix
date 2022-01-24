@@ -223,6 +223,7 @@ ContextController.prototype.clearCache = function() {
  * @return {ZxQuery}
  */
 ContextController.prototype.view = function(filter) {
+  const _t = this;
   // context view changed, dispose cached fields from previous attached view
   if (this.context.view() != null || this._view !== this.context.view()) {
     this.clearCache();
@@ -230,7 +231,9 @@ ContextController.prototype.view = function(filter) {
     // TODO: dispose also events on view change (!!!)
     // TODO: !!!!
     this._view = z$(this.context.view());
-    this._view.field = (fieldName) => this.context.field(fieldName);
+    this._view.field = function(fieldName) {
+      return _t.context.field(fieldName);
+    };
   }
   if (filter != null) {
     return this._view.find(filter);

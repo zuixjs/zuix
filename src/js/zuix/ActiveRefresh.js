@@ -34,6 +34,7 @@
  * @param {ZxQuery} $element The target element as *ZxQuery* object
  * @param {object} data Custom data that ca be passed from call to call
  * @param {ActiveRefreshCallback} nextCallback Callback for scheduling the next refresh call
+ * @param {string} [attributeName] Source attribute name if it's a '@' handler
  */
 
 /**
@@ -45,6 +46,8 @@
  * @param {boolean|undefined} [forceActive] Ignore visibility, schedule anyway
  */
 
+/** @private */
+const _defaultRefreshDelay = 100;
 
 /**
  * The active-refresh object.
@@ -58,7 +61,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.$view = $v;
   this.$element = $el;
   this.contextData = data;
-  this.refreshMs = 250;
+  this.refreshMs = _defaultRefreshDelay;
   this.paused = false;
   this.forceActive = false;
   const _t = this;
@@ -71,7 +74,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       if (active != null) _t.forceActive = active;
       const ctx = zuix.context($v);
       if (ctx != null && _t.refreshMs > 0) {
-        setTimeout(() => {
+        setTimeout(function() {
           _t.requestRefresh($v, $el, _t.contextData);
         }, isActive ? _t.refreshMs : 500); // 500ms for noop-loop
       } else if (ctx == null) {
@@ -84,7 +87,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
     if (isActive) {
       // call the `refreshCallback` and wait for
       // its completion before next loop round
-      refreshCallback($v, $el, data, (nextData, nextMsDelay, forceActive) => {
+      refreshCallback($v, $el, data, function(nextData, nextMsDelay, forceActive) {
         refreshLoop(nextData, nextMsDelay, forceActive);
       });
     } else {

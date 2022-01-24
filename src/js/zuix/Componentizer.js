@@ -430,6 +430,16 @@ function loadInline(element, opts) {
       options.viewDeferred = true;
       options.html = options.html || false;
       options.css = options.css || false;
+      // custom inline view style
+      const styleElement = v.children('[media="#"]');
+      if (styleElement.length() > 0 && styleElement.parent().get() === v.get()) {
+        if (options.css === false) {
+          options.css = '';
+        }
+        styleElement.each(function(i, el, $el) {
+          options.css += '\n' + options.css + $el.html();
+        });
+      }
       if (componentId === 'default') {
         options.controller = options.controller || function() {};
       }
@@ -597,10 +607,11 @@ function lazyElementCheck(element) {
               if (now - lastScroll > 100) {
                 lastScroll = now;
                 loadNext(lc);
+              } else {
                 clearTimeout(timeout);
-                timeout = setTimeout(() => {
+                timeout = setTimeout(function() {
                   loadNext(lc);
-                }, 100);
+                }, 150);
               }
             });
           })(this, lazyContainer);

@@ -161,6 +161,13 @@ module.exports = {
     return supportsPassive;
   },
 
+  hyphensToCamelCase: function(s) {
+    return s.replace(/-([a-z0-9_$-])/g, function(g) {
+      return '_$-'.indexOf(g[1]) > -1 || (+g[1]).toString() === g[1] ?
+          '_' + g[1].replace('-', '_') : g[1].toUpperCase();
+    });
+  },
+
   dom: {
 
     queryAttribute: function(name, value, appendValue) {

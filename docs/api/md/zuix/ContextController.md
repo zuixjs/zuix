@@ -91,6 +91,7 @@ ContextController constructor.
 
 ### Properties
 
+<a name="log"></a>
 #### log &rarr; *[Logger](../../helpers/Logger)*
 
 The component's built-in logger.
@@ -114,7 +115,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 316](../../zuix/ContextController.js#L316)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 319](../../zuix/ContextController.js#L319)
 
 -->
 
@@ -162,7 +163,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 409](../../zuix/ContextController.js#L409)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 412](../../zuix/ContextController.js#L412)
 
 -->
 
@@ -198,7 +199,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 355](../../zuix/ContextController.js#L355)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 358](../../zuix/ContextController.js#L358)
 
 -->
 
@@ -237,7 +238,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 380](../../zuix/ContextController.js#L380)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 383](../../zuix/ContextController.js#L383)
 
 -->
 
@@ -275,7 +276,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 250](../../zuix/ContextController.js#L250)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 253](../../zuix/ContextController.js#L253)
 
 -->
 
@@ -292,7 +293,7 @@ Same as [ComponentContext&ndash;options](../ComponentContext/#options).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 262](../../zuix/ContextController.js#L262)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 265](../../zuix/ContextController.js#L265)
 
 -->
 
@@ -321,7 +322,7 @@ in case `isHook` is set to true, use the
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 289](../../zuix/ContextController.js#L289)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 292](../../zuix/ContextController.js#L292)
 
 -->
 
@@ -395,12 +396,12 @@ The callback for setting data and delay of next refresh request.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 39](../../zuix/ActiveRefresh.js#L39)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 40](../../zuix/ActiveRefresh.js#L40)
 
 -->
 
 <a name="ActiveRefreshHandler"></a>
-#### ActiveRefreshHandler($view, $element, data, nextCallback)
+#### ActiveRefreshHandler($view, $element, data, nextCallback, attributeName)
 
 The Active-Refresh function that will be called for each refresh request.
 
@@ -409,12 +410,13 @@ The Active-Refresh function that will be called for each refresh request.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
-|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element as *ZxQuery* object|
-|`data`|*object*|Custom data that ca be passed from call to call|
-|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|Callback for scheduling the next refresh call|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|  |The component's view|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|  |The target element as *ZxQuery* object|
+|`data`|*object*|  |Custom data that ca be passed from call to call|
+|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|  |Callback for scheduling the next refresh call|
+|`attributeName`|*string*|*optional*  |Source attribute name if it's a '@' handler|
 
 <!--
 
@@ -627,9 +629,9 @@ of the component container.
 |`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
 |`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`css`|*Element* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|

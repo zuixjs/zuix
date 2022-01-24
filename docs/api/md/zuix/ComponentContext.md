@@ -84,7 +84,7 @@ all of its data such as the view template, the style, the controller, the data m
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 195](../../zuix/ComponentContext.js#L195)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 197](../../zuix/ComponentContext.js#L197)
 
 -->
 
@@ -95,17 +95,30 @@ all of its data such as the view template, the style, the controller, the data m
 
 ### Properties
 
-#### $ &rarr; *[ZxQuery](../../helpers/ZxQuery)*
+<a name="componentId"></a>
+#### componentId &rarr; *string*
 
-Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+The component identifier "`[<path>/]<name>`".
 
+<a name="path"></a>
 #### path &rarr; *string*
 
 Gets the base path of this component.
 
+<a name="name"></a>
 #### name &rarr; *string*
 
 Gets the name of this component (last part of the path).
+
+<a name="$"></a>
+#### $ &rarr; *[ZxQuery](../../helpers/ZxQuery)*
+
+Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+
+<a name="handlers"></a>
+#### handlers &rarr; *Object.&lt;string, <a href="#ActiveRefreshHandler">ActiveRefreshHandler</a>>*
+
+List component-local `@` handlers.
 
 ### Methods
 
@@ -126,7 +139,7 @@ otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 371](../../zuix/ComponentContext.js#L371)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 378](../../zuix/ComponentContext.js#L378)
 
 -->
 
@@ -148,7 +161,7 @@ Gets/Sets the component's controller handler.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 744](../../zuix/ComponentContext.js#L744)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 754](../../zuix/ComponentContext.js#L754)
 
 -->
 
@@ -164,7 +177,7 @@ Disposes the component context and all of its allocated resources.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 304](../../zuix/ComponentContext.js#L304)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 311](../../zuix/ComponentContext.js#L311)
 
 -->
 
@@ -185,7 +198,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 549](../../zuix/ComponentContext.js#L549)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 559](../../zuix/ComponentContext.js#L559)
 
 -->
 
@@ -227,7 +240,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1108](../../zuix/ComponentContext.js#L1108)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1127](../../zuix/ComponentContext.js#L1127)
 
 -->
 
@@ -254,7 +267,7 @@ changes.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 713](../../zuix/ComponentContext.js#L713)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 723](../../zuix/ComponentContext.js#L723)
 
 -->
 
@@ -320,7 +333,7 @@ that are bound to the model's fields.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1037](../../zuix/ComponentContext.js#L1037)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1047](../../zuix/ComponentContext.js#L1047)
 
 -->
 
@@ -344,7 +357,7 @@ Listens for a component event.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 787](../../zuix/ComponentContext.js#L787)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 797](../../zuix/ComponentContext.js#L797)
 
 -->
 
@@ -367,7 +380,7 @@ Gets/Sets the component's options.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 758](../../zuix/ComponentContext.js#L758)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 768](../../zuix/ComponentContext.js#L768)
 
 -->
 
@@ -394,7 +407,7 @@ element is returned.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 616](../../zuix/ComponentContext.js#L616)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 626](../../zuix/ComponentContext.js#L626)
 
 -->
 
@@ -426,7 +439,7 @@ argument is passed, the *ComponentContext* itself otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 391](../../zuix/ComponentContext.js#L391)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 398](../../zuix/ComponentContext.js#L398)
 
 -->
 
@@ -443,7 +456,7 @@ declared in the component's view.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 994](../../zuix/ComponentContext.js#L994)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1004](../../zuix/ComponentContext.js#L1004)
 
 -->
 
@@ -470,12 +483,12 @@ The callback for setting data and delay of next refresh request.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 39](../../zuix/ActiveRefresh.js#L39)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 40](../../zuix/ActiveRefresh.js#L40)
 
 -->
 
 <a name="ActiveRefreshHandler"></a>
-#### ActiveRefreshHandler($view, $element, data, nextCallback)
+#### ActiveRefreshHandler($view, $element, data, nextCallback, attributeName)
 
 The Active-Refresh function that will be called for each refresh request.
 
@@ -484,12 +497,13 @@ The Active-Refresh function that will be called for each refresh request.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
-|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element as *ZxQuery* object|
-|`data`|*object*|Custom data that ca be passed from call to call|
-|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|Callback for scheduling the next refresh call|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|  |The component's view|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|  |The target element as *ZxQuery* object|
+|`data`|*object*|  |Custom data that ca be passed from call to call|
+|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|  |Callback for scheduling the next refresh call|
+|`attributeName`|*string*|*optional*  |Source attribute name if it's a '@' handler|
 
 <!--
 
@@ -702,9 +716,9 @@ of the component container.
 |`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
 |`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`css`|*Element* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|

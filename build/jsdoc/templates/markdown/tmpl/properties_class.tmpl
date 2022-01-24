@@ -44,7 +44,8 @@
     props.forEach(function(prop) {
       if (!prop) { return; }
       if (props.hasName) {
-?>#### <?js= prop.name ?> &rarr; <?js= prop.type.names.map(p => '*'+self.linkto(p)+'*').join(' \\| ') ?>
+?><a name="<?js= prop.name ?>"></a>
+#### <?js= prop.name ?> &rarr; <?js= prop.type.names.map(p => '*'+self.linkto(p)+'*').join(' \\| ') ?>
 
 <?js= prop.description ?>
 

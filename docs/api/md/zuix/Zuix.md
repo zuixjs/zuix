@@ -78,7 +78,7 @@ Allocates a new instance of *zuix.js*, JavaScript library for
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 170](../../zuix/Zuix.js#L170)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 168](../../zuix/Zuix.js#L168)
 
 -->
 
@@ -88,6 +88,7 @@ Allocates a new instance of *zuix.js*, JavaScript library for
 
 ### Properties
 
+<a name="$"></a>
 #### $ &rarr; *[ZxQueryStatic](../../helpers/ZxQueryStatic)*
 
 Helper function for manipulating the DOM.
@@ -111,7 +112,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1603](../../zuix/Zuix.js#L1603)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1687](../../zuix/Zuix.js#L1687)
 
 -->
 
@@ -135,7 +136,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1614](../../zuix/Zuix.js#L1614)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1698](../../zuix/Zuix.js#L1698)
 
 -->
 
@@ -159,7 +160,7 @@ requested components.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1558](../../zuix/Zuix.js#L1558)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1634](../../zuix/Zuix.js#L1634)
 
 -->
 
@@ -190,7 +191,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1286](../../zuix/Zuix.js#L1286)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1362](../../zuix/Zuix.js#L1362)
 
 -->
 
@@ -230,7 +231,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1261](../../zuix/Zuix.js#L1261)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1337](../../zuix/Zuix.js#L1337)
 
 -->
 
@@ -268,7 +269,7 @@ order to actually load and display the component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1299](../../zuix/Zuix.js#L1299)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1375](../../zuix/Zuix.js#L1375)
 
 -->
 
@@ -285,7 +286,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1668](../../zuix/Zuix.js#L1668)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1752](../../zuix/Zuix.js#L1752)
 
 -->
 
@@ -301,7 +302,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1675](../../zuix/Zuix.js#L1675)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1759](../../zuix/Zuix.js#L1759)
 
 -->
 
@@ -328,7 +329,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1097](../../zuix/Zuix.js#L1097)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1171](../../zuix/Zuix.js#L1171)
 
 -->
 
@@ -365,7 +366,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1580](../../zuix/Zuix.js#L1580)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1664](../../zuix/Zuix.js#L1664)
 
 -->
 
@@ -391,7 +392,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1396](../../zuix/Zuix.js#L1396)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1472](../../zuix/Zuix.js#L1472)
 
 -->
 
@@ -477,7 +478,7 @@ Enables/Disables HTTP caching or gets the current settings.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1537](../../zuix/Zuix.js#L1537)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1613](../../zuix/Zuix.js#L1613)
 
 -->
 
@@ -501,7 +502,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1523](../../zuix/Zuix.js#L1523)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1599](../../zuix/Zuix.js#L1599)
 
 -->
 
@@ -527,7 +528,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1148](../../zuix/Zuix.js#L1148)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1222](../../zuix/Zuix.js#L1222)
 
 -->
 
@@ -594,7 +595,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1220](../../zuix/Zuix.js#L1220)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1294](../../zuix/Zuix.js#L1294)
 
 -->
 
@@ -662,7 +663,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1590](../../zuix/Zuix.js#L1590)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1674](../../zuix/Zuix.js#L1674)
 
 -->
 
@@ -671,10 +672,35 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 *[ObservableObject](../../observable/ObservableObject)*
  &dash; The observable object.
 
+<a name="parseAttributeArgs"></a>
+#### parseAttributeArgs(attributeName, $el, $view, contextData) &rarr; {Array.&lt;unknown>}
+
+// TODO: document method
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`attributeName`|||
+|`$el`|||
+|`$view`|||
+|`contextData`|||
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1813](../../zuix/Zuix.js#L1813)
+
+-->
+
+##### Returns
+
+*Array.&lt;unknown>*
+
 <a name="runScriptlet"></a>
 #### runScriptlet(scriptCode, $el, $view, data) &rarr; {object|undefined}
 
-// TODO: document this one
+// TODO: document method
 
 ##### Parameters
 
@@ -688,7 +714,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1713](../../zuix/Zuix.js#L1713)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1798](../../zuix/Zuix.js#L1798)
 
 -->
 
@@ -703,21 +729,30 @@ Gets/Sets a global store entry.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`name`|*string*|Entry name|
-|`value`|*object*|Entry value|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`name`|*string*|  |Entry name|
+|`value`|*object*|*optional*  |Entry value|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1568](../../zuix/Zuix.js#L1568)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1652](../../zuix/Zuix.js#L1652)
 
 -->
 
 ##### Returns
 
 *object*
+
+##### Example
+
+```js
+ // stores *myObjectData* in the store entry named *my-data*
+ zuix.store('my-data', myObjectData);
+ // gets data from the store entry named *my-data*
+ const data = zuix.store('my-data');
+ ```
 
 <a name="trigger"></a>
 #### trigger(context, eventPath, eventData) &rarr; {[Zuix](../../zuix/Zuix)}
@@ -735,7 +770,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1321](../../zuix/Zuix.js#L1321)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1397](../../zuix/Zuix.js#L1397)
 
 -->
 
@@ -758,7 +793,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1162](../../zuix/Zuix.js#L1162)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1236](../../zuix/Zuix.js#L1236)
 
 -->
 
@@ -791,7 +826,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1417](../../zuix/Zuix.js#L1417)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1493](../../zuix/Zuix.js#L1493)
 
 -->
 
@@ -826,12 +861,12 @@ The callback for setting data and delay of next refresh request.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 39](../../zuix/ActiveRefresh.js#L39)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 40](../../zuix/ActiveRefresh.js#L40)
 
 -->
 
 <a name="ActiveRefreshHandler"></a>
-#### ActiveRefreshHandler($view, $element, data, nextCallback)
+#### ActiveRefreshHandler($view, $element, data, nextCallback, attributeName)
 
 The Active-Refresh function that will be called for each refresh request.
 
@@ -840,12 +875,13 @@ The Active-Refresh function that will be called for each refresh request.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
-|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element as *ZxQuery* object|
-|`data`|*object*|Custom data that ca be passed from call to call|
-|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|Callback for scheduling the next refresh call|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|  |The component's view|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|  |The target element as *ZxQuery* object|
+|`data`|*object*|  |Custom data that ca be passed from call to call|
+|`nextCallback`|*[ActiveRefreshCallback](#ActiveRefreshCallback)*|  |Callback for scheduling the next refresh call|
+|`attributeName`|*string*|*optional*  |Source attribute name if it's a '@' handler|
 
 <!--
 
@@ -1058,9 +1094,9 @@ of the component container.
 |`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
 |`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Array.&lt;Object.&lt;string, <a href="#EventCallback">EventCallback</a>>>* \| *Array.&lt;Object.&lt;string, string>>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`css`|*Element* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|
