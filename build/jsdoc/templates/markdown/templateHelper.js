@@ -13,7 +13,7 @@ var hasOwnProp = Object.prototype.hasOwnProperty;
 var files = {};
 
 // each container gets its own html file
-var containers = ['class', 'module', 'external', 'namespace', 'mixin'];
+var containers = ['class', 'interface', 'module', 'external', 'namespace', 'mixin'];
 
 var tutorials;
 
@@ -470,6 +470,7 @@ function isModuleFunction(doclet) {
 exports.getMembers = function(data) {
   const members = {
     classes: find(data, {kind: ['class', 'typedef']}),
+    interfaces: find(data, {kind: ['interface']}),
     externals: find(data, {kind: 'external'}),
     events: find(data, {kind: 'event'}),
 /*    globals: find(data, {
@@ -764,7 +765,7 @@ exports.createLink = function(doclet, cfg) {
   }
   // the doclet is within another HTML file
   else {
-    filename = getFilename(doclet.memberof || exports.globalName);
+    filename = getFilename(doclet.memberof || (doclet.meta && doclet.meta.filename.replace('.js', '')) || exports.globalName);
     fragment = getNamespace(doclet.kind) + (doclet.name || '');
   }
 

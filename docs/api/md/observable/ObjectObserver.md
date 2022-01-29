@@ -248,7 +248,7 @@ Function that gets called after loading, when the component is actually created 
 <a name="ContextControllerDisposeCallback"></a>
 #### ContextControllerDisposeCallback()
 
-Function called when the component is disposed.
+Function called when the component is about to be disposed.
 
 <!--
 

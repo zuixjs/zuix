@@ -118,6 +118,7 @@ function generate(title, docs, filename, resolveLinks) {
 
   if (!docs[0].meta) {
     // Global
+    console.log('IGNORED', docs[0].name, docs[0].kind);
     return;
   }
   let markdown = view.render('container.tmpl', docData);
@@ -199,7 +200,6 @@ main table code {
 
 ` + markdown;
   if (outputFile.indexOf('#') === -1) {
-    console.log('Writing', outputFile);
     fs.writeFileSync(outputFile, markdown, 'utf8');
   }
 }
@@ -327,6 +327,7 @@ exports.publish = function(taffyData, opts, tutorials) {
     }
 
     const link = helper.createLink(doclet, configOptions);
+
     helper.registerLink(doclet.longname, path.join(p, link.url));
 
     // add a shortened version of the full path
@@ -393,7 +394,7 @@ exports.publish = function(taffyData, opts, tutorials) {
   }
 
   // once for all
-  attachModuleSymbols(find({kind: ['class', 'function'], longname: {left: 'module:'}}), members.modules);
+  attachModuleSymbols(find({kind: ['class', 'interface', 'function'], longname: {left: 'module:'}}), members.modules);
 
 
   if (false && members.globals.length) {
@@ -414,6 +415,7 @@ exports.publish = function(taffyData, opts, tutorials) {
 
   // set up the lists that we'll use to generate pages
   const classes = taffy(members.classes);
+  const interfaces = taffy(members.interfaces);
   const modules = taffy(members.modules);
   const namespaces = taffy(members.namespaces);
   const mixins = taffy(members.mixins);
@@ -423,6 +425,11 @@ exports.publish = function(taffyData, opts, tutorials) {
     const myClasses = helper.find(classes, {longname: longname});
     if (myClasses.length) {
       generate('Class: ' + myClasses[0].name, myClasses, helper.longnameToUrl[longname]);
+    }
+
+    const myInterfaces = helper.find(interfaces, {longname: longname});
+    if (myInterfaces.length) {
+      generate('Interface: ' + myInterfaces[0].name, myInterfaces, helper.longnameToUrl[longname]);
     }
 
     const myModules = helper.find(modules, {longname: longname});

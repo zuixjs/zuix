@@ -81,7 +81,7 @@ ContextController constructor.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 71](../../zuix/ContextController.js#L71)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 76](../../zuix/ContextController.js#L76)
 
 -->
 
@@ -95,6 +95,26 @@ ContextController constructor.
 #### log &rarr; *[Logger](../../helpers/Logger)*
 
 The component's built-in logger.
+
+<a name="init"></a>
+#### init &rarr; *[ContextControllerInitCallback](#ContextControllerInitCallback)*
+
+If set, this function gets called before component is created and before applying context options.
+
+<a name="create"></a>
+#### create &rarr; *[ContextControllerCreateCallback](#ContextControllerCreateCallback)*
+
+If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
+
+<a name="update"></a>
+#### update &rarr; *[ContextControllerUpdateCallback](#ContextControllerUpdateCallback)*
+
+If set, this function gets called each time the data model is updated.
+
+<a name="dispose"></a>
+#### dispose &rarr; *[ContextControllerDisposeCallback](#ContextControllerDisposeCallback)*
+
+If set, this function gets called when the component is about to be disposed.
 
 ### Methods
 
@@ -115,7 +135,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 319](../../zuix/ContextController.js#L319)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 303](../../zuix/ContextController.js#L303)
 
 -->
 
@@ -139,7 +159,7 @@ Same as [ComponentContext&ndash;field](../ComponentContext/#field).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 201](../../zuix/ContextController.js#L201)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 185](../../zuix/ContextController.js#L185)
 
 -->
 
@@ -163,7 +183,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 412](../../zuix/ContextController.js#L412)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 396](../../zuix/ContextController.js#L396)
 
 -->
 
@@ -199,7 +219,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 358](../../zuix/ContextController.js#L358)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 342](../../zuix/ContextController.js#L342)
 
 -->
 
@@ -238,7 +258,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 383](../../zuix/ContextController.js#L383)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 367](../../zuix/ContextController.js#L367)
 
 -->
 
@@ -276,7 +296,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 253](../../zuix/ContextController.js#L253)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 237](../../zuix/ContextController.js#L237)
 
 -->
 
@@ -293,7 +313,7 @@ Same as [ComponentContext&ndash;options](../ComponentContext/#options).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 265](../../zuix/ContextController.js#L265)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 249](../../zuix/ContextController.js#L249)
 
 -->
 
@@ -322,7 +342,7 @@ in case `isHook` is set to true, use the
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 292](../../zuix/ContextController.js#L292)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 276](../../zuix/ContextController.js#L276)
 
 -->
 
@@ -359,7 +379,7 @@ gets the view elements matching the given `filter`
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 225](../../zuix/ContextController.js#L225)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 209](../../zuix/ContextController.js#L209)
 
 -->
 
@@ -522,7 +542,7 @@ Function that gets called after loading, when the component is actually created 
 <a name="ContextControllerDisposeCallback"></a>
 #### ContextControllerDisposeCallback()
 
-Function called when the component is disposed.
+Function called when the component is about to be disposed.
 
 <!--
 

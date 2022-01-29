@@ -112,7 +112,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1687](../../zuix/Zuix.js#L1687)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1685](../../zuix/Zuix.js#L1685)
 
 -->
 
@@ -136,7 +136,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1698](../../zuix/Zuix.js#L1698)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1696](../../zuix/Zuix.js#L1696)
 
 -->
 
@@ -160,7 +160,7 @@ requested components.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1634](../../zuix/Zuix.js#L1634)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1632](../../zuix/Zuix.js#L1632)
 
 -->
 
@@ -191,7 +191,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1362](../../zuix/Zuix.js#L1362)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1360](../../zuix/Zuix.js#L1360)
 
 -->
 
@@ -231,7 +231,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1337](../../zuix/Zuix.js#L1337)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1335](../../zuix/Zuix.js#L1335)
 
 -->
 
@@ -269,7 +269,7 @@ order to actually load and display the component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1375](../../zuix/Zuix.js#L1375)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1373](../../zuix/Zuix.js#L1373)
 
 -->
 
@@ -286,7 +286,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1752](../../zuix/Zuix.js#L1752)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1750](../../zuix/Zuix.js#L1750)
 
 -->
 
@@ -302,7 +302,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1759](../../zuix/Zuix.js#L1759)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1757](../../zuix/Zuix.js#L1757)
 
 -->
 
@@ -329,7 +329,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1171](../../zuix/Zuix.js#L1171)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1170](../../zuix/Zuix.js#L1170)
 
 -->
 
@@ -366,7 +366,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1664](../../zuix/Zuix.js#L1664)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1662](../../zuix/Zuix.js#L1662)
 
 -->
 
@@ -392,7 +392,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1472](../../zuix/Zuix.js#L1472)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1470](../../zuix/Zuix.js#L1470)
 
 -->
 
@@ -478,7 +478,7 @@ Enables/Disables HTTP caching or gets the current settings.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1613](../../zuix/Zuix.js#L1613)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1611](../../zuix/Zuix.js#L1611)
 
 -->
 
@@ -502,7 +502,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1599](../../zuix/Zuix.js#L1599)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1597](../../zuix/Zuix.js#L1597)
 
 -->
 
@@ -528,7 +528,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1222](../../zuix/Zuix.js#L1222)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1220](../../zuix/Zuix.js#L1220)
 
 -->
 
@@ -540,17 +540,24 @@ attribute used to load components from HTML.
 ##### Example
 
 ```html
-<div z-field="sample-container"></div>
+ <!--
+ The controller will be loaded on the following host element:
+ -->
+<div #sample-view></div>
 
 <script>
-// declare inline controller of 'example/component'
+// Get the host element
+const view = zuix.field('sample-view');
+
+// Declares inline controller for 'my/example/component'
 const exampleController = zuix.controller((cp) => {
   cp.create = onCreate;
 
   function onCreate() {
-    // set the initial content of the view
+    // Sets the initial content of the view
     cp.view().html('Hello World!');
-    // expose a public method
+    // Exposes the private `testMethod`
+    // as the public method `test`
     cp.expose('test', testMethod);
   }
 
@@ -558,21 +565,13 @@ const exampleController = zuix.controller((cp) => {
     cp.log.i("Method exposing test");
     cp.view().html('A simple test.');
   }
-}).for('example/component');
+}).for('my/example/component');
 
-// get the container
-const container = zuix.field('sample-container');
-
-// load the component
-zuix.load('example/component', {
-  // sets the view of this component instance
-  view: container,
-  // callback called after the component is loaded
-  ready: (ctx) => {
-    // call the public method `test` after 1 second
-    setTimeout(ctx.test, 1000);
-  },
-});
+// loads the controller
+zuix.load('my/example/component', { view, ready: (ctx) => {
+  // call the public method `test` after 1 second
+  setTimeout(ctx.test, 1000);
+}});
 </script>
 ```
 
@@ -595,7 +594,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1294](../../zuix/Zuix.js#L1294)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1292](../../zuix/Zuix.js#L1292)
 
 -->
 
@@ -663,7 +662,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1674](../../zuix/Zuix.js#L1674)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1672](../../zuix/Zuix.js#L1672)
 
 -->
 
@@ -689,7 +688,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1813](../../zuix/Zuix.js#L1813)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1811](../../zuix/Zuix.js#L1811)
 
 -->
 
@@ -714,7 +713,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1798](../../zuix/Zuix.js#L1798)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1796](../../zuix/Zuix.js#L1796)
 
 -->
 
@@ -737,7 +736,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1652](../../zuix/Zuix.js#L1652)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1650](../../zuix/Zuix.js#L1650)
 
 -->
 
@@ -770,7 +769,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1397](../../zuix/Zuix.js#L1397)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1395](../../zuix/Zuix.js#L1395)
 
 -->
 
@@ -793,7 +792,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1236](../../zuix/Zuix.js#L1236)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1234](../../zuix/Zuix.js#L1234)
 
 -->
 
@@ -826,7 +825,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1493](../../zuix/Zuix.js#L1493)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1491](../../zuix/Zuix.js#L1491)
 
 -->
 
@@ -987,7 +986,7 @@ Function that gets called after loading, when the component is actually created 
 <a name="ContextControllerDisposeCallback"></a>
 #### ContextControllerDisposeCallback()
 
-Function called when the component is disposed.
+Function called when the component is about to be disposed.
 
 <!--
 

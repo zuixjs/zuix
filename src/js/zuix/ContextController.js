@@ -54,7 +54,7 @@ const z$ =
  */
 
 /**
- * Function called when the component is disposed.
+ * Function called when the component is about to be disposed.
  *
  * @callback ContextControllerDisposeCallback
  */
@@ -64,6 +64,11 @@ const z$ =
  *
  * @class
  * @property {Logger} log The component's built-in logger.
+ * @property {ContextControllerInitCallback} init If set, this function gets called before component is created and before applying context options.
+ * @property {ContextControllerCreateCallback} create If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
+ * @property {ContextControllerUpdateCallback} update If set, this function gets called each time the data model is updated.
+ * @property {ContextControllerDisposeCallback} dispose If set, this function gets called when the component is about to be disposed.
+ *
  * @constructor
  * @param {ComponentContext} context
  * @return {ContextController}
@@ -157,27 +162,6 @@ function ContextController(context) {
 
   return this;
 }
-
-/**
- * @description If set, this function gets called before component is created and before applying context options.
- * @type {ContextControllerInitCallback}
- */
-ContextController.prototype.init = null;
-/**
- * @description If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
- * @type {ContextControllerCreateCallback}
- **/
-ContextController.prototype.create = null;
-/**
- * @description If set, this function gets called each time the data model is updated.
- * @type {ContextControllerUpdateCallback}
- **/
-ContextController.prototype.update = null;
-/**
- * @description If set, this function gets called when the component is disposed.
- * @type {ContextControllerDisposeCallback}
- **/
-ContextController.prototype.dispose = null;
 
 // TODO: add jsDoc
 ContextController.prototype.addEvent = function(eventPath, handler) {

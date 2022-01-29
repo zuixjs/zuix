@@ -209,16 +209,15 @@ function Zuix() {
         });
         contextData[field] = $el.value();
       },
-      'on': function($view, $el, lastResult, refreshCallback, tag) {
-        const handlerArgs = tag.split(':').slice(1);
-        const code = $el.attr(tag);
-        handlerArgs.forEach(function(eventName) {
-          $el.on(eventName, function(e) {
-            const eventHandler = zuix.runScriptlet(code, $el, $view);
-            if (typeof eventHandler === 'function') {
-              eventHandler.call($el.get(), e, $el);
-            }
-          });
+      'on': function($view, $el, lastResult, refreshCallback, attributeName) {
+        const handlerArgs = zuix.parseAttributeArgs(attributeName, $el, $view, lastResult);
+        const code = $el.attr(attributeName);
+        const eventName = handlerArgs.slice(1).join(':');
+        $el.on(eventName, function(e) {
+          const eventHandler = zuix.runScriptlet(code, $el, $view);
+          if (typeof eventHandler === 'function') {
+            eventHandler.call($el.get(), e, $el);
+          }
         });
       },
       'get': function($view, $el, lastResult, refreshCallback) {
@@ -1080,7 +1079,7 @@ function initController(c) {
   }
 
 
-  // tender life-cycle moments
+  // tender lifecycle moments
   if (util.isFunction(c.create)) {
     c.create();
   }
@@ -1179,17 +1178,24 @@ Zuix.prototype.field = function(fieldName, container, context) {
  *
  * @example
 ```html
-<div z-field="sample-container"></div>
+ <!--
+ The controller will be loaded on the following host element:
+ -->
+<div #sample-view></div>
 
 <script>
-// declare inline controller of 'example/component'
+// Get the host element
+const view = zuix.field('sample-view');
+
+// Declares inline controller for 'my/example/component'
 const exampleController = zuix.controller((cp) => {
   cp.create = onCreate;
 
   function onCreate() {
-    // set the initial content of the view
+    // Sets the initial content of the view
     cp.view().html('Hello World!');
-    // expose a public method
+    // Exposes the private `testMethod`
+    // as the public method `test`
     cp.expose('test', testMethod);
   }
 
@@ -1197,21 +1203,13 @@ const exampleController = zuix.controller((cp) => {
     cp.log.i("Method exposing test");
     cp.view().html('A simple test.');
   }
-}).for('example/component');
+}).for('my/example/component');
 
-// get the container
-const container = zuix.field('sample-container');
-
-// load the component
-zuix.load('example/component', {
-  // sets the view of this component instance
-  view: container,
-  // callback called after the component is loaded
-  ready: (ctx) => {
-    // call the public method `test` after 1 second
-    setTimeout(ctx.test, 1000);
-  },
-});
+// loads the controller
+zuix.load('my/example/component', { view, ready: (ctx) => {
+  // call the public method `test` after 1 second
+  setTimeout(ctx.test, 1000);
+}});
 </script>
 ```
  *

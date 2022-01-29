@@ -524,7 +524,7 @@ ComponentContext.prototype.view = function(view) {
 };
 
 /**
- * Gets in the component's view, elements with `z-field`
+ * Gets, within the component's view, elements with `#` (same as `z-field`)
  * attribute matching the given `fieldName`.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
@@ -532,7 +532,7 @@ ComponentContext.prototype.view = function(view) {
  * @example
 ```html
 <div z-load="default" z-context="field-test">
-  <h1 z-field="title">Loading context...</h1>
+  <h1 #title>Loading context...</h1>
 </div>
 
 <script>
@@ -544,7 +544,7 @@ zuix.context('field-test', (ctx) => {
 ```
 <h5>Result</h5>
 <div z-load="default" z-context="field-test">
-  <h6 z-field="title">Loading context...</h6>
+  <h6 #title>Loading context...</h6>
 </div>
 <script>
 zuix.context('field-test', (ctx) => {

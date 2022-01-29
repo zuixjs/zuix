@@ -3201,7 +3201,7 @@ ComponentContext.prototype.view = function(view) {
 };
 
 /**
- * Gets in the component's view, elements with `z-field`
+ * Gets, within the component's view, elements with `#` (same as `z-field`)
  * attribute matching the given `fieldName`.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
@@ -3209,7 +3209,7 @@ ComponentContext.prototype.view = function(view) {
  * @example
 ```html
 <div z-load="default" z-context="field-test">
-  <h1 z-field="title">Loading context...</h1>
+  <h1 #title>Loading context...</h1>
 </div>
 
 <script>
@@ -3221,7 +3221,7 @@ zuix.context('field-test', (ctx) => {
 ```
 <h5>Result</h5>
 <div z-load="default" z-context="field-test">
-  <h6 z-field="title">Loading context...</h6>
+  <h6 #title>Loading context...</h6>
 </div>
 <script>
 zuix.context('field-test', (ctx) => {
@@ -4552,7 +4552,7 @@ const z$ =
  */
 
 /**
- * Function called when the component is disposed.
+ * Function called when the component is about to be disposed.
  *
  * @callback ContextControllerDisposeCallback
  */
@@ -4562,6 +4562,11 @@ const z$ =
  *
  * @class
  * @property {Logger} log The component's built-in logger.
+ * @property {ContextControllerInitCallback} init If set, this function gets called before component is created and before applying context options.
+ * @property {ContextControllerCreateCallback} create If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
+ * @property {ContextControllerUpdateCallback} update If set, this function gets called each time the data model is updated.
+ * @property {ContextControllerDisposeCallback} dispose If set, this function gets called when the component is about to be disposed.
+ *
  * @constructor
  * @param {ComponentContext} context
  * @return {ContextController}
@@ -4655,27 +4660,6 @@ function ContextController(context) {
 
   return this;
 }
-
-/**
- * @description If set, this function gets called before component is created and before applying context options.
- * @type {ContextControllerInitCallback}
- */
-ContextController.prototype.init = null;
-/**
- * @description If set, this function gets called after loading, when the component is created and its view (if provided) is loaded.
- * @type {ContextControllerCreateCallback}
- **/
-ContextController.prototype.create = null;
-/**
- * @description If set, this function gets called each time the data model is updated.
- * @type {ContextControllerUpdateCallback}
- **/
-ContextController.prototype.update = null;
-/**
- * @description If set, this function gets called when the component is disposed.
- * @type {ContextControllerDisposeCallback}
- **/
-ContextController.prototype.dispose = null;
 
 // TODO: add jsDoc
 ContextController.prototype.addEvent = function(eventPath, handler) {
@@ -5342,16 +5326,15 @@ function Zuix() {
         });
         contextData[field] = $el.value();
       },
-      'on': function($view, $el, lastResult, refreshCallback, tag) {
-        const handlerArgs = tag.split(':').slice(1);
-        const code = $el.attr(tag);
-        handlerArgs.forEach(function(eventName) {
-          $el.on(eventName, function(e) {
-            const eventHandler = zuix.runScriptlet(code, $el, $view);
-            if (typeof eventHandler === 'function') {
-              eventHandler.call($el.get(), e, $el);
-            }
-          });
+      'on': function($view, $el, lastResult, refreshCallback, attributeName) {
+        const handlerArgs = zuix.parseAttributeArgs(attributeName, $el, $view, lastResult);
+        const code = $el.attr(attributeName);
+        const eventName = handlerArgs.slice(1).join(':');
+        $el.on(eventName, function(e) {
+          const eventHandler = zuix.runScriptlet(code, $el, $view);
+          if (typeof eventHandler === 'function') {
+            eventHandler.call($el.get(), e, $el);
+          }
         });
       },
       'get': function($view, $el, lastResult, refreshCallback) {
@@ -6213,7 +6196,7 @@ function initController(c) {
   }
 
 
-  // tender life-cycle moments
+  // tender lifecycle moments
   if (util.isFunction(c.create)) {
     c.create();
   }
@@ -6312,17 +6295,24 @@ Zuix.prototype.field = function(fieldName, container, context) {
  *
  * @example
 ```html
-<div z-field="sample-container"></div>
+ <!--
+ The controller will be loaded on the following host element:
+ -->
+<div #sample-view></div>
 
 <script>
-// declare inline controller of 'example/component'
+// Get the host element
+const view = zuix.field('sample-view');
+
+// Declares inline controller for 'my/example/component'
 const exampleController = zuix.controller((cp) => {
   cp.create = onCreate;
 
   function onCreate() {
-    // set the initial content of the view
+    // Sets the initial content of the view
     cp.view().html('Hello World!');
-    // expose a public method
+    // Exposes the private `testMethod`
+    // as the public method `test`
     cp.expose('test', testMethod);
   }
 
@@ -6330,21 +6320,13 @@ const exampleController = zuix.controller((cp) => {
     cp.log.i("Method exposing test");
     cp.view().html('A simple test.');
   }
-}).for('example/component');
+}).for('my/example/component');
 
-// get the container
-const container = zuix.field('sample-container');
-
-// load the component
-zuix.load('example/component', {
-  // sets the view of this component instance
-  view: container,
-  // callback called after the component is loaded
-  ready: (ctx) => {
-    // call the public method `test` after 1 second
-    setTimeout(ctx.test, 1000);
-  },
-});
+// loads the controller
+zuix.load('my/example/component', { view, ready: (ctx) => {
+  // call the public method `test` after 1 second
+  setTimeout(ctx.test, 1000);
+}});
 </script>
 ```
  *

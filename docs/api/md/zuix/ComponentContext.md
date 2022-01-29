@@ -184,7 +184,7 @@ Disposes the component context and all of its allocated resources.
 <a name="field"></a>
 #### field(fieldName) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
 
-Gets in the component's view, elements with `z-field`
+Gets, within the component's view, elements with `#` (same as `z-field`)
 attribute matching the given `fieldName`.
 This method implements a caching mechanism and automatic
 disposal of allocated objects and events.
@@ -211,7 +211,7 @@ disposal of allocated objects and events.
 
 ```html
 <div z-load="default" z-context="field-test">
-  <h1 z-field="title">Loading context...</h1>
+  <h1 #title>Loading context...</h1>
 </div>
 
 <script>
@@ -223,7 +223,7 @@ zuix.context('field-test', (ctx) => {
 ```
 <h5>Result</h5>
 <div z-load="default" z-context="field-test">
-  <h6 z-field="title">Loading context...</h6>
+  <h6 #title>Loading context...</h6>
 </div>
 <script>
 zuix.context('field-test', (ctx) => {
@@ -609,7 +609,7 @@ Function that gets called after loading, when the component is actually created 
 <a name="ContextControllerDisposeCallback"></a>
 #### ContextControllerDisposeCallback()
 
-Function called when the component is disposed.
+Function called when the component is about to be disposed.
 
 <!--
 
