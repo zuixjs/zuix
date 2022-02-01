@@ -1,4 +1,4 @@
-/* zUIx v1.0.9 21.12.06 16:08:23 */
+/* zUIx v1.0.10 22.02.01 01:26:49 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -515,6 +515,10 @@ const OptionAttributes = Object.freeze({
         'z-model,data-bind-model',
   dataBindTo:
         'z-bind,data-bind-to',
+  dataUiBehavior:
+        'z-behavior',
+  dataUiOn:
+        'z-on',
   dataUiComponent:
         'z-component',
   dataUiContext:
