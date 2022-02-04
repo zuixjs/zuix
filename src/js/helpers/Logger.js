@@ -111,7 +111,7 @@ function Logger(ctx) {
       _callback.call(ctx, level, args);
     }
     // route event
-    if (!_global.zuixNoConsoleOutput) {
+    if (_global.__zuix__debug) {
       this.args(ctx, level, args);
       _console.log.apply(_console, args);
     }
