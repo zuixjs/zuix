@@ -1,4 +1,4 @@
-/* zUIx v1.0.10 22.02.01 01:26:49 */
+/* zUIx v1.0.11 22.02.04 02:37:07 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -6129,7 +6129,7 @@ function initController(c) {
           });
           // if "using" components are not ready, retry on the next refresh call
           if (ctx._dependencyResolver !== false && componentsResolve.length > 0) {
-            componentsResolve += 'const resolved = function() { return ' + waitingComponents + 'true; }';
+            componentsResolve += 'const resolved = function() { return ' + waitingComponents + 'true; };';
             ctx._dependencyResolver = Function(scriptHeader + componentsResolve + '; return { resolved }; }).call(this.$el.get(), this.$el, this.ctx, this.args);')
                 .call({$el, ctx, args: null});
             if (!ctx._dependencyResolver.resolved()) {

@@ -72,14 +72,14 @@ export interface ContextControllerInitCallback {
 export interface ContextControllerCreateCallback {
     (): void;
 }
-export interface ContextControllerDestroyCallback {
+export interface ContextControllerDisposeCallback {
     (): void;
 }
 export interface ContextController {
     init: ContextControllerInitCallback;
     create: ContextControllerCreateCallback;
     update: ContextControllerUpdateCallback;
-    destroy: ContextControllerDestroyCallback;
+    dispose: ContextControllerDisposeCallback;
     field(fieldName: String): ZxQuery;
     view(filter?: String): ZxQuery;
     model(model?: Object): ContextController | Object;
