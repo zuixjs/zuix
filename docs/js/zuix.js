@@ -1,4 +1,4 @@
-/* zUIx v1.0.11 22.02.04 02:37:07 */
+/* zUIx v1.0.12 22.02.04 16:14:35 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -1677,7 +1677,7 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
 };
 // TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
-  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.@]+.\n*){([^{}]|((.*){([^}]+)[}]))*})/g;
+  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.*@]+.\n*){[^}]*})/g;
   let wrappedCss = '';
   let ruleMatch;
   // remove comments

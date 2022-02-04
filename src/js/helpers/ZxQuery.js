@@ -925,7 +925,7 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
 };
 // TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
-  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.@]+.\n*){([^{}]|((.*){([^}]+)[}]))*})/g;
+  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.*@]+.\n*){[^}]*})/g;
   let wrappedCss = '';
   let ruleMatch;
   // remove comments
