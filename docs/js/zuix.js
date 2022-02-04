@@ -1,4 +1,4 @@
-/* zUIx v1.0.12 22.02.04 16:14:35 */
+/* zUIx v1.0.13 22.02.04 17:55:19 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -251,7 +251,7 @@ function Logger(ctx) {
       _callback.call(ctx, level, args);
     }
     // route event
-    if (!_global.zuixNoConsoleOutput) {
+    if (_global.__zuix__debug) {
       this.args(ctx, level, args);
       _console.log.apply(_console, args);
     }
