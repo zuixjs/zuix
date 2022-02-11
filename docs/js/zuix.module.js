@@ -6102,9 +6102,9 @@ function initController(c) {
           usingComponents.forEach(function(cid) {
             const ctxVarName = util.hyphensToCamelCase(cid);
             if (ctx._dependencyResolver !== false) {
-              componentsResolve += 'let ' + ctxVarName + ' = null; zuix.context("' + cid + '", function(ctx) { ' + ctxVarName + ' = ctx; });';
+              componentsResolve += 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { ' + ctxVarName + ' = zuix.context("' + cid + '", function(ctx) { ' + ctxVarName + ' = ctx; }); }';
             } else {
-              componentsResolve += 'let ' + ctxVarName + ' = zuix.context("' + cid + '");';
+              componentsResolve += 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { ' + ctxVarName + ' = zuix.context("' + cid + '"); }';
             }
             waitingComponents += ctxVarName + ' && ';
           });

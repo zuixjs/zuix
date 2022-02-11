@@ -1,4 +1,4 @@
-/* zUIx v1.0.13 22.02.04 17:55:19 */
+/* zUIx v1.0.14 22.02.11 08:18:54 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -6121,9 +6121,9 @@ function initController(c) {
           usingComponents.forEach(function(cid) {
             const ctxVarName = util.hyphensToCamelCase(cid);
             if (ctx._dependencyResolver !== false) {
-              componentsResolve += 'let ' + ctxVarName + ' = null; zuix.context("' + cid + '", function(ctx) { ' + ctxVarName + ' = ctx; });';
+              componentsResolve += 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { ' + ctxVarName + ' = zuix.context("' + cid + '", function(ctx) { ' + ctxVarName + ' = ctx; }); }';
             } else {
-              componentsResolve += 'let ' + ctxVarName + ' = zuix.context("' + cid + '");';
+              componentsResolve += 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { ' + ctxVarName + ' = zuix.context("' + cid + '"); }';
             }
             waitingComponents += ctxVarName + ' && ';
           });
