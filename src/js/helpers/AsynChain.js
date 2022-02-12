@@ -26,43 +26,38 @@
 
 'use strict';
 
+const jobsList = [];
+let currentIndex = -1;
+let listener = null;
+let lazyThread = null;
+
 function AsynChain(callback) {
   listener = callback;
 }
 
-AsynChain.prototype.isReady = function() {
-  return jobsList.length === 0 || currentIndex === -1;
-};
-AsynChain.prototype.getJobs = function() {
-  return jobsList;
-};
-AsynChain.prototype.setJobs = function(list) {
-  if (jobsList.length > 0) {
-    // TODO: this case should never happen
-    currentIndex = -1;
-    jobsList.length = 0;
-    // done();
-    return;
-  }
-  jobsList = list.slice();
-  listener.status('start', jobsList);
-  next();
-};
 AsynChain.prototype.append = function(list) {
-  // TODO: this is causing stack-overflow
-  if (this.isReady()) {
-    this.setJobs(list);
-  } else {
-    Array.prototype.push.apply(jobsList, list);
+  let exists;
+  zuix.$.each(list, (i, newJob) => {
+    exists = false;
+    for (let j = 0; j < jobsList.length; j++) {
+      const job = jobsList[j];
+      if (job.item.element === newJob.item.element) {
+        exists = true;
+        jobsList[j] = newJob;
+        break;
+      }
+    }
+    if (!exists) {
+      jobsList.push(newJob);
+    }
+  });
+  if (jobsList.length > 0 && currentIndex === -1) {
+    listener.status('start', jobsList);
+    next();
   }
 };
 
 // --------------------------------------------
-
-let jobsList = [];
-let currentIndex = -1;
-let listener = null;
-let lazyThread = null;
 
 function next() {
   resetAsynCallback();
@@ -78,8 +73,6 @@ function next() {
 }
 function done(reason) {
   currentIndex = -1;
-  jobsList.length = 0;
-  jobsList = [];
   listener.status(reason != null ? reason : 'done');
 }
 
