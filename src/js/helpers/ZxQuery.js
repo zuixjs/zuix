@@ -925,11 +925,13 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
 };
 // TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
-  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.*@]+.\n*){[^}]*})/g;
+  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.*@]+.*){[^}]*})/g;
   let wrappedCss = '';
   let ruleMatch;
   // remove comments
   css = css.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '');
+  // some more normalization to help parsing
+  css = css.replace(/(?:\r\n|\r|\n)/g, '').replace(/}/g, '}\n').replace(/\{/g, '{\n');
   do {
     ruleMatch = wrapReX.exec(css);
     if (ruleMatch && ruleMatch.length > 1) {
