@@ -397,7 +397,7 @@ function loadInline(element, opts) {
   if (util.isNoU(options.view) && !v.isEmpty()) {
     options.view = element;
     options.viewDeferred = true;
-  } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty()) {
+  } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty() && v.attr(_optionAttributes.resourceType.controller) == null) {
     options.container = element;
   }
 

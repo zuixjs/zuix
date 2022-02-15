@@ -1,4 +1,4 @@
-/* zUIx v1.0.16 22.02.14 21:21:58 */
+/* zUIx v1.0.17 22.02.15 02:05:11 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -4256,7 +4256,7 @@ function loadInline(element, opts) {
   if (util.isNoU(options.view) && !v.isEmpty()) {
     options.view = element;
     options.viewDeferred = true;
-  } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty()) {
+  } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty() && v.attr(_optionAttributes.resourceType.controller) == null) {
     options.container = element;
   }
 
