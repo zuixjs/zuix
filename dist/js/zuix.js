@@ -1,4 +1,4 @@
-/* zUIx v1.0.17 22.02.15 02:05:11 */
+/* zUIx v1.0.18 22.02.15 19:33:10 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -5580,7 +5580,6 @@ function loadResources(ctx, options) {
       /*
         TODO: CSS caching, to be tested.
       */
-      /*
       if (options.css !== false && typeof options.css !== 'string') {
         options.css = false;
         if (!cachedComponent.css_applied) {
@@ -5589,7 +5588,6 @@ function loadResources(ctx, options) {
           _log.t(ctx.componentId + ':css', 'component:cached:css');
         }
       }
-      */
     }
 
     // if not able to inherit the view from the base cachedComponent

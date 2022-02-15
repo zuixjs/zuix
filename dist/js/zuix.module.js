@@ -5561,7 +5561,6 @@ function loadResources(ctx, options) {
       /*
         TODO: CSS caching, to be tested.
       */
-      /*
       if (options.css !== false && typeof options.css !== 'string') {
         options.css = false;
         if (!cachedComponent.css_applied) {
@@ -5570,7 +5569,6 @@ function loadResources(ctx, options) {
           _log.t(ctx.componentId + ':css', 'component:cached:css');
         }
       }
-      */
     }
 
     // if not able to inherit the view from the base cachedComponent
