@@ -1661,12 +1661,12 @@ ZxQueryStatic.wrapElement = function(containerTag, element) {
 };
 // TODO: undocumented
 ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
-  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.*@]+.*){[^}]*})/g;
+  const wrapReX = /(([a-zA-Z0-9\240-\377=:-_- \n,.@]+.*){([^{}]|((.*){([^}]+)[}]))*})/g;
   let wrappedCss = '';
   let ruleMatch;
   // remove comments
   css = css.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '');
-  // some more normalization to help parsing
+  // some more normalization to help with parsing
   css = css.replace(/(?:\r\n|\r|\n)/g, '').replace(/}/g, '}\n').replace(/\{/g, '{\n');
   do {
     ruleMatch = wrapReX.exec(css);
@@ -1693,13 +1693,15 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
             v.split(/\s+/).forEach(function(attr) {
               attr = attr.trim();
               if (attr.lastIndexOf('.') > 0) {
-                attr.split('.').forEach(function(attr2) {
+                attr.replace(/(?=[.])/gi, ',').split(',').forEach(function(attr2) {
                   if (attr2 !== '') {
-                    wrappedCss += '.' + attr2 + wrapperRule;
+                    wrappedCss += '\n' + attr2 + wrapperRule;
                   }
                 });
-              } else if (attr !== '') {
+              } else if (attr !== '' && attr !== '>' && attr !== '*') {
                 wrappedCss += '\n' + attr + wrapperRule + ' ';
+              } else {
+                wrappedCss += attr + ' ';
               }
             });
           } else {
