@@ -1,4 +1,4 @@
-/* zUIx v1.0.19 22.02.18 23:07:42 */
+/* zUIx v1.0.20 22.02.19 01:51:53 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -5293,7 +5293,7 @@ function Zuix() {
       'baseUrl': '/',
       'resourcePath': '/app/',
       'libraryPath': {
-        '@lib': 'https://zuixjs.github.io/zkit/lib/',
+        '@lib': 'https://zuixjs.github.io/zkit/lib/1.1/',
         '@hgui': 'https://genielabs.github.io/homegenie-web-ui/app/',
         '@cdnjs': 'https://cdnjs.cloudflare.com/ajax/libs/'
       },
@@ -5301,7 +5301,7 @@ function Zuix() {
       'zuixjs.github.io': {
         'resourcePath': '/zuixjs/app',
         'libraryPath': {
-          '@lib': 'https://zuixjs.github.io/zkit/lib/',
+          '@lib': 'https://zuixjs.github.io/zkit/lib/1.1/',
           '@hgui': 'https://genielabs.github.io/homegenie-web-ui/app/',
           '@cdnjs': 'https://cdnjs.cloudflare.com/ajax/libs/'
         }

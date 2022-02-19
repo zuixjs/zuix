@@ -177,7 +177,7 @@ function Zuix() {
       'baseUrl': '/',
       'resourcePath': '/app/',
       'libraryPath': {
-        '@lib': 'https://zuixjs.github.io/zkit/lib/',
+        '@lib': 'https://zuixjs.github.io/zkit/lib/1.1/',
         '@hgui': 'https://genielabs.github.io/homegenie-web-ui/app/',
         '@cdnjs': 'https://cdnjs.cloudflare.com/ajax/libs/'
       },
@@ -185,7 +185,7 @@ function Zuix() {
       'zuixjs.github.io': {
         'resourcePath': '/zuixjs/app',
         'libraryPath': {
-          '@lib': 'https://zuixjs.github.io/zkit/lib/',
+          '@lib': 'https://zuixjs.github.io/zkit/lib/1.1/',
           '@hgui': 'https://genielabs.github.io/homegenie-web-ui/app/',
           '@cdnjs': 'https://cdnjs.cloudflare.com/ajax/libs/'
         }
