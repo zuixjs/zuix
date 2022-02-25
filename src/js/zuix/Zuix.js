@@ -903,8 +903,11 @@ function initController(c) {
 
   const $view = c.view();
   // re-enable nested components loading
+  let innerComponents = 0;
+  // re-enable nested components loading
   $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
       .each(function(i, v) {
+        innerComponents++;
         this.attr(_optionAttributes.dataUiLoaded, null);
       });
 
@@ -1101,7 +1104,9 @@ function initController(c) {
   _log.t(ctx.componentId, 'controller:init', 'timer:init:stop');
   _log.i(ctx.componentId, 'component:loaded', ctx.contextId);
 
-  zuix.componentize($view);
+  if (innerComponents) {
+    zuix.componentize($view);
+  }
 }
 
 /**

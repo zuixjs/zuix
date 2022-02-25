@@ -147,30 +147,6 @@ const TaskItem = function() {
   };
 };
 
-// Components Loading Chain
-const loader = require('./../helpers/AsynChain')({
-
-  doWork: function(item, callback) {
-    z$(item.element).one('component:ready', function() {
-      callback();
-    });
-    return loadInline(item.element);
-  },
-  willBreak: function() {
-    return false;
-  },
-  status: function(status) {
-    switch (status) {
-      case 'start':
-        break;
-      case 'done':
-        loadNext();
-        break;
-    }
-  }
-
-});
-
 /** @private */
 let _disableLazyLoading = false;
 /** @private */
@@ -354,8 +330,13 @@ function getNextLoadable() {
 function loadNext(element) {
   queueLoadables(element);
   const job = getNextLoadable();
-  if (job != null) {
-    loader.append([job]);
+  if (job != null && job.item != null && job.item.element != null) {
+    z$(job.item.element).one('component:ready', function() {
+      setTimeout(function() {
+        zuix.componentize(job.item.element);
+      });
+    });
+    loadInline(job.item.element);
   }
 }
 

@@ -1,131 +1,8 @@
-/* zUIx v1.0.20 22.02.19 01:51:53 */
+/* zUIx v1.0.21 22.02.25 04:56:25 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
-
-/***/ 246:
-/***/ ((module) => {
-
-"use strict";
-/*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- *
- *  This file is part of
- *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
- *
- * @author Generoso Martello <generoso@martello.com>
- */
-
-
-
-const jobsList = [];
-let currentIndex = -1;
-let listener = null;
-let lazyThread = null;
-
-function AsynChain(callback) {
-  listener = callback;
-}
-
-AsynChain.prototype.append = function(list) {
-  let exists;
-  zuix.$.each(list, (i, newJob) => {
-    exists = false;
-    for (let j = 0; j < jobsList.length; j++) {
-      const job = jobsList[j];
-      if (job.item.element === newJob.item.element) {
-        exists = true;
-        jobsList[j] = newJob;
-        break;
-      }
-    }
-    if (!exists) {
-      jobsList.push(newJob);
-    }
-  });
-  if (jobsList.length > 0 && currentIndex === -1) {
-    listener.status('start', jobsList);
-    next();
-  }
-};
-
-// --------------------------------------------
-
-function next() {
-  resetAsynCallback();
-  currentIndex++;
-  if (currentIndex < jobsList.length && !listener.willBreak()) {
-    worker();
-    return true;
-  }
-  if (currentIndex >= jobsList.length || listener.willBreak()) {
-    done();
-  }
-  return false;
-}
-function done(reason) {
-  currentIndex = -1;
-  listener.status(reason != null ? reason : 'done');
-}
-
-function worker() {
-  const job = jobsList[currentIndex];
-  if (job == null) {
-    return false;
-  }
-  const doWork = function() {
-    resetAsynCallback();
-    if (!listener.doWork(job.item, function() {
-      lazyThread = setTimeout(next);
-    })) {
-      next();
-    }
-  };
-  if (job.cancelable) {
-    if (listener.willBreak()) {
-      done('stopped');
-    } else if (lazyThread == null) {
-      lazyThread = setTimeout(doWork);
-    } else {
-      return false;
-    }
-  } else {
-    doWork();
-  }
-  return true;
-}
-
-function resetAsynCallback() {
-  if (lazyThread !== null) {
-    clearTimeout(lazyThread);
-    lazyThread = null;
-  }
-}
-
-module.exports = function(callback) {
-  return new AsynChain(callback);
-};
-
-
-/***/ }),
 
 /***/ 381:
 /***/ ((module) => {
@@ -4008,30 +3885,6 @@ const TaskItem = function() {
   };
 };
 
-// Components Loading Chain
-const loader = __webpack_require__(246)({
-
-  doWork: function(item, callback) {
-    z$(item.element).one('component:ready', function() {
-      callback();
-    });
-    return loadInline(item.element);
-  },
-  willBreak: function() {
-    return false;
-  },
-  status: function(status) {
-    switch (status) {
-      case 'start':
-        break;
-      case 'done':
-        loadNext();
-        break;
-    }
-  }
-
-});
-
 /** @private */
 let _disableLazyLoading = false;
 /** @private */
@@ -4215,8 +4068,13 @@ function getNextLoadable() {
 function loadNext(element) {
   queueLoadables(element);
   const job = getNextLoadable();
-  if (job != null) {
-    loader.append([job]);
+  if (job != null && job.item != null && job.item.element != null) {
+    z$(job.item.element).one('component:ready', function() {
+      setTimeout(function() {
+        zuix.componentize(job.item.element);
+      });
+    });
+    loadInline(job.item.element);
   }
 }
 
@@ -6019,8 +5877,11 @@ function initController(c) {
 
   const $view = c.view();
   // re-enable nested components loading
+  let innerComponents = 0;
+  // re-enable nested components loading
   $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
       .each(function(i, v) {
+        innerComponents++;
         this.attr(_optionAttributes.dataUiLoaded, null);
       });
 
@@ -6217,7 +6078,9 @@ function initController(c) {
   _log.t(ctx.componentId, 'controller:init', 'timer:init:stop');
   _log.i(ctx.componentId, 'component:loaded', ctx.contextId);
 
-  zuix.componentize($view);
+  if (innerComponents) {
+    zuix.componentize($view);
+  }
 }
 
 /**
