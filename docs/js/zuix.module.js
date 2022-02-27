@@ -5373,7 +5373,7 @@ function getResourcePath(path) {
     config = config[location.host];
   }
   path = _componentizer.resolvePath(path);
-  if (!path.startsWith('//') && path.indexOf('://') < 0) {
+  if (!path.startsWith('/') && path.indexOf('://') < 0) {
     path = (config != null && config.resourcePath != null ? config.resourcePath : '') + path;
   }
   return path;

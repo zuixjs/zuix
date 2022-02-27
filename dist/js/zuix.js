@@ -1,4 +1,4 @@
-/* zUIx v1.0.21 22.02.25 04:56:25 */
+/* zUIx v1.0.22 22.02.27 01:25:18 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -5391,7 +5391,7 @@ function getResourcePath(path) {
     config = config[location.host];
   }
   path = _componentizer.resolvePath(path);
-  if (!path.startsWith('//') && path.indexOf('://') < 0) {
+  if (!path.startsWith('/') && path.indexOf('://') < 0) {
     path = (config != null && config.resourcePath != null ? config.resourcePath : '') + path;
   }
   return path;
