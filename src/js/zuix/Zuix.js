@@ -1827,7 +1827,8 @@ Zuix.prototype.parseAttributeArgs = function(attributeName, $el, $view, contextD
  */
 module.exports = function(root) {
   const zuix = new Zuix();
-  zuix.$.appendCss('[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}', null, 'zuix-global');
+  const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
+  zuix.$.appendCss(globalStyle, null, 'zuix-global');
   if (document.readyState != 'loading') {
     zuix.componentize();
   } else {
