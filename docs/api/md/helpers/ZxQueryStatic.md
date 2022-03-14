@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: side_drawer.liquid
+tags: api
+options: mdl highlight
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: ZxQueryStatic"
+description: "zUIx.js API documentation, Class: ZxQueryStatic"
 keywords:
 - Documentation
 - API
@@ -105,7 +107,7 @@ Appends or replaces a stylesheet to the document.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 996](../../helpers/ZxQuery.js#L996)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1000](../../helpers/ZxQuery.js#L1000)
 
 -->
 
@@ -204,7 +206,7 @@ Gets the closest parent mathing the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1126](../../helpers/ZxQuery.js#L1126)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1130](../../helpers/ZxQuery.js#L1130)
 
 -->
 
@@ -227,7 +229,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1144](../../helpers/ZxQuery.js#L1144)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1148](../../helpers/ZxQuery.js#L1148)
 
 -->
 
@@ -296,7 +298,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1084](../../helpers/ZxQuery.js#L1084)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1088](../../helpers/ZxQuery.js#L1088)
 
 -->
 
@@ -320,7 +322,7 @@ Replaces CSS variables with provided values.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1036](../../helpers/ZxQuery.js#L1036)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1040](../../helpers/ZxQuery.js#L1040)
 
 -->
 

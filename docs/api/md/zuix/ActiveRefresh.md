@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: side_drawer.liquid
+tags: api
+options: mdl highlight
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: ActiveRefresh"
+description: "zUIx.js API documentation, Class: ActiveRefresh"
 keywords:
 - Documentation
 - API

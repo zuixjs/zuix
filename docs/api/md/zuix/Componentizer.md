@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: side_drawer.liquid
+tags: api
+options: mdl highlight
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: Class: Componentizer"
+description: "zUIx.js API documentation, Class: Componentizer"
 keywords:
 - Documentation
 - API
@@ -73,7 +75,7 @@ main table code {
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 198](../../zuix/Componentizer.js#L198)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 174](../../zuix/Componentizer.js#L174)
 
 -->
 

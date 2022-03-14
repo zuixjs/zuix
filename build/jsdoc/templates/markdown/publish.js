@@ -134,10 +134,12 @@ function generate(title, docs, filename, resolveLinks) {
 
   markdown = markdown.substring(markdown.indexOf('##'));
   markdown = `---
-layout: page
+layout: side_drawer.liquid
+tags: api
+options: mdl highlight
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation: ${docData.title}"
+description: "zUIx.js API documentation, ${docData.title}"
 keywords:
 - Documentation
 - API
