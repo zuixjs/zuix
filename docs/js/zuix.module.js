@@ -5910,7 +5910,7 @@ function initController(c) {
 
 
   // Setup main component's 'refresh' handler
-  const viewRefreshScript = $view.children('[type="jscript"]');
+  const viewRefreshScript = $view.find(':scope > [type="jscript"]');
   ctx.handlers.refresh = function($view, $el, contextData, refreshCallback) {
     //const ctx = zuix.context($view);
     if (!ctx._disposed) {

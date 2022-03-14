@@ -1,4 +1,4 @@
-/* zUIx v1.0.23 22.03.14 08:44:52 */
+/* zUIx v1.0.24 22.03.14 16:01:06 */
 
 var zuix;
 /******/ (() => { // webpackBootstrap
@@ -5928,7 +5928,7 @@ function initController(c) {
 
 
   // Setup main component's 'refresh' handler
-  const viewRefreshScript = $view.children('[type="jscript"]');
+  const viewRefreshScript = $view.find(':scope > [type="jscript"]');
   ctx.handlers.refresh = function($view, $el, contextData, refreshCallback) {
     //const ctx = zuix.context($view);
     if (!ctx._disposed) {
