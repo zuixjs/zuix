@@ -5588,6 +5588,10 @@ function httpCaching(enable) {
 
 // *********************** private members ************************* //
 
+/** @private */
+function setComponentCache(cache) {
+  _componentCache = cache;
+}
 
 /** @private */
 function removeCachedComponent(componentId) {
@@ -6702,6 +6706,10 @@ Zuix.prototype.TaskQueue = TaskQueue;
 Zuix.prototype.ObjectObserver = ObjectObserver;
 /** @private */
 Zuix.prototype.ZxQuery = z$.ZxQuery;
+/** @private */
+Zuix.prototype.setComponentCache = function(componentCache) {
+  setComponentCache(componentCache);
+};
 /**
  * Dumps content of the components cache. Mainly for debugging purpose.
  * @return {Array<ComponentCache>}
