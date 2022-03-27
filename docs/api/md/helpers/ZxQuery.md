@@ -86,7 +86,7 @@ root *document* element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 186](../../helpers/ZxQuery.js#L186)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 195](../../helpers/ZxQuery.js#L195)
 
 -->
 
@@ -111,7 +111,7 @@ Adds the given CSS class to the class list of all elements in the ZxQuery object
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 520](../../helpers/ZxQuery.js#L520)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 551](../../helpers/ZxQuery.js#L551)
 
 -->
 
@@ -134,7 +134,7 @@ Appends the given element or HTML string to the first element in the ZxQuery obj
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 612](../../helpers/ZxQuery.js#L612)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 643](../../helpers/ZxQuery.js#L643)
 
 -->
 
@@ -151,7 +151,7 @@ Re-attaches to its parent the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 673](../../helpers/ZxQuery.js#L673)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 704](../../helpers/ZxQuery.js#L704)
 
 -->
 
@@ -175,7 +175,7 @@ or sets one or more attributes for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 364](../../helpers/ZxQuery.js#L364)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 373](../../helpers/ZxQuery.js#L373)
 
 -->
 
@@ -199,7 +199,7 @@ or sets the `checked` attribute value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 580](../../helpers/ZxQuery.js#L580)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 611](../../helpers/ZxQuery.js#L611)
 
 -->
 
@@ -222,7 +222,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 243](../../helpers/ZxQuery.js#L243)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 252](../../helpers/ZxQuery.js#L252)
 
 -->
 
@@ -247,7 +247,7 @@ or sets one or more CSS property for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 497](../../helpers/ZxQuery.js#L497)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 528](../../helpers/ZxQuery.js#L528)
 
 -->
 
@@ -264,7 +264,7 @@ Detaches from its parent the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 657](../../helpers/ZxQuery.js#L657)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 688](../../helpers/ZxQuery.js#L688)
 
 -->
 
@@ -287,7 +287,7 @@ or sets the `display` property value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 693](../../helpers/ZxQuery.js#L693)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 724](../../helpers/ZxQuery.js#L724)
 
 -->
 
@@ -318,7 +318,7 @@ function or return `true` to continue to the next iteration.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 352](../../helpers/ZxQuery.js#L352)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 361](../../helpers/ZxQuery.js#L361)
 
 -->
 
@@ -342,7 +342,7 @@ located at the given position in the current ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 278](../../helpers/ZxQuery.js#L278)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 287](../../helpers/ZxQuery.js#L287)
 
 -->
 
@@ -366,7 +366,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 334](../../helpers/ZxQuery.js#L334)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 343](../../helpers/ZxQuery.js#L343)
 
 -->
 
@@ -390,7 +390,7 @@ If no index is provided, the default element will be returned.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 267](../../helpers/ZxQuery.js#L267)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 276](../../helpers/ZxQuery.js#L276)
 
 -->
 
@@ -413,7 +413,7 @@ Returns *true* if the first element in the ZxQuery object contains the given CSS
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 537](../../helpers/ZxQuery.js#L537)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 568](../../helpers/ZxQuery.js#L568)
 
 -->
 
@@ -430,7 +430,7 @@ Sets the CSS `display` property to 'none'.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 732](../../helpers/ZxQuery.js#L732)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 763](../../helpers/ZxQuery.js#L763)
 
 -->
 
@@ -454,7 +454,7 @@ or sets the HTML string for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 564](../../helpers/ZxQuery.js#L564)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 595](../../helpers/ZxQuery.js#L595)
 
 -->
 
@@ -478,7 +478,7 @@ ZxQuery object selection.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 317](../../helpers/ZxQuery.js#L317)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 326](../../helpers/ZxQuery.js#L326)
 
 -->
 
@@ -502,7 +502,7 @@ to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 628](../../helpers/ZxQuery.js#L628)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 659](../../helpers/ZxQuery.js#L659)
 
 -->
 
@@ -519,7 +519,7 @@ Returns *true* if the first element markup code is empty.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 472](../../helpers/ZxQuery.js#L472)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 503](../../helpers/ZxQuery.js#L503)
 
 -->
 
@@ -536,7 +536,7 @@ Gets the number of elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 220](../../helpers/ZxQuery.js#L220)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 229](../../helpers/ZxQuery.js#L229)
 
 -->
 
@@ -554,7 +554,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 306](../../helpers/ZxQuery.js#L306)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 315](../../helpers/ZxQuery.js#L315)
 
 -->
 
@@ -570,15 +570,15 @@ Stops listening for the given event.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`eventPath`|*string*|Event path.|
-|`eventHandler`|*function*|Event handler.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`eventPath`|*string* \| *Array.&lt;Object>* \| *JSON*|  |Event path or object with event/handler pairs.|
+|`eventHandler`|*function*|*optional*  |Event handler. Not used if eventPath is an object with event/handler pairs.|
 
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 447](../../helpers/ZxQuery.js#L447)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 471](../../helpers/ZxQuery.js#L471)
 
 -->
 
@@ -594,15 +594,15 @@ Listens to the given event for all elements in the ZxQuery object.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`eventPath`|*string*|Event path.|
-|`eventHandler`|*function*|Event handler.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`eventPath`|*string* \| *Array.&lt;Object>* \| *JSON*|  |Event path or object with event/handler pairs.|
+|`eventHandler`|*function*|*optional*  |Event handler. Not used if eventPath is an object with event/handler pairs.|
 
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 427](../../helpers/ZxQuery.js#L427)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 443](../../helpers/ZxQuery.js#L443)
 
 -->
 
@@ -618,15 +618,15 @@ Listens once to the given event for all elements in the ZxQuery object.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`eventPath`|*string*|Event path.|
-|`eventHandler`|*function*|Event handler.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`eventPath`|*string* \| *Array.&lt;Object>* \| *JSON*|  |Event path or object with event/handler pairs.|
+|`eventHandler`|*function*|*optional*  |Event handler. Not used if eventPath is an object with event/handler pairs.|
 
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 408](../../helpers/ZxQuery.js#L408)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 417](../../helpers/ZxQuery.js#L417)
 
 -->
 
@@ -650,7 +650,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 230](../../helpers/ZxQuery.js#L230)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 239](../../helpers/ZxQuery.js#L239)
 
 -->
 
@@ -667,7 +667,7 @@ Gets coordinates and visibility status of the first element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 480](../../helpers/ZxQuery.js#L480)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 511](../../helpers/ZxQuery.js#L511)
 
 -->
 
@@ -689,7 +689,7 @@ Prepends the given element or HTML string to the first element in the ZxQuery ob
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 644](../../helpers/ZxQuery.js#L644)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 675](../../helpers/ZxQuery.js#L675)
 
 -->
 
@@ -707,7 +707,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 297](../../helpers/ZxQuery.js#L297)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 306](../../helpers/ZxQuery.js#L306)
 
 -->
 
@@ -730,7 +730,7 @@ Removes the given CSS class from all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 546](../../helpers/ZxQuery.js#L546)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 577](../../helpers/ZxQuery.js#L577)
 
 -->
 
@@ -747,7 +747,7 @@ De-registers all event handlers of all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 461](../../helpers/ZxQuery.js#L461)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 492](../../helpers/ZxQuery.js#L492)
 
 -->
 
@@ -764,7 +764,7 @@ Reverses order of the elements in the current set.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 255](../../helpers/ZxQuery.js#L255)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 264](../../helpers/ZxQuery.js#L264)
 
 -->
 
@@ -787,7 +787,7 @@ Sets the CSS `display` property to '' if no argument value is provided, otherwis
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 724](../../helpers/ZxQuery.js#L724)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 755](../../helpers/ZxQuery.js#L755)
 
 -->
 
@@ -811,7 +811,7 @@ Triggers the given event for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 388](../../helpers/ZxQuery.js#L388)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 397](../../helpers/ZxQuery.js#L397)
 
 -->
 
@@ -835,7 +835,7 @@ or sets the `value` attribute value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 597](../../helpers/ZxQuery.js#L597)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 628](../../helpers/ZxQuery.js#L628)
 
 -->
 
@@ -858,7 +858,7 @@ or sets the `visibility` property value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 709](../../helpers/ZxQuery.js#L709)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 740](../../helpers/ZxQuery.js#L740)
 
 -->
 
@@ -1228,7 +1228,7 @@ with the `on` method occurs.
 -->
 
 <a name="IterationCallback"></a>
-#### IterationCallback(i, item)
+#### IterationCallback(k, item)
 
 The `IterationCallback` function.
 
@@ -1239,7 +1239,7 @@ The `IterationCallback` function.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`i`|*number*|Iteration count.|
+|`k`|*number* \| *object*|Iteration count / item key.|
 |`item`|*object*|Current element (same as `this`).|
 
 <!--
@@ -1269,6 +1269,28 @@ Callback function for monitoring all log messages.
 
 *Source:*
 [helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+
+-->
+
+<a name="PlayTransitionCallback"></a>
+#### PlayTransitionCallback($element, transitionQueue)
+
+Callback function used with the `each(..)` method.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
+|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 119](../../helpers/ZxQuery.js#L119)
 
 -->
 

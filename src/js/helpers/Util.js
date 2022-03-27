@@ -168,6 +168,10 @@ module.exports = {
     });
   },
 
+  camelCaseToHyphens: function(s) {
+    return s.split(/(?=[A-Z])/).join('-').toLowerCase();
+  },
+
   dom: {
 
     queryAttribute: function(name, value, appendValue) {

@@ -1,5 +1,3 @@
-/* zUIx v1.0.25 22.03.17 16:22:18 */
-
 var zuix;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({

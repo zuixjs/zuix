@@ -138,6 +138,8 @@ let _componentCache = [];
 /** @private */
 let _contextSeqNum = 0;
 /** @private */
+let _disableComponentize = false;
+/** @private */
 let _enableHttpCaching = true;
 /** @private */
 const _objectObserver = new ObjectObserver();
@@ -583,7 +585,9 @@ function context(contextId, callback) {
     if (context == null || !context.isReady) {
       z$(contextId).one('component:ready', function() {
         context = zuix.context(this);
-        callback.call(context, context);
+        setTimeout(function() {
+          callback.call(context, context);
+        }, 10);
       });
     } else callback.call(context, context);
   }
@@ -905,15 +909,41 @@ function initController(c) {
   const ctx = c.context;
   _log.t(ctx.componentId, 'controller:init', 'timer:init:start');
 
+  // tender lifecycle moments
   const $view = c.view();
-  // re-enable nested components loading
-  let innerComponents = 0;
-  // re-enable nested components loading
-  $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
-      .each(function(i, v) {
-        innerComponents++;
-        this.attr(_optionAttributes.dataUiLoaded, null);
-      });
+  if (util.isFunction(c.create)) {
+    c.create();
+  }
+  c.trigger('view:create', $view);
+
+  const contextReady = function() {
+    let innerComponents = 0;
+    // re-enable nested components loading
+    $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
+        .each(function(i, v) {
+          innerComponents++;
+          this.attr(_optionAttributes.dataUiLoaded, null);
+        });
+
+    // set component ready
+    if (util.isFunction(ctx.ready)) {
+      (ctx.ready).call(ctx, ctx);
+    }
+
+    // load pending resources
+    if (_pendingResourceTask[ctx.componentId] != null) {
+      const pendingRequests = _pendingResourceTask[ctx.componentId];
+      _pendingResourceTask[ctx.componentId] = null;
+      let context;
+      while (pendingRequests != null && (context = pendingRequests.shift()) != null) {
+        loadResources(context.c, context.o);
+      }
+    }
+
+    if (innerComponents) {
+      zuix.componentize($view);
+    }
+  };
 
 
   /** @type {Object.<string, ActiveRefreshHandler>} */
@@ -1072,6 +1102,7 @@ function initController(c) {
               h.start(handlersDelay);
             });
             ctx.$.removeClass('not-ready');
+            contextReady();
           } else if (!ctx.$.hasClass('not-ready')) {
             ctx.$.addClass('not-ready');
           }
@@ -1081,36 +1112,15 @@ function initController(c) {
         }
       }).start(refreshDelay);
     });
+  } else {
+    contextReady();
   }
 
-
-  // tender lifecycle moments
-  if (util.isFunction(c.create)) {
-    c.create();
-  }
-  c.trigger('view:create', $view);
-  if (util.isFunction(ctx.ready)) {
-    (ctx.ready).call(ctx, ctx);
-  }
-
-  if (_pendingResourceTask[ctx.componentId] != null) {
-    const pendingRequests = _pendingResourceTask[ctx.componentId];
-    _pendingResourceTask[ctx.componentId] = null;
-    let context;
-    while (pendingRequests != null && (context = pendingRequests.shift()) != null) {
-      loadResources(context.c, context.o);
-    }
-  }
-
-  c.trigger('component:ready', $view, true);
   ctx.isReady = true;
+  c.trigger('component:ready', $view, true);
 
   _log.t(ctx.componentId, 'controller:init', 'timer:init:stop');
   _log.i(ctx.componentId, 'component:loaded', ctx.contextId);
-
-  if (innerComponents) {
-    zuix.componentize($view);
-  }
 }
 
 /**
@@ -1245,7 +1255,9 @@ Zuix.prototype.unload = function(context) {
 /**
  * Loads a component, given the target host element(s).
  * If the target is already a component, it will be
- * unloaded and replaced by the new one.
+ * unloaded and replaced by the new one. The component will
+ * be loaded right away, lazy loading option is ignored when
+ * using this method.
  *
  * @example
  * ```html
@@ -1302,10 +1314,6 @@ Zuix.prototype.loadComponent = function(elements, componentId, type, options) {
    * @param {ZxQuery} container
    */
   const load = function(container) {
-    container.attr(_optionAttributes.dataUiLoad, componentId);
-    if (type) {
-      container.attr(type, '');
-    }
     container.attr(_optionAttributes.dataUiLoad, componentId);
     if (type) {
       container.attr(type, '');
@@ -1627,17 +1635,31 @@ Zuix.prototype.httpCaching = function(enable) {
  * Searches the document, or inside the given `element`,
  * for elements with `z-load` attribute, and loads the
  * requested components.
+ * Is also possible to disable/enable the componentizer
+ * by passing a boolean value as argument.
  *
  * @example
  ```js
  zuix.componentize(document);
+ // Globally disable the componentizer
+ zuix.compenentize(false);
+ // Re-enable the componentizer
+ zuix.compenentize(true);
  ```
  *
- * @param {Element|ZxQuery} [element] Container to use as starting element for the search (**default:** *document*)
+ * @param {Element|ZxQuery|boolean} [element] Container to use as starting element for the search (**default:** *document*)
  * @return {Zuix} The `{Zuix}` object itself.
  */
 Zuix.prototype.componentize = function(element) {
-  _componentizer.componentize(element);
+  if (element === false) {
+    _disableComponentize = true;
+  } else if (element === true) {
+    _disableComponentize = false;
+    element = null;
+  }
+  if (!_disableComponentize) {
+    _componentizer.componentize(element);
+  }
   return this;
 };
 /**

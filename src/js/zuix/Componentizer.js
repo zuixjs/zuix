@@ -571,7 +571,7 @@ function lazyElementCheck(element) {
     // Check if element inherits lazy-loading from a parent lazy container/scroll
     const q = util.dom.queryAttribute(_optionAttributes.dataUiLazyload, 'scroll') + ',' +
             util.dom.queryAttribute(_optionAttributes.dataUiLazyload, 'true');
-    const lazyContainer = z$.getClosest(element.parentNode, q);
+    const lazyContainer = element.parentNode && z$.getClosest(element.parentNode, q);
     if (lazyContainer != null) {
       le = addLazyElement(element);
       // Check if the lazy container is already added to the lazy container list

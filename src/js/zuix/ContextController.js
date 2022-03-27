@@ -106,6 +106,12 @@ function ContextController(context) {
   };
 
   this.on = function(eventPath, handler) {
+    if (typeof eventPath === 'object' && handler == null) {
+      z$.each(eventPath, function(evt, hnd) {
+        _t.on(evt, hnd);
+      });
+      return this;
+    }
     this.addEvent(eventPath, handler);
     return this;
   };
@@ -116,7 +122,7 @@ function ContextController(context) {
   this.mapEvent = function(eventMap, target, eventPath, handler) {
     if (target != null) {
       target.off(eventPath, this.eventRouter);
-      eventMap[eventPath] = handler;
+      eventMap.push({target, eventPath, handler});
       target.on(eventPath, this.eventRouter);
     } else {
       // TODO: should report missing target
@@ -128,25 +134,20 @@ function ContextController(context) {
    */
   this.eventRouter = function(e) {
     const v = _t.view();
-    if (typeof context._behaviorMap[e.type] === 'function') {
-      context._behaviorMap[e.type].call(v, e, e.detail, v);
-    }
-    if (typeof context._eventMap[e.type] === 'function') {
-      context._eventMap[e.type].call(v, e, e.detail, v);
-    }
-    // TODO: else-> should report anomaly
+    context._behaviorMap.concat(context._eventMap).forEach(function(em) {
+      if (em.eventPath === e.type && typeof em.handler === 'function') {
+        em.handler.call(v, e, e.detail, v);
+      }
+    });
   };
 
   // create event map from context options
   const options = context.options();
   let handler = null;
   if (options.on != null) {
-    for (const ep in options.on) {
-      if (options.on.hasOwnProperty(ep)) {
-        handler = options.on[ep];
-        _t.addEvent(ep, handler);
-      }
-    }
+    z$.each(options.on, function(ep, handler) {
+      _t.addEvent(ep, handler);
+    });
   }
   // create behavior map from context options
   if (options.behavior != null) {
@@ -163,18 +164,41 @@ function ContextController(context) {
   return this;
 }
 
-// TODO: add jsDoc
+/**
+ * Adds an event handler.
+ *
+ * @param {string} eventPath Event path.
+ * @param {EventCallback} handler Event hanler.
+ * @return {ContextController}
+ */
 ContextController.prototype.addEvent = function(eventPath, handler) {
   this.mapEvent(this.context._eventMap, this.view(), eventPath, handler);
   return this;
 };
-
-// TODO: add jsDoc
+/**
+ * Adds a behavior handler.
+ *
+ * @param {string} eventPath Event path.
+ * @param {EventCallback} handler Behavior handler.
+ * @return {ContextController}
+ */
 ContextController.prototype.addBehavior = function(eventPath, handler) {
   this.mapEvent(this.context._behaviorMap, this.view(), eventPath, handler);
   return this;
 };
-
+/**
+ * Adds a CSS transition effect to the component stylesheet.
+ *
+ * @param {string} className CSS class name to assign to this transition.
+ * @param {Array<Object>|JSON} properties List of CSS properties/values to set.
+ * @param {Array<Object>|JSON} options List of transition options.
+ */
+ContextController.prototype.addTransition = function(className, properties, options) {
+  const cssId = this.context.getCssId();
+  const scope = '[z-component][' + cssId + ']';
+  z$.addTransition(this.context.componentId + '@' + cssId, scope, className, properties, options);
+  return this;
+};
 /**
  * Gets view's field(s) with the specified name.
  * Same as [ComponentContext&ndash;field](../ComponentContext/#field).
@@ -185,6 +209,9 @@ ContextController.prototype.addBehavior = function(eventPath, handler) {
 ContextController.prototype.field = function(fieldName) {
   return this.context.field(fieldName);
 };
+/**
+ * Clears the fields cache.
+ */
 ContextController.prototype.clearCache = function() {
   this.context._fieldCache = {};
 };
@@ -274,10 +301,6 @@ zuix.context('my-slide-show')
  * @return {ContextController}
  */
 ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
-  if (this.context._eventMap[eventPath] == null && isHook !== true) {
-    this.addEvent(eventPath, null);
-  }
-  // TODO: ...
   if (isHook === true) {
     let target = this.context.container();
     if (target == null) target = this.context.view();

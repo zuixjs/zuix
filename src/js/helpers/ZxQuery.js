@@ -66,7 +66,7 @@ const util = require('./Util.js');
  * The `IterationCallback` function.
  *
  * @callback IterationCallback
- * @param {number} i Iteration count.
+ * @param {number|object} k Iteration count / item key.
  * @param {object} item Current element (same as `this`).
  * @this {object}
  */
@@ -114,6 +114,15 @@ const util = require('./Util.js');
  * @property {ZxQueryHttpSuccessCallback|undefined} success
  * @property {ZxQueryHttpErrorCallback|undefined} error
  * @property {ZxQueryHttpThenCallback|undefined} then
+ */
+
+/**
+ * Callback function used with the `each(..)` method.
+ *
+ * @callback PlayTransitionCallback
+ * @param {ZxQuery} $element Target element (same as 'this').
+ * @param {Array<string>} transitionQueue Transition class queue left to animate, `null` if the animation ended.
+ * @this {ZxQuery}
  */
 
 /** @private */
@@ -401,11 +410,18 @@ ZxQuery.prototype.trigger = function(eventPath, eventData) {
 /**
  * Listens once to the given event for all elements in the ZxQuery object.
  *
- * @param {string} eventPath Event path.
- * @param {function} eventHandler Event handler.
+ * @param {string|Array<Object>|JSON} eventPath Event path or object with event/handler pairs.
+ * @param {function} [eventHandler] Event handler. Not used if eventPath is an object with event/handler pairs.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.one = function(eventPath, eventHandler) {
+  if (typeof eventPath === 'object' && eventHandler == null) {
+    const _t = this;
+    z$.each(eventPath, function(evt, handler) {
+      _t.one(evt, handler);
+    });
+    return this;
+  }
   let fired = false;
   const _t = this;
   const h = function(a, b) {
@@ -420,11 +436,18 @@ ZxQuery.prototype.one = function(eventPath, eventHandler) {
 /**
  * Listens to the given event for all elements in the ZxQuery object.
  *
- * @param {string} eventPath Event path.
- * @param {function} eventHandler Event handler.
+ * @param {string|Array<Object>|JSON} eventPath Event path or object with event/handler pairs.
+ * @param {function} [eventHandler] Event handler. Not used if eventPath is an object with event/handler pairs.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.on = function(eventPath, eventHandler) {
+  if (typeof eventPath === 'object' && eventHandler == null) {
+    const _t = this;
+    z$.each(eventPath, function(evt, handler) {
+      _t.on(evt, handler);
+    });
+    return this;
+  }
   const events = eventPath.match(/\S+/g) || [];
   let options;
   if (typeof eventHandler !== 'function') {
@@ -440,11 +463,19 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
 };
 /**
  * Stops listening for the given event.
- * @param {string} eventPath Event path.
- * @param {function} eventHandler Event handler.
+ *
+ * @param {string|Array<Object>|JSON} eventPath Event path or object with event/handler pairs.
+ * @param {function} [eventHandler] Event handler. Not used if eventPath is an object with event/handler pairs.
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.off = function(eventPath, eventHandler) {
+  if (typeof eventPath === 'object' && eventHandler == null) {
+    const _t = this;
+    z$.each(eventPath, function(evt, handler) {
+      _t.off(evt, handler);
+    });
+    return this;
+  }
   const events = eventPath.match(/\S+/g) || [];
   this.each(function(k, el) {
     z$.each(events, function(k, ev) {
@@ -998,7 +1029,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
   return css;
 };
 /**
- * Appends or replaces a stylesheet to the document.
+ * Appends a new stylesheet, or replaces an existing one, to the document.
  *
  * @method appendCss
  * @memberOf ZxQueryStatic
@@ -1012,7 +1043,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId) {
   const head = document.head || document.getElementsByTagName('head')[0];
   let style = null;
   // remove old style if already defined
-  if (!util.isNoU(target)) {
+  if (!util.isNoU(target) && head.contains(target)) {
     head.removeChild(target);
   } else {
     const oldStyle = document.getElementById(cssId);
@@ -1076,11 +1107,11 @@ ZxQueryStatic.replaceCssVars = function(css, model) {
         matched++;
       }
     }
-    outCss += css.substr(currentIndex, result.index-currentIndex)+value;
+    outCss += css.substring(currentIndex, result.index)+value;
     currentIndex = result.index+result[0].length;
   }
   if (matched > 0) {
-    outCss += css.substr(currentIndex);
+    outCss += css.substring(currentIndex);
     css = outCss;
   }
   return css;
@@ -1105,7 +1136,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
   let result;
   while (result = tags.exec(html)) {
     if (typeof result[0] === 'string' && (result[0].trim().length === 0 || result[0].indexOf('\n') >= 0)) {
-      const nv = html.substr(currentIndex, result.index-currentIndex)+result[0];
+      const nv = html.substring(currentIndex, result.index)+result[0];
       outHtml += nv;
       currentIndex += nv.length;
       continue;
@@ -1118,11 +1149,11 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
         matched++;
       }
     }
-    outHtml += html.substr(currentIndex, result.index-currentIndex)+value;
+    outHtml += html.substring(currentIndex, result.index)+value;
     currentIndex = result.index+result[0].length;
   }
   if (matched > 0) {
-    outHtml += html.substr(currentIndex);
+    outHtml += html.substring(currentIndex);
     return outHtml;
   }
   return null;
@@ -1157,6 +1188,7 @@ ZxQueryStatic.getClosest = function(elem, selector) {
  */
 ZxQueryStatic.getPosition = function(el, tolerance) {
   const visibleClass = '--ui--visible';
+  /** @type ElementPosition */
   const position = (function() {
     let x = 0;
     let y = 0;
@@ -1184,6 +1216,9 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
   })(el);
   position.visible = false;
   let scrollable = el.offsetParent;
+  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
+    scrollable = document.body;
+  }
   if (scrollable != null) {
     if (scrollable !== document.body) {
       // find the scrollable container
@@ -1210,31 +1245,105 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     if (tolerance == null) tolerance = 0;
     const r2 = el.getBoundingClientRect();
     // visible status
-    const visible = !(r2.left-1 > r1.right - tolerance ||
+    let visible = !(r2.left-1 > r1.right - tolerance ||
         r2.right+1 < r1.left + tolerance ||
         r2.top-1 > r1.bottom - tolerance ||
         r2.bottom+1 < r1.top + tolerance);
+    if (scrollable !== document.body) {
+      visible = visible && z$(scrollable).position().visible;
+    }
+    let parentNode = el.parentNode;
+    while (parentNode && parentNode instanceof Element && visible) {
+      const parentStyle = getComputedStyle(parentNode);
+      visible = visible && parentStyle.display !== 'none' && parentStyle.visibility !== 'hidden';
+      parentNode = parentNode.parentNode;
+    }
     position.visible = visible;
     // viewport-relative frame position
     position.frame = {
       dx: (r2.left + (r2.width / 2) - r1.left) / r1.width,
       dy: (r2.top + (r2.height / 2) - r1.top) / r1.height
     };
-    // update status event and and/remove 'visibleClass'
-    el = z$(el);
-    if (!visible && el.hasClass(visibleClass)) {
-      el.removeClass(visibleClass);
+    // update status event and remove 'visibleClass'
+    const $el = z$(el);
+    if (!visible && $el.hasClass(visibleClass)) {
+      $el.removeClass(visibleClass);
       position.event = 'exit';
     } else if (!visible) {
       position.event = 'off-scroll';
     } else if (visible) {
-      if (!el.hasClass(visibleClass)) {
+      if (!$el.hasClass(visibleClass)) {
         position.event = 'enter';
-        el.addClass(visibleClass);
+        $el.addClass(visibleClass);
       } else position.event = 'scroll';
     }
   }
   return position;
+};
+/**
+ * Adds a CSS transition effect to the component stylesheet.
+ *
+ * @param cssId
+ * @param scope
+ * @param {string} className CSS class name to assign to this transition.
+ * @param {Array<Object>|JSON} properties List of CSS properties/values to set.
+ * @param {Array<Object>|JSON} options List of transition options.
+ */
+ZxQueryStatic.addTransition = function(cssId, scope, className, properties, options) {
+  let cssText = '';
+  let styleElement = document.getElementById(cssId);
+  if (styleElement != null) {
+    cssText = styleElement.innerHTML;
+  } else {
+    styleElement = document.createElement('style');
+  }
+  let props = ''; let transProps = '';
+  zuix.$.each(properties, function(k, v) {
+    k = util.camelCaseToHyphens(k);
+    props += '  ' + k + ': ' + v + ';\n';
+    transProps += k + ', ';
+  });
+  let opts = '\n';
+  zuix.$.each(options, function(k, v) {
+    k = util.camelCaseToHyphens(k);
+    opts += '  transition-' + k + ': ' + v + ';\n';
+  });
+  transProps = transProps.substring(0, transProps.length - 2) + ';';
+  cssText += (scope + '.' + className +
+    ', ' + scope + ' .' + className +
+    '{\n' + props + '  transition-property: ' + transProps + opts + '}\n');
+  this.appendCss(cssText, styleElement, cssId);
+  return cssText;
+};
+/**
+ * Plays transition effects or animations on a given element inside the component.
+ *
+ * @param {Element|ZxQuery} element The target element.
+ * @param {Array<string>} classNames List of transition/animation classes to apply.
+ * @param {PlayTransitionCallback} [callback] Callback function to call when all transitions/animations ended.
+ */
+ZxQueryStatic.playTransition = function(element, classNames, callback) {
+  const _t = this;
+  const $el = z$(element).show();
+  if (typeof classNames === 'string') {
+    classNames = classNames.split(' ');
+  }
+  $el.addClass(classNames.join(' ')).show();
+  const transitionOutClass = classNames.shift();
+  const style = getComputedStyle($el.get());
+  const delay = (parseFloat(style.transitionDelay) * 1000) || 10;
+  setTimeout(function() {
+    $el.removeClass(transitionOutClass);
+    const duration = 10 + parseFloat(style.transitionDuration) * 1000;
+    setTimeout(function() {
+      if (classNames.length > 1) {
+        callback.call($el, $el, classNames.slice(1));
+        _t.playTransition(element, classNames, callback);
+      } else if (callback) {
+        callback.call($el, $el);
+      }
+    }, duration);
+  }, delay);
 };
 
 ZxQueryStatic.ZxQuery = ZxQuery;
@@ -1281,9 +1390,9 @@ String.prototype.hashCode = function() {
 // String.startsWith polyfill
 if (!String.prototype.startsWith) {
   String.prototype.startsWith = function(search, pos) {
-    return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+    const startIndex = !pos || pos < 0 ? 0 : +pos;
+    return this.substring(startIndex, search.length + startIndex) === search;
   };
 }
 
-/** @type {ZxQueryStatic} */
-module.exports = z$;
+module.exports = ZxQueryStatic;

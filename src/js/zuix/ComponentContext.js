@@ -790,8 +790,8 @@ ComponentContext.prototype.options = function(options) {
 /**
  * Listens for a component event.
  *
- * @param {string} eventPath The event path
- * @param {EventCallback} eventHandler The event handler function
+ * @param {string|Array<Object>|JSON} eventPath The event path or object with event name/handler pairs.
+ * @param {EventCallback} [eventHandler] The event handler function. Not used if eventPath is an object with event name/handler pairs.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.on = function(eventPath, eventHandler) {
@@ -820,7 +820,7 @@ ComponentContext.prototype.on = function(eventPath, eventHandler) {
  *
  * @private
  * @param {object} [options] The options object.
- * @param {boolean} [enableCaching] Enable HTTP
+ * @param {boolean} [enableCaching] Enable HTTP.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
 ComponentContext.prototype.loadCss = function(options, enableCaching) {

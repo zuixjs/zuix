@@ -65,6 +65,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.paused = false;
   this.forceActive = false;
   const _t = this;
+  let inactive = false;
   this.requestRefresh = function($v, $el, data) {
     const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && $el.position().visible);
     /** @type {ActiveRefreshCallback} */
@@ -85,12 +86,20 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       }
     };
     if (isActive) {
+      if (inactive) {
+        inactive = false;
+        $v.trigger('refresh:active');
+      }
       // call the `refreshCallback` and wait for
       // its completion before next loop round
       refreshCallback($v, $el, data, function(nextData, nextMsDelay, forceActive) {
         refreshLoop(nextData, nextMsDelay, forceActive);
       });
     } else {
+      if (!inactive) {
+        inactive = true;
+        $v.trigger('refresh:inactive');
+      }
       // noop-loop
       refreshLoop(_t.contextData);
     }

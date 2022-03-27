@@ -80,7 +80,7 @@ Allocates a new instance of *zuix.js*, JavaScript library for
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 168](../../zuix/Zuix.js#L168)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 170](../../zuix/Zuix.js#L170)
 
 -->
 
@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1688](../../zuix/Zuix.js#L1688)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1714](../../zuix/Zuix.js#L1714)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1699](../../zuix/Zuix.js#L1699)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1725](../../zuix/Zuix.js#L1725)
 
 -->
 
@@ -152,17 +152,19 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 Searches the document, or inside the given `element`,
 for elements with `z-load` attribute, and loads the
 requested components.
+Is also possible to disable/enable the componentizer
+by passing a boolean value as argument.
 
 ##### Parameters
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|*optional*  |Container to use as starting element for the search (**default:** *document*)|
+|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *boolean*|*optional*  |Container to use as starting element for the search (**default:** *document*)|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1635](../../zuix/Zuix.js#L1635)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1653](../../zuix/Zuix.js#L1653)
 
 -->
 
@@ -175,6 +177,10 @@ requested components.
 
 ```js
  zuix.componentize(document);
+ // Globally disable the componentizer
+ zuix.compenentize(false);
+ // Re-enable the componentizer
+ zuix.compenentize(true);
  ```
 
 <a name="context"></a>
@@ -193,7 +199,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1363](../../zuix/Zuix.js#L1363)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1375](../../zuix/Zuix.js#L1375)
 
 -->
 
@@ -233,7 +239,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1338](../../zuix/Zuix.js#L1338)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1350](../../zuix/Zuix.js#L1350)
 
 -->
 
@@ -271,7 +277,7 @@ order to actually load and display the component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1376](../../zuix/Zuix.js#L1376)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1388](../../zuix/Zuix.js#L1388)
 
 -->
 
@@ -288,7 +294,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1753](../../zuix/Zuix.js#L1753)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1783](../../zuix/Zuix.js#L1783)
 
 -->
 
@@ -304,7 +310,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1760](../../zuix/Zuix.js#L1760)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1790](../../zuix/Zuix.js#L1790)
 
 -->
 
@@ -331,7 +337,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1173](../../zuix/Zuix.js#L1173)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1187](../../zuix/Zuix.js#L1187)
 
 -->
 
@@ -368,7 +374,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1665](../../zuix/Zuix.js#L1665)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1691](../../zuix/Zuix.js#L1691)
 
 -->
 
@@ -394,7 +400,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1473](../../zuix/Zuix.js#L1473)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1485](../../zuix/Zuix.js#L1485)
 
 -->
 
@@ -480,7 +486,7 @@ Enables/Disables HTTP caching or gets the current settings.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1614](../../zuix/Zuix.js#L1614)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1626](../../zuix/Zuix.js#L1626)
 
 -->
 
@@ -504,7 +510,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1600](../../zuix/Zuix.js#L1600)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1612](../../zuix/Zuix.js#L1612)
 
 -->
 
@@ -530,7 +536,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1223](../../zuix/Zuix.js#L1223)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1237](../../zuix/Zuix.js#L1237)
 
 -->
 
@@ -582,7 +588,9 @@ zuix.load('my/example/component', { view, ready: (ctx) => {
 
 Loads a component, given the target host element(s).
 If the target is already a component, it will be
-unloaded and replaced by the new one.
+unloaded and replaced by the new one. The component will
+be loaded right away, lazy loading option is ignored when
+using this method.
 
 ##### Parameters
 
@@ -596,7 +604,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1295](../../zuix/Zuix.js#L1295)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1311](../../zuix/Zuix.js#L1311)
 
 -->
 
@@ -664,7 +672,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1675](../../zuix/Zuix.js#L1675)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1701](../../zuix/Zuix.js#L1701)
 
 -->
 
@@ -690,7 +698,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1814](../../zuix/Zuix.js#L1814)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1844](../../zuix/Zuix.js#L1844)
 
 -->
 
@@ -715,7 +723,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1799](../../zuix/Zuix.js#L1799)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1829](../../zuix/Zuix.js#L1829)
 
 -->
 
@@ -738,7 +746,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1653](../../zuix/Zuix.js#L1653)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1679](../../zuix/Zuix.js#L1679)
 
 -->
 
@@ -771,7 +779,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1398](../../zuix/Zuix.js#L1398)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1410](../../zuix/Zuix.js#L1410)
 
 -->
 
@@ -794,7 +802,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1237](../../zuix/Zuix.js#L1237)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1251](../../zuix/Zuix.js#L1251)
 
 -->
 
@@ -827,7 +835,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1494](../../zuix/Zuix.js#L1494)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1506](../../zuix/Zuix.js#L1506)
 
 -->
 
@@ -1205,7 +1213,7 @@ with the `on` method occurs.
 -->
 
 <a name="IterationCallback"></a>
-#### IterationCallback(i, item)
+#### IterationCallback(k, item)
 
 The `IterationCallback` function.
 
@@ -1216,7 +1224,7 @@ The `IterationCallback` function.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`i`|*number*|Iteration count.|
+|`k`|*number* \| *object*|Iteration count / item key.|
 |`item`|*object*|Current element (same as `this`).|
 
 <!--
@@ -1246,6 +1254,28 @@ Callback function for monitoring all log messages.
 
 *Source:*
 [helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+
+-->
+
+<a name="PlayTransitionCallback"></a>
+#### PlayTransitionCallback($element, transitionQueue)
+
+Callback function used with the `each(..)` method.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
+|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 119](../../helpers/ZxQuery.js#L119)
 
 -->
 

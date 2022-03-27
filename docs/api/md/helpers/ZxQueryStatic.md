@@ -81,7 +81,7 @@ Creates a ZxQuery wrapped element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 748](../../helpers/ZxQuery.js#L748)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 779](../../helpers/ZxQuery.js#L779)
 
 -->
 
@@ -94,7 +94,7 @@ Creates a ZxQuery wrapped element.
 <a name="appendCss"></a>
 #### appendCss(css, target, cssId) &rarr; {Element|HTMLElement}
 
-Appends or replaces a stylesheet to the document.
+Appends a new stylesheet, or replaces an existing one, to the document.
 
 ##### Parameters
 
@@ -107,7 +107,7 @@ Appends or replaces a stylesheet to the document.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1000](../../helpers/ZxQuery.js#L1000)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1031](../../helpers/ZxQuery.js#L1031)
 
 -->
 
@@ -130,7 +130,7 @@ Checks if a class exists by searching for it in all document stylesheets.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 864](../../helpers/ZxQuery.js#L864)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 895](../../helpers/ZxQuery.js#L895)
 
 -->
 
@@ -159,7 +159,7 @@ If the callback returns *false*, the iteration loop will interrupt.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 764](../../helpers/ZxQuery.js#L764)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 795](../../helpers/ZxQuery.js#L795)
 
 -->
 
@@ -182,7 +182,7 @@ Selects document elements matching the given *DOM* query selector.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 752](../../helpers/ZxQuery.js#L752)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 783](../../helpers/ZxQuery.js#L783)
 
 -->
 
@@ -206,7 +206,7 @@ Gets the closest parent mathing the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1130](../../helpers/ZxQuery.js#L1130)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1161](../../helpers/ZxQuery.js#L1161)
 
 -->
 
@@ -229,7 +229,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1148](../../helpers/ZxQuery.js#L1148)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1179](../../helpers/ZxQuery.js#L1179)
 
 -->
 
@@ -252,7 +252,7 @@ Checks if an element has got the specified CSS class.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 841](../../helpers/ZxQuery.js#L841)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 872](../../helpers/ZxQuery.js#L872)
 
 -->
 
@@ -274,7 +274,7 @@ Makes an HTTP request.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 803](../../helpers/ZxQuery.js#L803)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 834](../../helpers/ZxQuery.js#L834)
 
 -->
 
@@ -298,7 +298,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1088](../../helpers/ZxQuery.js#L1088)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1119](../../helpers/ZxQuery.js#L1119)
 
 -->
 
@@ -322,7 +322,7 @@ Replaces CSS variables with provided values.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1040](../../helpers/ZxQuery.js#L1040)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1071](../../helpers/ZxQuery.js#L1071)
 
 -->
 
@@ -346,7 +346,7 @@ Wraps an `Element` inside a container specified by a given tag name.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 903](../../helpers/ZxQuery.js#L903)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 934](../../helpers/ZxQuery.js#L934)
 
 -->
 
@@ -354,6 +354,48 @@ Wraps an `Element` inside a container specified by a given tag name.
 
 *Element* \| *HTMLElement*
  &dash; The new wrapped element
+
+<a name="addTransition"></a>
+#### &lt;_static_&gt; addTransition(cssId, scope, className, properties, options)
+
+Adds a CSS transition effect to the component stylesheet.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`cssId`|||
+|`scope`|||
+|`className`|*string*|CSS class name to assign to this transition.|
+|`properties`|*Array.&lt;Object>* \| *JSON*|List of CSS properties/values to set.|
+|`options`|*Array.&lt;Object>* \| *JSON*|List of transition options.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1292](../../helpers/ZxQuery.js#L1292)
+
+-->
+
+<a name="playTransition"></a>
+#### &lt;_static_&gt; playTransition(element, classNames, callback)
+
+Plays transition effects or animations on a given element inside the component.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|  |The target element.|
+|`classNames`|*Array.&lt;string>*|  |List of transition/animation classes to apply.|
+|`callback`|*[PlayTransitionCallback](#PlayTransitionCallback)*|*optional*  |Callback function to call when all transitions/animations ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1325](../../helpers/ZxQuery.js#L1325)
+
+-->
 
 ### Type Definitions
 
@@ -716,7 +758,7 @@ with the `on` method occurs.
 -->
 
 <a name="IterationCallback"></a>
-#### IterationCallback(i, item)
+#### IterationCallback(k, item)
 
 The `IterationCallback` function.
 
@@ -727,7 +769,7 @@ The `IterationCallback` function.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`i`|*number*|Iteration count.|
+|`k`|*number* \| *object*|Iteration count / item key.|
 |`item`|*object*|Current element (same as `this`).|
 
 <!--
@@ -757,6 +799,28 @@ Callback function for monitoring all log messages.
 
 *Source:*
 [helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+
+-->
+
+<a name="PlayTransitionCallback"></a>
+#### PlayTransitionCallback($element, transitionQueue)
+
+Callback function used with the `each(..)` method.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
+|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 119](../../helpers/ZxQuery.js#L119)
 
 -->
 

@@ -120,6 +120,84 @@ If set, this function gets called when the component is about to be disposed.
 
 ### Methods
 
+<a name="addBehavior"></a>
+#### addBehavior(eventPath, handler) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Adds a behavior handler.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`eventPath`|*string*|Event path.|
+|`handler`|*[EventCallback](#EventCallback)*|Behavior handler.|
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 185](../../zuix/ContextController.js#L185)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+
+<a name="addEvent"></a>
+#### addEvent(eventPath, handler) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Adds an event handler.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`eventPath`|*string*|Event path.|
+|`handler`|*[EventCallback](#EventCallback)*|Event hanler.|
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 174](../../zuix/ContextController.js#L174)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+
+<a name="addTransition"></a>
+#### addTransition(className, properties, options)
+
+Adds a CSS transition effect to the component stylesheet.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`className`|*string*|CSS class name to assign to this transition.|
+|`properties`|*Array.&lt;Object>* \| *JSON*|List of CSS properties/values to set.|
+|`options`|*Array.&lt;Object>* \| *JSON*|List of transition options.|
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 196](../../zuix/ContextController.js#L196)
+
+-->
+
+<a name="clearCache"></a>
+#### clearCache()
+
+Clears the fields cache.
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 215](../../zuix/ContextController.js#L215)
+
+-->
+
 <a name="expose"></a>
 #### expose(name, handler) &rarr; {[ContextController](../../zuix/ContextController)}
 
@@ -137,7 +215,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 303](../../zuix/ContextController.js#L303)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 326](../../zuix/ContextController.js#L326)
 
 -->
 
@@ -161,7 +239,7 @@ Same as [ComponentContext&ndash;field](../ComponentContext/#field).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 185](../../zuix/ContextController.js#L185)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 209](../../zuix/ContextController.js#L209)
 
 -->
 
@@ -185,7 +263,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 396](../../zuix/ContextController.js#L396)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 419](../../zuix/ContextController.js#L419)
 
 -->
 
@@ -221,7 +299,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 342](../../zuix/ContextController.js#L342)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 365](../../zuix/ContextController.js#L365)
 
 -->
 
@@ -260,7 +338,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 367](../../zuix/ContextController.js#L367)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 390](../../zuix/ContextController.js#L390)
 
 -->
 
@@ -298,7 +376,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 237](../../zuix/ContextController.js#L237)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 264](../../zuix/ContextController.js#L264)
 
 -->
 
@@ -315,7 +393,7 @@ Same as [ComponentContext&ndash;options](../ComponentContext/#options).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 249](../../zuix/ContextController.js#L249)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 276](../../zuix/ContextController.js#L276)
 
 -->
 
@@ -344,7 +422,7 @@ in case `isHook` is set to true, use the
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 276](../../zuix/ContextController.js#L276)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 303](../../zuix/ContextController.js#L303)
 
 -->
 
@@ -381,7 +459,7 @@ gets the view elements matching the given `filter`
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 209](../../zuix/ContextController.js#L209)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 236](../../zuix/ContextController.js#L236)
 
 -->
 
@@ -761,7 +839,7 @@ with the `on` method occurs.
 -->
 
 <a name="IterationCallback"></a>
-#### IterationCallback(i, item)
+#### IterationCallback(k, item)
 
 The `IterationCallback` function.
 
@@ -772,7 +850,7 @@ The `IterationCallback` function.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`i`|*number*|Iteration count.|
+|`k`|*number* \| *object*|Iteration count / item key.|
 |`item`|*object*|Current element (same as `this`).|
 
 <!--
@@ -802,6 +880,28 @@ Callback function for monitoring all log messages.
 
 *Source:*
 [helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+
+-->
+
+<a name="PlayTransitionCallback"></a>
+#### PlayTransitionCallback($element, transitionQueue)
+
+Callback function used with the `each(..)` method.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
+|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 119](../../helpers/ZxQuery.js#L119)
 
 -->
 

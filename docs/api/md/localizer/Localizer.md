@@ -522,7 +522,7 @@ with the `on` method occurs.
 -->
 
 <a name="IterationCallback"></a>
-#### IterationCallback(i, item)
+#### IterationCallback(k, item)
 
 The `IterationCallback` function.
 
@@ -533,7 +533,7 @@ The `IterationCallback` function.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`i`|*number*|Iteration count.|
+|`k`|*number* \| *object*|Iteration count / item key.|
 |`item`|*object*|Current element (same as `this`).|
 
 <!--
@@ -563,6 +563,28 @@ Callback function for monitoring all log messages.
 
 *Source:*
 [helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+
+-->
+
+<a name="PlayTransitionCallback"></a>
+#### PlayTransitionCallback($element, transitionQueue)
+
+Callback function used with the `each(..)` method.
+
+##### This
+- {<a href="../../helpers/ZxQuery">ZxQuery</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
+|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 119](../../helpers/ZxQuery.js#L119)
 
 -->
 
