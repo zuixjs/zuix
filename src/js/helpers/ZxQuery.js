@@ -1333,7 +1333,9 @@ ZxQueryStatic.playTransition = function(element, classNames, callback) {
   const style = getComputedStyle($el.get());
   const delay = (parseFloat(style.transitionDelay) * 1000) || 10;
   setTimeout(function() {
-    $el.removeClass(transitionOutClass);
+    if (transitionOutClass) {
+      $el.removeClass(transitionOutClass);
+    }
     const duration = 10 + parseFloat(style.transitionDuration) * 1000;
     setTimeout(function() {
       if (classNames.length > 1) {

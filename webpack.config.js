@@ -3,8 +3,8 @@ const path = require('path');
 /**
  * Creates WebPack config.
  *
- * @param {string} target!
- * @param {boolean} minimize?
+ * @param {string} target
+ * @param {boolean} [minimize]
  * @return {{output: {path: string, filename: string, library: {umdNamedDefine: boolean, type}}, entry: {'zuix-bundler': string, zuix: string}, optimization: {minimize: (boolean)}, experiments: {outputModule: (boolean)}}}
  */
 function createConfig(target, minimize) {
@@ -28,7 +28,8 @@ function createConfig(target, minimize) {
     },
     optimization: {
       minimize: minimize === true ? true : false
-    }
+    },
+    target: ['web', 'es5']
   };
 }
 
