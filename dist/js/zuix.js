@@ -1,11 +1,11 @@
-/* zUIx v1.0.26 22.03.28 01:11:49 */
+/* zUIx v1.0.27 22.03.28 14:13:52 */
 
 var zuix;
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 381:
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 /*
@@ -236,7 +236,7 @@ module.exports = function(ctx) {
 /***/ }),
 
 /***/ 65:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -363,7 +363,7 @@ module.exports = TaskQueue;
 /***/ }),
 
 /***/ 826:
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 /*
@@ -621,7 +621,7 @@ module.exports = {
 /***/ }),
 
 /***/ 917:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -1959,7 +1959,9 @@ ZxQueryStatic.playTransition = function(element, classNames, callback) {
   const style = getComputedStyle($el.get());
   const delay = (parseFloat(style.transitionDelay) * 1000) || 10;
   setTimeout(function() {
-    $el.removeClass(transitionOutClass);
+    if (transitionOutClass) {
+      $el.removeClass(transitionOutClass);
+    }
     const duration = 10 + parseFloat(style.transitionDuration) * 1000;
     setTimeout(function() {
       if (classNames.length > 1) {
@@ -2076,7 +2078,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
 /***/ }),
 
 /***/ 265:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -2257,7 +2259,7 @@ module.exports = ObjectObserver;
 /***/ }),
 
 /***/ 463:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -2338,7 +2340,7 @@ module.export = ObservableListener;
 /***/ }),
 
 /***/ 349:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -2455,7 +2457,7 @@ module.exports = ObservableObject;
 /***/ }),
 
 /***/ 398:
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 /*
@@ -2612,7 +2614,7 @@ module.exports = ActiveRefresh;
 /***/ }),
 
 /***/ 854:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -2670,7 +2672,7 @@ module.exports = function(root) {
 /***/ }),
 
 /***/ 622:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -3855,7 +3857,7 @@ module.exports = ComponentContext;
 /***/ }),
 
 /***/ 211:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -4472,7 +4474,7 @@ function lazyElementCheck(element) {
 /***/ }),
 
 /***/ 561:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -4904,7 +4906,7 @@ module.exports = ContextController;
 /***/ }),
 
 /***/ 541:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -4982,7 +4984,7 @@ module.exports = OptionAttributes;
 /***/ }),
 
 /***/ 643:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -5114,7 +5116,7 @@ module.exports = ViewObserver;
 /***/ }),
 
 /***/ 459:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -7028,13 +7030,13 @@ module.exports = function(root) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/node module decorator */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nmd = (module) => {
+/******/ 	!function() {
+/******/ 		__webpack_require__.nmd = function(module) {
 /******/ 			module.paths = [];
 /******/ 			if (!module.children) module.children = [];
 /******/ 			return module;
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 /******/ 	

@@ -1,7 +1,7 @@
 /******/ var __webpack_modules__ = ({
 
 /***/ 381:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -231,7 +231,7 @@ module.exports = function(ctx) {
 /***/ }),
 
 /***/ 65:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -357,7 +357,7 @@ module.exports = TaskQueue;
 /***/ }),
 
 /***/ 826:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -614,7 +614,7 @@ module.exports = {
 /***/ }),
 
 /***/ 917:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -1951,7 +1951,9 @@ ZxQueryStatic.playTransition = function(element, classNames, callback) {
   const style = getComputedStyle($el.get());
   const delay = (parseFloat(style.transitionDelay) * 1000) || 10;
   setTimeout(function() {
-    $el.removeClass(transitionOutClass);
+    if (transitionOutClass) {
+      $el.removeClass(transitionOutClass);
+    }
     const duration = 10 + parseFloat(style.transitionDuration) * 1000;
     setTimeout(function() {
       if (classNames.length > 1) {
@@ -2067,7 +2069,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
 /***/ }),
 
 /***/ 265:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -2247,7 +2249,7 @@ module.exports = ObjectObserver;
 /***/ }),
 
 /***/ 463:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
 /*
@@ -2327,7 +2329,7 @@ module.export = ObservableListener;
 /***/ }),
 
 /***/ 349:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -2443,7 +2445,7 @@ module.exports = ObservableObject;
 /***/ }),
 
 /***/ 398:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -2599,7 +2601,7 @@ module.exports = ActiveRefresh;
 /***/ }),
 
 /***/ 854:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -2657,7 +2659,7 @@ module.exports = function(root) {
 /***/ }),
 
 /***/ 622:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -3841,7 +3843,7 @@ module.exports = ComponentContext;
 /***/ }),
 
 /***/ 211:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -4457,7 +4459,7 @@ function lazyElementCheck(element) {
 /***/ }),
 
 /***/ 561:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -4888,7 +4890,7 @@ module.exports = ContextController;
 /***/ }),
 
 /***/ 541:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -4966,7 +4968,7 @@ module.exports = OptionAttributes;
 /***/ }),
 
 /***/ 643:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -5097,7 +5099,7 @@ module.exports = ViewObserver;
 /***/ }),
 
 /***/ 459:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -7010,13 +7012,13 @@ module.exports = function(root) {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/node module decorator */
-/******/ (() => {
-/******/ 	__webpack_require__.nmd = (module) => {
+/******/ !function() {
+/******/ 	__webpack_require__.nmd = function(module) {
 /******/ 		module.paths = [];
 /******/ 		if (!module.children) module.children = [];
 /******/ 		return module;
 /******/ 	};
-/******/ })();
+/******/ }();
 /******/ 
 /************************************************************************/
 /******/ 

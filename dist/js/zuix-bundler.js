@@ -1,7 +1,7 @@
-/* zUIx v1.0.26 22.03.28 01:11:49 */
+/* zUIx v1.0.27 22.03.28 14:13:52 */
 
 var zuix;
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 460:
@@ -252,7 +252,7 @@ if ( true && module.exports) {
 /***/ }),
 
 /***/ 458:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  Copyright (c) 2014, Yahoo! Inc. All rights reserved.
@@ -372,7 +372,7 @@ module.exports = function serialize(obj, options) {
 /***/ }),
 
 /***/ 94:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 /*
@@ -482,7 +482,7 @@ module.exports = function(root) {
 /***/ }),
 
 /***/ 541:
-/***/ ((module) => {
+/***/ (function(module) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -587,16 +587,16 @@ module.exports = OptionAttributes;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/amd define */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		__webpack_require__.amdD = function () {
 /******/ 			throw new Error('define cannot be used indirect');
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/amd options */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		__webpack_require__.amdO = {};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 /******/ 	
