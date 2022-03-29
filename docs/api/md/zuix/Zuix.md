@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1714](../../zuix/Zuix.js#L1714)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1703](../../zuix/Zuix.js#L1703)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1725](../../zuix/Zuix.js#L1725)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1714](../../zuix/Zuix.js#L1714)
 
 -->
 
@@ -164,7 +164,7 @@ by passing a boolean value as argument.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1653](../../zuix/Zuix.js#L1653)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1642](../../zuix/Zuix.js#L1642)
 
 -->
 
@@ -199,7 +199,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1375](../../zuix/Zuix.js#L1375)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1364](../../zuix/Zuix.js#L1364)
 
 -->
 
@@ -239,7 +239,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1350](../../zuix/Zuix.js#L1350)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1339](../../zuix/Zuix.js#L1339)
 
 -->
 
@@ -277,7 +277,7 @@ order to actually load and display the component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1388](../../zuix/Zuix.js#L1388)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1377](../../zuix/Zuix.js#L1377)
 
 -->
 
@@ -294,7 +294,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1783](../../zuix/Zuix.js#L1783)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1772](../../zuix/Zuix.js#L1772)
 
 -->
 
@@ -310,7 +310,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1790](../../zuix/Zuix.js#L1790)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1779](../../zuix/Zuix.js#L1779)
 
 -->
 
@@ -337,7 +337,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1187](../../zuix/Zuix.js#L1187)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1176](../../zuix/Zuix.js#L1176)
 
 -->
 
@@ -374,7 +374,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1691](../../zuix/Zuix.js#L1691)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1680](../../zuix/Zuix.js#L1680)
 
 -->
 
@@ -400,7 +400,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1485](../../zuix/Zuix.js#L1485)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1474](../../zuix/Zuix.js#L1474)
 
 -->
 
@@ -486,7 +486,7 @@ Enables/Disables HTTP caching or gets the current settings.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1626](../../zuix/Zuix.js#L1626)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1615](../../zuix/Zuix.js#L1615)
 
 -->
 
@@ -510,7 +510,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1612](../../zuix/Zuix.js#L1612)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1601](../../zuix/Zuix.js#L1601)
 
 -->
 
@@ -536,7 +536,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1237](../../zuix/Zuix.js#L1237)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1226](../../zuix/Zuix.js#L1226)
 
 -->
 
@@ -604,7 +604,7 @@ using this method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1311](../../zuix/Zuix.js#L1311)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1300](../../zuix/Zuix.js#L1300)
 
 -->
 
@@ -672,7 +672,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1701](../../zuix/Zuix.js#L1701)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1690](../../zuix/Zuix.js#L1690)
 
 -->
 
@@ -698,7 +698,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1844](../../zuix/Zuix.js#L1844)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1833](../../zuix/Zuix.js#L1833)
 
 -->
 
@@ -723,7 +723,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1829](../../zuix/Zuix.js#L1829)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1818](../../zuix/Zuix.js#L1818)
 
 -->
 
@@ -746,7 +746,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1679](../../zuix/Zuix.js#L1679)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1668](../../zuix/Zuix.js#L1668)
 
 -->
 
@@ -779,7 +779,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1410](../../zuix/Zuix.js#L1410)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1399](../../zuix/Zuix.js#L1399)
 
 -->
 
@@ -802,7 +802,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1251](../../zuix/Zuix.js#L1251)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1240](../../zuix/Zuix.js#L1240)
 
 -->
 
@@ -835,7 +835,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1506](../../zuix/Zuix.js#L1506)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1495](../../zuix/Zuix.js#L1495)
 
 -->
 
@@ -1257,8 +1257,8 @@ Callback function for monitoring all log messages.
 
 -->
 
-<a name="PlayTransitionCallback"></a>
-#### PlayTransitionCallback($element, transitionQueue)
+<a name="PlayFxCallback"></a>
+#### PlayFxCallback($element, classQueue)
 
 Callback function used with the `each(..)` method.
 
@@ -1270,7 +1270,31 @@ Callback function used with the `each(..)` method.
 |Name|Type|Description|
 |----|----|-----------|
 |`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
-|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+|`classQueue`|*Array.&lt;string>*|Transition/animation class queue left to play, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 132](../../helpers/ZxQuery.js#L132)
+
+-->
+
+<a name="PlayFxConfig"></a>
+#### PlayFxConfig
+
+Configuration object for `playFx`, `playTransition`, `playAnimation` utility methods.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
+|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
+|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*|Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
 
 <!--
 

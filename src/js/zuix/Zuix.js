@@ -20,7 +20,7 @@
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  *
  */
 
@@ -762,15 +762,9 @@ function createComponent(context, task) {
       }
     } else _log.w(context.componentId, 'component:deferred:load');
 
-    if (task != null) {
-      task.callback(function() {
-        if (!context._c._initialized) {
-          _log.d(context.componentId, 'controller:create:deferred');
-          initController(context._c);
-        }
-      });
-    }
     const v = z$(context.view());
+    // if dataUiContext it's not null, a main controller was already loaded
+    // on this view, so we preserve the main controller's context id
     if (v.attr(_optionAttributes.dataUiContext) == null) {
       v.attr(_optionAttributes.dataUiContext, context.contextId);
     }
@@ -784,73 +778,49 @@ function createComponent(context, task) {
       if (typeof c.init === 'function') {
         c.init();
       }
-      let loadingHtml;
-      if (!util.isNoU(c.view())) {
-        // if it's not null, a controller was already loaded, so we preserve the base controller name
-        // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
-        if (c.view().attr(_optionAttributes.dataUiComponent) == null) {
-          c.view().attr(_optionAttributes.dataUiComponent, '');
-        }
-        // if no model is supplied, try auto-create from view fields
-        if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
-          context.viewToModel();
-        }
-        if (context.options().viewDeferred) {
-          context.options().viewDeferred = false;
-          // save the original inline view
-          // before loading the view template
-          // it can be then restored with c.restoreView()
-          c.saveView();
+      const endTask = function() {
+        task && _log.d(context.componentId, 'controller:create:deferred');
+        initController(c);
+        task && task.end();
+      };
+      // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
+      let loadingHtml = false;
+      if (!util.isNoU(c.view()) && c.view().attr(_optionAttributes.dataUiComponent) == null) {
+        // add the `dataUiComponent` attribute
+        c.view().attr(_optionAttributes.dataUiComponent, '');
+      }
+      // if no model is supplied, try auto-create from view fields
+      if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
+        context.viewToModel();
+      }
 
-          // TODO: check if this case is still required, otherwise remove it.
-          if (cached === null) {
-            cached = {
-              componentId: context.componentId,
-              controller: context.controller()
-            };
-            _componentCache.push(cached);
-            _log.t(context.componentId, 'bundle:added');
-            _log.d(context.componentId, 'component:deferred:load');
-          }
+      if (context.options().viewDeferred) {
+        context.options().viewDeferred = false;
+        // save the original inline view
+        // before loading the view template
+        // it can be then restored with c.restoreView()
+        c.saveView();
 
-          let pending = -1;
-          if (context.options().css !== false && typeof context.options().css !== 'string') {
-            if (cached.css == null) {
-              if (pending === -1) pending = 0;
-              pending++;
-              context.loadCss({
-                caching: _enableHttpCaching,
-                success: function(css) {
-                  // TODO: this is a work-around for 'componentize' overlapping issue
-                  if (cached.css == null) {
-                    cached.css = css;
-                  }
-                  _log.d(context.componentId, 'component:deferred:css', pending);
-                },
-                then: function() {
-                  if (--pending === 0 && task != null) {
-                    task.end();
-                  }
-                }
-              });
-            } else context.style(cached.css);
-          } else if (typeof context.options().css === 'string') {
-            context.style(context.options().css);
-          }
+        if (cached === null) {
+          cached = {
+            componentId: context.componentId,
+            controller: context.controller()
+          };
+          _componentCache.push(cached);
+          _log.t(context.componentId, 'bundle:added');
+          _log.d(context.componentId, 'component:deferred:load');
+        }
+
+        const loadViewTask = function() {
           if (context.options().html !== false) {
             if (cached.view == null) {
-              if (pending === -1) pending = 0;
-              pending++;
               loadingHtml = true;
               context.loadHtml({
                 cext: context.options().cext,
                 caching: _enableHttpCaching,
                 success: function(html) {
-                  // TODO: this is a work-around for 'componentize' overlapping issue
-                  if (cached.view == null) {
-                    cached.view = html;
-                  }
-                  _log.d(context.componentId, 'component:deferred:html', pending);
+                  cached.view = html;
+                  _log.d(context.componentId, 'component:deferred:html');
                 },
                 error: function(err) {
                   _log.e(err, context);
@@ -859,25 +829,45 @@ function createComponent(context, task) {
                   }
                 },
                 then: function() {
-                  if (--pending === 0 && task != null) {
-                    task.end();
-                  } else {
-                    _log.d(context.componentId, 'controller:create:2');
-                    initController(c);
-                  }
+                  _log.d(context.componentId, 'controller:create:2');
+                  endTask();
                 }
               });
-            } else context.view(cached.view);
+            } else {
+              context.view(cached.view);
+              endTask();
+            }
+          } else {
+            _log.d(context.componentId, 'controller:create:3');
+            endTask();
           }
-          if (pending === -1 && task != null) {
-            task.end();
-          }
-        } else if (task != null) task.end();
-      }
+        };
 
-      if (task == null && !loadingHtml) {
+        if (context.options().css !== false && typeof context.options().css !== 'string') {
+          if (cached.css == null) {
+            context.loadCss({
+              caching: _enableHttpCaching,
+              success: function(css) {
+                cached.css = css;
+                _log.d(context.componentId, 'component:deferred:css');
+              },
+              then: function() {
+                loadViewTask();
+              }
+            });
+          } else {
+            context.style(cached.css);
+            loadViewTask();
+          }
+        } else {
+          if (typeof context.options().css === 'string') {
+            context.style(context.options().css);
+          }
+          loadViewTask();
+        }
+      } else {
         _log.d(context.componentId, 'controller:create:1');
-        initController(c);
+        endTask();
       }
     } else {
       _log.w(context.componentId, 'component:controller:undefined');
@@ -905,7 +895,6 @@ function isDirectComponentElement($view, $el) {
  * @param {ContextController} c
  */
 function initController(c) {
-  c._initialized = true;
   const ctx = c.context;
   _log.t(ctx.componentId, 'controller:init', 'timer:init:start');
 

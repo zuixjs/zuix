@@ -26,7 +26,7 @@
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -256,7 +256,7 @@ module.exports = function(ctx) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -382,7 +382,7 @@ module.exports = TaskQueue;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -639,7 +639,7 @@ module.exports = {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2047,7 +2047,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 /* global define */
@@ -2094,7 +2094,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2275,7 +2275,7 @@ module.exports = ObjectObserver;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2354,7 +2354,7 @@ module.export = ObservableListener;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2469,7 +2469,7 @@ module.exports = ObservableObject;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  *
  */
 
@@ -2625,7 +2625,7 @@ module.exports = ActiveRefresh;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 /**
@@ -2684,7 +2684,7 @@ module.exports = function(root) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -3868,7 +3868,7 @@ module.exports = ComponentContext;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -4484,7 +4484,7 @@ function lazyElementCheck(element) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -4915,7 +4915,7 @@ module.exports = ContextController;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 const OptionAttributes = Object.freeze({
@@ -4993,7 +4993,7 @@ module.exports = OptionAttributes;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -5123,7 +5123,7 @@ module.exports = ViewObserver;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  *
  */
 

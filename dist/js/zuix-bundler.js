@@ -1,5 +1,3 @@
-/* zUIx v1.0.27 22.03.28 14:13:52 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -32,7 +30,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 /* global define */
@@ -398,7 +396,7 @@ module.exports = function serialize(obj, options) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -507,7 +505,7 @@ module.exports = function(root) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 const OptionAttributes = Object.freeze({

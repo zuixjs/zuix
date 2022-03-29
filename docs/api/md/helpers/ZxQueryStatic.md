@@ -81,7 +81,7 @@ Creates a ZxQuery wrapped element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 779](../../helpers/ZxQuery.js#L779)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 847](../../helpers/ZxQuery.js#L847)
 
 -->
 
@@ -90,6 +90,28 @@ Creates a ZxQuery wrapped element.
 *[ZxQuery](../../helpers/ZxQuery)*
 
 ### Methods
+
+<a name="addTransition"></a>
+#### addTransition(cssId, scope, className, properties, options)
+
+Adds a CSS transition effect to the component stylesheet.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`cssId`|||
+|`scope`|||
+|`className`|*string*|CSS class name to assign to this transition.|
+|`properties`|*Array.&lt;Object>* \| *JSON*|List of CSS properties/values to set.|
+|`options`|*Array.&lt;Object>* \| *JSON*|List of transition options.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1351](../../helpers/ZxQuery.js#L1351)
+
+-->
 
 <a name="appendCss"></a>
 #### appendCss(css, target, cssId) &rarr; {Element|HTMLElement}
@@ -107,7 +129,7 @@ Appends a new stylesheet, or replaces an existing one, to the document.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1031](../../helpers/ZxQuery.js#L1031)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1099](../../helpers/ZxQuery.js#L1099)
 
 -->
 
@@ -130,7 +152,7 @@ Checks if a class exists by searching for it in all document stylesheets.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 895](../../helpers/ZxQuery.js#L895)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 963](../../helpers/ZxQuery.js#L963)
 
 -->
 
@@ -159,7 +181,7 @@ If the callback returns *false*, the iteration loop will interrupt.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 795](../../helpers/ZxQuery.js#L795)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 863](../../helpers/ZxQuery.js#L863)
 
 -->
 
@@ -182,7 +204,7 @@ Selects document elements matching the given *DOM* query selector.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 783](../../helpers/ZxQuery.js#L783)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 851](../../helpers/ZxQuery.js#L851)
 
 -->
 
@@ -194,7 +216,7 @@ Selects document elements matching the given *DOM* query selector.
 <a name="getClosest"></a>
 #### getClosest(elem, selector) &rarr; {Element|HTMLElement|null}
 
-Gets the closest parent mathing the given query selector
+Gets the closest parent matching the given query selector
 
 ##### Parameters
 
@@ -206,7 +228,7 @@ Gets the closest parent mathing the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1161](../../helpers/ZxQuery.js#L1161)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1229](../../helpers/ZxQuery.js#L1229)
 
 -->
 
@@ -229,7 +251,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1179](../../helpers/ZxQuery.js#L1179)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1247](../../helpers/ZxQuery.js#L1247)
 
 -->
 
@@ -252,7 +274,7 @@ Checks if an element has got the specified CSS class.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 872](../../helpers/ZxQuery.js#L872)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 940](../../helpers/ZxQuery.js#L940)
 
 -->
 
@@ -274,13 +296,31 @@ Makes an HTTP request.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 834](../../helpers/ZxQuery.js#L834)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 902](../../helpers/ZxQuery.js#L902)
 
 -->
 
 ##### Returns
 
 *[ZxQueryStatic](../../helpers/ZxQueryStatic)*
+
+<a name="playFx"></a>
+#### playFx(config)
+
+Plays transition effects or animations on a given element inside the component.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`config`|*[PlayFxConfig](#PlayFxConfig)*|Options.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1389](../../helpers/ZxQuery.js#L1389)
+
+-->
 
 <a name="replaceBraces"></a>
 #### replaceBraces(html, callback) &rarr; {string|null}
@@ -298,7 +338,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1119](../../helpers/ZxQuery.js#L1119)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1187](../../helpers/ZxQuery.js#L1187)
 
 -->
 
@@ -322,7 +362,7 @@ Replaces CSS variables with provided values.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1071](../../helpers/ZxQuery.js#L1071)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1139](../../helpers/ZxQuery.js#L1139)
 
 -->
 
@@ -346,7 +386,7 @@ Wraps an `Element` inside a container specified by a given tag name.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 934](../../helpers/ZxQuery.js#L934)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1002](../../helpers/ZxQuery.js#L1002)
 
 -->
 
@@ -354,48 +394,6 @@ Wraps an `Element` inside a container specified by a given tag name.
 
 *Element* \| *HTMLElement*
  &dash; The new wrapped element
-
-<a name="addTransition"></a>
-#### &lt;_static_&gt; addTransition(cssId, scope, className, properties, options)
-
-Adds a CSS transition effect to the component stylesheet.
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`cssId`|||
-|`scope`|||
-|`className`|*string*|CSS class name to assign to this transition.|
-|`properties`|*Array.&lt;Object>* \| *JSON*|List of CSS properties/values to set.|
-|`options`|*Array.&lt;Object>* \| *JSON*|List of transition options.|
-
-<!--
-
-*Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1292](../../helpers/ZxQuery.js#L1292)
-
--->
-
-<a name="playTransition"></a>
-#### &lt;_static_&gt; playTransition(element, classNames, callback)
-
-Plays transition effects or animations on a given element inside the component.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|  |The target element.|
-|`classNames`|*Array.&lt;string>*|  |List of transition/animation classes to apply.|
-|`callback`|*[PlayTransitionCallback](#PlayTransitionCallback)*|*optional*  |Callback function to call when all transitions/animations ended.|
-
-<!--
-
-*Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1325](../../helpers/ZxQuery.js#L1325)
-
--->
 
 ### Type Definitions
 
@@ -802,8 +800,8 @@ Callback function for monitoring all log messages.
 
 -->
 
-<a name="PlayTransitionCallback"></a>
-#### PlayTransitionCallback($element, transitionQueue)
+<a name="PlayFxCallback"></a>
+#### PlayFxCallback($element, classQueue)
 
 Callback function used with the `each(..)` method.
 
@@ -815,7 +813,31 @@ Callback function used with the `each(..)` method.
 |Name|Type|Description|
 |----|----|-----------|
 |`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
-|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+|`classQueue`|*Array.&lt;string>*|Transition/animation class queue left to play, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 132](../../helpers/ZxQuery.js#L132)
+
+-->
+
+<a name="PlayFxConfig"></a>
+#### PlayFxConfig
+
+Configuration object for `playFx`, `playTransition`, `playAnimation` utility methods.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
+|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
+|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*|Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
 
 <!--
 

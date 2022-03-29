@@ -26,7 +26,7 @@
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -256,7 +256,7 @@ module.exports = function(ctx) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -382,7 +382,7 @@ module.exports = TaskQueue;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -639,7 +639,7 @@ module.exports = {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -735,11 +735,24 @@ const util = __webpack_require__(826);
  */
 
 /**
+ * Configuration object for `playFx`, `playTransition`, `playAnimation` utility methods.
+ *
+ * @typedef {object} PlayFxConfig
+ * @property {'transition'|'animation'} type The type of effect to play.
+ * @property {Element|ZxQuery} target Target element.
+ * @property {Array<string>|string} classes List of transition or animation classes to play.
+ * @property {object} options Transition/animation options ('delay', 'duration', etc..).
+ * @property {boolean} holdState Hold last transition/animation class.
+ * @property {PlayFxCallback} onStep Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.
+ * @property {PlayFxCallback} onEnd Called when all transitions/animations ended.
+ */
+
+/**
  * Callback function used with the `each(..)` method.
  *
- * @callback PlayTransitionCallback
+ * @callback PlayFxCallback
  * @param {ZxQuery} $element Target element (same as 'this').
- * @param {Array<string>} transitionQueue Transition class queue left to animate, `null` if the animation ended.
+ * @param {Array<string>} classQueue Transition/animation class queue left to play, `null` if the animation ended.
  * @this {ZxQuery}
  */
 
@@ -1381,6 +1394,61 @@ ZxQuery.prototype.show = function(mode) {
 ZxQuery.prototype.hide = function() {
   return this.display('none');
 };
+/**
+ * Plays the transition effect specified by the given transition class list. If no class list is provided,
+ * the callback function can be used to wait for the end of any currently running animation.
+ *
+ * @param {Array<string>|string|PlayFxConfig} options This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated  class names, or a {PlayFxConfig} object.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.playTransition = function(options) {
+  let classes = options.classes;
+  if (typeof options === 'string') {
+    classes = options.split(' ');
+    options = {};
+  } else if (Array.isArray(options)) {
+    classes = options;
+    options = {};
+  }
+  const config = Object.assign({
+    classes,
+    target: this,
+    type: 'transition'
+  }, options);
+  z$.playFx(config);
+  return this;
+};
+/**
+ * Plays the animation specified by the given animation class list. If no class list is provided,
+ * the callback function can be used to wait for the end of any currently running animation.
+ *
+ * @param {Array<string>|string|PlayFxConfig} options This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated  class names, or a {PlayFxConfig} object.
+ * @return {ZxQuery}
+ */
+ZxQuery.prototype.playAnimation = function(options) {
+  let classes = options.classes;
+  if (typeof options === 'string') {
+    classes = options.split(' ');
+    options = {};
+  } else if (Array.isArray(options)) {
+    classes = options;
+    options = {};
+  }
+  const config = Object.assign({
+    classes,
+    target: this,
+    type: 'animation'
+  }, options);
+  z$.playFx(config);
+  return this;
+};
+/**
+ * Returns true if a transition or animation is running.
+ * @return {boolean|*}
+ */
+ZxQuery.prototype.isPlaying = function() {
+  return this.hasClass('--z-playing');
+};
 
 // --- ZxQuery factory members --- //
 
@@ -1777,7 +1845,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
   return null;
 };
 /**
- * Gets the closest parent mathing the given query selector
+ * Gets the closest parent matching the given query selector
  *
  * @method getClosest
  * @memberOf ZxQueryStatic
@@ -1901,6 +1969,9 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
 /**
  * Adds a CSS transition effect to the component stylesheet.
  *
+ * @method addTransition
+ * @memberOf ZxQueryStatic
+ * @alias zuix.$.addTransition
  * @param cssId
  * @param scope
  * @param {string} className CSS class name to assign to this transition.
@@ -1936,35 +2007,65 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
 /**
  * Plays transition effects or animations on a given element inside the component.
  *
- * @param {Element|ZxQuery} element The target element.
- * @param {Array<string>} classNames List of transition/animation classes to apply.
- * @param {PlayTransitionCallback} [callback] Callback function to call when all transitions/animations ended.
+ * @method playFx
+ * @memberOf ZxQueryStatic
+ * @alias zuix.$.playFx
+ * @param {PlayFxConfig} config Options.
  */
-ZxQueryStatic.playTransition = function(element, classNames, callback) {
+ZxQueryStatic.playFx = function(config) {
   const _t = this;
-  const $el = z$(element).show();
-  if (typeof classNames === 'string') {
-    classNames = classNames.split(' ');
+  const $el = z$(config.target);
+  if (config.classes == null) {
+    config.classes = [];
+  } else if (typeof config.classes === 'string') {
+    config.classes = config.classes.split(' ');
   }
-  $el.addClass(classNames.join(' ')).show();
-  const transitionOutClass = classNames.shift();
-  const style = getComputedStyle($el.get());
-  const delay = (parseFloat(style.transitionDelay) * 1000) || 10;
-  setTimeout(function() {
-    if (transitionOutClass) {
-      $el.removeClass(transitionOutClass);
+  const classOut = config.classes.shift();
+  if (!$el.hasClass('--z-playing')) {
+    $el.addClass('--z-playing');
+    if (classOut) {
+      $el.addClass(classOut).css(config.type, 'none');
     }
-    const duration = 10 + parseFloat(style.transitionDuration) * 1000;
+    if (config.options) {
+      z$.each(config.options, function(k, v) {
+        $el.css(config.type + '-' + k, v);
+      });
+    }
+  }
+  const style = getComputedStyle($el.get());
+  const delay = (parseFloat(style[config.type + '-delay']) * 1000) || 10;
+  setTimeout(function() {
+    if (classOut) {
+      $el.css(config.type, '')
+          .removeClass(classOut);
+      const classIn = config.classes[0];
+      if (classIn) {
+        $el.addClass(classIn);
+      }
+    }
+    const duration = 10 + parseFloat(style[config.type + '-duration']) * 1000;
     setTimeout(function() {
-      if (classNames.length > 1) {
-        callback.call($el, $el, classNames.slice(1));
-        _t.playTransition(element, classNames, callback);
-      } else if (callback) {
-        callback.call($el, $el);
+      if (config.classes.length > 1) {
+        if (typeof config.onStep === 'function') {
+          config.onStep.call($el, $el, config.classes.slice(1));
+        }
+        _t.playFx(config);
+      } else {
+        if (!config.holdState && config.classes.length > 0) {
+          $el.removeClass(config.classes.shift());
+        }
+        $el.removeClass('--z-playing');
+        if (typeof config.onEnd === 'function') {
+          z$.each(config.options, function(k, v) {
+            $el.css(config.type + '-' + k, '');
+          });
+          config.onEnd.call($el, $el);
+        }
       }
     }, duration);
   }, delay);
 };
+
 
 ZxQueryStatic.ZxQuery = ZxQuery;
 
@@ -2047,7 +2148,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 /* global define */
@@ -2094,7 +2195,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2275,7 +2376,7 @@ module.exports = ObjectObserver;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2354,7 +2455,7 @@ module.export = ObservableListener;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -2469,7 +2570,7 @@ module.exports = ObservableObject;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  *
  */
 
@@ -2625,7 +2726,7 @@ module.exports = ActiveRefresh;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 /**
@@ -2684,7 +2785,7 @@ module.exports = function(root) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -3868,7 +3969,7 @@ module.exports = ComponentContext;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -4484,7 +4585,7 @@ function lazyElementCheck(element) {
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -4915,7 +5016,7 @@ module.exports = ContextController;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 const OptionAttributes = Object.freeze({
@@ -4993,7 +5094,7 @@ module.exports = OptionAttributes;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  */
 
 
@@ -5123,7 +5224,7 @@ module.exports = ViewObserver;
  *  zUIx, Javascript library for component-based development.
  *        https://zuixjs.github.io/zuix
  *
- * @author Generoso Martello <generoso@martello.com>
+ * @author Generoso Martello  -  https://github.com/genemars
  *
  */
 
@@ -5865,15 +5966,9 @@ function createComponent(context, task) {
       }
     } else _log.w(context.componentId, 'component:deferred:load');
 
-    if (task != null) {
-      task.callback(function() {
-        if (!context._c._initialized) {
-          _log.d(context.componentId, 'controller:create:deferred');
-          initController(context._c);
-        }
-      });
-    }
     const v = z$(context.view());
+    // if dataUiContext it's not null, a main controller was already loaded
+    // on this view, so we preserve the main controller's context id
     if (v.attr(_optionAttributes.dataUiContext) == null) {
       v.attr(_optionAttributes.dataUiContext, context.contextId);
     }
@@ -5887,73 +5982,49 @@ function createComponent(context, task) {
       if (typeof c.init === 'function') {
         c.init();
       }
-      let loadingHtml;
-      if (!util.isNoU(c.view())) {
-        // if it's not null, a controller was already loaded, so we preserve the base controller name
-        // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
-        if (c.view().attr(_optionAttributes.dataUiComponent) == null) {
-          c.view().attr(_optionAttributes.dataUiComponent, '');
-        }
-        // if no model is supplied, try auto-create from view fields
-        if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
-          context.viewToModel();
-        }
-        if (context.options().viewDeferred) {
-          context.options().viewDeferred = false;
-          // save the original inline view
-          // before loading the view template
-          // it can be then restored with c.restoreView()
-          c.saveView();
+      const endTask = function() {
+        task && _log.d(context.componentId, 'controller:create:deferred');
+        initController(c);
+        task && task.end();
+      };
+      // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
+      let loadingHtml = false;
+      if (!util.isNoU(c.view()) && c.view().attr(_optionAttributes.dataUiComponent) == null) {
+        // add the `dataUiComponent` attribute
+        c.view().attr(_optionAttributes.dataUiComponent, '');
+      }
+      // if no model is supplied, try auto-create from view fields
+      if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
+        context.viewToModel();
+      }
 
-          // TODO: check if this case is still required, otherwise remove it.
-          if (cached === null) {
-            cached = {
-              componentId: context.componentId,
-              controller: context.controller()
-            };
-            _componentCache.push(cached);
-            _log.t(context.componentId, 'bundle:added');
-            _log.d(context.componentId, 'component:deferred:load');
-          }
+      if (context.options().viewDeferred) {
+        context.options().viewDeferred = false;
+        // save the original inline view
+        // before loading the view template
+        // it can be then restored with c.restoreView()
+        c.saveView();
 
-          let pending = -1;
-          if (context.options().css !== false && typeof context.options().css !== 'string') {
-            if (cached.css == null) {
-              if (pending === -1) pending = 0;
-              pending++;
-              context.loadCss({
-                caching: _enableHttpCaching,
-                success: function(css) {
-                  // TODO: this is a work-around for 'componentize' overlapping issue
-                  if (cached.css == null) {
-                    cached.css = css;
-                  }
-                  _log.d(context.componentId, 'component:deferred:css', pending);
-                },
-                then: function() {
-                  if (--pending === 0 && task != null) {
-                    task.end();
-                  }
-                }
-              });
-            } else context.style(cached.css);
-          } else if (typeof context.options().css === 'string') {
-            context.style(context.options().css);
-          }
+        if (cached === null) {
+          cached = {
+            componentId: context.componentId,
+            controller: context.controller()
+          };
+          _componentCache.push(cached);
+          _log.t(context.componentId, 'bundle:added');
+          _log.d(context.componentId, 'component:deferred:load');
+        }
+
+        const loadViewTask = function() {
           if (context.options().html !== false) {
             if (cached.view == null) {
-              if (pending === -1) pending = 0;
-              pending++;
               loadingHtml = true;
               context.loadHtml({
                 cext: context.options().cext,
                 caching: _enableHttpCaching,
                 success: function(html) {
-                  // TODO: this is a work-around for 'componentize' overlapping issue
-                  if (cached.view == null) {
-                    cached.view = html;
-                  }
-                  _log.d(context.componentId, 'component:deferred:html', pending);
+                  cached.view = html;
+                  _log.d(context.componentId, 'component:deferred:html');
                 },
                 error: function(err) {
                   _log.e(err, context);
@@ -5962,25 +6033,45 @@ function createComponent(context, task) {
                   }
                 },
                 then: function() {
-                  if (--pending === 0 && task != null) {
-                    task.end();
-                  } else {
-                    _log.d(context.componentId, 'controller:create:2');
-                    initController(c);
-                  }
+                  _log.d(context.componentId, 'controller:create:2');
+                  endTask();
                 }
               });
-            } else context.view(cached.view);
+            } else {
+              context.view(cached.view);
+              endTask();
+            }
+          } else {
+            _log.d(context.componentId, 'controller:create:3');
+            endTask();
           }
-          if (pending === -1 && task != null) {
-            task.end();
-          }
-        } else if (task != null) task.end();
-      }
+        };
 
-      if (task == null && !loadingHtml) {
+        if (context.options().css !== false && typeof context.options().css !== 'string') {
+          if (cached.css == null) {
+            context.loadCss({
+              caching: _enableHttpCaching,
+              success: function(css) {
+                cached.css = css;
+                _log.d(context.componentId, 'component:deferred:css');
+              },
+              then: function() {
+                loadViewTask();
+              }
+            });
+          } else {
+            context.style(cached.css);
+            loadViewTask();
+          }
+        } else {
+          if (typeof context.options().css === 'string') {
+            context.style(context.options().css);
+          }
+          loadViewTask();
+        }
+      } else {
         _log.d(context.componentId, 'controller:create:1');
-        initController(c);
+        endTask();
       }
     } else {
       _log.w(context.componentId, 'component:controller:undefined');
@@ -6008,7 +6099,6 @@ function isDirectComponentElement($view, $el) {
  * @param {ContextController} c
  */
 function initController(c) {
-  c._initialized = true;
   const ctx = c.context;
   _log.t(ctx.componentId, 'controller:init', 'timer:init:start');
 

@@ -86,7 +86,7 @@ root *document* element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 195](../../helpers/ZxQuery.js#L195)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 208](../../helpers/ZxQuery.js#L208)
 
 -->
 
@@ -111,7 +111,7 @@ Adds the given CSS class to the class list of all elements in the ZxQuery object
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 551](../../helpers/ZxQuery.js#L551)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 564](../../helpers/ZxQuery.js#L564)
 
 -->
 
@@ -134,7 +134,7 @@ Appends the given element or HTML string to the first element in the ZxQuery obj
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 643](../../helpers/ZxQuery.js#L643)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 656](../../helpers/ZxQuery.js#L656)
 
 -->
 
@@ -151,7 +151,7 @@ Re-attaches to its parent the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 704](../../helpers/ZxQuery.js#L704)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 717](../../helpers/ZxQuery.js#L717)
 
 -->
 
@@ -175,7 +175,7 @@ or sets one or more attributes for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 373](../../helpers/ZxQuery.js#L373)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 386](../../helpers/ZxQuery.js#L386)
 
 -->
 
@@ -199,7 +199,7 @@ or sets the `checked` attribute value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 611](../../helpers/ZxQuery.js#L611)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 624](../../helpers/ZxQuery.js#L624)
 
 -->
 
@@ -222,7 +222,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 252](../../helpers/ZxQuery.js#L252)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 265](../../helpers/ZxQuery.js#L265)
 
 -->
 
@@ -247,7 +247,7 @@ or sets one or more CSS property for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 528](../../helpers/ZxQuery.js#L528)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 541](../../helpers/ZxQuery.js#L541)
 
 -->
 
@@ -264,7 +264,7 @@ Detaches from its parent the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 688](../../helpers/ZxQuery.js#L688)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 701](../../helpers/ZxQuery.js#L701)
 
 -->
 
@@ -287,7 +287,7 @@ or sets the `display` property value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 724](../../helpers/ZxQuery.js#L724)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 737](../../helpers/ZxQuery.js#L737)
 
 -->
 
@@ -318,7 +318,7 @@ function or return `true` to continue to the next iteration.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 361](../../helpers/ZxQuery.js#L361)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 374](../../helpers/ZxQuery.js#L374)
 
 -->
 
@@ -342,7 +342,7 @@ located at the given position in the current ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 287](../../helpers/ZxQuery.js#L287)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 300](../../helpers/ZxQuery.js#L300)
 
 -->
 
@@ -366,7 +366,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 343](../../helpers/ZxQuery.js#L343)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 356](../../helpers/ZxQuery.js#L356)
 
 -->
 
@@ -390,7 +390,7 @@ If no index is provided, the default element will be returned.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 276](../../helpers/ZxQuery.js#L276)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 289](../../helpers/ZxQuery.js#L289)
 
 -->
 
@@ -413,7 +413,7 @@ Returns *true* if the first element in the ZxQuery object contains the given CSS
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 568](../../helpers/ZxQuery.js#L568)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 581](../../helpers/ZxQuery.js#L581)
 
 -->
 
@@ -430,7 +430,7 @@ Sets the CSS `display` property to 'none'.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 763](../../helpers/ZxQuery.js#L763)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 776](../../helpers/ZxQuery.js#L776)
 
 -->
 
@@ -454,7 +454,7 @@ or sets the HTML string for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 595](../../helpers/ZxQuery.js#L595)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 608](../../helpers/ZxQuery.js#L608)
 
 -->
 
@@ -478,7 +478,7 @@ ZxQuery object selection.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 326](../../helpers/ZxQuery.js#L326)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 339](../../helpers/ZxQuery.js#L339)
 
 -->
 
@@ -502,7 +502,7 @@ to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 659](../../helpers/ZxQuery.js#L659)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 672](../../helpers/ZxQuery.js#L672)
 
 -->
 
@@ -519,7 +519,7 @@ Returns *true* if the first element markup code is empty.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 503](../../helpers/ZxQuery.js#L503)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 516](../../helpers/ZxQuery.js#L516)
 
 -->
 
@@ -527,6 +527,22 @@ Returns *true* if the first element markup code is empty.
 
 *boolean*
  &dash; *true* if the element is empty, *false* otherwise.
+
+<a name="isPlaying"></a>
+#### isPlaying() &rarr; {boolean|*}
+
+Returns true if a transition or animation is running.
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 831](../../helpers/ZxQuery.js#L831)
+
+-->
+
+##### Returns
+
+*boolean* \| ***
 
 <a name="length"></a>
 #### length() &rarr; {Number}
@@ -536,7 +552,7 @@ Gets the number of elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 229](../../helpers/ZxQuery.js#L229)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 242](../../helpers/ZxQuery.js#L242)
 
 -->
 
@@ -554,7 +570,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 315](../../helpers/ZxQuery.js#L315)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 328](../../helpers/ZxQuery.js#L328)
 
 -->
 
@@ -578,7 +594,7 @@ Stops listening for the given event.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 471](../../helpers/ZxQuery.js#L471)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 484](../../helpers/ZxQuery.js#L484)
 
 -->
 
@@ -602,7 +618,7 @@ Listens to the given event for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 443](../../helpers/ZxQuery.js#L443)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 456](../../helpers/ZxQuery.js#L456)
 
 -->
 
@@ -626,7 +642,7 @@ Listens once to the given event for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 417](../../helpers/ZxQuery.js#L417)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 430](../../helpers/ZxQuery.js#L430)
 
 -->
 
@@ -650,7 +666,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 239](../../helpers/ZxQuery.js#L239)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 252](../../helpers/ZxQuery.js#L252)
 
 -->
 
@@ -658,6 +674,52 @@ This only applies to the first element in the ZxQuery object.
 
 *[ZxQuery](../../helpers/ZxQuery)*
  &dash; A new *ZxQuery* object containing the matching parent element.
+
+<a name="playAnimation"></a>
+#### playAnimation(options) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Plays the animation specified by the given animation class list. If no class list is provided,
+the callback function can be used to wait for the end of any currently running animation.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`options`|*Array.&lt;string>* \| *string* \| *[PlayFxConfig](#PlayFxConfig)*|This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated  class names, or a {PlayFxConfig} object.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 810](../../helpers/ZxQuery.js#L810)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
+
+<a name="playTransition"></a>
+#### playTransition(options) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Plays the transition effect specified by the given transition class list. If no class list is provided,
+the callback function can be used to wait for the end of any currently running animation.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`options`|*Array.&lt;string>* \| *string* \| *[PlayFxConfig](#PlayFxConfig)*|This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated  class names, or a {PlayFxConfig} object.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 786](../../helpers/ZxQuery.js#L786)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
 
 <a name="position"></a>
 #### position() &rarr; {[ElementPosition](#ElementPosition)}
@@ -667,7 +729,7 @@ Gets coordinates and visibility status of the first element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 511](../../helpers/ZxQuery.js#L511)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 524](../../helpers/ZxQuery.js#L524)
 
 -->
 
@@ -689,7 +751,7 @@ Prepends the given element or HTML string to the first element in the ZxQuery ob
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 675](../../helpers/ZxQuery.js#L675)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 688](../../helpers/ZxQuery.js#L688)
 
 -->
 
@@ -707,7 +769,7 @@ This only applies to the first element in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 306](../../helpers/ZxQuery.js#L306)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 319](../../helpers/ZxQuery.js#L319)
 
 -->
 
@@ -730,7 +792,7 @@ Removes the given CSS class from all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 577](../../helpers/ZxQuery.js#L577)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 590](../../helpers/ZxQuery.js#L590)
 
 -->
 
@@ -747,7 +809,7 @@ De-registers all event handlers of all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 492](../../helpers/ZxQuery.js#L492)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 505](../../helpers/ZxQuery.js#L505)
 
 -->
 
@@ -764,7 +826,7 @@ Reverses order of the elements in the current set.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 264](../../helpers/ZxQuery.js#L264)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 277](../../helpers/ZxQuery.js#L277)
 
 -->
 
@@ -787,7 +849,7 @@ Sets the CSS `display` property to '' if no argument value is provided, otherwis
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 755](../../helpers/ZxQuery.js#L755)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 768](../../helpers/ZxQuery.js#L768)
 
 -->
 
@@ -811,7 +873,7 @@ Triggers the given event for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 397](../../helpers/ZxQuery.js#L397)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 410](../../helpers/ZxQuery.js#L410)
 
 -->
 
@@ -835,7 +897,7 @@ or sets the `value` attribute value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 628](../../helpers/ZxQuery.js#L628)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 641](../../helpers/ZxQuery.js#L641)
 
 -->
 
@@ -858,7 +920,7 @@ or sets the `visibility` property value for all elements in the ZxQuery object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 740](../../helpers/ZxQuery.js#L740)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 753](../../helpers/ZxQuery.js#L753)
 
 -->
 
@@ -1272,8 +1334,8 @@ Callback function for monitoring all log messages.
 
 -->
 
-<a name="PlayTransitionCallback"></a>
-#### PlayTransitionCallback($element, transitionQueue)
+<a name="PlayFxCallback"></a>
+#### PlayFxCallback($element, classQueue)
 
 Callback function used with the `each(..)` method.
 
@@ -1285,7 +1347,31 @@ Callback function used with the `each(..)` method.
 |Name|Type|Description|
 |----|----|-----------|
 |`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
-|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+|`classQueue`|*Array.&lt;string>*|Transition/animation class queue left to play, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 132](../../helpers/ZxQuery.js#L132)
+
+-->
+
+<a name="PlayFxConfig"></a>
+#### PlayFxConfig
+
+Configuration object for `playFx`, `playTransition`, `playAnimation` utility methods.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
+|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
+|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*|Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
 
 <!--
 

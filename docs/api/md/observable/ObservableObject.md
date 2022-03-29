@@ -540,8 +540,8 @@ Callback function for monitoring all log messages.
 
 -->
 
-<a name="PlayTransitionCallback"></a>
-#### PlayTransitionCallback($element, transitionQueue)
+<a name="PlayFxCallback"></a>
+#### PlayFxCallback($element, classQueue)
 
 Callback function used with the `each(..)` method.
 
@@ -553,7 +553,31 @@ Callback function used with the `each(..)` method.
 |Name|Type|Description|
 |----|----|-----------|
 |`$element`|*[ZxQuery](../../helpers/ZxQuery)*|Target element (same as 'this').|
-|`transitionQueue`|*Array.&lt;string>*|Transition class queue left to animate, `null` if the animation ended.|
+|`classQueue`|*Array.&lt;string>*|Transition/animation class queue left to play, `null` if the animation ended.|
+
+<!--
+
+*Source:*
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 132](../../helpers/ZxQuery.js#L132)
+
+-->
+
+<a name="PlayFxConfig"></a>
+#### PlayFxConfig
+
+Configuration object for `playFx`, `playTransition`, `playAnimation` utility methods.
+
+##### Properties
+
+|Name|Type|Description|
+|----|----|-----------|
+|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
+|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
+|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*|Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
 
 <!--
 
