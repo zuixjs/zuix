@@ -2635,8 +2635,9 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         _t.stop();
       }
     };
+    const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
     if (isActive) {
-      if (inactive) {
+      if (isMainComponent && inactive) {
         inactive = false;
         $v.trigger('refresh:active');
       }
@@ -2646,7 +2647,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         refreshLoop(nextData, nextMsDelay, forceActive);
       });
     } else {
-      if (!inactive) {
+      if (isMainComponent && !inactive) {
         inactive = true;
         $v.trigger('refresh:inactive');
       }

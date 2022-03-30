@@ -1,4 +1,4 @@
-/* zUIx v1.0.28 22.03.30 01:20:07 */
+/* zUIx v1.0.29 22.03.30 21:59:29 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -2648,8 +2648,9 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         _t.stop();
       }
     };
+    const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
     if (isActive) {
-      if (inactive) {
+      if (isMainComponent && inactive) {
         inactive = false;
         $v.trigger('refresh:active');
       }
@@ -2659,7 +2660,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         refreshLoop(nextData, nextMsDelay, forceActive);
       });
     } else {
-      if (!inactive) {
+      if (isMainComponent && !inactive) {
         inactive = true;
         $v.trigger('refresh:inactive');
       }
