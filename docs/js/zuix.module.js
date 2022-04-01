@@ -1398,7 +1398,7 @@ ZxQuery.prototype.hide = function() {
  * Plays the transition effect specified by the given transition class list. If no class list is provided,
  * the callback function can be used to wait for the end of any currently running animation.
  *
- * @param {Array<string>|string|PlayFxConfig} options This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated  class names, or a {PlayFxConfig} object.
+ * @param {Array<string>|string|PlayFxConfig} options This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated class names, or a {PlayFxConfig} object.
  * @return {ZxQuery}
  */
 ZxQuery.prototype.playTransition = function(options) {
@@ -1422,7 +1422,7 @@ ZxQuery.prototype.playTransition = function(options) {
  * Plays the animation specified by the given animation class list. If no class list is provided,
  * the callback function can be used to wait for the end of any currently running animation.
  *
- * @param {Array<string>|string|PlayFxConfig} options This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated  class names, or a {PlayFxConfig} object.
+ * @param {Array<string>|string|PlayFxConfig} options This parameter can be either: a list of classes (Array<string>), or a string with whitespace-separated class names, or a {PlayFxConfig} object.
  * @return {ZxQuery}
  */
 ZxQuery.prototype.playAnimation = function(options) {
@@ -2020,50 +2020,58 @@ ZxQueryStatic.playFx = function(config) {
   } else if (typeof config.classes === 'string') {
     config.classes = config.classes.split(' ');
   }
-  const classOut = config.classes.shift();
+  const classOut = config.classes.length > 1 && config.classes.shift();
   if (!$el.hasClass('--z-playing')) {
     $el.addClass('--z-playing');
     if (classOut) {
       $el.addClass(classOut).css(config.type, 'none');
+    }
+  }
+  const style = getComputedStyle($el.get());
+  const delay = (parseFloat(style[config.type + '-delay']) * 1000) || classOut ? 10 : 0;
+  let expired = false;
+  const animationStart = function() {
+    if (expired) return;
+    expired = true;
+    if (config.classes.length > 1) {
+      if (typeof config.onStep === 'function') {
+        config.onStep.call($el, $el, config.classes.slice(1));
+      }
+      _t.playFx(config);
+    } else {
+      if (!config.holdState && config.classes.length > 0) {
+        $el.removeClass(config.classes.shift());
+      }
+      $el.removeClass('--z-playing');
+      if (typeof config.onEnd === 'function') {
+        config.onEnd.call($el, $el);
+      }
+    }
+  };
+  const animationSetup = function() {
+    if (classOut) {
+      $el.css(config.type, '')
+          .removeClass(classOut);
+    }
+    const classIn = config.classes[0];
+    if (classIn) {
+      $el.addClass(classIn);
     }
     if (config.options) {
       z$.each(config.options, function(k, v) {
         $el.css(config.type + '-' + k, v);
       });
     }
+    const iterationCount = 1 + (parseFloat(style[config.type + '-iteration-count']) || 0);
+    const duration = (parseFloat(style[config.type + '-duration']) * 1000) * iterationCount;
+    setTimeout(animationStart, duration);
+  };
+  $el.one(config.type + 'end', animationStart);
+  if (delay > 0) {
+    setTimeout(animationSetup, delay);
+  } else {
+    animationSetup();
   }
-  const style = getComputedStyle($el.get());
-  const delay = (parseFloat(style[config.type + '-delay']) * 1000) || 10;
-  setTimeout(function() {
-    if (classOut) {
-      $el.css(config.type, '')
-          .removeClass(classOut);
-      const classIn = config.classes[0];
-      if (classIn) {
-        $el.addClass(classIn);
-      }
-    }
-    const duration = 10 + parseFloat(style[config.type + '-duration']) * 1000;
-    setTimeout(function() {
-      if (config.classes.length > 1) {
-        if (typeof config.onStep === 'function') {
-          config.onStep.call($el, $el, config.classes.slice(1));
-        }
-        _t.playFx(config);
-      } else {
-        if (!config.holdState && config.classes.length > 0) {
-          $el.removeClass(config.classes.shift());
-        }
-        $el.removeClass('--z-playing');
-        if (typeof config.onEnd === 'function') {
-          z$.each(config.options, function(k, v) {
-            $el.css(config.type + '-' + k, '');
-          });
-          config.onEnd.call($el, $el);
-        }
-      }
-    }, duration);
-  }, delay);
 };
 
 
@@ -5526,7 +5534,8 @@ function field(fieldName, container, context) {
 
   let el = null;
   if (typeof context._fieldCache[fieldName] === 'undefined') {
-    el = z$(container).find(util.dom.queryAttribute(_optionAttributes.dataUiField, fieldName));
+    el = z$(container)
+        .find(util.dom.queryAttribute(_optionAttributes.dataUiField, fieldName) + ',[\\#'+fieldName+']');
     if (el != null && el.length() > 0) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
