@@ -321,7 +321,8 @@ function field(fieldName, container, context) {
 
   let el = null;
   if (typeof context._fieldCache[fieldName] === 'undefined') {
-    el = z$(container).find(util.dom.queryAttribute(_optionAttributes.dataUiField, fieldName));
+    el = z$(container)
+        .find(util.dom.queryAttribute(_optionAttributes.dataUiField, fieldName) + ',[\\#'+fieldName+']');
     if (el != null && el.length() > 0) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
