@@ -3283,7 +3283,7 @@ ComponentContext.prototype.view = function(view) {
   initializeTemplateFields(v);
 
   // Disable loading of nested components until the component is ready
-  v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
+  v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded))).each(function(i, v) {
     this.attr(_optionAttributes.dataUiLoaded, 'false');
   });
 

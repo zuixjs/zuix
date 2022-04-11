@@ -1,4 +1,4 @@
-/* zUIx v1.0.30 22.04.01 23:32:02 */
+/* zUIx v1.0.31 22.04.11 19:57:13 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -3297,7 +3297,7 @@ ComponentContext.prototype.view = function(view) {
   initializeTemplateFields(v);
 
   // Disable loading of nested components until the component is ready
-  v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad)).each(function(i, v) {
+  v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded))).each(function(i, v) {
     this.attr(_optionAttributes.dataUiLoaded, 'false');
   });
 
