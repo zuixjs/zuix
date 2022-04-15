@@ -159,7 +159,16 @@ function ContextController(context) {
     }
   }
 
-  context.controller().call(this, this);
+  const isClass = function(v) {
+    return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+  };
+  if (isClass(context.controller())) {
+    // >= ES6
+    context.controller(new (context.controller())(this));
+  } else {
+    // <= ES5
+    context.controller().call(this, this);
+  }
 
   return this;
 }

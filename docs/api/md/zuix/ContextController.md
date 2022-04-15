@@ -135,7 +135,7 @@ Adds a behavior handler.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 185](../../zuix/ContextController.js#L185)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 194](../../zuix/ContextController.js#L194)
 
 -->
 
@@ -158,7 +158,7 @@ Adds an event handler.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 174](../../zuix/ContextController.js#L174)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 183](../../zuix/ContextController.js#L183)
 
 -->
 
@@ -182,7 +182,7 @@ Adds a CSS transition effect to the component stylesheet.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 196](../../zuix/ContextController.js#L196)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 205](../../zuix/ContextController.js#L205)
 
 -->
 
@@ -194,7 +194,7 @@ Clears the fields cache.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 215](../../zuix/ContextController.js#L215)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 224](../../zuix/ContextController.js#L224)
 
 -->
 
@@ -215,7 +215,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 326](../../zuix/ContextController.js#L326)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 335](../../zuix/ContextController.js#L335)
 
 -->
 
@@ -239,7 +239,7 @@ Same as [ComponentContext&ndash;field](../ComponentContext/#field).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 209](../../zuix/ContextController.js#L209)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 218](../../zuix/ContextController.js#L218)
 
 -->
 
@@ -263,7 +263,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 419](../../zuix/ContextController.js#L419)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 428](../../zuix/ContextController.js#L428)
 
 -->
 
@@ -299,7 +299,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 365](../../zuix/ContextController.js#L365)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 374](../../zuix/ContextController.js#L374)
 
 -->
 
@@ -338,7 +338,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 390](../../zuix/ContextController.js#L390)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 399](../../zuix/ContextController.js#L399)
 
 -->
 
@@ -376,7 +376,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 264](../../zuix/ContextController.js#L264)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 273](../../zuix/ContextController.js#L273)
 
 -->
 
@@ -393,7 +393,7 @@ Same as [ComponentContext&ndash;options](../ComponentContext/#options).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 276](../../zuix/ContextController.js#L276)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 285](../../zuix/ContextController.js#L285)
 
 -->
 
@@ -422,7 +422,7 @@ in case `isHook` is set to true, use the
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 303](../../zuix/ContextController.js#L303)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 312](../../zuix/ContextController.js#L312)
 
 -->
 
@@ -459,7 +459,7 @@ gets the view elements matching the given `filter`
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 236](../../zuix/ContextController.js#L236)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 245](../../zuix/ContextController.js#L245)
 
 -->
 

@@ -334,7 +334,7 @@ function loadNext(element) {
     z$(job.item.element).one('component:ready', function() {
       setTimeout(function() {
         zuix.componentize(job.item.element);
-      });
+      }, 100); // <-- short delay before loading nested components, do not remove this timeout!
     });
     loadInline(job.item.element);
   }
@@ -346,9 +346,8 @@ function loadInline(element, opts) {
   if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
     // _log.w("Skipped", element);
     return false;
-  } else {
-    v.attr(_optionAttributes.dataUiLoaded, 'true');
   }
+  v.attr(_optionAttributes.dataUiLoaded, 'true');
 
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.dataUiOptions);
@@ -448,12 +447,6 @@ function loadInline(element, opts) {
   if (!util.isNoU(priority)) {
     options.priority = +(priority);
   }
-
-  const el = z$(element);
-  el.one('component:ready', function() {
-    addRequest(element);
-    loadNext(element);
-  });
 
   zuix.load(componentId, options);
 

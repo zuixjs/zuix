@@ -169,6 +169,9 @@ module.exports = {
   },
 
   camelCaseToHyphens: function(s) {
+    s = s.replace(/(^\w)|(\s+\w)/g, function(letter) {
+      return letter.toUpperCase();
+    }).replace(/\s/g, '');
     return s.split(/(?=[A-Z])/).join('-').toLowerCase();
   },
 

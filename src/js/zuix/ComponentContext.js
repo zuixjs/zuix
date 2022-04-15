@@ -1040,7 +1040,8 @@ ComponentContext.prototype.viewToModel = function() {
 };
 /**
  * Triggers the update of all `z-field` elements in the view
- * that are bound to the model's fields.
+ * that are bound to the model's fields. If the `inherits="true"` attribute
+ * is present on a field, data can be inherited from parent component.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
@@ -1052,7 +1053,7 @@ ComponentContext.prototype.modelToView = function() {
     _t['#'] = {};
     const $view = z$(this._view);
     $view.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el, $el) {
-      if (!zuix.isDirectComponentElement($view, $el)) {
+      if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
       let boundField = $el.attr(_optionAttributes.dataBindTo);

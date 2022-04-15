@@ -428,22 +428,26 @@ ZxQuery.prototype.trigger = function(eventPath, eventData) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.one = function(eventPath, eventHandler) {
+  const _t = this;
   if (typeof eventPath === 'object' && eventHandler == null) {
-    const _t = this;
     z$.each(eventPath, function(evt, handler) {
       _t.one(evt, handler);
     });
     return this;
   }
-  let fired = false;
-  const _t = this;
-  const h = function(a, b) {
-    if (fired) return;
-    fired = true;
-    z$(_t).off(eventPath, h);
-    (eventHandler).call(_t, a, b, _t);
+  const HandleOnce = function(e, h) {
+    let fired = false;
+    return function(a, b) {
+      if (fired) {
+        // TODO: this should not occur (verify why "once" handlers are not removed)
+        return;
+      }
+      fired = true;
+      z$(_t).off(e, this);
+      (h).call(_t, a, b, _t);
+    };
   };
-  this.on(eventPath, h);
+  this.on(eventPath, new HandleOnce(eventPath, eventHandler));
   return this;
 };
 /**

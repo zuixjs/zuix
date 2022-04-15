@@ -66,8 +66,11 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.forceActive = false;
   const _t = this;
   let inactive = false;
+  let initialized = false;
   this.requestRefresh = function($v, $el, data) {
-    const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && $el.position().visible);
+    const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
+    const isVisible = (isMainComponent && !initialized) || $el.position().visible;
+    const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && isVisible);
     /** @type {ActiveRefreshCallback} */
     const refreshLoop = function(st, ms, active) {
       if (ms != null) _t.refreshMs = ms;
@@ -78,6 +81,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         setTimeout(function() {
           _t.requestRefresh($v, $el, _t.contextData);
         }, isActive ? _t.refreshMs : 500); // 500ms for noop-loop
+        initialized = true;
       } else if (ctx == null) {
         // will not request refresh, loop
         // ends if context was disposed
@@ -85,7 +89,6 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         _t.stop();
       }
     };
-    const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
     if (isActive) {
       if (isMainComponent && inactive) {
         inactive = false;
@@ -105,7 +108,6 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       refreshLoop(_t.contextData);
     }
   };
-  //this.requestRefresh($v, $el, data);
 }
 
 /**

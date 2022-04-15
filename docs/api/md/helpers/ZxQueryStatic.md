@@ -81,7 +81,7 @@ Creates a ZxQuery wrapped element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 847](../../helpers/ZxQuery.js#L847)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 851](../../helpers/ZxQuery.js#L851)
 
 -->
 
@@ -109,7 +109,7 @@ Adds a CSS transition effect to the component stylesheet.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1351](../../helpers/ZxQuery.js#L1351)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1355](../../helpers/ZxQuery.js#L1355)
 
 -->
 
@@ -129,7 +129,7 @@ Appends a new stylesheet, or replaces an existing one, to the document.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1099](../../helpers/ZxQuery.js#L1099)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1103](../../helpers/ZxQuery.js#L1103)
 
 -->
 
@@ -152,7 +152,7 @@ Checks if a class exists by searching for it in all document stylesheets.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 963](../../helpers/ZxQuery.js#L963)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 967](../../helpers/ZxQuery.js#L967)
 
 -->
 
@@ -181,7 +181,7 @@ If the callback returns *false*, the iteration loop will interrupt.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 863](../../helpers/ZxQuery.js#L863)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 867](../../helpers/ZxQuery.js#L867)
 
 -->
 
@@ -204,7 +204,7 @@ Selects document elements matching the given *DOM* query selector.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 851](../../helpers/ZxQuery.js#L851)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 855](../../helpers/ZxQuery.js#L855)
 
 -->
 
@@ -228,7 +228,7 @@ Gets the closest parent matching the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1229](../../helpers/ZxQuery.js#L1229)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1233](../../helpers/ZxQuery.js#L1233)
 
 -->
 
@@ -251,7 +251,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1247](../../helpers/ZxQuery.js#L1247)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1251](../../helpers/ZxQuery.js#L1251)
 
 -->
 
@@ -274,7 +274,7 @@ Checks if an element has got the specified CSS class.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 940](../../helpers/ZxQuery.js#L940)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 944](../../helpers/ZxQuery.js#L944)
 
 -->
 
@@ -296,7 +296,7 @@ Makes an HTTP request.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 902](../../helpers/ZxQuery.js#L902)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 906](../../helpers/ZxQuery.js#L906)
 
 -->
 
@@ -318,7 +318,7 @@ Plays transition effects or animations on a given element inside the component.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1389](../../helpers/ZxQuery.js#L1389)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1393](../../helpers/ZxQuery.js#L1393)
 
 -->
 
@@ -338,7 +338,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1187](../../helpers/ZxQuery.js#L1187)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1191](../../helpers/ZxQuery.js#L1191)
 
 -->
 
@@ -362,7 +362,7 @@ Replaces CSS variables with provided values.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1139](../../helpers/ZxQuery.js#L1139)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1143](../../helpers/ZxQuery.js#L1143)
 
 -->
 
@@ -386,7 +386,7 @@ Wraps an `Element` inside a container specified by a given tag name.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1002](../../helpers/ZxQuery.js#L1002)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1006](../../helpers/ZxQuery.js#L1006)
 
 -->
 

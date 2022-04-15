@@ -242,7 +242,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1127](../../zuix/ComponentContext.js#L1127)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1128](../../zuix/ComponentContext.js#L1128)
 
 -->
 
@@ -330,12 +330,13 @@ zuix.context('model-test', (ctx) => {
 #### modelToView() &rarr; {[ComponentContext](../../zuix/ComponentContext)}
 
 Triggers the update of all `z-field` elements in the view
-that are bound to the model's fields.
+that are bound to the model's fields. If the `inherits="true"` attribute
+is present on a field, data can be inherited from parent component.
 
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1047](../../zuix/ComponentContext.js#L1047)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1048](../../zuix/ComponentContext.js#L1048)
 
 -->
 

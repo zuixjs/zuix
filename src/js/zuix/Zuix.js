@@ -147,7 +147,7 @@ const _objectObserver = new ObjectObserver();
 /** @private */
 const _implicitLoadDefaultList = [
   util.dom.queryAttribute(_optionAttributes.dataUiContext),
-  util.dom.queryAttribute(_optionAttributes.dataUiComponent),
+//  util.dom.queryAttribute(_optionAttributes.dataUiComponent),
   util.dom.queryAttribute(_optionAttributes.dataUiOptions),
   util.dom.queryAttribute(_optionAttributes.dataBindModel),
   util.dom.queryAttribute(_optionAttributes.dataUiOn),
@@ -1840,6 +1840,11 @@ Zuix.prototype.parseAttributeArgs = function(attributeName, $el, $view, contextD
   });
 };
 
+// member to expose utility class
+// TODO: document this with JSDocs
+/** @package
+ * @private */
+Zuix.prototype.utils = util;
 
 /**
  * @param root
