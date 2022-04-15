@@ -530,6 +530,9 @@ module.exports = {
   },
 
   camelCaseToHyphens: function(s) {
+    s = s.replace(/(^\w)|(\s+\w)/g, function(letter) {
+      return letter.toUpperCase();
+    }).replace(/\s/g, '');
     return s.split(/(?=[A-Z])/).join('-').toLowerCase();
   },
 
@@ -1046,22 +1049,26 @@ ZxQuery.prototype.trigger = function(eventPath, eventData) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.one = function(eventPath, eventHandler) {
+  const _t = this;
   if (typeof eventPath === 'object' && eventHandler == null) {
-    const _t = this;
     z$.each(eventPath, function(evt, handler) {
       _t.one(evt, handler);
     });
     return this;
   }
-  let fired = false;
-  const _t = this;
-  const h = function(a, b) {
-    if (fired) return;
-    fired = true;
-    z$(_t).off(eventPath, h);
-    (eventHandler).call(_t, a, b, _t);
+  const HandleOnce = function(e, h) {
+    let fired = false;
+    return function(a, b) {
+      if (fired) {
+        // TODO: this should not occur (verify why "once" handlers are not removed)
+        return;
+      }
+      fired = true;
+      z$(_t).off(e, this);
+      (h).call(_t, a, b, _t);
+    };
   };
-  this.on(eventPath, h);
+  this.on(eventPath, new HandleOnce(eventPath, eventHandler));
   return this;
 };
 /**
@@ -2624,8 +2631,11 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.forceActive = false;
   const _t = this;
   let inactive = false;
+  let initialized = false;
   this.requestRefresh = function($v, $el, data) {
-    const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && $el.position().visible);
+    const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
+    const isVisible = (isMainComponent && !initialized) || $el.position().visible;
+    const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && isVisible);
     /** @type {ActiveRefreshCallback} */
     const refreshLoop = function(st, ms, active) {
       if (ms != null) _t.refreshMs = ms;
@@ -2636,6 +2646,7 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         setTimeout(function() {
           _t.requestRefresh($v, $el, _t.contextData);
         }, isActive ? _t.refreshMs : 500); // 500ms for noop-loop
+        initialized = true;
       } else if (ctx == null) {
         // will not request refresh, loop
         // ends if context was disposed
@@ -2643,7 +2654,6 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         _t.stop();
       }
     };
-    const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
     if (isActive) {
       if (isMainComponent && inactive) {
         inactive = false;
@@ -2663,7 +2673,6 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       refreshLoop(_t.contextData);
     }
   };
-  //this.requestRefresh($v, $el, data);
 }
 
 /**
@@ -3813,7 +3822,8 @@ ComponentContext.prototype.viewToModel = function() {
 };
 /**
  * Triggers the update of all `z-field` elements in the view
- * that are bound to the model's fields.
+ * that are bound to the model's fields. If the `inherits="true"` attribute
+ * is present on a field, data can be inherited from parent component.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
@@ -3825,7 +3835,7 @@ ComponentContext.prototype.modelToView = function() {
     _t['#'] = {};
     const $view = z$(this._view);
     $view.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el, $el) {
-      if (!zuix.isDirectComponentElement($view, $el)) {
+      if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
       let boundField = $el.attr(_optionAttributes.dataBindTo);
@@ -4291,7 +4301,7 @@ function loadNext(element) {
     z$(job.item.element).one('component:ready', function() {
       setTimeout(function() {
         zuix.componentize(job.item.element);
-      });
+      }, 100); // <-- short delay before loading nested components, do not remove this timeout!
     });
     loadInline(job.item.element);
   }
@@ -4303,9 +4313,8 @@ function loadInline(element, opts) {
   if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
     // _log.w("Skipped", element);
     return false;
-  } else {
-    v.attr(_optionAttributes.dataUiLoaded, 'true');
   }
+  v.attr(_optionAttributes.dataUiLoaded, 'true');
 
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.dataUiOptions);
@@ -4405,12 +4414,6 @@ function loadInline(element, opts) {
   if (!util.isNoU(priority)) {
     options.priority = +(priority);
   }
-
-  const el = z$(element);
-  el.one('component:ready', function() {
-    addRequest(element);
-    loadNext(element);
-  });
 
   zuix.load(componentId, options);
 
@@ -4732,7 +4735,16 @@ function ContextController(context) {
     }
   }
 
-  context.controller().call(this, this);
+  const isClass = function(v) {
+    return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+  };
+  if (isClass(context.controller())) {
+    // >= ES6
+    context.controller(new (context.controller())(this));
+  } else {
+    // <= ES5
+    context.controller().call(this, this);
+  }
 
   return this;
 }
@@ -5360,7 +5372,7 @@ const _objectObserver = new ObjectObserver();
 /** @private */
 const _implicitLoadDefaultList = [
   util.dom.queryAttribute(_optionAttributes.dataUiContext),
-  util.dom.queryAttribute(_optionAttributes.dataUiComponent),
+//  util.dom.queryAttribute(_optionAttributes.dataUiComponent),
   util.dom.queryAttribute(_optionAttributes.dataUiOptions),
   util.dom.queryAttribute(_optionAttributes.dataBindModel),
   util.dom.queryAttribute(_optionAttributes.dataUiOn),
@@ -7053,6 +7065,11 @@ Zuix.prototype.parseAttributeArgs = function(attributeName, $el, $view, contextD
   });
 };
 
+// member to expose utility class
+// TODO: document this with JSDocs
+/** @package
+ * @private */
+Zuix.prototype.utils = util;
 
 /**
  * @param root
