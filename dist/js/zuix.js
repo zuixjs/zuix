@@ -1,4 +1,4 @@
-/* zUIx v1.0.32 22.04.15 02:21:35 */
+/* zUIx v1.0.33 22.04.16 19:00:58 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -2651,8 +2651,10 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
     const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && isVisible);
     /** @type {ActiveRefreshCallback} */
     const refreshLoop = function(st, ms, active) {
-      if (ms != null) _t.refreshMs = ms;
       if (st != null) _t.contextData = st;
+      if (ms == null) ms = $el.attr('@delay') ? +$el.attr('@delay') : null;
+      if (ms != null) _t.refreshMs = ms;
+      if (active == null) active = $el.attr('@active') != null;
       if (active != null) _t.forceActive = active;
       const ctx = zuix.context($v);
       if (ctx != null && _t.refreshMs > 0) {
