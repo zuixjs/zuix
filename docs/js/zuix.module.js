@@ -2069,11 +2069,18 @@ ZxQueryStatic.playFx = function(config) {
         $el.css(config.type + '-' + k, v);
       });
     }
+    // TODO: the following 'setTimeout' is a work-around to animation/transition end not firing sometimes (to be investigated)
     const iterationCount = 1 + (parseFloat(style[config.type + '-iteration-count']) || 0);
     const duration = (parseFloat(style[config.type + '-duration']) * 1000) * iterationCount;
     setTimeout(animationStart, duration);
   };
-  $el.one(config.type + 'end', animationStart);
+  const handler = function(e) {
+    if (e.target === config.target.get()) {
+      $el.off(config.type + 'end', this);
+      animationStart();
+    }
+  };
+  $el.on(config.type + 'end', handler);
   if (delay > 0) {
     setTimeout(animationSetup, delay);
   } else {
@@ -4321,7 +4328,7 @@ function loadInline(element, opts) {
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.dataUiOptions);
   if (!util.isNoU(options)) {
-    options = parseOptions(options);
+    options = parseOptions(element, options);
     // copy passed options
     options = util.cloneObject(options) || {};
   } else {
@@ -4399,17 +4406,17 @@ function loadInline(element, opts) {
 
   const model = v.attr(_optionAttributes.dataBindModel);
   if (!util.isNoU(model) && model.length > 0) {
-    options.model = parseOptions(model);
+    options.model = parseOptions(element, model);
   }
 
   const behavior = v.attr(_optionAttributes.dataUiBehavior);
   if (!util.isNoU(behavior) && behavior.length > 0) {
-    options.behavior = parseOptions(behavior);
+    options.behavior = parseOptions(element, behavior);
   }
 
   const on = v.attr(_optionAttributes.dataUiOn);
   if (!util.isNoU(on) && on.length > 0) {
-    options.on = parseOptions(on);
+    options.on = parseOptions(element, on);
   }
 
   const priority = v.attr(_optionAttributes.dataUiPriority);
@@ -4452,18 +4459,29 @@ function resolvePath(path) {
 }
 
 /** @private */
-function parseOptions(attributeValue) {
+function parseOptions(element, attributeValue) {
   if (typeof attributeValue === 'string') {
+    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.dataUiLoad));
+    if (parentComponent.get()) {
+      // parent component context should be already loaded
+      const context = zuix.context(parentComponent);
+      try {
+        return context._refreshHandler
+            .runScriptlet(element, `[${attributeValue}][0]`);
+      } catch (e) { }
+    }
     if (attributeValue.trim().startsWith('{') && attributeValue.trim().endsWith('}')) {
       attributeValue = Function('return ' + attributeValue)();
-    } else attributeValue = util.propertyFromPath(window, attributeValue);
+    } else {
+      attributeValue = util.propertyFromPath(window, attributeValue);
+    }
   }
   return attributeValue;
 }
 
 /** @private */
 function applyOptions(element, options) {
-  options = parseOptions(options);
+  options = parseOptions(element, options);
   // TODO: should check if options object is valid
   if (element != null && options != null) {
     if (options.lazyLoad != null) {
@@ -5486,7 +5504,7 @@ function Zuix() {
           result ? $el.css({visibility: 'hidden'}) : $el.css({visibility: 'visible'});
           lastResult = result;
         }
-        refreshCallback(lastResult); // default 250ms delay
+        refreshCallback(lastResult); // default 100ms delay
       },
       'if': function($view, $el, lastResult, refreshCallback) {
         const code = $el.attr('@if');
@@ -6289,8 +6307,10 @@ function initController(c) {
       if (refreshHandler.refresh) {
         refreshHandler.refresh();
       }
-      // Active-Refresh callback to request a new refresh in 250ms
-      refreshCallback(contextData);
+      // Active-Refresh callback to request a new refresh in 100ms
+      if (typeof refreshCallback === 'function') {
+        refreshCallback(contextData);
+      }
     }
   };
 
@@ -6330,6 +6350,7 @@ function initController(c) {
       }).start(refreshDelay);
     });
   } else {
+    ctx.handlers.refresh.call($view.get(), $view, $view);
     contextReady();
   }
 
