@@ -907,12 +907,16 @@ function initController(c) {
   c.trigger('view:create', $view);
 
   const contextReady = function() {
-    let innerComponents = 0;
+    zuix.componentize($view);
+
     // re-enable nested components loading
     $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
         .each(function(i, v) {
-          innerComponents++;
           this.attr(_optionAttributes.dataUiLoaded, null);
+          // Load inner-component after componentizer completed current job queue
+          z$().one('componentize:end', function() {
+            zuix.componentize(v);
+          });
         });
 
     // set component ready
@@ -928,10 +932,6 @@ function initController(c) {
       while (pendingRequests != null && (context = pendingRequests.shift()) != null) {
         loadResources(context.c, context.o);
       }
-    }
-
-    if (innerComponents) {
-      zuix.componentize($view);
     }
   };
 

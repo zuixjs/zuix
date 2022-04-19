@@ -40,6 +40,7 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  */
 Componentizer.prototype.componentize = function(element, child) {
   zuix.trigger(this, 'componentize:begin');
+  zuix.$().trigger('componentize:begin');
   zuix.resolveImplicitLoad(element);
   if (child != null) {
     const cache = getElementCache(element);
@@ -291,6 +292,7 @@ function queueLoadables(element) {
 
   if (added === 0 || (_componentizeRequests.length === 0 && _componentizeQueue.length === 0)) {
     zuix.trigger(this, 'componentize:end');
+    zuix.$().trigger('componentize:end');
   }
 }
 
@@ -332,9 +334,7 @@ function loadNext(element) {
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
     z$(job.item.element).one('component:ready', function() {
-      setTimeout(function() {
-        zuix.componentize(job.item.element);
-      }, 100); // <-- short delay before loading nested components, do not remove this timeout!
+      zuix.componentize(job.item.element);
     });
     loadInline(job.item.element);
   }
