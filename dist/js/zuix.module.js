@@ -4016,6 +4016,7 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  */
 Componentizer.prototype.componentize = function(element, child) {
   zuix.trigger(this, 'componentize:begin');
+  zuix.$().trigger('componentize:begin');
   zuix.resolveImplicitLoad(element);
   if (child != null) {
     const cache = getElementCache(element);
@@ -4267,6 +4268,7 @@ function queueLoadables(element) {
 
   if (added === 0 || (_componentizeRequests.length === 0 && _componentizeQueue.length === 0)) {
     zuix.trigger(this, 'componentize:end');
+    zuix.$().trigger('componentize:end');
   }
 }
 
@@ -4308,9 +4310,7 @@ function loadNext(element) {
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
     z$(job.item.element).one('component:ready', function() {
-      setTimeout(function() {
-        zuix.componentize(job.item.element);
-      }, 100); // <-- short delay before loading nested components, do not remove this timeout!
+      zuix.componentize(job.item.element);
     });
     loadInline(job.item.element);
   }
@@ -6152,12 +6152,16 @@ function initController(c) {
   c.trigger('view:create', $view);
 
   const contextReady = function() {
-    let innerComponents = 0;
+    zuix.componentize($view);
+
     // re-enable nested components loading
     $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
         .each(function(i, v) {
-          innerComponents++;
           this.attr(_optionAttributes.dataUiLoaded, null);
+          // Load inner-component after componentizer completed current job queue
+          z$().one('componentize:end', function() {
+            zuix.componentize(v);
+          });
         });
 
     // set component ready
@@ -6173,10 +6177,6 @@ function initController(c) {
       while (pendingRequests != null && (context = pendingRequests.shift()) != null) {
         loadResources(context.c, context.o);
       }
-    }
-
-    if (innerComponents) {
-      zuix.componentize($view);
     }
   };
 
