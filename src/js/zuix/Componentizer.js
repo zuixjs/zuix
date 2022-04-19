@@ -352,7 +352,7 @@ function loadInline(element, opts) {
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.dataUiOptions);
   if (!util.isNoU(options)) {
-    options = parseOptions(options);
+    options = parseOptions(element, options);
     // copy passed options
     options = util.cloneObject(options) || {};
   } else {
@@ -430,17 +430,17 @@ function loadInline(element, opts) {
 
   const model = v.attr(_optionAttributes.dataBindModel);
   if (!util.isNoU(model) && model.length > 0) {
-    options.model = parseOptions(model);
+    options.model = parseOptions(element, model);
   }
 
   const behavior = v.attr(_optionAttributes.dataUiBehavior);
   if (!util.isNoU(behavior) && behavior.length > 0) {
-    options.behavior = parseOptions(behavior);
+    options.behavior = parseOptions(element, behavior);
   }
 
   const on = v.attr(_optionAttributes.dataUiOn);
   if (!util.isNoU(on) && on.length > 0) {
-    options.on = parseOptions(on);
+    options.on = parseOptions(element, on);
   }
 
   const priority = v.attr(_optionAttributes.dataUiPriority);
@@ -483,18 +483,29 @@ function resolvePath(path) {
 }
 
 /** @private */
-function parseOptions(attributeValue) {
+function parseOptions(element, attributeValue) {
   if (typeof attributeValue === 'string') {
+    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.dataUiLoad));
+    if (parentComponent.get()) {
+      // parent component context should be already loaded
+      const context = zuix.context(parentComponent);
+      try {
+        return context._refreshHandler
+            .runScriptlet(element, `[${attributeValue}][0]`);
+      } catch (e) { }
+    }
     if (attributeValue.trim().startsWith('{') && attributeValue.trim().endsWith('}')) {
       attributeValue = Function('return ' + attributeValue)();
-    } else attributeValue = util.propertyFromPath(window, attributeValue);
+    } else {
+      attributeValue = util.propertyFromPath(window, attributeValue);
+    }
   }
   return attributeValue;
 }
 
 /** @private */
 function applyOptions(element, options) {
-  options = parseOptions(options);
+  options = parseOptions(element, options);
   // TODO: should check if options object is valid
   if (element != null && options != null) {
     if (options.lazyLoad != null) {

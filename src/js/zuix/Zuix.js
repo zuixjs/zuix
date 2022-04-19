@@ -259,7 +259,7 @@ function Zuix() {
           result ? $el.css({visibility: 'hidden'}) : $el.css({visibility: 'visible'});
           lastResult = result;
         }
-        refreshCallback(lastResult); // default 250ms delay
+        refreshCallback(lastResult); // default 100ms delay
       },
       'if': function($view, $el, lastResult, refreshCallback) {
         const code = $el.attr('@if');
@@ -1062,8 +1062,10 @@ function initController(c) {
       if (refreshHandler.refresh) {
         refreshHandler.refresh();
       }
-      // Active-Refresh callback to request a new refresh in 250ms
-      refreshCallback(contextData);
+      // Active-Refresh callback to request a new refresh in 100ms
+      if (typeof refreshCallback === 'function') {
+        refreshCallback(contextData);
+      }
     }
   };
 
@@ -1103,6 +1105,7 @@ function initController(c) {
       }).start(refreshDelay);
     });
   } else {
+    ctx.handlers.refresh.call($view.get(), $view, $view);
     contextReady();
   }
 

@@ -1448,11 +1448,18 @@ ZxQueryStatic.playFx = function(config) {
         $el.css(config.type + '-' + k, v);
       });
     }
+    // TODO: the following 'setTimeout' is a work-around to animation/transition end not firing sometimes (to be investigated)
     const iterationCount = 1 + (parseFloat(style[config.type + '-iteration-count']) || 0);
     const duration = (parseFloat(style[config.type + '-duration']) * 1000) * iterationCount;
     setTimeout(animationStart, duration);
   };
-  $el.one(config.type + 'end', animationStart);
+  const handler = function(e) {
+    if (e.target === config.target.get()) {
+      $el.off(config.type + 'end', this);
+      animationStart();
+    }
+  };
+  $el.on(config.type + 'end', handler);
   if (delay > 0) {
     setTimeout(animationSetup, delay);
   } else {
