@@ -452,8 +452,13 @@ module.exports = {
     if (typeof s !== 'string' || o == null) {
       return;
     }
-    if (typeof o[s] !== 'undefined') {
-      return o[s];
+    try {
+      if (typeof o[s] !== 'undefined') {
+        return o[s];
+      }
+    } catch (e) {
+      // TODO: "TypeError: Cannot create proxy with a non-object as target or handler"
+      console.log(e);
     }
     let ref = o; let path = '';
     const parts = s.match(/\[(".*?"|'.*?'|(.*?))\]|".*?"|'.*?'|[0-9a-zA-Z_$]+/g);
@@ -2144,9 +2149,9 @@ module.exports = ZxQueryStatic;
 /***/ }),
 
 /***/ 693:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
+/* eslint-disable */
 /*!
  * @license
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -2177,16 +2182,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
 
 
 
-// TODO: detect whether running in a browser environment or not
-(function(root, factory) {
-  if (true) {
-    // AMD. Register as an anonymous module.
-    !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
-      return (root.zuix = (factory).call(root));
-    }).call(exports, __webpack_require__, exports, module),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else {}
-}(this, __webpack_require__(459)));
+module.exports = __webpack_require__(459)();
 
 
 /***/ }),
@@ -2637,7 +2633,6 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.paused = false;
   this.forceActive = false;
   const _t = this;
-  let inactive = false;
   let initialized = false;
   this.requestRefresh = function($v, $el, data) {
     const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
@@ -2664,9 +2659,9 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       }
     };
     if (isActive) {
-      if (isMainComponent && inactive) {
-        inactive = false;
-        $v.trigger('refresh:active');
+      if (!$el._refreshActive) {
+        $el._refreshActive = true;
+        $el.trigger('refresh:active');
       }
       // call the `refreshCallback` and wait for
       // its completion before next loop round
@@ -2674,9 +2669,9 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         refreshLoop(nextData, nextMsDelay, forceActive);
       });
     } else {
-      if (isMainComponent && !inactive) {
-        inactive = true;
-        $v.trigger('refresh:inactive');
+      if ($el._refreshActive) {
+        $el._refreshActive = false;
+        $el.trigger('refresh:inactive');
       }
       // noop-loop
       refreshLoop(_t.contextData);
@@ -4015,6 +4010,16 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  * @return {Componentizer}
  */
 Componentizer.prototype.componentize = function(element, child) {
+  if (isBusy) {
+    z$().one('componentize:step', function() {
+      requestAnimationFrame(function() {
+        isBusy = false;
+        zuix.componentize(element, child);
+      });
+    });
+    return this;
+  }
+  isBusy = true;
   zuix.trigger(this, 'componentize:begin');
   zuix.$().trigger('componentize:begin');
   zuix.resolveImplicitLoad(element);
@@ -4143,6 +4148,8 @@ if (_isCrawlerBotClient) {
   _log.d(navigator.userAgent, 'is a bot, ignoring `lazy-loading` option.');
 }
 
+let isBusy = false;
+
 /**
  *
  * @class
@@ -4269,7 +4276,10 @@ function queueLoadables(element) {
   if (added === 0 || (_componentizeRequests.length === 0 && _componentizeQueue.length === 0)) {
     zuix.trigger(this, 'componentize:end');
     zuix.$().trigger('componentize:end');
+  } else {
+    zuix.$().trigger('componentize:step');
   }
+  isBusy = false;
 }
 
 /** @private */
@@ -4760,7 +4770,8 @@ function ContextController(context) {
   };
   if (isClass(context.controller())) {
     // >= ES6
-    context.controller(new (context.controller())(this));
+    const ctrl = new ((context.controller()).bind(this, this))();
+    context.controller(ctrl);
   } else {
     // <= ES5
     context.controller().call(this, this);
@@ -5031,6 +5042,57 @@ module.exports = ContextController;
 
 /***/ }),
 
+/***/ 871:
+/***/ (function(module) {
+
+
+
+/**
+ * @class ControllerInstance
+ * @param {ContextController} [controller] The controller instance.
+ * @extends {ContextController}
+ * @constructor
+ */
+function ControllerInstance(controller) {
+  const _t = this;
+  /**
+   * @type {ContextController}
+   */
+  controller.init = this.onInit.bind(this);
+  controller.create = this.onCreate.bind(this);
+  controller.dispose = this.onDispose.bind(this);
+  controller.update = function(target, key, value, path, old) {
+    return _t.onUpdate.call(_t, target, key, value, path, old);
+  };
+  Object.assign(this, controller);
+  Object.assign(this, Object.getPrototypeOf(controller));
+}
+/**
+ * @type {ContextControllerInitCallback}
+ */
+ControllerInstance.prototype.onInit = function() {
+};
+/**
+ * @type {ContextControllerCreateCallback}
+ */
+ControllerInstance.prototype.onCreate = function() {
+};
+/**
+ * @type {ContextControllerDisposeCallback}
+ */
+ControllerInstance.prototype.onDispose = function() {
+};
+/**
+ * @type {ContextControllerUpdateCallback}
+ */
+ControllerInstance.prototype.onUpdate = function(target, key, value, path, old) {
+};
+
+module.exports = ControllerInstance;
+
+
+/***/ }),
+
 /***/ 541:
 /***/ (function(module) {
 
@@ -5285,6 +5347,8 @@ const ComponentContext =
     __webpack_require__(622);
 const ContextController =
     __webpack_require__(561);
+const ControllerInstance =
+    __webpack_require__(871);
 const ActiveRefresh =
     __webpack_require__(398);
 const _componentizer =
@@ -6144,6 +6208,10 @@ function initController(c) {
   const ctx = c.context;
   _log.t(ctx.componentId, 'controller:init', 'timer:init:start');
 
+  ctx.isReady = true;
+  // isReady status can be set to false in the `create` callback
+  // and later set to true when all dependencies have been loaded
+
   // tender lifecycle moments
   const $view = c.view();
   if (util.isFunction(c.create)) {
@@ -6152,18 +6220,6 @@ function initController(c) {
   c.trigger('view:create', $view);
 
   const contextReady = function() {
-    zuix.componentize($view);
-
-    // re-enable nested components loading
-    $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
-        .each(function(i, v) {
-          this.attr(_optionAttributes.dataUiLoaded, null);
-          // Load inner-component after componentizer completed current job queue
-          z$().one('componentize:end', function() {
-            zuix.componentize(v);
-          });
-        });
-
     // set component ready
     if (util.isFunction(ctx.ready)) {
       (ctx.ready).call(ctx, ctx);
@@ -6178,6 +6234,18 @@ function initController(c) {
         loadResources(context.c, context.o);
       }
     }
+
+    // re-enable nested components loading
+    z$().one('componentize:end', function() {
+      setTimeout(function() {
+        $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
+            .each(function(i, v) {
+              this.attr(_optionAttributes.dataUiLoaded, null);
+            });
+        // render nested components
+        zuix.componentize($view);
+      });
+    });
   };
 
 
@@ -6331,7 +6399,14 @@ function initController(c) {
     ctx.handlers.refresh.call($view.get(), $view, $view, c.model(), function(contextData, delay) {
       zuix.activeRefresh($view, $view, contextData, function($v, $element, data, refreshCallback) {
         if (ctx._refreshHandler && !ctx._refreshHandler.initialized) {
-          const canStart = ctx._refreshHandler.ready();
+          let loadedNested = true;
+          allocated.forEach(function(h) {
+            if (h.$element.attr(_optionAttributes.dataUiLoad) != null || h.$element.attr(_optionAttributes.dataUiInclude) != null) {
+              loadedNested = zuix.context(h.$element) != null && zuix.context(h.$element).isReady;
+              return loadedNested;
+            }
+          });
+          const canStart = ctx._refreshHandler.ready() && ctx.isReady === true && loadedNested;
           if (canStart) {
             ctx._refreshHandler.initialized = true;
             // start '@' handlers
@@ -6339,7 +6414,6 @@ function initController(c) {
               h.start(handlersDelay);
             });
             ctx.$.removeClass('not-ready');
-            contextReady();
           } else if (!ctx.$.hasClass('not-ready')) {
             ctx.$.addClass('not-ready');
           }
@@ -6351,10 +6425,9 @@ function initController(c) {
     });
   } else {
     ctx.handlers.refresh.call($view.get(), $view, $view);
-    contextReady();
   }
 
-  ctx.isReady = true;
+  contextReady();
   c.trigger('component:ready', $view, true);
 
   _log.t(ctx.componentId, 'controller:init', 'timer:init:stop');
@@ -6370,12 +6443,17 @@ function initController(c) {
 function getController(javascriptCode) {
   let instance = function(ctx) { };
   if (typeof javascriptCode === 'string') {
+    let ctrl;
     try {
       if (javascriptCode.indexOf('module.exports') >= 0) {
-        instance = Function('module = {};\n' + javascriptCode + '; return module.exports;')();
+        ctrl = Function('\'use strict\'; let ControllerInstance = arguments[0]; let module = {};\n' + javascriptCode + '; return module.exports;')(ControllerInstance);
       } else {
-        instance = Function('return ' + javascriptCode)();
+        ctrl = Function('return ' + javascriptCode)();
       }
+      if (typeof ctrl !== 'function') {
+        throw new Error('Unexpected module type: "' + (typeof ctrl) + '"');
+      }
+      instance = ctrl;
     } catch (e) {
       // TODO: should trigger a global hook
       // eg. 'controller:error'
@@ -7095,19 +7173,21 @@ Zuix.prototype.parseAttributeArgs = function(attributeName, $el, $view, contextD
 Zuix.prototype.utils = util;
 
 /**
- * @param root
  * @return {Zuix}
  */
-module.exports = function(root) {
+module.exports = function() {
   const zuix = new Zuix();
-  const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
-  zuix.$.appendCss(globalStyle, null, 'zuix-global');
-  if (document.readyState != 'loading') {
-    zuix.componentize();
-  } else {
-    document.addEventListener('DOMContentLoaded', function() {
+  if (window && document) {
+    const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
+    zuix.$.appendCss(globalStyle, null, 'zuix-global');
+    if (document.readyState !== 'loading') {
       zuix.componentize();
-    });
+    } else {
+      document.addEventListener('DOMContentLoaded', function() {
+        zuix.componentize();
+      });
+    }
+    window.ControllerInstance = ControllerInstance;
   }
   // log messages monitor (one global listener)
   _log.monitor(function(level, args) {
@@ -7141,7 +7221,7 @@ module.exports = function(root) {
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
-/******/ 	__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 
 /******/ 	// Flag the module as loaded
 /******/ 	module.loaded = true;
