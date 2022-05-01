@@ -39,6 +39,16 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  * @return {Componentizer}
  */
 Componentizer.prototype.componentize = function(element, child) {
+  if (isBusy) {
+    z$().one('componentize:step', function() {
+      requestAnimationFrame(function() {
+        isBusy = false;
+        zuix.componentize(element, child);
+      });
+    });
+    return this;
+  }
+  isBusy = true;
   zuix.trigger(this, 'componentize:begin');
   zuix.$().trigger('componentize:begin');
   zuix.resolveImplicitLoad(element);
@@ -167,6 +177,8 @@ if (_isCrawlerBotClient) {
   _log.d(navigator.userAgent, 'is a bot, ignoring `lazy-loading` option.');
 }
 
+let isBusy = false;
+
 /**
  *
  * @class
@@ -293,7 +305,10 @@ function queueLoadables(element) {
   if (added === 0 || (_componentizeRequests.length === 0 && _componentizeQueue.length === 0)) {
     zuix.trigger(this, 'componentize:end');
     zuix.$().trigger('componentize:end');
+  } else {
+    zuix.$().trigger('componentize:step');
   }
+  isBusy = false;
 }
 
 /** @private */

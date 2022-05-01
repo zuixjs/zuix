@@ -40,6 +40,8 @@ const ComponentContext =
     require('./ComponentContext');
 const ContextController =
     require('./ContextController');
+const ControllerInstance =
+    require('./ControllerInstance');
 const ActiveRefresh =
     require('./ActiveRefresh');
 const _componentizer =
@@ -899,6 +901,10 @@ function initController(c) {
   const ctx = c.context;
   _log.t(ctx.componentId, 'controller:init', 'timer:init:start');
 
+  ctx.isReady = true;
+  // isReady status can be set to false in the `create` callback
+  // and later set to true when all dependencies have been loaded
+
   // tender lifecycle moments
   const $view = c.view();
   if (util.isFunction(c.create)) {
@@ -907,18 +913,6 @@ function initController(c) {
   c.trigger('view:create', $view);
 
   const contextReady = function() {
-    zuix.componentize($view);
-
-    // re-enable nested components loading
-    $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
-        .each(function(i, v) {
-          this.attr(_optionAttributes.dataUiLoaded, null);
-          // Load inner-component after componentizer completed current job queue
-          z$().one('componentize:end', function() {
-            zuix.componentize(v);
-          });
-        });
-
     // set component ready
     if (util.isFunction(ctx.ready)) {
       (ctx.ready).call(ctx, ctx);
@@ -933,6 +927,18 @@ function initController(c) {
         loadResources(context.c, context.o);
       }
     }
+
+    // re-enable nested components loading
+    z$().one('componentize:end', function() {
+      setTimeout(function() {
+        $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
+            .each(function(i, v) {
+              this.attr(_optionAttributes.dataUiLoaded, null);
+            });
+        // render nested components
+        zuix.componentize($view);
+      });
+    });
   };
 
 
@@ -1086,7 +1092,14 @@ function initController(c) {
     ctx.handlers.refresh.call($view.get(), $view, $view, c.model(), function(contextData, delay) {
       zuix.activeRefresh($view, $view, contextData, function($v, $element, data, refreshCallback) {
         if (ctx._refreshHandler && !ctx._refreshHandler.initialized) {
-          const canStart = ctx._refreshHandler.ready();
+          let loadedNested = true;
+          allocated.forEach(function(h) {
+            if (h.$element.attr(_optionAttributes.dataUiLoad) != null || h.$element.attr(_optionAttributes.dataUiInclude) != null) {
+              loadedNested = zuix.context(h.$element) != null && zuix.context(h.$element).isReady;
+              return loadedNested;
+            }
+          });
+          const canStart = ctx._refreshHandler.ready() && ctx.isReady === true && loadedNested;
           if (canStart) {
             ctx._refreshHandler.initialized = true;
             // start '@' handlers
@@ -1094,7 +1107,6 @@ function initController(c) {
               h.start(handlersDelay);
             });
             ctx.$.removeClass('not-ready');
-            contextReady();
           } else if (!ctx.$.hasClass('not-ready')) {
             ctx.$.addClass('not-ready');
           }
@@ -1106,10 +1118,9 @@ function initController(c) {
     });
   } else {
     ctx.handlers.refresh.call($view.get(), $view, $view);
-    contextReady();
   }
 
-  ctx.isReady = true;
+  contextReady();
   c.trigger('component:ready', $view, true);
 
   _log.t(ctx.componentId, 'controller:init', 'timer:init:stop');
@@ -1125,12 +1136,17 @@ function initController(c) {
 function getController(javascriptCode) {
   let instance = function(ctx) { };
   if (typeof javascriptCode === 'string') {
+    let ctrl;
     try {
       if (javascriptCode.indexOf('module.exports') >= 0) {
-        instance = Function('module = {};\n' + javascriptCode + '; return module.exports;')();
+        ctrl = Function('\'use strict\'; let ControllerInstance = arguments[0]; let module = {};\n' + javascriptCode + '; return module.exports;')(ControllerInstance);
       } else {
-        instance = Function('return ' + javascriptCode)();
+        ctrl = Function('return ' + javascriptCode)();
       }
+      if (typeof ctrl !== 'function') {
+        throw new Error('Unexpected module type: "' + (typeof ctrl) + '"');
+      }
+      instance = ctrl;
     } catch (e) {
       // TODO: should trigger a global hook
       // eg. 'controller:error'
@@ -1850,19 +1866,21 @@ Zuix.prototype.parseAttributeArgs = function(attributeName, $el, $view, contextD
 Zuix.prototype.utils = util;
 
 /**
- * @param root
  * @return {Zuix}
  */
-module.exports = function(root) {
+module.exports = function() {
   const zuix = new Zuix();
-  const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
-  zuix.$.appendCss(globalStyle, null, 'zuix-global');
-  if (document.readyState != 'loading') {
-    zuix.componentize();
-  } else {
-    document.addEventListener('DOMContentLoaded', function() {
+  if (window && document) {
+    const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
+    zuix.$.appendCss(globalStyle, null, 'zuix-global');
+    if (document.readyState !== 'loading') {
       zuix.componentize();
-    });
+    } else {
+      document.addEventListener('DOMContentLoaded', function() {
+        zuix.componentize();
+      });
+    }
+    window.ControllerInstance = ControllerInstance;
   }
   // log messages monitor (one global listener)
   _log.monitor(function(level, args) {

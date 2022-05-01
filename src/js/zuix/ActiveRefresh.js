@@ -65,7 +65,6 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.paused = false;
   this.forceActive = false;
   const _t = this;
-  let inactive = false;
   let initialized = false;
   this.requestRefresh = function($v, $el, data) {
     const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
@@ -92,9 +91,9 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       }
     };
     if (isActive) {
-      if (isMainComponent && inactive) {
-        inactive = false;
-        $v.trigger('refresh:active');
+      if (!$el._refreshActive) {
+        $el._refreshActive = true;
+        $el.trigger('refresh:active');
       }
       // call the `refreshCallback` and wait for
       // its completion before next loop round
@@ -102,9 +101,9 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
         refreshLoop(nextData, nextMsDelay, forceActive);
       });
     } else {
-      if (isMainComponent && !inactive) {
-        inactive = true;
-        $v.trigger('refresh:inactive');
+      if ($el._refreshActive) {
+        $el._refreshActive = false;
+        $el.trigger('refresh:inactive');
       }
       // noop-loop
       refreshLoop(_t.contextData);

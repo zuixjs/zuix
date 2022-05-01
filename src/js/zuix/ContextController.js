@@ -164,7 +164,8 @@ function ContextController(context) {
   };
   if (isClass(context.controller())) {
     // >= ES6
-    context.controller(new (context.controller())(this));
+    const ctrl = new ((context.controller()).bind(this, this))();
+    context.controller(ctrl);
   } else {
     // <= ES5
     context.controller().call(this, this);

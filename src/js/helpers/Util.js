@@ -91,8 +91,13 @@ module.exports = {
     if (typeof s !== 'string' || o == null) {
       return;
     }
-    if (typeof o[s] !== 'undefined') {
-      return o[s];
+    try {
+      if (typeof o[s] !== 'undefined') {
+        return o[s];
+      }
+    } catch (e) {
+      // TODO: "TypeError: Cannot create proxy with a non-object as target or handler"
+      console.log(e);
     }
     let ref = o; let path = '';
     const parts = s.match(/\[(".*?"|'.*?'|(.*?))\]|".*?"|'.*?'|[0-9a-zA-Z_$]+/g);
