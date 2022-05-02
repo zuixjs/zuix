@@ -91,6 +91,12 @@ export interface ContextController {
     log: Logger;
     for(componentId: String): ContextController;
 }
+export interface ControllerInstance extends ContextController {
+    onInit: ContextControllerInitCallback;
+    onCreate: ContextControllerCreateCallback;
+    onUpdate: ContextControllerUpdateCallback;
+    onDispose: ContextControllerDisposeCallback;
+}
 export interface ComponentCache {
     componentId: String;
     view: Element;

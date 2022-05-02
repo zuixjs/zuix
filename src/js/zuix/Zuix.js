@@ -1873,14 +1873,17 @@ module.exports = function() {
   if (window && document) {
     const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
-    if (document.readyState !== 'loading') {
+    const refreshCallback = function() {
       zuix.componentize();
-    } else {
-      document.addEventListener('DOMContentLoaded', function() {
-        zuix.componentize();
-      });
-    }
+    };
     window.ControllerInstance = ControllerInstance;
+//    window.addEventListener('DOMContentLoaded', refreshCallback);
+    window.addEventListener('load', refreshCallback);
+    window.addEventListener('resize', refreshCallback);
+    window.addEventListener('pageshow', refreshCallback);
+    if (document.readyState !== 'loading') {
+      refreshCallback();
+    }
   }
   // log messages monitor (one global listener)
   _log.monitor(function(level, args) {
