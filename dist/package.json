@@ -1,6 +1,6 @@
 {
   "name": "zuix-dist",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "zUIx is a JavaScript library for creating component-based websites and applications.",
   "main": "js/zuix.min.js",
   "typings": "ts/zuix.d.ts",

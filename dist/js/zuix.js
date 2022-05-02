@@ -1,4 +1,4 @@
-/* zUIx v1.0.36 22.05.01 16:31:18 */
+/* zUIx v1.0.37 22.05.02 15:06:40 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -5062,19 +5062,42 @@ module.exports = ContextController;
 /***/ (function(module) {
 
 "use strict";
+/*
+ * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ *         https://zuixjs.github.io/zuix
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ *  This file is part of
+ *  zUIx, Javascript library for component-based development.
+ *        https://zuixjs.github.io/zuix
+ *
+ * @author Generoso Martello  -  https://github.com/genemars
+ */
 
 
+// noinspection JSClosureCompilerSyntax
 /**
  * @class ControllerInstance
- * @param {ContextController} [controller] The controller instance.
+ * @param {ContextController} controller The controller instance.
  * @extends {ContextController}
  * @constructor
  */
 function ControllerInstance(controller) {
   const _t = this;
-  /**
-   * @type {ContextController}
-   */
   controller.init = this.onInit.bind(this);
   controller.create = this.onCreate.bind(this);
   controller.dispose = this.onDispose.bind(this);
@@ -7199,14 +7222,17 @@ module.exports = function() {
   if (window && document) {
     const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
-    if (document.readyState !== 'loading') {
+    const refreshCallback = function() {
       zuix.componentize();
-    } else {
-      document.addEventListener('DOMContentLoaded', function() {
-        zuix.componentize();
-      });
-    }
+    };
     window.ControllerInstance = ControllerInstance;
+//    window.addEventListener('DOMContentLoaded', refreshCallback);
+    window.addEventListener('load', refreshCallback);
+    window.addEventListener('resize', refreshCallback);
+    window.addEventListener('pageshow', refreshCallback);
+    if (document.readyState !== 'loading') {
+      refreshCallback();
+    }
   }
   // log messages monitor (one global listener)
   _log.monitor(function(level, args) {
