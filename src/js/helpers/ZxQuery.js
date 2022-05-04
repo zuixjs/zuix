@@ -1244,7 +1244,7 @@ ZxQueryStatic.getClosest = function(elem, selector) {
   // Get closest match
   elem = elem.parentNode;
   for (; elem && elem !== document; elem = elem.parentNode) {
-    if (elem.matches(selector)) return elem;
+    if (elem.matches && elem.matches(selector)) return elem;
   }
   return null;
 };

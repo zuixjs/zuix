@@ -55,8 +55,8 @@ require('./ComponentCache');
 
 /**
  * This object can be supplied when loading a component. It can be either passed as argument for the
- * `zuix.load(...)` method in the javascript code, or in the `z-options` attribute of the HTML code
- * of the component container.
+ * `zuix.load(...) / zuix.loadComponent(...) ` methods, in the javascript code, or with the `z-options` attribute in the HTML code
+ * of the component's host element.
  *
  * @typedef {object} ContextOptions
  * @property {Object|undefined} contextId The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.
@@ -73,7 +73,8 @@ require('./ComponentCache');
  * @property {boolean|undefined} html Enables or disables HTML template loading (**default:** true).
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false).
  * @property {number|undefined} priority Loading priority (**default:** 0).
- * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once the component is successfully loaded.
+ * @property {ContextLoadedCallback|undefined} ready The loaded callback, triggered once the component is successfully loaded.
+ * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once all component's dependencies have been loaded.
  * @property {ContextErrorCallback|undefined} error The error callback, triggered when an error occurs.
  */
 
@@ -83,6 +84,15 @@ require('./ComponentCache');
  * @callback ContextErrorCallback
  * @param {Object} error
  * @param {ComponentContext} ctx The component context object (same as `this`).
+ * @this {ComponentContext}
+ */
+
+/**
+ * Callback function triggered when a component is created, after all of its dependencies have been loaded.
+ *
+ *
+ * @callback ContextLoadedCallback
+ * @param {ComponentContext} ctx The component context (same as `this`).
  * @this {ComponentContext}
  */
 
@@ -399,6 +409,9 @@ function load(componentId, options) {
   if (util.isFunction(options.ready)) {
     ctx.ready = options.ready;
   }
+  if (util.isFunction(options.loaded)) {
+    ctx.loaded = options.loaded;
+  }
   if (util.isFunction(options.error)) {
     ctx.error = options.error;
   }
@@ -542,7 +555,7 @@ function unload(context) {
       // it's a lazy-loadable element not yet loaded
       _componentizer.dequeue(el);
     }
-    if (!util.isNoU(ctx)) {
+    if (!util.isNoU(ctx) && ctx.dispose) {
       ctx.dispose();
     }
   };
@@ -556,6 +569,31 @@ function unload(context) {
 }
 
 /** @private */
+function loadComponent(elements, componentId, type, options) {
+  elements = z$(elements);
+  unload(elements);
+  /**
+   * @param {ZxQuery} container
+   */
+  const load = function(container) {
+    container.attr(_optionAttributes.dataUiLoad, componentId);
+    if (type) {
+      container.attr(type, '');
+    }
+    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || container.attr(_optionAttributes.dataUiLazyload) === 'true') {
+      if (options) {
+        container.get().__zuix_loadOptions = options;
+      }
+      return false;
+    }
+    return _componentizer.loadInline(container, options);
+  };
+  elements.each(function(i, el, $el) {
+    load($el);
+  });
+}
+
+/** @private */
 function createContext(options) {
   const context = new ComponentContext(zuix, options, trigger);
   _contextRoot.push(context);
@@ -565,9 +603,9 @@ function createContext(options) {
 /**
  *
  * @private
- * @param {Element|ZxQuery|object} contextId The `contextId` object (usually a string) or the container/view element of the component.
- * @param {function} [callback] The callback function that will pass the context object once it is ready.
- * @return {ComponentContext} The matching component context or `null` if the context does not exist, or it is not yet loaded.
+ * @param {Element|ZxQuery|object} contextId The `contextId` or the component's host element.
+ * @param {ContextReadyCallback} [callback] The callback function that will pass the component's context object once loaded and ready.
+ * @return {ComponentContext} The matching component's context or `null` if the context does not exist or not yet loaded.
  */
 function context(contextId, callback) {
   let context = null;
@@ -586,7 +624,7 @@ function context(contextId, callback) {
   });
   if (typeof callback === 'function' && (contextId instanceof Element || contextId instanceof z$.ZxQuery)) {
     if (context == null || !context.isReady) {
-      z$(contextId).one('component:ready', function() {
+      z$(contextId).one('component:loaded', function() {
         context = zuix.context(this);
         setTimeout(function() {
           callback.call(context, context);
@@ -606,7 +644,12 @@ function context(contextId, callback) {
 function hook(path, handler) {
   if (util.isNoU(handler)) {
     delete _hooksCallbacks[path];
-  } else _hooksCallbacks[path] = handler;
+  } else {
+    if (_hooksCallbacks[path]) {
+      _log.w('Overwritten an already registered hook for', '"' + path + '"', 'OLD HANDLER', _hooksCallbacks[path], 'REPLACED BY', handler);
+    }
+    _hooksCallbacks[path] = handler;
+  }
 }
 
 /**
@@ -763,7 +806,9 @@ function createComponent(context, task) {
       } else if (cached.controller == null) {
         cached.controller = context.controller();
       }
-    } else _log.w(context.componentId, 'component:deferred:load');
+    } else {
+      _log.d(context.componentId, 'component:deferred:load');
+    }
 
     const v = z$(context.view());
     // if dataUiContext it's not null, a main controller was already loaded
@@ -895,10 +940,10 @@ function isDirectComponentElement($view, $el) {
 
 /**
  * @private
- * @param {ContextController} c
+ * @param {ContextController} ctrl
  */
-function initController(c) {
-  const ctx = c.context;
+function initController(ctrl) {
+  const ctx = ctrl.context;
   _log.t(ctx.componentId, 'controller:init', 'timer:init:start');
 
   ctx.isReady = true;
@@ -906,16 +951,16 @@ function initController(c) {
   // and later set to true when all dependencies have been loaded
 
   // tender lifecycle moments
-  const $view = c.view();
-  if (util.isFunction(c.create)) {
-    c.create();
+  const $view = ctrl.view();
+  if (util.isFunction(ctrl.create)) {
+    ctrl.create();
   }
-  c.trigger('view:create', $view);
+  ctrl.trigger('view:create', $view);
 
-  const contextReady = function() {
-    // set component ready
-    if (util.isFunction(ctx.ready)) {
-      (ctx.ready).call(ctx, ctx);
+  const contextLoaded = function() {
+    // set component loaded
+    if (util.isFunction(ctx.loaded)) {
+      (ctx.loaded).call(ctx, ctx);
     }
 
     // load pending resources
@@ -940,7 +985,16 @@ function initController(c) {
       });
     });
   };
+  contextLoaded();
+  ctrl.trigger('component:loaded', $view, true);
 
+  const contextReady = function() {
+    // set component ready
+    if (util.isFunction(ctx.ready)) {
+      (ctx.ready).call(ctx, ctx);
+    }
+    ctrl.trigger('component:ready', $view, true);
+  };
 
   /** @type {Object.<string, ActiveRefreshHandler>} */
   const globalHandlers = zuix.store('handlers');
@@ -960,7 +1014,7 @@ function initController(c) {
           activeTagHandler = globalHandlers[handlerName];
         }
         if (typeof activeTagHandler === 'function') {
-          const h = zuix.activeRefresh($view, $el, c.model(), function($v, $element, data, refreshCallback) {
+          const h = zuix.activeRefresh($view, $el, ctrl.model(), function($v, $element, data, refreshCallback) {
             // TODO: should `$v` and/or `$element` be passed here?
             const runActiveTagHandler = function() {
               activeTagHandler.call(el, $view, $el, data, refreshCallback, activeTagName);
@@ -984,9 +1038,10 @@ function initController(c) {
 
 
   // Setup main component's 'refresh' handler
+  const contextId = ctx.contextId;
   const viewRefreshScript = $view.find(':scope > [type="jscript"]');
+  viewRefreshScript._selection = viewRefreshScript._selection.concat(z$(document).find('[type="jscript"][for="' + contextId + '"]')._selection);
   ctx.handlers.refresh = function($view, $el, contextData, refreshCallback) {
-    //const ctx = zuix.context($view);
     if (!ctx._disposed) {
       if (ctx._dependencyResolver && !ctx._dependencyResolver.resolved()) {
         // not all requested components are ready, retry on next refresh
@@ -1018,11 +1073,12 @@ function initController(c) {
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';
+        usingComponents.push(contextId); // map contextId to a local variable
         viewRefreshScript.each(function(i, el, $el) {
           if ($el.attr('using') != null) {
             usingComponents.push(...$el.attr('using').split(','));
           }
-          if ($el.parent().get() === $view.get()) {
+          if ($el.parent().get() === $view.get() || $el.attr('for') === contextId) {
             userCode += $el.html() + ';';
           }
         });
@@ -1089,7 +1145,7 @@ function initController(c) {
     const refreshDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('refreshDelay') : null;
     const handlersDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('handlersDelay') : null;
     // init refresh handler / first paint
-    ctx.handlers.refresh.call($view.get(), $view, $view, c.model(), function(contextData, delay) {
+    ctx.handlers.refresh.call($view.get(), $view, $view, ctrl.model(), function(contextData, delay) {
       zuix.activeRefresh($view, $view, contextData, function($v, $element, data, refreshCallback) {
         if (ctx._refreshHandler && !ctx._refreshHandler.initialized) {
           let loadedNested = true;
@@ -1107,6 +1163,7 @@ function initController(c) {
               h.start(handlersDelay);
             });
             ctx.$.removeClass('not-ready');
+            contextReady();
           } else if (!ctx.$.hasClass('not-ready')) {
             ctx.$.addClass('not-ready');
           }
@@ -1118,13 +1175,11 @@ function initController(c) {
     });
   } else {
     ctx.handlers.refresh.call($view.get(), $view, $view);
+    contextReady();
   }
 
-  contextReady();
-  c.trigger('component:ready', $view, true);
-
   _log.t(ctx.componentId, 'controller:init', 'timer:init:stop');
-  _log.i(ctx.componentId, 'component:loaded', ctx.contextId);
+  _log.i(ctx.componentId, 'component:loaded', contextId);
 }
 
 /**
@@ -1264,9 +1319,7 @@ Zuix.prototype.unload = function(context) {
 /**
  * Loads a component, given the target host element(s).
  * If the target is already a component, it will be
- * unloaded and replaced by the new one. The component will
- * be loaded right away, lazy loading option is ignored when
- * using this method.
+ * unloaded and replaced by the new one.
  *
  * @example
  * ```html
@@ -1311,31 +1364,14 @@ Zuix.prototype.unload = function(context) {
   zuix.loadComponent(elements, 'templates/mdl_card', 'view');
 </script>
  *
- * @param {ComponentContext|ZxQuery|Element} elements The target host element(s) or component context(s)
+ * @param {ZxQuery|Element} elements The target host element(s) or component context(s)
  * @param {string|object} componentId The id of the component to load (path/component_name)
  * @param {'view'|'ctrl'|undefined} [type] The component type
  * @param {ContextOptions|undefined} [options] The component options
  * @return {Zuix} The `{Zuix}` object itself.
  */
 Zuix.prototype.loadComponent = function(elements, componentId, type, options) {
-  unload(elements);
-  /**
-   * @param {ZxQuery} container
-   */
-  const load = function(container) {
-    container.attr(_optionAttributes.dataUiLoad, componentId);
-    if (type) {
-      container.attr(type, '');
-    }
-    _componentizer.loadInline(container, options);
-  };
-  if (elements.each) {
-    elements.each(function(i, el, $el) {
-      load($el);
-    });
-  } else {
-    load(elements);
-  }
+  loadComponent(elements, componentId, type, options);
   return this;
 };
 /**
@@ -1360,8 +1396,8 @@ Zuix.prototype.controller = function(handler) {
   return controller.call(this, handler);
 };
 /**
- * Gets a `ComponentContext` object, given its `contextId` or its container/view element.
- * The `contextId` is the one specified in the `ContextOptions` object or by using the `z-context` attribute.
+ * Gets a `ComponentContext` object, given its `contextId` or its host element.
+ * The `contextId` is the one specified in the `ContextOptions` object or by using the `z-context` attribute on the host element.
  *
  * @example
 ```html
@@ -1377,9 +1413,9 @@ zuix.context('my-slide-show', function(ctx) {
 });
 ```
  *
- * @param {Element|ZxQuery|object} contextId The *contextId* object (usually a string) or the container/view element of the component
- * @param {function} [callback] The callback function that will be called once the component is loaded. The *ComponentContext* object will be passed as argument of this callback
- * @return {ComponentContext} The matching component context or `null` if the component does not exist, or it is not loaded yet.
+ * @param {Element|ZxQuery|object} contextId The `contextId` or the component's host element.
+ * @param {ContextReadyCallback} [callback] The callback function that will pass the component's context object once loaded and ready.
+ * @return {ComponentContext} The matching component's context or `null` if the context does not exist or not yet loaded.
  */
 Zuix.prototype.context = function(contextId, callback) {
   return context.call(this, contextId, callback);
@@ -1871,7 +1907,7 @@ Zuix.prototype.utils = util;
 module.exports = function() {
   const zuix = new Zuix();
   if (window && document) {
-    const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1;transition:opacity 150ms ease-in-out}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
+    const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
     const refreshCallback = function() {
       zuix.componentize();

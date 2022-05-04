@@ -4,7 +4,7 @@ tags: api
 options: mdl highlight
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation, Class: ObservableListener"
+description: "zUIx.js API documentation, Class: ControllerInstance"
 keywords:
 - Documentation
 - API
@@ -65,100 +65,468 @@ main table code {
 /* END: MARKDOWN JSDOC */
 </style>
 
-## `ObservableListener` class
+## `ControllerInstance` class
 
 ### Constructor
 
-<a name="ObservableListener"></a>
-#### new ObservableListener()
+<a name="ControllerInstance"></a>
+#### new ControllerInstance(controller)
 
-ObservableListener interface.
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`controller`|*[ContextController](../../zuix/ContextController)*|The controller instance.|
 
 <!--
 
 *Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 35](../../observable/ObservableListener.js#L35)
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 35](../../zuix/ControllerInstance.js#L35)
 
 -->
+
+### Extends
+
+- [ContextController](../../zuix/ContextController)
 
 ### Methods
 
-<a name="change"></a>
-#### change(target, key, value, path, old)
+<a name="addBehavior"></a>
+#### addBehavior(eventPath, handler) &rarr; {[ContextController](../../zuix/ContextController)}
 
-TODO: add description
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`target`|*Object*|The updated object|
-|`key`|*string*|The property key|
-|`value`|*Object*|The value|
-|`path`|*string*|Full property path|
-|`old`|*Object*|A copy of the object before the update|
-
-<!--
-
-*Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 70](../../observable/ObservableListener.js#L70)
-
--->
-
-##### Returns
-
- &dash; undefined
-
-<a name="get"></a>
-#### get(target, key, value, path)
-
-TODO: add description
+Adds a behavior handler.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`target`|*Object*|The updated object|
-|`key`|*string*|The property key|
-|`value`|*Object*|The value|
-|`path`|*string*|Full property path|
+|`eventPath`|*string*|Event path.|
+|`handler`|*[EventCallback](#EventCallback)*|Behavior handler.|
+
+*Inherited From:*
+    - [ContextController#addBehavior](#addBehavior)
 
 <!--
 
 *Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 46](../../observable/ObservableListener.js#L46)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 195](../../zuix/ContextController.js#L195)
 
 -->
 
 ##### Returns
 
- &dash; undefined
+*[ContextController](../../zuix/ContextController)*
 
-<a name="set"></a>
-#### set(target, key, value, path, old)
+<a name="addEvent"></a>
+#### addEvent(eventPath, handler) &rarr; {[ContextController](../../zuix/ContextController)}
 
-TODO: add description
+Adds an event handler.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`target`|*Object*|The updated object|
-|`key`|*string*|The property key|
-|`value`|*Object*|The value|
-|`path`|*string*|Full property path|
-|`old`|*Object*|A copy of the object before the update|
+|`eventPath`|*string*|Event path.|
+|`handler`|*[EventCallback](#EventCallback)*|Event hanler.|
+
+*Inherited From:*
+    - [ContextController#addEvent](#addEvent)
 
 <!--
 
 *Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 58](../../observable/ObservableListener.js#L58)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 184](../../zuix/ContextController.js#L184)
 
 -->
 
 ##### Returns
 
- &dash; undefined
+*[ContextController](../../zuix/ContextController)*
+
+<a name="addTransition"></a>
+#### addTransition(className, properties, options)
+
+Adds a CSS transition effect to the component stylesheet.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`className`|*string*|CSS class name to assign to this transition.|
+|`properties`|*Array.&lt;Object>* \| *JSON*|List of CSS properties/values to set.|
+|`options`|*Array.&lt;Object>* \| *JSON*|List of transition options.|
+
+*Inherited From:*
+    - [ContextController#addTransition](#addTransition)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 206](../../zuix/ContextController.js#L206)
+
+-->
+
+<a name="clearCache"></a>
+#### clearCache()
+
+Clears the fields cache.
+
+*Inherited From:*
+    - [ContextController#clearCache](#clearCache)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 225](../../zuix/ContextController.js#L225)
+
+-->
+
+<a name="expose"></a>
+#### expose(name, handler) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Exposes a method or property declared in the private
+scope of the controller, as a public member of the
+component context object.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`name`|*string* \| *JSON*|  |Name of the exposed method/property, or list of name/value pairs|
+|`handler`|*function*|*optional*  |Function or property descriptor.|
+
+*Inherited From:*
+    - [ContextController#expose](#expose)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 336](../../zuix/ContextController.js#L336)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+ &dash; The `{ContextController}` itself.
+
+<a name="field"></a>
+#### field(fieldName) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Gets view's field(s) with the specified name.
+Same as [ComponentContext&ndash;field](../ComponentContext/#field).
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`fieldName`|*string*|Value to match in the *z-field* attribute|
+
+*Inherited From:*
+    - [ContextController#field](#field)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 219](../../zuix/ContextController.js#L219)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
+ &dash; A `{ZxQuery}` object wrapping the matching element(s).
+
+<a name="for"></a>
+#### for(componentId) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Registers this one as the default controller
+for the given component type.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`componentId`|*string*|Component identifier|
+
+*Inherited From:*
+    - [ContextController#for](#for)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 429](../../zuix/ContextController.js#L429)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+ &dash; The `{ContextController}` itself.
+
+##### Example
+
+```js
+// Controller of component 'path/to/component_name'
+var ctrl = zuix.controller(function(cp) {
+    // `cp` is the {ContextController}
+    cp.create = function() { ... };
+    cp.dispose = function() { ... }
+}).for('path/to/component_name');
+```
+
+<a name="loadCss"></a>
+#### loadCss(options) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Loads the `.css` file and replace the current view style of the component.
+If no `options.path` is specified, it will try to load
+the file with the same base-name as the `componentId`.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`options`|*object*|*optional*  |The options object|
+
+*Inherited From:*
+    - [ContextController#loadCss](#loadCss)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 375](../../zuix/ContextController.js#L375)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+ &dash; The ```{ContextController}``` object itself.
+
+##### Example
+
+```js
+// loads 'path/to/component_name.css' by default
+cp.loadCss();
+// or loads the view css with provided options
+cp.loadCss({
+    path: 'url/of/style/file.css',
+    success: function() { ... },
+    error: function(err) { ... },
+    then: function() { ... }
+});
+```
+
+<a name="loadHtml"></a>
+#### loadHtml(options) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Loads the `.html` file and replace the view markup of the component.
+If no `options.path` is specified, it will try to load the
+file with the same base-name as the `componentId`.
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`options`|*object*|*optional*  |The options object|
+
+*Inherited From:*
+    - [ContextController#loadHtml](#loadHtml)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 400](../../zuix/ContextController.js#L400)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+ &dash; The ```{ContextController}``` object itself.
+
+##### Example
+
+```js
+// loads 'path/to/component_name.html' by default
+cp.loadHtml();
+// or loads the view html with provided options
+cp.loadHtml({
+    path: 'url/of/view/file.html',
+    success: function() { ... },
+    error: function(err) { ... },
+    then: function() { ... }
+});
+```
+
+<a name="model"></a>
+#### model(model) &rarr; {[ContextController](../../zuix/ContextController)|object}
+
+Gets/Sets the data model of the component.
+Same as [ComponentContext&ndash;model](../ComponentContext/#model).
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`model`|*object* \| *undefined*|*optional*  |The model object|
+
+*Inherited From:*
+    - [ContextController#model](#model)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 274](../../zuix/ContextController.js#L274)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)* \| *object*
+
+<a name="onCreate"></a>
+#### onCreate()
+
+<!--
+
+*Source:*
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 54](../../zuix/ControllerInstance.js#L54)
+
+-->
+
+<a name="onDispose"></a>
+#### onDispose()
+
+<!--
+
+*Source:*
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 59](../../zuix/ControllerInstance.js#L59)
+
+-->
+
+<a name="onInit"></a>
+#### onInit()
+
+<!--
+
+*Source:*
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 49](../../zuix/ControllerInstance.js#L49)
+
+-->
+
+<a name="onUpdate"></a>
+#### onUpdate()
+
+<!--
+
+*Source:*
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 64](../../zuix/ControllerInstance.js#L64)
+
+-->
+
+<a name="options"></a>
+#### options() &rarr; {[ContextOptions](#ContextOptions)|any}
+
+Gets the component options.
+Same as [ComponentContext&ndash;options](../ComponentContext/#options).
+
+*Inherited From:*
+    - [ContextController#options](#options)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 286](../../zuix/ContextController.js#L286)
+
+-->
+
+##### Returns
+
+*[ContextOptions](#ContextOptions)* \| *any*
+ &dash; The component options.
+
+<a name="trigger"></a>
+#### trigger(eventPath, eventData, isHook) &rarr; {[ContextController](../../zuix/ContextController)}
+
+Triggers the component event `eventPath` with the given
+`eventData` object. To listen to a component event use the
+`{ComponentContext}.on(eventPath, handler)` method or
+in case `isHook` is set to true, use the
+`zuix.hook(eventPath, handler)` method (global hook event).
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`eventPath`|*string*|  |The event path|
+|`eventData`|*object*|  |The event data|
+|`isHook`|*boolean*|*optional*  |Trigger as global hook event|
+
+*Inherited From:*
+    - [ContextController#trigger](#trigger)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 313](../../zuix/ContextController.js#L313)
+
+-->
+
+##### Returns
+
+*[ContextController](../../zuix/ContextController)*
+
+##### Example
+
+```js
+// somewhere inside the slide-show component controller
+cp.trigger('slide:change', slideIndex);
+
+// somewhere in a page hosting the slide-show component
+// set component event listeners
+zuix.context('my-slide-show')
+  .on('slide:change', function(slideIndex) { ... })
+  .on(...);
+```
+
+<a name="view"></a>
+#### view(filter) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
+
+Gets the component view or if `filter` argument is passed,
+gets the view elements matching the given `filter`
+(shorthand for `cp.view().find(filter)`).
+
+##### Parameters
+
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`filter`|*string* \| *undefined*|*optional*  ||
+
+*Inherited From:*
+    - [ContextController#view](#view)
+
+<!--
+
+*Source:*
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 246](../../zuix/ContextController.js#L246)
+
+-->
+
+##### Returns
+
+*[ZxQuery](../../helpers/ZxQuery)*
+
+##### Example
+
+```js
+// get all `checkbox` elements with `.checked` class.
+var choices = cp.view('input[type="checkbox"].checked');
+choices.removeClass('.checked');
+// ...
+// hide the component's view
+cp.view().hide();
+```
 
 ### Type Definitions
 

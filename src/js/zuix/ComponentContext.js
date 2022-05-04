@@ -762,7 +762,7 @@ ComponentContext.prototype.controller = function(controller) {
 /**
  * Gets/Sets the component's options.
  *
- * @param {ContextOptions|undefined} options The JSON options object.
+ * @param {ContextOptions|undefined} [options] The JSON options object.
  * @return {ComponentContext|object}
  */
 ComponentContext.prototype.options = function(options) {
@@ -948,7 +948,23 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         util.dom.cssNot(_optionAttributes.dataUiComponent)
     ));
     if (inlineView.length() > 0) {
-      const inlineElement = inlineView.get(0);
+      let inlineElement = inlineView.get(0);
+      if (inlineElement.tagName.toLowerCase() === 'template') {
+        inlineElement = inlineElement.cloneNode(true);
+        const styles = inlineElement.content.querySelectorAll('style');
+        if (styles) {
+          for (const s of styles) {
+            s.setAttribute('media', '#' + context.componentId);
+          }
+        }
+      } else {
+        const styles = inlineElement.querySelectorAll('style[media="#"]');
+        if (styles) {
+          for (const s of styles) {
+            s.setAttribute('media', '#' + context.componentId);
+          }
+        }
+      }
       inlineViews[htmlPath] = inlineElement.innerHTML;
       if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
         // TODO: test this case better (or finally integrate some unit testing =))

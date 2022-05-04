@@ -75,7 +75,7 @@ main table code {
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 174](../../zuix/Componentizer.js#L174)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 187](../../zuix/Componentizer.js#L187)
 
 -->
 
@@ -119,7 +119,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 95](../../zuix/Componentizer.js#L95)
 
 -->
 
@@ -140,7 +140,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 105](../../zuix/Componentizer.js#L105)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 116](../../zuix/Componentizer.js#L116)
 
 -->
 
@@ -154,7 +154,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 73](../../zuix/Componentizer.js#L73)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
 
 -->
 
@@ -393,7 +393,28 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 78](../../zuix/Zuix.js#L78)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 81](../../zuix/Zuix.js#L81)
+
+-->
+
+<a name="ContextLoadedCallback"></a>
+#### ContextLoadedCallback(ctx)
+
+Callback function triggered when a component is created, after all of its dependencies have been loaded.
+
+##### This
+- {<a href="../../zuix/ComponentContext">ComponentContext</a>}
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`ctx`|*[ComponentContext](../../zuix/ComponentContext)*|The component context (same as `this`).|
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 90](../../zuix/Zuix.js#L90)
 
 -->
 
@@ -401,8 +422,8 @@ Callback function triggered if an error occurs when loading a component.
 #### ContextOptions
 
 This object can be supplied when loading a component. It can be either passed as argument for the
-`zuix.load(...)` method in the javascript code, or in the `z-options` attribute of the HTML code
-of the component container.
+`zuix.load(...) / zuix.loadComponent(...) ` methods, in the javascript code, or with the `z-options` attribute in the HTML code
+of the component's host element.
 
 ##### Properties
 
@@ -422,13 +443,14 @@ of the component container.
 |`html`|*boolean* \| *undefined*|Enables or disables HTML template loading (**default:** true).|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false).|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0).|
-|`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once the component is successfully loaded.|
+|`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
+|`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 54](../../zuix/Zuix.js#L54)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 56](../../zuix/Zuix.js#L56)
 
 -->
 
@@ -449,7 +471,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 87](../../zuix/Zuix.js#L87)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 99](../../zuix/Zuix.js#L99)
 
 -->
 
@@ -647,7 +669,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 95](../../zuix/Zuix.js#L95)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 107](../../zuix/Zuix.js#L107)
 
 -->
 

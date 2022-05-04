@@ -111,7 +111,7 @@ function Logger(ctx) {
       _callback.call(ctx, level, args);
     }
     // route event
-    if (_global.__zuix__debug || level === 'ERROR') {
+    if (_global.__zuix__debug || level === 'ERROR' || level === 'WARN') {
       this.args(ctx, level, args);
       _console.log.apply(_console, args);
     }

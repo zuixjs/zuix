@@ -13,11 +13,15 @@ export interface ContextOptions {
     html?: Boolean;
     lazyLoad?: Boolean;
     priority?: Number;
+    loaded?: ContextLoadedCallback;
     ready?: ContextReadyCallback;
     error?: ContextErrorCallback;
 }
 export interface ContextErrorCallback {
     (error: Object, ctx: ComponentContext): void;
+}
+export interface ContextLoadedCallback {
+    (ctx: ComponentContext): void;
 }
 export interface ContextReadyCallback {
     (ctx: ComponentContext): void;
@@ -29,6 +33,7 @@ export interface Zuix {
     controller(handler: ContextControllerHandler): ContextControllerHandler;
     context(contextId: Element | ZxQuery | Object, callback?: Function): ComponentContext;
     createComponent(componentId: String, options?: ContextOptions): ComponentContext;
+    loadComponent(elements: Element | ZxQuery, componentId: string, type?: 'view' | 'ctrl', options?: ContextOptions);
     trigger(context: Object, eventPath: String, eventData?: Object): Zuix;
     hook(eventPath: String, eventHandler: Function): Zuix;
     using(resourceType: String, resourcePath: String, callback?: Function): void;

@@ -241,13 +241,15 @@ function queueLoadables(element) {
   }
   // Select all loadable elements
   let waitingLoad = getElementCache(element);
-  //    if (waitingLoad == null || waitingLoad.length == 0) {
-  const q = util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded)) + ',' +
-        util.dom.queryAttribute(_optionAttributes.dataUiInclude, null, util.dom.cssNot(_optionAttributes.dataUiLoaded));
-  waitingLoad = z$(element).find(q);
-  waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
-  setElementCache(element, waitingLoad);
-  //    }
+  if (waitingLoad == null || waitingLoad.length == 0) {
+    const q = util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded)) + ',' +
+      util.dom.queryAttribute(_optionAttributes.dataUiInclude, null, util.dom.cssNot(_optionAttributes.dataUiLoaded));
+    waitingLoad = z$(element).find(q);
+    waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
+    // Cache loadable elements
+    setElementCache(element, waitingLoad);
+  }
+  // Process elements options
   const waitingTasks = [];
   for (let w = 0; w < waitingLoad.length; w++) {
     const el = waitingLoad[w];
@@ -348,7 +350,7 @@ function loadNext(element) {
   queueLoadables(element);
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
-    z$(job.item.element).one('component:ready', function() {
+    z$(job.item.element).one('component:loaded', function() {
       zuix.componentize(job.item.element);
     });
     loadInline(job.item.element);
@@ -359,7 +361,7 @@ function loadNext(element) {
 function loadInline(element, opts) {
   const v = z$(element);
   if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
-    // _log.w("Skipped", element);
+    //_log.w('Skipped', element);
     return false;
   }
   v.attr(_optionAttributes.dataUiLoaded, 'true');
@@ -370,6 +372,8 @@ function loadInline(element, opts) {
     options = parseOptions(element, options);
     // copy passed options
     options = util.cloneObject(options) || {};
+  } else if (v.get().__zuix_loadOptions != null) {
+    options = v.get().__zuix_loadOptions;
   } else {
     options = {};
   }
