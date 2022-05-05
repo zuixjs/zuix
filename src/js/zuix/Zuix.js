@@ -830,6 +830,7 @@ function createComponent(context, task) {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
         task && task.end();
+        v.attr(_optionAttributes.dataUiReady, 'true');
       };
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
       let loadingHtml = false;
@@ -920,7 +921,6 @@ function createComponent(context, task) {
     } else {
       _log.w(context.componentId, 'component:controller:undefined');
     }
-    v.attr(_optionAttributes.dataUiReady, 'true');
   } else {
     // TODO: should report error or throw an exception
     _log.e(context.componentId, 'component:view:undefined');
