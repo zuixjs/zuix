@@ -4022,15 +4022,14 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  * TODO: describe this...
  *
  * @param {Element|ZxQuery|undefined} [element] Scan and process loadable elements inside `element`.
- * @param {Element|undefined} [child] Process only the specified `child` of `element`.
  * @return {Componentizer}
  */
-Componentizer.prototype.componentize = function(element, child) {
+Componentizer.prototype.componentize = function(element) {
   if (isBusy) {
     z$().one('componentize:step', function() {
       requestAnimationFrame(function() {
         isBusy = false;
-        zuix.componentize(element, child);
+        zuix.componentize(element);
       });
     });
     return this;
@@ -4039,14 +4038,7 @@ Componentizer.prototype.componentize = function(element, child) {
   zuix.trigger(this, 'componentize:begin');
   zuix.$().trigger('componentize:begin');
   zuix.resolveImplicitLoad(element);
-  if (child != null) {
-    const cache = getElementCache(element);
-    if (cache == null) {
-      setElementCache(element, [child]);
-    } else cache.push(child);
-  } else {
-    addRequest(element);
-  }
+  addRequest(element);
   loadNext(element);
   return this;
 };
@@ -4199,25 +4191,6 @@ function addRequest(element) {
   }
 }
 
-const _elementCache = [];
-/** @private */
-function setElementCache(element, waiting) {
-  _elementCache.push({
-    element: element,
-    waiting: waiting
-  });
-}
-/** @private */
-function getElementCache(element) {
-  for (let i = 0; i < _elementCache.length; i++) {
-    const cache = _elementCache[i];
-    if (cache.element === element) {
-      return cache.waiting;
-    }
-  }
-  return null;
-}
-
 /** @private */
 function queueLoadables(element) {
   if (element == null && _componentizeRequests.length > 0) {
@@ -4227,15 +4200,10 @@ function queueLoadables(element) {
     element = element.get();
   }
   // Select all loadable elements
-  let waitingLoad = getElementCache(element);
-  if (waitingLoad == null || waitingLoad.length == 0) {
-    const q = util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded)) + ',' +
-      util.dom.queryAttribute(_optionAttributes.dataUiInclude, null, util.dom.cssNot(_optionAttributes.dataUiLoaded));
-    waitingLoad = z$(element).find(q);
-    waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
-    // Cache loadable elements
-    setElementCache(element, waitingLoad);
-  }
+  const q = util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded)) + ',' +
+    util.dom.queryAttribute(_optionAttributes.dataUiInclude, null, util.dom.cssNot(_optionAttributes.dataUiLoaded));
+  let waitingLoad = z$(element).find(q);
+  waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
   // Process elements options
   const waitingTasks = [];
   for (let w = 0; w < waitingLoad.length; w++) {
@@ -6180,6 +6148,7 @@ function createComponent(context, task) {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
         task && task.end();
+        v.attr(_optionAttributes.dataUiReady, 'true');
       };
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
       let loadingHtml = false;
@@ -6270,7 +6239,6 @@ function createComponent(context, task) {
     } else {
       _log.w(context.componentId, 'component:controller:undefined');
     }
-    v.attr(_optionAttributes.dataUiReady, 'true');
   } else {
     // TODO: should report error or throw an exception
     _log.e(context.componentId, 'component:view:undefined');
