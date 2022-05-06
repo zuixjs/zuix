@@ -833,7 +833,6 @@ function createComponent(context, task) {
         v.attr(_optionAttributes.dataUiReady, 'true');
       };
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
-      let loadingHtml = false;
       if (!util.isNoU(c.view()) && c.view().attr(_optionAttributes.dataUiComponent) == null) {
         // add the `dataUiComponent` attribute
         c.view().attr(_optionAttributes.dataUiComponent, '');
@@ -863,7 +862,6 @@ function createComponent(context, task) {
         const loadViewTask = function() {
           if (context.options().html !== false) {
             if (cached.view == null) {
-              loadingHtml = true;
               context.loadHtml({
                 cext: context.options().cext,
                 caching: _enableHttpCaching,
