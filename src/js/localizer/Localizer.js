@@ -156,6 +156,12 @@ localesDictionary['other-scope'] = {
 };
 */
 
+/**
+ * Get translated string given its locale ID
+ * @param localeId
+ * @param localeDictionary
+ * @return {*}
+ */
 function getDictionaryItem(localeId, localeDictionary) {
   for (const id in localeDictionary) {
     if (id == localeId) {

@@ -1470,34 +1470,6 @@ ZxQueryStatic.playFx = function(config) {
 
 ZxQueryStatic.ZxQuery = ZxQuery;
 
-// Element.matches() polyfill
-if (!Element.prototype.matches) {
-  Element.prototype.matches =
-      Element.prototype.matchesSelector ||
-      Element.prototype.mozMatchesSelector ||
-      Element.prototype.msMatchesSelector ||
-      Element.prototype.oMatchesSelector ||
-      Element.prototype.webkitMatchesSelector ||
-      function(s) {
-        const matches = (this.document || this.ownerDocument).querySelectorAll(s);
-        let i = matches.length;
-        while (--i >= 0 && matches.item(i) !== this) {
-        }
-        return i > -1;
-      };
-}
-// window.CustomEvent polyfill for IE>=9
-(function() {
-  if (typeof window.CustomEvent === 'function') return false;
-  function CustomEvent(event, params) {
-    params = params || {bubbles: false, cancelable: false, detail: undefined};
-    const evt = document.createEvent( 'CustomEvent' );
-    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-    return evt;
-  }
-  CustomEvent.prototype = window.Event.prototype;
-  window.CustomEvent = CustomEvent;
-})();
 // String.hashCode extension
 String.prototype.hashCode = function() {
   let hash = 0;
@@ -1509,12 +1481,5 @@ String.prototype.hashCode = function() {
   }
   return hash;
 };
-// String.startsWith polyfill
-if (!String.prototype.startsWith) {
-  String.prototype.startsWith = function(search, pos) {
-    const startIndex = !pos || pos < 0 ? 0 : +pos;
-    return this.substring(startIndex, search.length + startIndex) === search;
-  };
-}
 
 module.exports = ZxQueryStatic;

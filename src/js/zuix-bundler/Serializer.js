@@ -27,6 +27,7 @@ const ESCAPED_CHARS = {
   '\u2029': '\\u2029'
 };
 
+/** @private */
 function escapeUnsafeChars(unsafeChar) {
   return ESCAPED_CHARS[unsafeChar];
 }
@@ -46,6 +47,7 @@ module.exports = function serialize(obj, options) {
 
   // Returns placeholders for functions and regexps (identified by index)
   // which are later replaced by their string representation.
+  /** @private */
   function replacer(key, value) {
     if (!value) {
       return value;

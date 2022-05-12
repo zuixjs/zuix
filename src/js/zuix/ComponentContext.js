@@ -104,14 +104,12 @@ function dataBind(el, boundData) {
   boundData = boundData.observableTarget || boundData;
   const value = (!util.isNoU(boundData.value) ? boundData.value :
       (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-  const processed = [];
   // try to guess target property
   switch (el.tagName.toLowerCase()) {
     // TODO: complete binding cases
     case 'img':
       el.src = (!util.isNoU(boundData.src) ? boundData.src :
                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
-      processed.push('src');
       break;
     case 'a':
       el.href = (!util.isNoU(boundData.href) ? boundData.getAttribute('href'):
@@ -119,11 +117,10 @@ function dataBind(el, boundData) {
       if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
         // won't replace innerHTML if it contains inner bound fields
         const t = zuix.$(boundData);
-        if (t.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).length() === 0) {
+        if (t.find(util.dom.queryAttribute(_optionAttributes.zField)).length() === 0) {
           z$(el).html('').append(document.createTextNode(boundData.innerHTML));
         }
       }
-      processed.push('href', 'innerHTML');
       break;
     case 'input':
       switch (el.type) {
@@ -132,49 +129,23 @@ function dataBind(el, boundData) {
           if (el.value == value) {
             el.checked = true;
           }
-          processed.push('checked');
           break;
         default:
           el.value = value;
-          processed.push('value');
       }
       break;
     case 'select':
-      z$.each(el.options, function(i, opt, $opt) {
+      z$.each(el.options, function(i, opt) {
         if (opt.value == value) {
           el.selectedIndex = i;
           return false;
         }
       });
-      processed.push('value');
       break;
     default:
       const v = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : document.createTextNode(boundData));
       z$(el).html('').append(v);
-      processed.push('innerHTML');
   }
-  /* TODO: maybe deprecate this (tag's attributes mapping)
-  // copy not already processed attributes from `boundData` to `el`
-  if (boundData instanceof Element && boundData.attributes != null) {
-    for (let i = 0; i < boundData.attributes.length; i++) {
-      const attr = boundData.attributes[i];
-      let attrValue = attr.value;
-      const process = attrValue[0] === '=' || attrValue[0] === '-' || attrValue[0] === '+';
-      if (process && processed.indexOf(attr.name) < 0 && attr.specified &&
-          _optionAttributes.dataUiField.split(',').indexOf(attr.name) < 0 &&
-          !attr.name.startsWith('z-')) {
-        if (attrValue[0] === '+' && el.hasAttribute(attr.name)) {
-          // append
-          attrValue = el.getAttribute(attr.name) + attrValue.substring(1);
-        } else if (attrValue[0] === '-' && el.hasAttribute(attr.name)) {
-          // prepend
-          attrValue = attrValue.substring(1) + ' ' + el.getAttribute(attr.name);
-        }
-        util.dom.setAttribute(el, attr.name, attrValue);
-      }
-    }
-  }
-  */
 }
 
 /**
@@ -185,7 +156,7 @@ function dataBind(el, boundData) {
  * @property {string} componentId The component identifier "`[<path>/]<name>`".
  * @property {string} path Gets the base path of this component.
  * @property {string} name Gets the name of this component (last part of the path).
- * @property {ZxQuery} $ Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+ * @property {ZxQuery} $ Access the view of this component. Use this to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
  * @property {Object.<string, ActiveRefreshHandler>} handlers List component-local `@` handlers.
  *
  * @constructor
@@ -269,13 +240,13 @@ function ComponentContext(zuixInstance, options, eventCallback) {
       // update bound field if found in the view
       const view = z$(this.context.view());
       if (view.get()) {
-        let fld = view.find(util.dom.queryAttribute(_optionAttributes.dataBindTo, path));
+        let fld = view.find(util.dom.queryAttribute(_optionAttributes.zBind, path));
         if (fld.get() != null) {
           fld.each(function(i, f) {
             dataBind(f, value);
           });
         }
-        fld = view.find(util.dom.queryAttribute(_optionAttributes.dataUiField, path));
+        fld = view.find(util.dom.queryAttribute(_optionAttributes.zField, path));
         if (fld.get() != null) {
           fld.each(function(i, f) {
             dataBind(f, value);
@@ -320,11 +291,11 @@ ComponentContext.prototype.dispose = function() {
       this._c.trigger('component:dispose', this._c.view(), true);
       // TODO: restore all attributes state to the original state (before component creation)
       this._c.view()
-          .attr(_optionAttributes.dataUiComponent, null)
-          .attr(_optionAttributes.dataUiContext, null)
-          .attr(_optionAttributes.dataUiLoad, null)
-          .attr(_optionAttributes.dataUiLoaded, null)
-          .attr(_optionAttributes.dataUiReady, null)
+          .attr(_optionAttributes.zComponent, null)
+          .attr(_optionAttributes.zContext, null)
+          .attr(_optionAttributes.zLoad, null)
+          .attr(_optionAttributes.zLoaded, null)
+          .attr(_optionAttributes.zReady, null)
           .attr(_optionAttributes.resourceType.view, null)
           .attr(_optionAttributes.resourceType.controller, null)
           .attr(_optionAttributes.resourceType.file, null) // not implemented yet
@@ -412,8 +383,8 @@ ComponentContext.prototype.view = function(view) {
   if (this._view != null) {
     // view style encapsulation
     const q = '*' +
-            util.dom.cssNot(_optionAttributes.dataUiLoad).getAll() +
-            util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+            util.dom.cssNot(_optionAttributes.zLoad).getAll() +
+            util.dom.cssNot(_optionAttributes.zInclude).getAll();
     // mark all elements with a css identifier attribute
     z$(this._view).attr(cssId, null).find(q).each(function(i, v) {
       this.attr(cssId, null);
@@ -428,11 +399,11 @@ ComponentContext.prototype.view = function(view) {
         const a = el.attributes.item(j);
         const attributeName = a.name;
         if (attributeName.length > 1 && attributeName.startsWith('#')) {
-          if ($el.attr(_optionAttributes.dataUiField) == null) {
-            $el.attr(_optionAttributes.dataUiField, attributeName.substring(1));
+          if ($el.attr(_optionAttributes.zField) == null) {
+            $el.attr(_optionAttributes.zField, attributeName.substring(1));
           }
-          if ($el.attr(_optionAttributes.dataBindTo) == null && a.value != null && a.value.length > 0) {
-            $el.attr(_optionAttributes.dataBindTo, a.value);
+          if ($el.attr(_optionAttributes.zBind) == null && a.value != null && a.value.length > 0) {
+            $el.attr(_optionAttributes.zBind, a.value);
           }
         }
       }
@@ -451,7 +422,7 @@ ComponentContext.prototype.view = function(view) {
     const viewDiv = z$.wrapElement('div', view);
     if (viewDiv.firstElementChild != null) {
       // remove z-view attribute from template if present on root node
-      if (util.dom.getAttribute(viewDiv.firstElementChild, _optionAttributes.dataUiView) != null) {
+      if (util.dom.getAttribute(viewDiv.firstElementChild, _optionAttributes.zView) != null) {
         if (viewDiv.children.length === 1) {
           view = viewDiv.firstElementChild.innerHTML;
         }
@@ -473,19 +444,19 @@ ComponentContext.prototype.view = function(view) {
       if (this.attr(_optionAttributes.zuixLoaded) !== 'true') {
         this.attr(_optionAttributes.zuixLoaded, 'true');
         /* if (el.src != null && el.src.length > 0) {
-                    var clonedScript = document.createElement('script');
-                    setAttribute(clonedScript, _optionAttributes.zuixLoaded, 'true');
-                    clonedScript.onload = function () {
-                        // TODO: ...
-                    };
-                    if (!util.isNoU(this.type) && this.type.length > 0)
-                        clonedScript.type = this.type;
-                    if (!util.isNoU(this.text) && this.text.length > 0)
-                        clonedScript.text = this.text;
-                    if (!util.isNoU(this.src) && this.src.length > 0)
-                        clonedScript.src = this.src;
-                    this.get().parentNode.insertBefore(clonedScript, this.get());
-                } else */
+          var clonedScript = document.createElement('script');
+          setAttribute(clonedScript, _optionAttributes.zuixLoaded, 'true');
+          clonedScript.onload = function () {
+              // TODO: ...
+          };
+          if (!util.isNoU(this.type) && this.type.length > 0)
+              clonedScript.type = this.type;
+          if (!util.isNoU(this.text) && this.text.length > 0)
+              clonedScript.text = this.text;
+          if (!util.isNoU(this.src) && this.src.length > 0)
+              clonedScript.src = this.src;
+          this.get().parentNode.insertBefore(clonedScript, this.get());
+        } else */
         Function(el.innerHTML).call(window);
       }
     });
@@ -499,7 +470,7 @@ ComponentContext.prototype.view = function(view) {
     if (this._container != null && this.componentId !== 'default') {
       this._view = z$.wrapElement('div', view.outerHTML).firstElementChild;
       // remove z-view attribute if present on root node
-      util.dom.setAttribute(this._view, _optionAttributes.dataUiView, null);
+      util.dom.setAttribute(this._view, _optionAttributes.zView, null);
       this._container.appendChild(this._view);
       this._view = this._container;
     } else this._view = view;
@@ -510,8 +481,8 @@ ComponentContext.prototype.view = function(view) {
   initializeTemplateFields(v);
 
   // Disable loading of nested components until the component is ready
-  v.find(util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded))).each(function(i, v) {
-    this.attr(_optionAttributes.dataUiLoaded, 'false');
+  v.find(util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded))).each(function(i, v) {
+    this.attr(_optionAttributes.zLoaded, 'false');
   });
 
   // View style encapsulation
@@ -588,8 +559,8 @@ ComponentContext.prototype.checkEncapsulation = function() {
     if (this._container != null || this._style != null) {
       // view style encapsulation
       const q = '*' +
-          util.dom.cssNot(_optionAttributes.dataUiLoad).getAll() +
-          util.dom.cssNot(_optionAttributes.dataUiInclude).getAll();
+          util.dom.cssNot(_optionAttributes.zLoad).getAll() +
+          util.dom.cssNot(_optionAttributes.zInclude).getAll();
       // mark all elements with a css identifier attribute
       v.find(q).each(function(i, v) {
         this.attr(cssId, '');
@@ -943,9 +914,9 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
   } else {
     // TODO: check if view caching is working in this case too
     const inlineView = z$().find(util.dom.queryAttribute(
-        _optionAttributes.dataUiView,
+        _optionAttributes.zView,
         htmlPath,
-        util.dom.cssNot(_optionAttributes.dataUiComponent)
+        util.dom.cssNot(_optionAttributes.zComponent)
     ));
     if (inlineView.length() > 0) {
       let inlineElement = inlineView.get(0);
@@ -969,7 +940,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
       if (context.view() === inlineElement || (context.container() != null && context.container().contains(inlineElement))) {
         // TODO: test this case better (or finally integrate some unit testing =))
         // TODO: "html:parse" will not fire in this case (and this is the wanted behavior)
-        inlineView.attr(_optionAttributes.dataUiView, null);
+        inlineView.attr(_optionAttributes.zView, null);
         context._view = inlineElement;
         // trigger `view:process` hook
         this.trigger(this, 'view:process', z$(context.view()));
@@ -1022,15 +993,11 @@ ComponentContext.prototype.viewToModel = function() {
   const model = {};
   const $view = z$(this._view);
   // create data model from inline view fields
-  $view.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el, $el) {
+  $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
     if (!zuix.isDirectComponentElement($view, $el)) {
       return true;
     }
-    const name = this.attr(_optionAttributes.dataUiField);
-    const value =
-            // TODO: this is a work around for IE where "el.innerHTML" is lost after view replacing
-            (!util.isNoU(el.innerHTML) && util.isIE()) ?
-                el.cloneNode(true) : el;
+    const name = this.attr(_optionAttributes.zField);
     // TODO: the following code is disabled because
     //       causes "proxy revoked" exception when unloading and reloading a component
     // dotted field path to nested objects
@@ -1045,7 +1012,7 @@ ComponentContext.prototype.viewToModel = function() {
         cur = cur[path[p]];
       }
       cur[path[path.length - 1]] = value;
-    } else*/ model[name] = value;
+    } else*/ model[name] = el;
   });
   this._model = zuix.observable(model)
       .subscribe(this._modelListener)
@@ -1068,13 +1035,13 @@ ComponentContext.prototype.modelToView = function() {
     // the '#' member contains all `z-field` mapped as a context['#'] property (ZxQuery object)
     _t['#'] = {};
     const $view = z$(this._view);
-    $view.find(util.dom.queryAttribute(_optionAttributes.dataUiField)).each(function(i, el, $el) {
+    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
       if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
-      let boundField = $el.attr(_optionAttributes.dataBindTo);
+      let boundField = $el.attr(_optionAttributes.zBind);
       if (boundField == null) {
-        boundField = $el.attr(_optionAttributes.dataUiField);
+        boundField = $el.attr(_optionAttributes.zField);
       }
       const v = z$(_t._view);
       // map `z-field`s as properties of the context's member '#' if the variable name is valid

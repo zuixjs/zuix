@@ -43,6 +43,7 @@ function ObservableListener() {}
  * @param {string} path Full property path
  * @returns undefined
  */
+// eslint-disable-next-line no-unused-vars
 ObservableListener.prototype.get = function(target, key, value, path) {};
 
 /**
@@ -55,6 +56,7 @@ ObservableListener.prototype.get = function(target, key, value, path) {};
  * @param {Object} old A copy of the object before the update
  * @returns undefined
  */
+// eslint-disable-next-line no-unused-vars
 ObservableListener.prototype.set = function(target, key, value, path, old) {};
 
 /**
@@ -67,6 +69,7 @@ ObservableListener.prototype.set = function(target, key, value, path, old) {};
  * @param {Object} old A copy of the object before the update
  * @returns undefined
  */
+// eslint-disable-next-line no-unused-vars
 ObservableListener.prototype.change = function(target, key, value, path, old) {};
 
-module.export = ObservableListener;
+module.exports = ObservableListener;

@@ -61,6 +61,7 @@ ControllerInstance.prototype.onDispose = function() {
 /**
  * @type {ContextControllerUpdateCallback}
  */
+// eslint-disable-next-line no-unused-vars
 ControllerInstance.prototype.onUpdate = function(target, key, value, path, old) {
 };
 

@@ -29,10 +29,6 @@
 // Generic utility class
 module.exports = {
 
-  isIE: function() {
-    return (window.navigator.userAgent.indexOf('Trident') > 0);
-  },
-
   isNoU: function(obj) {
     return (typeof obj === 'undefined' || obj === null);
   },
@@ -245,6 +241,7 @@ module.exports = {
             const selectors = s.split(',');
             return (i >= selectors.length || i == null) ? selectors[0] : selectors[i];
           },
+          // eslint-disable-next-line no-unused-vars
           getAll: function(i) {
             const selectors = s.split(',');
             return selectors.join('');

@@ -82,8 +82,8 @@ function saveBundle() {
   headerSummary += '\n\n';
   let bundle = headerSummary + serialize(zuix.bundle());
   // revert loaded status before exporting
-  bundle = bundle.replace(new RegExp(_optionAttributes.dataUiLoaded+'="true"', 'g'),
-      _optionAttributes.dataUiLoaded+'="false"');
+  bundle = bundle.replace(new RegExp(_optionAttributes.zLoaded+'="true"', 'g'),
+      _optionAttributes.zLoaded+'="false"');
   bundle = bundle.replace(new RegExp(_optionAttributes.zuixLoaded+'="true"', 'g'),
       _optionAttributes.zuixLoaded+'="false"');
   // save bundle
@@ -92,7 +92,7 @@ function saveBundle() {
   return bundle;
 }
 
-module.exports = function(root) {
+module.exports = function() {
   if (zuix == null) {
     alert('Error: ZuixBundler requires Zuix to be included first.');
     return;

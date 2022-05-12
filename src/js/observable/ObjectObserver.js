@@ -26,8 +26,6 @@
 
 'use strict';
 
-const ObservableListener =
-    require('./ObservableListener');
 const ObservableObject =
     require('./ObservableObject');
 
@@ -45,6 +43,7 @@ function ObjectObserver() {
   this.observableList = [];
 }
 
+/** @private */
 function getPath(observable) {
   let path = '';
   while (observable && observable.__path__) {
@@ -59,6 +58,7 @@ function getPath(observable) {
   }
   return path;
 }
+/** @private */
 function getListeners(observable) {
   const listeners = [];
   observable.__parents__.forEach(function(po) {
@@ -66,8 +66,9 @@ function getListeners(observable) {
   });
   listeners.push(...observable.__listeners__);
   return listeners;
-};
+}
 
+/** @private */
 function deleteObservable(targetObservable) {
   getListeners(targetObservable).forEach(
       /** @param {ObservableListener} l */

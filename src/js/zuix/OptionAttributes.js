@@ -25,37 +25,37 @@
  */
 
 const OptionAttributes = Object.freeze({
-  dataBindModel:
-        'z-model,data-bind-model',
-  dataBindTo:
-        'z-bind,data-bind-to',
-  dataUiBehavior:
+  zModel:
+        'z-model',
+  zBind:
+        'z-bind',
+  zBehavior:
         'z-behavior',
-  dataUiOn:
+  zOn:
         'z-on',
-  dataUiComponent:
+  zComponent:
         'z-component',
-  dataUiContext:
-        'z-context,data-ui-context',
-  dataUiField:
-        'z-field,data-ui-field',
-  dataUiInclude:
-        'z-include,data-ui-include',
-  dataUiLazyload:
-        'z-lazy,data-ui-lazyload',
-  dataUiLoad:
-        'z-load,data-ui-load',
-  dataUiLoaded:
+  zContext:
+        'z-context',
+  zField:
+        'z-field',
+  zInclude:
+        'z-include',
+  zLazy:
+        'z-lazy',
+  zLoad:
+        'z-load',
+  zLoaded:
         'z-loaded',
-  dataUiOptions:
-        'z-options,data-ui-options',
-  dataUiPriority:
-        'z-priority,data-ui-priority',
-  dataUiView:
-        'z-view,data-ui-view',
+  zOptions:
+        'z-options',
+  zPriority:
+        'z-priority',
+  zView:
+        'z-view',
   zuixLoaded:
         'zuix-loaded',
-  dataUiReady:
+  zReady:
         'z-ready',
   // Types attributes
   resourceType: {

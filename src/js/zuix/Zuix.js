@@ -158,13 +158,13 @@ const _objectObserver = new ObjectObserver();
 
 /** @private */
 const _implicitLoadDefaultList = [
-  util.dom.queryAttribute(_optionAttributes.dataUiContext),
-//  util.dom.queryAttribute(_optionAttributes.dataUiComponent),
-  util.dom.queryAttribute(_optionAttributes.dataUiOptions),
-  util.dom.queryAttribute(_optionAttributes.dataBindModel),
-  util.dom.queryAttribute(_optionAttributes.dataUiOn),
-  util.dom.queryAttribute(_optionAttributes.dataUiBehavior),
-  util.dom.queryAttribute(_optionAttributes.dataUiReady)
+  util.dom.queryAttribute(_optionAttributes.zContext),
+//  util.dom.queryAttribute(_optionAttributes.zComponent),
+  util.dom.queryAttribute(_optionAttributes.zOptions),
+  util.dom.queryAttribute(_optionAttributes.zModel),
+  util.dom.queryAttribute(_optionAttributes.zOn),
+  util.dom.queryAttribute(_optionAttributes.zBehavior),
+  util.dom.queryAttribute(_optionAttributes.zReady)
 ];
 
 /**
@@ -209,7 +209,7 @@ function Zuix() {
     handlers: {
       // Default component 'refresh' handler, this should be never overridden
       'sync': function($view, $el, contextData, refreshCallback) {
-        const field = $el.attr('@sync') || $el.attr(_optionAttributes.dataUiField);
+        const field = $el.attr('@sync') || $el.attr(_optionAttributes.zField);
         $el.on('keyup change keydown', function() {
           const el = $el.get();
           let val = $el.value();
@@ -334,7 +334,7 @@ function field(fieldName, container, context) {
   let el = null;
   if (typeof context._fieldCache[fieldName] === 'undefined') {
     el = z$(container)
-        .find(util.dom.queryAttribute(_optionAttributes.dataUiField, fieldName) + ',[\\#'+fieldName+']');
+        .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[\\#'+fieldName+']');
     if (el != null && el.length() > 0) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
@@ -576,11 +576,11 @@ function loadComponent(elements, componentId, type, options) {
    * @param {ZxQuery} container
    */
   const load = function(container) {
-    container.attr(_optionAttributes.dataUiLoad, componentId);
+    container.attr(_optionAttributes.zLoad, componentId);
     if (type) {
       container.attr(type, '');
     }
-    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || container.attr(_optionAttributes.dataUiLazyload) === 'true') {
+    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || container.attr(_optionAttributes.zLazy) === 'true') {
       if (options) {
         container.get().__zuix_loadOptions = options;
       }
@@ -612,7 +612,7 @@ function context(contextId, callback) {
   if (contextId instanceof z$.ZxQuery) {
     contextId = contextId.get();
   } else if (typeof contextId === 'string') {
-    const ctx = z$.find(util.dom.queryAttribute(_optionAttributes.dataUiContext, contextId));
+    const ctx = z$.find(util.dom.queryAttribute(_optionAttributes.zContext, contextId));
     if (ctx.length() > 0) contextId = ctx.get();
   }
   z$.each(_contextRoot, function(k, v) {
@@ -811,10 +811,10 @@ function createComponent(context, task) {
     }
 
     const v = z$(context.view());
-    // if dataUiContext it's not null, a main controller was already loaded
+    // if zContext it's not null, a main controller was already loaded
     // on this view, so we preserve the main controller's context id
-    if (v.attr(_optionAttributes.dataUiContext) == null) {
-      v.attr(_optionAttributes.dataUiContext, context.contextId);
+    if (v.attr(_optionAttributes.zContext) == null) {
+      v.attr(_optionAttributes.zContext, context.contextId);
     }
 
     _log.d(context.componentId, 'component:initializing');
@@ -830,12 +830,12 @@ function createComponent(context, task) {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
         task && task.end();
-        v.attr(_optionAttributes.dataUiReady, 'true');
+        v.attr(_optionAttributes.zReady, 'true');
       };
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
-      if (!util.isNoU(c.view()) && c.view().attr(_optionAttributes.dataUiComponent) == null) {
-        // add the `dataUiComponent` attribute
-        c.view().attr(_optionAttributes.dataUiComponent, '');
+      if (!util.isNoU(c.view()) && c.view().attr(_optionAttributes.zComponent) == null) {
+        // add the `zComponent` attribute
+        c.view().attr(_optionAttributes.zComponent, '');
       }
       // if no model is supplied, try auto-create from view fields
       if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
@@ -929,8 +929,8 @@ function createComponent(context, task) {
 function isDirectComponentElement($view, $el) {
   const exclusionList = [
     ..._implicitLoadDefaultList,
-    util.dom.queryAttribute(_optionAttributes.dataUiLoad),
-    util.dom.queryAttribute(_optionAttributes.dataUiInclude)
+    util.dom.queryAttribute(_optionAttributes.zLoad),
+    util.dom.queryAttribute(_optionAttributes.zInclude)
   ].join(',');
   const $cv = $el.parent('pre,code,' + exclusionList);
   return $cv.get() === $view.get();
@@ -974,9 +974,9 @@ function initController(ctrl) {
     // re-enable nested components loading
     z$().one('componentize:end', function() {
       setTimeout(function() {
-        $view.find(util.dom.queryAttribute(_optionAttributes.dataUiLoaded, 'false', util.dom.cssNot(_optionAttributes.dataUiComponent)))
+        $view.find(util.dom.queryAttribute(_optionAttributes.zLoaded, 'false', util.dom.cssNot(_optionAttributes.zComponent)))
             .each(function(i, v) {
-              this.attr(_optionAttributes.dataUiLoaded, null);
+              this.attr(_optionAttributes.zLoaded, null);
             });
         // render nested components
         zuix.componentize($view);
@@ -1017,7 +1017,7 @@ function initController(ctrl) {
             const runActiveTagHandler = function() {
               activeTagHandler.call(el, $view, $el, data, refreshCallback, activeTagName);
             };
-            if ($el.attr(_optionAttributes.dataUiLoad) && $el.attr(_optionAttributes.dataUiReady) !== 'true') {
+            if ($el.attr(_optionAttributes.zLoad) && $el.attr(_optionAttributes.zReady) !== 'true') {
               // if the element is a component, asynchronously wait
               // for the component to load before starting the handler
               if (zuix.context($el) == null) {
@@ -1148,7 +1148,7 @@ function initController(ctrl) {
         if (ctx._refreshHandler && !ctx._refreshHandler.initialized) {
           let loadedNested = true;
           allocated.forEach(function(h) {
-            if (h.$element.attr(_optionAttributes.dataUiLoad) != null || h.$element.attr(_optionAttributes.dataUiInclude) != null) {
+            if (h.$element.attr(_optionAttributes.zLoad) != null || h.$element.attr(_optionAttributes.zInclude) != null) {
               loadedNested = zuix.context(h.$element) != null && zuix.context(h.$element).isReady;
               return loadedNested;
             }
@@ -1844,8 +1844,8 @@ Zuix.prototype.isDirectComponentElement = function($view, $el) {
   * @private */
 Zuix.prototype.resolveImplicitLoad = function(element) {
   // Resolve implicit loadable component
-  const notLoad = util.dom.cssNot(_optionAttributes.dataUiLoad).get();
-  const notReady = util.dom.cssNot(_optionAttributes.dataUiReady).get();
+  const notLoad = util.dom.cssNot(_optionAttributes.zLoad).get();
+  const notReady = util.dom.cssNot(_optionAttributes.zReady).get();
   const implicitDefault = _implicitLoadDefaultList.join(',')
       .split(',')
       .map(function(a) {
@@ -1854,8 +1854,8 @@ Zuix.prototype.resolveImplicitLoad = function(element) {
   z$(element)
       .find(implicitDefault)
       .each(function(i, el, $el) {
-        $el.attr(_optionAttributes.dataUiLoad, 'default')
-            .attr(_optionAttributes.dataUiLazyload, 'false');
+        $el.attr(_optionAttributes.zLoad, 'default')
+            .attr(_optionAttributes.zLazy, 'false');
       });
 };
 

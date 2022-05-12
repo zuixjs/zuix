@@ -426,6 +426,7 @@ var ctrl = zuix.controller(function(cp) {
  * @param {!string} componentId Component identifier
  * @return {ContextController} The `{ContextController}` itself.
  */
+// eslint-disable-next-line no-unused-vars
 ContextController.prototype.for = function(componentId) {
   // this method is "attached" from Zuix.js on controller initialization
   return this;

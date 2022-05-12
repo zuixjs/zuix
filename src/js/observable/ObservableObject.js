@@ -26,9 +26,6 @@
 
 'use strict';
 
-const ObservableListener =
-    require('./ObservableListener');
-
 /**
  * ObservableObject class.
  *

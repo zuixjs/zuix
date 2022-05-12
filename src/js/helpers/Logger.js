@@ -23,6 +23,7 @@
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
+/* eslint-disable camelcase */
 
 'use strict';
 
@@ -113,7 +114,7 @@ function Logger(ctx) {
     // route event
     if (_global.__zuix__debug || level === 'ERROR' || level === 'WARN') {
       this.args(ctx, level, args);
-      _console.log.apply(_console, args);
+      _console.log(...args);
     }
   };
 }
@@ -160,55 +161,55 @@ Logger.prototype.console = function(enable) {
 /**
  * Logs information messages.
  *
- * @param {Object[]} ...args
+ * @param {Object[]} args
  * @return {Logger}
  */
-Logger.prototype.info = function() {
-  this.log('INFO', arguments);
+Logger.prototype.info = function(...args) {
+  this.log('INFO', args);
   return this;
 };
 Logger.prototype.i = Logger.prototype.l = Logger.prototype.log = Logger.prototype.info;
 /**
  * Logs warning messages.
  *
- * @param {Object[]} ...args
+ * @param {Object[]} args
  * @return {Logger}
  */
-Logger.prototype.warn = function() {
-  this.log('WARN', arguments);
+Logger.prototype.warn = function(...args) {
+  this.log('WARN', args);
   return this;
 };
 Logger.prototype.w = Logger.prototype.warn;
 /**
  * Logs error messages.
  *
- * @param {Object[]} ...args
+ * @param {Object[]} args
  * @return {Logger}
  */
-Logger.prototype.error = function() {
-  this.log('ERROR', arguments);
+Logger.prototype.error = function(...args) {
+  this.log('ERROR', args);
   return this;
 };
 Logger.prototype.e = Logger.prototype.error;
 /**
  * Logs debug messages.
  *
- * @param {Object[]} ...args
+ * @param {Object[]} args
  * @return {Logger}
  */
-Logger.prototype.debug = function() {
-  this.log('DEBUG', arguments);
+Logger.prototype.debug = function(...args) {
+  this.log('DEBUG', args);
   return this;
 };
 Logger.prototype.d = Logger.prototype.debug;
 /**
  * Logs trace messages.
  *
- * @param {Object[]} ...args
+ * @param {Object[]} args
  * @return {Logger}
  */
-Logger.prototype.trace = function() {
-  this.log('TRACE', arguments);
+Logger.prototype.trace = function(...args) {
+  this.log('TRACE', args);
   return this;
 };
 Logger.prototype.t = Logger.prototype.trace;

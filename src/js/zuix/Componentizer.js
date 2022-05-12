@@ -213,15 +213,15 @@ function queueLoadables(element) {
     element = element.get();
   }
   // Select all loadable elements
-  const q = util.dom.queryAttribute(_optionAttributes.dataUiLoad, null, util.dom.cssNot(_optionAttributes.dataUiLoaded)) + ',' +
-    util.dom.queryAttribute(_optionAttributes.dataUiInclude, null, util.dom.cssNot(_optionAttributes.dataUiLoaded));
+  const q = util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded)) + ',' +
+    util.dom.queryAttribute(_optionAttributes.zInclude, null, util.dom.cssNot(_optionAttributes.zLoaded));
   let waitingLoad = z$(element).find(q);
   waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
   // Process elements options
   const waitingTasks = [];
   for (let w = 0; w < waitingLoad.length; w++) {
     const el = waitingLoad[w];
-    let pri = +(util.dom.getAttribute(el, _optionAttributes.dataUiPriority));
+    let pri = +(util.dom.getAttribute(el, _optionAttributes.zPriority));
     if (isNaN(pri)) pri = 0;
     // adjust priority by element level
     let level = 0;
@@ -229,7 +229,7 @@ function queueLoadables(element) {
     let ignore = false;
     while (parent != null && parent !== document) {
       level++;
-      if (util.dom.getAttribute(parent, _optionAttributes.dataUiView) != null) {
+      if (util.dom.getAttribute(parent, _optionAttributes.zView) != null) {
         ignore = true;
         break;
       }
@@ -255,9 +255,9 @@ function queueLoadables(element) {
       }
     }
     if (!alreadyAdded) {
-      // Add attributes to element if data-ui-options was provided
+      // Add attributes to element if z-options was provided
       const el = waitingTasks[i].element;
-      const options = util.dom.getAttribute(el, _optionAttributes.dataUiOptions);
+      const options = util.dom.getAttribute(el, _optionAttributes.zOptions);
       applyOptions(el, options);
       // Add task to the queue
       _componentizeQueue.push(waitingTasks[i]);
@@ -328,14 +328,14 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element, opts) {
   const v = z$(element);
-  if (v.attr(_optionAttributes.dataUiLoaded) != null || v.parent('pre,code').length() > 0) {
+  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length() > 0) {
     //_log.w('Skipped', element);
     return false;
   }
-  v.attr(_optionAttributes.dataUiLoaded, 'true');
+  v.attr(_optionAttributes.zLoaded, 'true');
 
   /** @type {ContextOptions} */
-  let options = v.attr(_optionAttributes.dataUiOptions);
+  let options = v.attr(_optionAttributes.zOptions);
   if (!util.isNoU(options)) {
     options = parseOptions(element, options);
     // copy passed options
@@ -350,7 +350,7 @@ function loadInline(element, opts) {
     Object.assign(options, opts);
   }
 
-  const contextId = v.attr(_optionAttributes.dataUiContext);
+  const contextId = v.attr(_optionAttributes.zContext);
   if (!util.isNoU(contextId)) {
     // inherit options from context if already exists
     const ctx = zuix.context(contextId);
@@ -368,13 +368,13 @@ function loadInline(element, opts) {
     options.container = element;
   }
 
-  let componentId = v.attr(_optionAttributes.dataUiLoad);
+  let componentId = v.attr(_optionAttributes.zLoad);
   if (util.isNoU(componentId)) {
-    const include = v.attr(_optionAttributes.dataUiInclude);
+    const include = v.attr(_optionAttributes.zInclude);
     if (include != null) {
       componentId = resolvePath(include);
-      v.attr(_optionAttributes.dataUiInclude, componentId);
-      v.attr(_optionAttributes.dataUiComponent, null);
+      v.attr(_optionAttributes.zInclude, componentId);
+      v.attr(_optionAttributes.zComponent, null);
       // Static include hove no controller
       if (util.isNoU(options.controller)) {
         options.controller = function() {};
@@ -384,10 +384,10 @@ function loadInline(element, opts) {
     }
   } else {
     componentId = resolvePath(componentId);
-    v.attr(_optionAttributes.dataUiLoad, componentId);
+    v.attr(_optionAttributes.zLoad, componentId);
     // check for `view` and `ctrl` type attributes
     if (componentId !== 'default' && v.attr(_optionAttributes.resourceType.view) !== null) {
-      v.attr(_optionAttributes.dataUiComponent, null);
+      v.attr(_optionAttributes.zComponent, null);
       // Static includes have no controller
       if (util.isNoU(options.controller)) {
         options.controller = function() {};
@@ -415,22 +415,22 @@ function loadInline(element, opts) {
 
   // inline attributes have precedence over ```options```
 
-  const model = v.attr(_optionAttributes.dataBindModel);
+  const model = v.attr(_optionAttributes.zModel);
   if (!util.isNoU(model) && model.length > 0) {
     options.model = parseOptions(element, model);
   }
 
-  const behavior = v.attr(_optionAttributes.dataUiBehavior);
+  const behavior = v.attr(_optionAttributes.zBehavior);
   if (!util.isNoU(behavior) && behavior.length > 0) {
     options.behavior = parseOptions(element, behavior);
   }
 
-  const on = v.attr(_optionAttributes.dataUiOn);
+  const on = v.attr(_optionAttributes.zOn);
   if (!util.isNoU(on) && on.length > 0) {
     options.on = parseOptions(element, on);
   }
 
-  const priority = v.attr(_optionAttributes.dataUiPriority);
+  const priority = v.attr(_optionAttributes.zPriority);
   if (!util.isNoU(priority)) {
     options.priority = +(priority);
   }
@@ -472,7 +472,7 @@ function resolvePath(path) {
 /** @private */
 function parseOptions(element, attributeValue) {
   if (typeof attributeValue === 'string') {
-    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.dataUiLoad));
+    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.zLoad));
     if (parentComponent.get()) {
       // parent component context should be already loaded
       const context = zuix.context(parentComponent);
@@ -496,13 +496,13 @@ function applyOptions(element, options) {
   // TODO: should check if options object is valid
   if (element != null && options != null) {
     if (options.lazyLoad != null) {
-      util.dom.setAttribute(element, _optionAttributes.dataUiLazyload, options.lazyLoad.toString().toLowerCase());
+      util.dom.setAttribute(element, _optionAttributes.zLazy, options.lazyLoad.toString().toLowerCase());
     }
     if (options.contextId != null) {
-      util.dom.setAttribute(element, _optionAttributes.dataUiContext, options.contextId.toString().toLowerCase());
+      util.dom.setAttribute(element, _optionAttributes.zContext, options.contextId.toString().toLowerCase());
     }
     if (options.componentId != null) {
-      util.dom.setAttribute(element, _optionAttributes.dataUiLoad, options.componentId.toString().toLowerCase());
+      util.dom.setAttribute(element, _optionAttributes.zLoad, options.componentId.toString().toLowerCase());
     }
     // TODO: eventually map other attributes from options
   }
@@ -553,15 +553,15 @@ function addLazyContainer(el) {
 /** @private */
 function lazyElementCheck(element) {
   // Check if element has explicit lazyLoad=false flag set
-  if (util.dom.getAttribute(element, _optionAttributes.dataUiLazyload) === 'false') {
+  if (util.dom.getAttribute(element, _optionAttributes.zLazy) === 'false') {
     return false;
   }
   // Check if element is already added to Lazy-Element list
   let le = getLazyElement(element);
   if (le == null) {
     // Check if element inherits lazy-loading from a parent lazy container/scroll
-    const q = util.dom.queryAttribute(_optionAttributes.dataUiLazyload, 'scroll') + ',' +
-            util.dom.queryAttribute(_optionAttributes.dataUiLazyload, 'true');
+    const q = util.dom.queryAttribute(_optionAttributes.zLazy, 'scroll') + ',' +
+            util.dom.queryAttribute(_optionAttributes.zLazy, 'true');
     const lazyContainer = element.parentNode && z$.getClosest(element.parentNode, q);
     if (lazyContainer != null) {
       le = addLazyElement(element);
@@ -570,7 +570,7 @@ function lazyElementCheck(element) {
       if (lc == null) {
         lc = addLazyContainer(lazyContainer);
         // if it's of type 'scroll' attach 'scroll' event handler
-        if (util.dom.getAttribute(lazyContainer, _optionAttributes.dataUiLazyload) === 'scroll') {
+        if (util.dom.getAttribute(lazyContainer, _optionAttributes.zLazy) === 'scroll') {
           (function(instance, lc) {
             let lastScroll = new Date().getTime();
             let timeout;
@@ -590,7 +590,7 @@ function lazyElementCheck(element) {
         }
       }
       return true;
-    } else if (util.dom.getAttribute(element, _optionAttributes.dataUiLazyload) === 'true') {
+    } else if (util.dom.getAttribute(element, _optionAttributes.zLazy) === 'true') {
       // element has explicit lazyLoad=true flag set
       le = addLazyElement(element);
       return true;

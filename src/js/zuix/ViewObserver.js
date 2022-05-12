@@ -54,8 +54,9 @@ function ViewObserver(context) {
          * @param observer
          * @private
          */
+        // eslint-disable-next-line no-unused-vars
         function(mutationsList, observer) {
-          const zc = util.dom.queryAttribute(_optionAttributes.dataUiComponent);
+          const zc = util.dom.queryAttribute(_optionAttributes.zComponent);
           for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
               mutation.addedNodes.forEach(function(node) {

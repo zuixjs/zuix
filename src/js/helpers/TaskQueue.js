@@ -111,6 +111,7 @@ function TaskQueue(listener) {
  *
  * @param handler {function}
  */
+// eslint-disable-next-line no-unused-vars
 TaskQueue.prototype.callback = function(handler) { };
 TaskQueue.prototype.queue = function(tid, fn, pri) {
   return this.taskQueue(tid, fn, pri);
