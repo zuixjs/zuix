@@ -1,14 +1,14 @@
-/* zUIx v1.0.39 22.05.05 20:01:42 */
+/* zUIx v1.1.0 22.05.12 11:57:28 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 460:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
-var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
+/* eslint-disable */
 /*!
  * @license
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
@@ -39,16 +39,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* eslint-disable */
 
 
 
-// TODO: detect whether running in a browser environment or not
-(function(root, factory) {
-  if (true) {
-    // AMD. Register as an anonymous module.
-    !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
-      return (root.zuix = (factory).call(root));
-    }).call(exports, __webpack_require__, exports, module),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else {}
-}(this, __webpack_require__(94)));
+module.exports = __webpack_require__(94)();
 
 
 /***/ }),
@@ -283,6 +274,7 @@ const ESCAPED_CHARS = {
   '\u2029': '\\u2029'
 };
 
+/** @private */
 function escapeUnsafeChars(unsafeChar) {
   return ESCAPED_CHARS[unsafeChar];
 }
@@ -302,6 +294,7 @@ module.exports = function serialize(obj, options) {
 
   // Returns placeholders for functions and regexps (identified by index)
   // which are later replaced by their string representation.
+  /** @private */
   function replacer(key, value) {
     if (!value) {
       return value;
@@ -459,8 +452,8 @@ function saveBundle() {
   headerSummary += '\n\n';
   let bundle = headerSummary + serialize(zuix.bundle());
   // revert loaded status before exporting
-  bundle = bundle.replace(new RegExp(_optionAttributes.dataUiLoaded+'="true"', 'g'),
-      _optionAttributes.dataUiLoaded+'="false"');
+  bundle = bundle.replace(new RegExp(_optionAttributes.zLoaded+'="true"', 'g'),
+      _optionAttributes.zLoaded+'="false"');
   bundle = bundle.replace(new RegExp(_optionAttributes.zuixLoaded+'="true"', 'g'),
       _optionAttributes.zuixLoaded+'="false"');
   // save bundle
@@ -469,7 +462,7 @@ function saveBundle() {
   return bundle;
 }
 
-module.exports = function(root) {
+module.exports = function() {
   if (zuix == null) {
     alert('Error: ZuixBundler requires Zuix to be included first.');
     return;
@@ -511,37 +504,37 @@ module.exports = function(root) {
  */
 
 const OptionAttributes = Object.freeze({
-  dataBindModel:
-        'z-model,data-bind-model',
-  dataBindTo:
-        'z-bind,data-bind-to',
-  dataUiBehavior:
+  zModel:
+        'z-model',
+  zBind:
+        'z-bind',
+  zBehavior:
         'z-behavior',
-  dataUiOn:
+  zOn:
         'z-on',
-  dataUiComponent:
+  zComponent:
         'z-component',
-  dataUiContext:
-        'z-context,data-ui-context',
-  dataUiField:
-        'z-field,data-ui-field',
-  dataUiInclude:
-        'z-include,data-ui-include',
-  dataUiLazyload:
-        'z-lazy,data-ui-lazyload',
-  dataUiLoad:
-        'z-load,data-ui-load',
-  dataUiLoaded:
+  zContext:
+        'z-context',
+  zField:
+        'z-field',
+  zInclude:
+        'z-include',
+  zLazy:
+        'z-lazy',
+  zLoad:
+        'z-load',
+  zLoaded:
         'z-loaded',
-  dataUiOptions:
-        'z-options,data-ui-options',
-  dataUiPriority:
-        'z-priority,data-ui-priority',
-  dataUiView:
-        'z-view,data-ui-view',
+  zOptions:
+        'z-options',
+  zPriority:
+        'z-priority',
+  zView:
+        'z-view',
   zuixLoaded:
         'zuix-loaded',
-  dataUiReady:
+  zReady:
         'z-ready',
   // Types attributes
   resourceType: {
