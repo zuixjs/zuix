@@ -334,7 +334,7 @@ function field(fieldName, container, context) {
   let el = null;
   if (typeof context._fieldCache[fieldName] === 'undefined') {
     el = z$(container)
-        .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[\\#'+fieldName+']');
+        .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[' + CSS.escape('#' + fieldName) + ']');
     if (el != null && el.length() > 0) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
@@ -747,6 +747,14 @@ function loadController(context, task) {
               }
               ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
               context.controller(getController(ctrlJs));
+              let cached = getCachedComponent(context.componentId);
+              if (cached == null) {
+                cached = {
+                  componentId: context.componentId,
+                  controller: context.controller()
+                };
+                _componentCache.push(cached);
+              }
             } catch (e) {
               _log.e(new Error(), e, ctrlJs, context);
               if (util.isFunction(context.error)) {
@@ -1564,7 +1572,9 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
           }
         },
         error: function() {
-          callback(resourcePath, null);
+          if (typeof callback === 'function') {
+            callback(resourcePath, null);
+          }
         }
       });
     } else if (typeof callback === 'function') {
