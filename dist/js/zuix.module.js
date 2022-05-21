@@ -1667,7 +1667,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
       if (ruleParts != null && ruleParts.length > 0) {
         ruleParts = ruleParts.replace(/\n/g, '');
         const classes = ruleParts.split(',');
-        let isMediaQuery = false;
+        let isAtRule = false;
         z$.each(classes, function(k, v) {
           // TODO: deprecate the 'single dot' notation
           if (v.trim() === '.' || v.trim() === ':host') {
@@ -1677,18 +1677,16 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
           } else if (v.trim()[0] === '@') {
             // leave it as is if it's an animation or media rule
             wrappedCss += v + ' ';
-            if (v.trim().toLowerCase().startsWith('@media')) {
-              isMediaQuery = true;
+            if (v.trim().toLowerCase().startsWith('@media') || v.trim().toLowerCase().startsWith('@supports')) {
+              isAtRule = true;
             }
           } else if (encapsulate) {
             // wrap the class names (v)
             v.split(/\s+/).forEach(function(attr) {
               attr = attr.trim();
               if (attr.lastIndexOf('.') > 0) {
-                attr.replace(/(?=[.])/gi, ',').split(',').forEach(function(attr2) {
-                  if (attr2 !== '') {
-                    wrappedCss += '\n' + attr2 + wrapperRule;
-                  }
+                attr.replace(/(?=\.)(?![^\[\]()]*(?:\[[^\[\]()]*([\])]))?([\])]))/gi, ',').split(',').forEach(function(attr2) {
+                  wrappedCss += attr2 !== '' ? attr2 + wrapperRule : '\n';
                 });
               } else if (attr !== '' && attr !== '>' && attr !== '*') {
                 wrappedCss += '\n' + attr + wrapperRule + ' ';
@@ -1709,9 +1707,9 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
             wrappedCss = wrappedCss.trim() + ', ';
           }
         });
-        if (isMediaQuery) {
-          const wrappedMediaQuery = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), encapsulate);
-          wrappedCss += '{\n  '+wrappedMediaQuery+'\n}';
+        if (isAtRule) {
+          const wrappedAtRule = z$.wrapCss(wrapperRule, ruleMatch[1].substring(ruleMatch[2].length).replace(/^{([^\0]*?)}$/, '$1'), encapsulate);
+          wrappedCss += '{\n  ' + wrappedAtRule + '\n}\n';
         } else {
           wrappedCss += ruleMatch[1].substring(ruleMatch[2].length) + '\n';
         }
@@ -5503,7 +5501,7 @@ function field(fieldName, container, context) {
   let el = null;
   if (typeof context._fieldCache[fieldName] === 'undefined') {
     el = z$(container)
-        .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[\\#'+fieldName+']');
+        .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[' + CSS.escape('#' + fieldName) + ']');
     if (el != null && el.length() > 0) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
@@ -5916,6 +5914,14 @@ function loadController(context, task) {
               }
               ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
               context.controller(getController(ctrlJs));
+              let cached = getCachedComponent(context.componentId);
+              if (cached == null) {
+                cached = {
+                  componentId: context.componentId,
+                  controller: context.controller()
+                };
+                _componentCache.push(cached);
+              }
             } catch (e) {
               _log.e(new Error(), e, ctrlJs, context);
               if (util.isFunction(context.error)) {
@@ -6733,7 +6739,9 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
           }
         },
         error: function() {
-          callback(resourcePath, null);
+          if (typeof callback === 'function') {
+            callback(resourcePath, null);
+          }
         }
       });
     } else if (typeof callback === 'function') {
