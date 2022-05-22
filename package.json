@@ -28,13 +28,13 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "^8.5.0",
+    "eslint": "^8.16.0",
     "eslint-config-google": "^0.14.0",
     "fs-readdir-recursive": "^1.1.0",
-    "jsdoc": "^3.6.7",
-    "replace": "^1.2.0",
-    "terminal-kit": "^2.3.0",
-    "webpack": "^5.65.0",
-    "webpack-cli": "^4.9.1"
+    "jsdoc": "^3.6.10",
+    "replace": "^1.2.1",
+    "terminal-kit": "^2.4.0",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
   }
 }

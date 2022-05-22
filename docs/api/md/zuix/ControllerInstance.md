@@ -255,7 +255,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 429](../../zuix/ContextController.js#L429)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 430](../../zuix/ContextController.js#L430)
 
 -->
 
@@ -421,7 +421,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 64](../../zuix/ControllerInstance.js#L64)
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 65](../../zuix/ControllerInstance.js#L65)
 
 -->
 
@@ -951,7 +951,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

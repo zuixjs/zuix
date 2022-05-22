@@ -86,7 +86,7 @@ all of its data such as the view template, the style, the controller, the data m
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 197](../../zuix/ComponentContext.js#L197)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 168](../../zuix/ComponentContext.js#L168)
 
 -->
 
@@ -115,7 +115,7 @@ Gets the name of this component (last part of the path).
 <a name="$"></a>
 #### $ &rarr; *[ZxQuery](../../helpers/ZxQuery)*
 
-Access the view of this component. Use this property to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
+Access the view of this component. Use this to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
 
 <a name="handlers"></a>
 #### handlers &rarr; *Object.&lt;string, <a href="#ActiveRefreshHandler">ActiveRefreshHandler</a>>*
@@ -141,7 +141,7 @@ otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 378](../../zuix/ComponentContext.js#L378)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 349](../../zuix/ComponentContext.js#L349)
 
 -->
 
@@ -163,7 +163,7 @@ Gets/Sets the component's controller handler.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 754](../../zuix/ComponentContext.js#L754)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 725](../../zuix/ComponentContext.js#L725)
 
 -->
 
@@ -179,7 +179,7 @@ Disposes the component context and all of its allocated resources.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 311](../../zuix/ComponentContext.js#L311)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 282](../../zuix/ComponentContext.js#L282)
 
 -->
 
@@ -200,7 +200,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 559](../../zuix/ComponentContext.js#L559)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 530](../../zuix/ComponentContext.js#L530)
 
 -->
 
@@ -242,7 +242,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1144](../../zuix/ComponentContext.js#L1144)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1111](../../zuix/ComponentContext.js#L1111)
 
 -->
 
@@ -269,7 +269,7 @@ changes.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 723](../../zuix/ComponentContext.js#L723)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 694](../../zuix/ComponentContext.js#L694)
 
 -->
 
@@ -336,7 +336,7 @@ is present on a field, data can be inherited from parent component.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1064](../../zuix/ComponentContext.js#L1064)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1031](../../zuix/ComponentContext.js#L1031)
 
 -->
 
@@ -360,7 +360,7 @@ Listens for a component event.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 797](../../zuix/ComponentContext.js#L797)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 768](../../zuix/ComponentContext.js#L768)
 
 -->
 
@@ -383,7 +383,7 @@ Gets/Sets the component's options.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 768](../../zuix/ComponentContext.js#L768)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 739](../../zuix/ComponentContext.js#L739)
 
 -->
 
@@ -410,7 +410,7 @@ element is returned.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 626](../../zuix/ComponentContext.js#L626)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 597](../../zuix/ComponentContext.js#L597)
 
 -->
 
@@ -442,7 +442,7 @@ argument is passed, the *ComponentContext* itself otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 398](../../zuix/ComponentContext.js#L398)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 369](../../zuix/ComponentContext.js#L369)
 
 -->
 
@@ -459,7 +459,7 @@ declared in the component's view.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1020](../../zuix/ComponentContext.js#L1020)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 991](../../zuix/ComponentContext.js#L991)
 
 -->
 
@@ -891,7 +891,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

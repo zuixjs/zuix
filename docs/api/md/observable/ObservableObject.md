@@ -85,7 +85,7 @@ ObservableObject class.
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 41](../../observable/ObservableObject.js#L41)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 38](../../observable/ObservableObject.js#L38)
 
 -->
 
@@ -105,7 +105,7 @@ Subscribe a listener to this observable events
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 63](../../observable/ObservableObject.js#L63)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 60](../../observable/ObservableObject.js#L60)
 
 -->
 
@@ -127,7 +127,7 @@ Unsubscribe a listener
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 80](../../observable/ObservableObject.js#L80)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 77](../../observable/ObservableObject.js#L77)
 
 -->
 
@@ -558,7 +558,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

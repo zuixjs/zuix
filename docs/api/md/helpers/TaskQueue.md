@@ -95,7 +95,7 @@ Task Queue Manager
 <!--
 
 *Source:*
-[helpers/TaskQueue.js](../../helpers/TaskQueue.js), [line 114](../../helpers/TaskQueue.js#L114)
+[helpers/TaskQueue.js](../../helpers/TaskQueue.js), [line 115](../../helpers/TaskQueue.js#L115)
 
 -->
 
@@ -522,7 +522,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

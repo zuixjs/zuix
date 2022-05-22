@@ -263,7 +263,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 429](../../zuix/ContextController.js#L429)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 430](../../zuix/ContextController.js#L430)
 
 -->
 
@@ -901,7 +901,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

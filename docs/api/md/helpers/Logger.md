@@ -77,7 +77,7 @@ Simple Logging Helper
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 65](../../helpers/Logger.js#L65)
+[helpers/Logger.js](../../helpers/Logger.js), [line 66](../../helpers/Logger.js#L66)
 
 -->
 
@@ -108,7 +108,7 @@ log.e('Error loading data', dataUrl);
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 147](../../helpers/Logger.js#L147)
+[helpers/Logger.js](../../helpers/Logger.js), [line 148](../../helpers/Logger.js#L148)
 
 -->
 
@@ -117,7 +117,7 @@ log.e('Error loading data', dataUrl);
  &dash; undefined
 
 <a name="debug"></a>
-#### debug() &rarr; {[Logger](../../helpers/Logger)}
+#### debug(args) &rarr; {[Logger](../../helpers/Logger)}
 
 Logs debug messages.
 
@@ -125,12 +125,12 @@ Logs debug messages.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`...args`|*Array.&lt;Object>*||
+|`args`|*Array.&lt;Object>*||
 
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 199](../../helpers/Logger.js#L199)
+[helpers/Logger.js](../../helpers/Logger.js), [line 200](../../helpers/Logger.js#L200)
 
 -->
 
@@ -139,7 +139,7 @@ Logs debug messages.
 *[Logger](../../helpers/Logger)*
 
 <a name="error"></a>
-#### error() &rarr; {[Logger](../../helpers/Logger)}
+#### error(args) &rarr; {[Logger](../../helpers/Logger)}
 
 Logs error messages.
 
@@ -147,12 +147,12 @@ Logs error messages.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`...args`|*Array.&lt;Object>*||
+|`args`|*Array.&lt;Object>*||
 
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 188](../../helpers/Logger.js#L188)
+[helpers/Logger.js](../../helpers/Logger.js), [line 189](../../helpers/Logger.js#L189)
 
 -->
 
@@ -161,7 +161,7 @@ Logs error messages.
 *[Logger](../../helpers/Logger)*
 
 <a name="info"></a>
-#### info() &rarr; {[Logger](../../helpers/Logger)}
+#### info(args) &rarr; {[Logger](../../helpers/Logger)}
 
 Logs information messages.
 
@@ -169,12 +169,12 @@ Logs information messages.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`...args`|*Array.&lt;Object>*||
+|`args`|*Array.&lt;Object>*||
 
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 166](../../helpers/Logger.js#L166)
+[helpers/Logger.js](../../helpers/Logger.js), [line 167](../../helpers/Logger.js#L167)
 
 -->
 
@@ -196,7 +196,7 @@ Sets a callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 137](../../helpers/Logger.js#L137)
+[helpers/Logger.js](../../helpers/Logger.js), [line 138](../../helpers/Logger.js#L138)
 
 -->
 
@@ -205,7 +205,7 @@ Sets a callback function for monitoring all log messages.
  &dash; undefined
 
 <a name="trace"></a>
-#### trace() &rarr; {[Logger](../../helpers/Logger)}
+#### trace(args) &rarr; {[Logger](../../helpers/Logger)}
 
 Logs trace messages.
 
@@ -213,12 +213,12 @@ Logs trace messages.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`...args`|*Array.&lt;Object>*||
+|`args`|*Array.&lt;Object>*||
 
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 210](../../helpers/Logger.js#L210)
+[helpers/Logger.js](../../helpers/Logger.js), [line 211](../../helpers/Logger.js#L211)
 
 -->
 
@@ -227,7 +227,7 @@ Logs trace messages.
 *[Logger](../../helpers/Logger)*
 
 <a name="warn"></a>
-#### warn() &rarr; {[Logger](../../helpers/Logger)}
+#### warn(args) &rarr; {[Logger](../../helpers/Logger)}
 
 Logs warning messages.
 
@@ -235,12 +235,12 @@ Logs warning messages.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`...args`|*Array.&lt;Object>*||
+|`args`|*Array.&lt;Object>*||
 
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 177](../../helpers/Logger.js#L177)
+[helpers/Logger.js](../../helpers/Logger.js), [line 178](../../helpers/Logger.js#L178)
 
 -->
 
@@ -671,7 +671,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

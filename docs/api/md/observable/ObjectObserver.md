@@ -77,7 +77,7 @@ Object Observer
 <!--
 
 *Source:*
-[observable/ObjectObserver.js](../../observable/ObjectObserver.js), [line 40](../../observable/ObjectObserver.js#L40)
+[observable/ObjectObserver.js](../../observable/ObjectObserver.js), [line 38](../../observable/ObjectObserver.js#L38)
 
 -->
 
@@ -97,7 +97,7 @@ Get an observable instance of an object for detecting changes.
 <!--
 
 *Source:*
-[observable/ObjectObserver.js](../../observable/ObjectObserver.js), [line 86](../../observable/ObjectObserver.js#L86)
+[observable/ObjectObserver.js](../../observable/ObjectObserver.js), [line 87](../../observable/ObjectObserver.js#L87)
 
 -->
 
@@ -529,7 +529,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

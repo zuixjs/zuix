@@ -75,14 +75,14 @@ main table code {
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 187](../../zuix/Componentizer.js#L187)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 179](../../zuix/Componentizer.js#L179)
 
 -->
 
 ### Methods
 
 <a name="componentize"></a>
-#### componentize(element, child) &rarr; {[Componentizer](../../zuix/Componentizer)}
+#### componentize(element) &rarr; {[Componentizer](../../zuix/Componentizer)}
 
 TODO: describe this...
 
@@ -91,12 +91,11 @@ TODO: describe this...
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
 |`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *undefined*|*optional*  |Scan and process loadable elements inside `element`.|
-|`child`|*Element* \| *undefined*|*optional*  |Process only the specified `child` of `element`.|
 
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 41](../../zuix/Componentizer.js#L41)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 40](../../zuix/Componentizer.js#L40)
 
 -->
 
@@ -119,7 +118,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 95](../../zuix/Componentizer.js#L95)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 87](../../zuix/Componentizer.js#L87)
 
 -->
 
@@ -140,7 +139,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 116](../../zuix/Componentizer.js#L116)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 108](../../zuix/Componentizer.js#L108)
 
 -->
 
@@ -154,7 +153,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 84](../../zuix/Componentizer.js#L84)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 76](../../zuix/Componentizer.js#L76)
 
 -->
 
@@ -585,7 +584,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

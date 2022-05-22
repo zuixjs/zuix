@@ -836,7 +836,7 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
       }
     } else {
       if (cssPath == context.componentId) {
-        cssPath += '.css' + (!enableCaching ? '?' + new Date().getTime() : '');
+        cssPath += '.css';
       }
       z$.ajax({
         url: zuix.getResourcePath(cssPath),
@@ -956,7 +956,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     } else {
       const cext = util.isNoU(options.cext) ? '.html' : options.cext;
       if (htmlPath == context.componentId) {
-        htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
+        htmlPath += cext;
       }
       z$.ajax({
         url: zuix.getResourcePath(htmlPath),

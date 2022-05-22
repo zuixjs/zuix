@@ -101,7 +101,7 @@ TODO: add description
 <!--
 
 *Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 70](../../observable/ObservableListener.js#L70)
+[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 73](../../observable/ObservableListener.js#L73)
 
 -->
 
@@ -126,7 +126,7 @@ TODO: add description
 <!--
 
 *Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 46](../../observable/ObservableListener.js#L46)
+[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 47](../../observable/ObservableListener.js#L47)
 
 -->
 
@@ -152,7 +152,7 @@ TODO: add description
 <!--
 
 *Source:*
-[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 58](../../observable/ObservableListener.js#L58)
+[observable/ObservableListener.js](../../observable/ObservableListener.js), [line 60](../../observable/ObservableListener.js#L60)
 
 -->
 
@@ -583,7 +583,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 

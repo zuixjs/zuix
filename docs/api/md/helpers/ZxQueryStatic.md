@@ -109,7 +109,7 @@ Adds a CSS transition effect to the component stylesheet.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1355](../../helpers/ZxQuery.js#L1355)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1353](../../helpers/ZxQuery.js#L1353)
 
 -->
 
@@ -129,7 +129,7 @@ Appends a new stylesheet, or replaces an existing one, to the document.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1103](../../helpers/ZxQuery.js#L1103)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1101](../../helpers/ZxQuery.js#L1101)
 
 -->
 
@@ -228,7 +228,7 @@ Gets the closest parent matching the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1233](../../helpers/ZxQuery.js#L1233)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1231](../../helpers/ZxQuery.js#L1231)
 
 -->
 
@@ -251,7 +251,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1251](../../helpers/ZxQuery.js#L1251)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1249](../../helpers/ZxQuery.js#L1249)
 
 -->
 
@@ -318,7 +318,7 @@ Plays transition effects or animations on a given element inside the component.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1393](../../helpers/ZxQuery.js#L1393)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1391](../../helpers/ZxQuery.js#L1391)
 
 -->
 
@@ -338,7 +338,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1191](../../helpers/ZxQuery.js#L1191)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1189](../../helpers/ZxQuery.js#L1189)
 
 -->
 
@@ -362,7 +362,7 @@ Replaces CSS variables with provided values.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1143](../../helpers/ZxQuery.js#L1143)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1141](../../helpers/ZxQuery.js#L1141)
 
 -->
 
@@ -818,7 +818,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 121](../../helpers/Logger.js#L121)
+[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
 
 -->
 
