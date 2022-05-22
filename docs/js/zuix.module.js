@@ -539,6 +539,26 @@ module.exports = {
     return s.split(/(?=[A-Z])/).join('-').toLowerCase();
   },
 
+  normalizeControllerCode: function(javascriptCode) {
+    if (javascriptCode.indexOf('module.exports') >= 0) {
+      return '\'use strict\'; let module = {}; ' + javascriptCode + ';\nreturn module.exports;';
+    } else {
+      // TODO: improve code parsing
+      let code = javascriptCode;
+      const fni = javascriptCode.indexOf('function ');
+      const fnz = javascriptCode.indexOf('zuix.controller');
+      const fnc = javascriptCode.indexOf('class ');
+      if (fnc > 0 && (fnc < fni || fni === -1) && (fnc < fnz || fnz === -1)) {
+        code = javascriptCode.substring(0, fnc) + 'return ' + javascriptCode.substring(fnc);
+      } else if (fni > 0 && (fni < fnz || fnz === -1)) {
+        code = javascriptCode.substring(0, fni) + 'return ' + javascriptCode.substring(fni);
+      } else if (fnz !== -1) {
+        code = javascriptCode.substring(0, fnz) + 'return ' + javascriptCode.substring(fnz + 15);
+      }
+      return code;
+    }
+  },
+
   dom: {
 
     queryAttribute: function(name, value, appendValue) {
@@ -3501,7 +3521,7 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
       }
     } else {
       if (cssPath == context.componentId) {
-        cssPath += '.css' + (!enableCaching ? '?' + new Date().getTime() : '');
+        cssPath += '.css';
       }
       z$.ajax({
         url: zuix.getResourcePath(cssPath),
@@ -3621,7 +3641,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
     } else {
       const cext = util.isNoU(options.cext) ? '.html' : options.cext;
       if (htmlPath == context.componentId) {
-        htmlPath += cext + (!enableCaching ? '?' + new Date().getTime() : '');
+        htmlPath += cext;
       }
       z$.ajax({
         url: zuix.getResourcePath(htmlPath),
@@ -5319,8 +5339,6 @@ let _contextSeqNum = 0;
 /** @private */
 let _disableComponentize = false;
 /** @private */
-let _enableHttpCaching = true;
-/** @private */
 const _objectObserver = new ObjectObserver();
 
 /** @private */
@@ -5626,7 +5644,6 @@ function loadResources(ctx, options) {
     if (options.css !== false && typeof options.css !== 'string') {
       resourceLoadTask[ctx.componentId].step(ctx.componentId+':css');
       ctx.loadCss({
-        caching: _enableHttpCaching,
         success: function(css) {
           cachedComponent.css = css;
         },
@@ -5670,7 +5687,6 @@ function loadResources(ctx, options) {
 
         ctx.loadHtml({
           cext: options.cext,
-          caching: _enableHttpCaching,
           success: function(html) {
             if (cachedComponent == null) {
               cachedComponent = cacheComponent(ctx);
@@ -5833,20 +5849,6 @@ function trigger(context, path, data) {
   }
 }
 
-/**
- * Enable/Disable HTTP caching
- *
- * @private
- * @param {boolean} [enable]
- * @return {boolean} *true* if HTTP caching is enabled, *false* otherwise.
- */
-function httpCaching(enable) {
-  if (enable != null) {
-    _enableHttpCaching = enable;
-  }
-  return _enableHttpCaching;
-}
-
 // *********************** private members ************************* //
 
 /** @private */
@@ -5893,26 +5895,12 @@ function loadController(context, task) {
       createComponent(context, task);
     } else {
       const job = function(t) {
-        const jsPath = context.componentId + '.js' + (_enableHttpCaching ? '' : '?'+new Date().getTime());
+        const jsPath = context.componentId + '.js';
         z$.ajax({
           url: getResourcePath(jsPath),
           success: function(ctrlJs) {
-            // TODO: improve js parsing!
+            ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
             try {
-              const fn = ctrlJs.indexOf('function');
-              const il = ctrlJs.indexOf('.load');
-              if (il > 1 && il < fn) {
-                ctrlJs = ctrlJs.substring(0, il - 4);
-              }
-              const ih = ctrlJs.indexOf('.controller');
-              if (ih > 1 && ih < fn) {
-                ctrlJs = ctrlJs.substring(ih + 11);
-              }
-              const ec = ctrlJs.indexOf('//<--controller');
-              if (ec > 0) {
-                ctrlJs = ctrlJs.substring(0, ec);
-              }
-              ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
               context.controller(getController(ctrlJs));
               let cached = getCachedComponent(context.componentId);
               if (cached == null) {
@@ -6024,7 +6012,7 @@ function createComponent(context, task) {
         // it can be then restored with c.restoreView()
         c.saveView();
 
-        if (cached === null) {
+        if (cached === null && context.componentId !== 'default') {
           cached = {
             componentId: context.componentId,
             controller: context.controller()
@@ -6039,7 +6027,6 @@ function createComponent(context, task) {
             if (cached.view == null) {
               context.loadHtml({
                 cext: context.options().cext,
-                caching: _enableHttpCaching,
                 success: function(html) {
                   cached.view = html;
                   _log.d(context.componentId, 'component:deferred:html');
@@ -6068,7 +6055,6 @@ function createComponent(context, task) {
         if (context.options().css !== false && typeof context.options().css !== 'string') {
           if (cached.css == null) {
             context.loadCss({
-              caching: _enableHttpCaching,
               success: function(css) {
                 cached.css = css;
                 _log.d(context.componentId, 'component:deferred:css');
@@ -6364,13 +6350,8 @@ function initController(ctrl) {
 function getController(javascriptCode) {
   let instance = function(ctx) { };
   if (typeof javascriptCode === 'string') {
-    let ctrl;
     try {
-      if (javascriptCode.indexOf('module.exports') >= 0) {
-        ctrl = Function('\'use strict\'; let ControllerInstance = arguments[0]; let module = {};\n' + javascriptCode + '; return module.exports;')(ControllerInstance);
-      } else {
-        ctrl = Function('return ' + javascriptCode)();
-      }
+      const ctrl = Function(util.normalizeControllerCode(javascriptCode))();
       if (typeof ctrl !== 'function') {
         throw new Error('Unexpected module type: "' + (typeof ctrl) + '"');
       }
@@ -6384,13 +6365,6 @@ function getController(javascriptCode) {
   return instance;
 }
 
-/**
- * @private
- * @param c
- */
-function replaceCache(c) {
-  _componentCache = c;
-}
 
 // ******************* proto ******************** //
 
@@ -6834,20 +6808,6 @@ Zuix.prototype.lazyLoad = function(enable, threshold) {
     _componentizer.lazyLoad(enable, threshold);
   } else {
     return _componentizer.lazyLoad();
-  }
-  return this;
-};
-/**
- * Enables/Disables HTTP caching or gets the current settings.
- *
- * @param {boolean} [enable]
- * @return {Zuix|boolean} *true* if HTTP caching is enabled, *false* otherwise.
- */
-Zuix.prototype.httpCaching = function(enable) {
-  if (enable != null) {
-    httpCaching(enable);
-  } else {
-    return httpCaching();
   }
   return this;
 };
