@@ -185,9 +185,9 @@ module.exports = {
       const fni = javascriptCode.indexOf('function ');
       const fnz = javascriptCode.indexOf('zuix.controller');
       const fnc = javascriptCode.indexOf('class ');
-      if (fnc > 0 && (fnc < fni || fni === -1) && (fnc < fnz || fnz === -1)) {
+      if (fnc >= 0 && (fnc < fni || fni === -1) && (fnc < fnz || fnz === -1)) {
         code = javascriptCode.substring(0, fnc) + 'return ' + javascriptCode.substring(fnc);
-      } else if (fni > 0 && (fni < fnz || fnz === -1)) {
+      } else if (fni >= 0 && (fni < fnz || fnz === -1)) {
         code = javascriptCode.substring(0, fni) + 'return ' + javascriptCode.substring(fni);
       } else if (fnz !== -1) {
         code = javascriptCode.substring(0, fnz) + 'return ' + javascriptCode.substring(fnz + 15);
