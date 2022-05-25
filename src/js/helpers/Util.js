@@ -268,6 +268,14 @@ module.exports = {
           }
         };
       })(selector);
+    },
+    getShadowRoot: function(node) {
+      for (; node; node = node.parentNode) {
+        if (node instanceof ShadowRoot) {
+          return node;
+        }
+      }
+      return false;
     }
 
   }

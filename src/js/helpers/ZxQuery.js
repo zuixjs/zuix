@@ -1107,10 +1107,11 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
  * @param {string} css Stylesheet text
  * @param {Element|HTMLElement|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
+ * @param {Node|undefined} [container] The container where to append the style element
  * @return {Element|HTMLElement} The new style element created out of the given css text.
  */
-ZxQueryStatic.appendCss = function(css, target, cssId) {
-  const head = document.head || document.getElementsByTagName('head')[0];
+ZxQueryStatic.appendCss = function(css, target, cssId, container) {
+  const head = container || document.head || document.getElementsByTagName('head')[0];
   let style = null;
   // remove old style if already defined
   if (!util.isNoU(target) && head.contains(target)) {
@@ -1361,8 +1362,10 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
  * @param {string} className CSS class name to assign to this transition.
  * @param {Array<Object>|JSON} properties List of CSS properties/values to set.
  * @param {Array<Object>|JSON} options List of transition options.
+ * @param {Node|undefined} [container] The container where to append the style element
+ * @return {Element|HTMLElement} The new style element created out of the given css text.
  */
-ZxQueryStatic.addTransition = function(cssId, scope, className, properties, options) {
+ZxQueryStatic.addTransition = function(cssId, scope, className, properties, options, container) {
   let cssText = '';
   let styleElement = document.getElementById(cssId);
   if (styleElement != null) {
@@ -1385,8 +1388,7 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
   cssText += (scope + '.' + className +
     ', ' + scope + ' .' + className +
     '{\n' + props + '  transition-property: ' + transProps + opts + '}\n');
-  this.appendCss(cssText, styleElement, cssId);
-  return cssText;
+  return this.appendCss(cssText, styleElement, cssId, container);
 };
 /**
  * Plays transition effects or animations on a given element inside the component.
@@ -1399,6 +1401,10 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
 ZxQueryStatic.playFx = function(config) {
   const _t = this;
   const $el = z$(config.target);
+  if ($el.length() === 0) {
+    _log.warn('playFx: target element is undefined', config);
+    return;
+  }
   if (config.classes == null) {
     config.classes = [];
   } else if (typeof config.classes === 'string') {

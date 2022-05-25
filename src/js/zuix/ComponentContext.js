@@ -116,7 +116,7 @@ function dataBind(el, boundData) {
                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
       if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
         // won't replace innerHTML if it contains inner bound fields
-        const t = zuix.$(boundData);
+        const t = z$(boundData);
         if (t.find(util.dom.queryAttribute(_optionAttributes.zField)).length() === 0) {
           z$(el).html('').append(document.createTextNode(boundData.innerHTML));
         }
@@ -600,7 +600,7 @@ ComponentContext.prototype.style = function(css) {
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId);
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._container));
   } else if (typeof css === 'string') {
     // store original unparsed css (might be useful for debugging)
     this._css = css;
@@ -626,7 +626,7 @@ ComponentContext.prototype.style = function(css) {
     );
 
     // output css
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId);
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._container));
   }
   this.checkEncapsulation();
   // TODO: should throw error if ```css``` is not a valid type

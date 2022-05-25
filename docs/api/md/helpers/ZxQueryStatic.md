@@ -92,39 +92,46 @@ Creates a ZxQuery wrapped element.
 ### Methods
 
 <a name="addTransition"></a>
-#### addTransition(cssId, scope, className, properties, options)
+#### addTransition(cssId, scope, className, properties, options, container) &rarr; {Element|HTMLElement}
 
 Adds a CSS transition effect to the component stylesheet.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`cssId`|||
-|`scope`|||
-|`className`|*string*|CSS class name to assign to this transition.|
-|`properties`|*Array.&lt;Object>* \| *JSON*|List of CSS properties/values to set.|
-|`options`|*Array.&lt;Object>* \| *JSON*|List of transition options.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`cssId`||  ||
+|`scope`||  ||
+|`className`|*string*|  |CSS class name to assign to this transition.|
+|`properties`|*Array.&lt;Object>* \| *JSON*|  |List of CSS properties/values to set.|
+|`options`|*Array.&lt;Object>* \| *JSON*|  |List of transition options.|
+|`container`|*Node* \| *undefined*|*optional*  |The container where to append the style element|
 
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1353](../../helpers/ZxQuery.js#L1353)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1354](../../helpers/ZxQuery.js#L1354)
 
 -->
 
+##### Returns
+
+*Element* \| *HTMLElement*
+ &dash; The new style element created out of the given css text.
+
 <a name="appendCss"></a>
-#### appendCss(css, target, cssId) &rarr; {Element|HTMLElement}
+#### appendCss(css, target, cssId, container) &rarr; {Element|HTMLElement}
 
 Appends a new stylesheet, or replaces an existing one, to the document.
 
 ##### Parameters
 
-|Name|Type|Description|
-|----|----|-----------|
-|`css`|*string*|Stylesheet text|
-|`target`|*Element* \| *HTMLElement* \| *null*|Existing style element to replace|
-|`cssId`|*string*|id to assign to the stylesheet|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`css`|*string*|  |Stylesheet text|
+|`target`|*Element* \| *HTMLElement* \| *null*|  |Existing style element to replace|
+|`cssId`|*string*|  |id to assign to the stylesheet|
+|`container`|*Node* \| *undefined*|*optional*  |The container where to append the style element|
 
 <!--
 
@@ -228,7 +235,7 @@ Gets the closest parent matching the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1231](../../helpers/ZxQuery.js#L1231)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1232](../../helpers/ZxQuery.js#L1232)
 
 -->
 
@@ -251,7 +258,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1249](../../helpers/ZxQuery.js#L1249)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1250](../../helpers/ZxQuery.js#L1250)
 
 -->
 
@@ -318,7 +325,7 @@ Plays transition effects or animations on a given element inside the component.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1391](../../helpers/ZxQuery.js#L1391)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1393](../../helpers/ZxQuery.js#L1393)
 
 -->
 
@@ -338,7 +345,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1189](../../helpers/ZxQuery.js#L1189)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1190](../../helpers/ZxQuery.js#L1190)
 
 -->
 
@@ -362,7 +369,7 @@ Replaces CSS variables with provided values.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1141](../../helpers/ZxQuery.js#L1141)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1142](../../helpers/ZxQuery.js#L1142)
 
 -->
 
@@ -532,7 +539,7 @@ Function that gets called after loading, when the component is actually created 
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 50](../../zuix/ContextController.js#L50)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 52](../../zuix/ContextController.js#L52)
 
 -->
 
@@ -544,7 +551,7 @@ Function called when the component is about to be disposed.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 56](../../zuix/ContextController.js#L56)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 58](../../zuix/ContextController.js#L58)
 
 -->
 
@@ -578,7 +585,7 @@ Function that gets called after loading and before the component is created.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 44](../../zuix/ContextController.js#L44)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 46](../../zuix/ContextController.js#L46)
 
 -->
 
@@ -600,7 +607,7 @@ Function called when the data model of the component is updated
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 32](../../zuix/ContextController.js#L32)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 34](../../zuix/ContextController.js#L34)
 
 -->
 

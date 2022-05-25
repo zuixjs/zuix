@@ -569,20 +569,35 @@ function loadComponent(elements, componentId, type, options) {
   elements = z$(elements);
   unload(elements);
   /**
-   * @param {ZxQuery} container
+   * @param {ZxQuery} el
    */
-  const load = function(container) {
-    container.attr(_optionAttributes.zLoad, componentId);
-    if (type) {
-      container.attr(type, '');
+  const load = function(el) {
+    let sr = el.get().shadowRoot;
+    if (sr == null && options && options.container instanceof ShadowRoot) {
+      sr = options.container;
     }
-    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || container.attr(_optionAttributes.zLazy) === 'true') {
+    if (sr) {
+      const shadowView = document.createElement('div');
+      sr.appendChild(shadowView);
+      Array.from(el.get().childNodes).map(function(el) {
+        shadowView.appendChild(el);
+      });
+      if (options && options.container) {
+        options.container = shadowView;
+      }
+      el = z$(shadowView);
+    }
+    el.attr(_optionAttributes.zLoad, componentId);
+    if (type) {
+      el.attr(type, '');
+    }
+    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || el.attr(_optionAttributes.zLazy) === 'true') {
       if (options) {
-        container.get().__zuix_loadOptions = options;
+        el.get().__zuix_loadOptions = options;
       }
       return false;
     }
-    return _componentizer.loadInline(container, options);
+    return _componentizer.loadInline(el, options);
   };
   elements.each(function(i, el, $el) {
     load($el);
@@ -1506,9 +1521,10 @@ zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
  * @param {string} resourceType Either *'style'*, *'script'* or *'component'*
  * @param {string} resourcePath Relative or absolute resource url path
  * @param {ResourceUsingCallback} [callback] Callback function to call once resource is loaded
+ * @param {ComponentContext} [ctx] The target context.
  * @return {Zuix} The `{Zuix}` object itself.
  */
-Zuix.prototype.using = function(resourceType, resourcePath, callback) {
+Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
   resourcePath = _componentizer.resolvePath(resourcePath);
   resourceType = resourceType.toLowerCase();
   const hashId = resourceType + '-' + resourcePath.hashCode();
@@ -1538,7 +1554,8 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
   } else {
     const isCss = (resourceType === 'style');
     if (z$.find(resourceType + '[id="' + hashId + '"]').length() === 0) {
-      const head = document.head || document.getElementsByTagName('head')[0];
+      const container = ctx ? util.dom.getShadowRoot(ctx.container()) : null;
+      const head = container || document.head || document.getElementsByTagName('head')[0];
       const resource = document.createElement(resourceType);
       if (isCss) {
         resource.type = 'text/css';

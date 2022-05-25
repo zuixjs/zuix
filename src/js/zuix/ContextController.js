@@ -28,6 +28,8 @@
 
 const z$ =
     require('../helpers/ZxQuery');
+const util =
+    require('../helpers/Util');
 
 /**
  * Function called when the data model of the component is updated
@@ -205,8 +207,16 @@ ContextController.prototype.addBehavior = function(eventPath, handler) {
  */
 ContextController.prototype.addTransition = function(className, properties, options) {
   const cssId = this.context.getCssId();
+  this.context.$.attr(cssId, '');
   const scope = '[z-component][' + cssId + ']';
-  z$.addTransition(this.context.componentId + '@' + cssId, scope, className, properties, options);
+  z$.addTransition(
+      this.context.componentId + '@' + cssId,
+      scope,
+      className,
+      properties,
+      options,
+      util.dom.getShadowRoot(this.context.container())
+  );
   return this;
 };
 /**
