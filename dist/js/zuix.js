@@ -1,4 +1,4 @@
-/* zUIx v1.1.3 22.05.22 21:41:05 */
+/* zUIx v1.1.4 22.05.25 22:25:50 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -638,6 +638,14 @@ module.exports = {
           }
         };
       })(selector);
+    },
+    getShadowRoot: function(node) {
+      for (; node; node = node.parentNode) {
+        if (node instanceof ShadowRoot) {
+          return node;
+        }
+      }
+      return false;
     }
 
   }
@@ -1760,10 +1768,11 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
  * @param {string} css Stylesheet text
  * @param {Element|HTMLElement|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
+ * @param {Node|undefined} [container] The container where to append the style element
  * @return {Element|HTMLElement} The new style element created out of the given css text.
  */
-ZxQueryStatic.appendCss = function(css, target, cssId) {
-  const head = document.head || document.getElementsByTagName('head')[0];
+ZxQueryStatic.appendCss = function(css, target, cssId, container) {
+  const head = container || document.head || document.getElementsByTagName('head')[0];
   let style = null;
   // remove old style if already defined
   if (!util.isNoU(target) && head.contains(target)) {
@@ -2014,8 +2023,10 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
  * @param {string} className CSS class name to assign to this transition.
  * @param {Array<Object>|JSON} properties List of CSS properties/values to set.
  * @param {Array<Object>|JSON} options List of transition options.
+ * @param {Node|undefined} [container] The container where to append the style element
+ * @return {Element|HTMLElement} The new style element created out of the given css text.
  */
-ZxQueryStatic.addTransition = function(cssId, scope, className, properties, options) {
+ZxQueryStatic.addTransition = function(cssId, scope, className, properties, options, container) {
   let cssText = '';
   let styleElement = document.getElementById(cssId);
   if (styleElement != null) {
@@ -2038,8 +2049,7 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
   cssText += (scope + '.' + className +
     ', ' + scope + ' .' + className +
     '{\n' + props + '  transition-property: ' + transProps + opts + '}\n');
-  this.appendCss(cssText, styleElement, cssId);
-  return cssText;
+  return this.appendCss(cssText, styleElement, cssId, container);
 };
 /**
  * Plays transition effects or animations on a given element inside the component.
@@ -2052,6 +2062,10 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
 ZxQueryStatic.playFx = function(config) {
   const _t = this;
   const $el = z$(config.target);
+  if ($el.length() === 0) {
+    _log.warn('playFx: target element is undefined', config);
+    return;
+  }
   if (config.classes == null) {
     config.classes = [];
   } else if (typeof config.classes === 'string') {
@@ -2814,7 +2828,7 @@ function dataBind(el, boundData) {
                 (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
       if (!util.isNoU(boundData.href) && !util.isNoU(boundData.innerHTML) && boundData.innerHTML.trim() !== '') {
         // won't replace innerHTML if it contains inner bound fields
-        const t = zuix.$(boundData);
+        const t = z$(boundData);
         if (t.find(util.dom.queryAttribute(_optionAttributes.zField)).length() === 0) {
           z$(el).html('').append(document.createTextNode(boundData.innerHTML));
         }
@@ -3298,7 +3312,7 @@ ComponentContext.prototype.style = function(css) {
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId);
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._container));
   } else if (typeof css === 'string') {
     // store original unparsed css (might be useful for debugging)
     this._css = css;
@@ -3324,7 +3338,7 @@ ComponentContext.prototype.style = function(css) {
     );
 
     // output css
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId);
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._container));
   }
   this.checkEncapsulation();
   // TODO: should throw error if ```css``` is not a valid type
@@ -4503,6 +4517,8 @@ function lazyElementCheck(element) {
 
 const z$ =
     __webpack_require__(917);
+const util =
+    __webpack_require__(826);
 
 /**
  * Function called when the data model of the component is updated
@@ -4680,8 +4696,16 @@ ContextController.prototype.addBehavior = function(eventPath, handler) {
  */
 ContextController.prototype.addTransition = function(className, properties, options) {
   const cssId = this.context.getCssId();
+  this.context.$.attr(cssId, '');
   const scope = '[z-component][' + cssId + ']';
-  z$.addTransition(this.context.componentId + '@' + cssId, scope, className, properties, options);
+  z$.addTransition(
+      this.context.componentId + '@' + cssId,
+      scope,
+      className,
+      properties,
+      options,
+      util.dom.getShadowRoot(this.context.container())
+  );
   return this;
 };
 /**
@@ -5774,20 +5798,35 @@ function loadComponent(elements, componentId, type, options) {
   elements = z$(elements);
   unload(elements);
   /**
-   * @param {ZxQuery} container
+   * @param {ZxQuery} el
    */
-  const load = function(container) {
-    container.attr(_optionAttributes.zLoad, componentId);
-    if (type) {
-      container.attr(type, '');
+  const load = function(el) {
+    let sr = el.get().shadowRoot;
+    if (sr == null && options && options.container instanceof ShadowRoot) {
+      sr = options.container;
     }
-    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || container.attr(_optionAttributes.zLazy) === 'true') {
+    if (sr) {
+      const shadowView = document.createElement('div');
+      sr.appendChild(shadowView);
+      Array.from(el.get().childNodes).map(function(el) {
+        shadowView.appendChild(el);
+      });
+      if (options && options.container) {
+        options.container = shadowView;
+      }
+      el = z$(shadowView);
+    }
+    el.attr(_optionAttributes.zLoad, componentId);
+    if (type) {
+      el.attr(type, '');
+    }
+    if ((options && options.lazyLoad && options.lazyLoad.toString() === 'true') || el.attr(_optionAttributes.zLazy) === 'true') {
       if (options) {
-        container.get().__zuix_loadOptions = options;
+        el.get().__zuix_loadOptions = options;
       }
       return false;
     }
-    return _componentizer.loadInline(container, options);
+    return _componentizer.loadInline(el, options);
   };
   elements.each(function(i, el, $el) {
     load($el);
@@ -6711,9 +6750,10 @@ zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
  * @param {string} resourceType Either *'style'*, *'script'* or *'component'*
  * @param {string} resourcePath Relative or absolute resource url path
  * @param {ResourceUsingCallback} [callback] Callback function to call once resource is loaded
+ * @param {ComponentContext} [ctx] The target context.
  * @return {Zuix} The `{Zuix}` object itself.
  */
-Zuix.prototype.using = function(resourceType, resourcePath, callback) {
+Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
   resourcePath = _componentizer.resolvePath(resourcePath);
   resourceType = resourceType.toLowerCase();
   const hashId = resourceType + '-' + resourcePath.hashCode();
@@ -6743,7 +6783,8 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback) {
   } else {
     const isCss = (resourceType === 'style');
     if (z$.find(resourceType + '[id="' + hashId + '"]').length() === 0) {
-      const head = document.head || document.getElementsByTagName('head')[0];
+      const container = ctx ? util.dom.getShadowRoot(ctx.container()) : null;
+      const head = container || document.head || document.getElementsByTagName('head')[0];
       const resource = document.createElement(resourceType);
       if (isCss) {
         resource.type = 'text/css';
