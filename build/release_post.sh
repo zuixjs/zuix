@@ -50,7 +50,7 @@ if [ "${CURRENT_VERSION}" = "${NEW_VERSION}" ] || [ "${VERSION_TAG_EXISTS}" = "t
 fi
 
 # Update version number in the README.md file
-node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+\\-\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./README.md
+node ./node_modules/replace/bin/replace.js "${PACKAGE_NAME} v\\d+\\.\\d+\\.\\d+" "${PACKAGE_NAME} v${NEW_VERSION}" ./README.md
 # Copy the updated README.md to the dist folder as well
 yes | cp -rf ./README.md ./dist/
 
@@ -63,7 +63,7 @@ JS_VERSION="/* ${PACKAGE_NAME} v${NEW_VERSION} `date +'%y.%m.%d %H:%M:%S'` */"
 sed -i "1i${JS_VERSION}\n" dist/js/zuix.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix.module.js
-sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.module.js
+sed -i "1i${JS_VERSION}\n" dist/js/zuix.module.min.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.min.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.module.js

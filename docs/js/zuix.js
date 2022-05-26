@@ -1,4 +1,4 @@
-/* zUIx v1.1.5 22.05.26 14:22:32 */
+/* zuix.js v1.1.6 22.05.26 17:50:11 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -7099,11 +7099,15 @@ Zuix.prototype.utils = util;
  * @return {Zuix}
  */
 module.exports = function() {
+  if (window && window.zuix) {
+    //console.log('WARNING zuix.js already imported!');
+    return window.zuix;
+  }
   const zuix = new Zuix();
   if (window && document) {
+    window.zuix = zuix;
     const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
-    window.zuix = zuix;
     const refreshCallback = function() {
       zuix.componentize();
     };
