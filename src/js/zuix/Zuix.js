@@ -1874,6 +1874,7 @@ module.exports = function() {
   if (window && document) {
     const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
+    window.zuix = zuix;
     const refreshCallback = function() {
       zuix.componentize();
     };

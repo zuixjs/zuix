@@ -24,10 +24,10 @@ function createConfig(target, minimize) {
       }
     },
     experiments: {
-      outputModule: target === 'module' ? true : false
+      outputModule: target === 'module'
     },
     optimization: {
-      minimize: minimize === true ? true : false
+      minimize: minimize === true
     },
     target: ['web', 'es5']
   };
