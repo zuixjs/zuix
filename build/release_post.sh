@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e # Exit with nonzero exit code if anything fails
 
-PACKAGE_NAME="zUIx"
+PACKAGE_NAME="zuix.js"
 CURRENT_VERSION=`grep '"version":' package.json | cut -d\" -f4`
 
 # Check argument
@@ -62,8 +62,12 @@ update_version "dist/package.json" ${NEW_VERSION}
 JS_VERSION="/* ${PACKAGE_NAME} v${NEW_VERSION} `date +'%y.%m.%d %H:%M:%S'` */"
 sed -i "1i${JS_VERSION}\n" dist/js/zuix.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.js
+sed -i "1i${JS_VERSION}\n" dist/js/zuix.module.js
+sed -i "1i${JS_VERSION}\n" dist/js/zuix.min.module.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.js
 sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.min.js
+sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.module.js
+sed -i "1i${JS_VERSION}\n" dist/js/zuix-bundler.module.min.js
 
 # Copy latest zUIx dist files to the CDN website folder (docs)
 mkdir -p docs/js
