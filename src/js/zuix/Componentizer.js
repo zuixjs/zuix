@@ -290,16 +290,17 @@ function getNextLoadable() {
   let job = null;
   let item = _componentizeQueue.length > 0 ? _componentizeQueue.shift() : null;
   while (item != null && item.element != null) {
+    const el = item.element;
     // defer element loading if lazy loading is enabled and the element is not in view
-    const isLazy = lazyElementCheck(item.element);
+    const isLazy = lazyElementCheck(el);
     if (lazyLoad() && isLazy) {
       item.lazy = true;
-      item.visible = z$.getPosition(item.element, _lazyLoadingThreshold).visible;
+      item.visible = z$.getPosition(el, _lazyLoadingThreshold).visible;
     } else {
       item.lazy = false;
       item.visible = true;
     }
-    if (item.element != null && item.visible) {
+    if (el != null && item.visible) {
       job = {
         item: item,
         cancelable: item.lazy
@@ -318,10 +319,11 @@ function loadNext(element) {
   queueLoadables(element);
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
-    z$(job.item.element).one('component:loaded', function() {
-      zuix.componentize(job.item.element);
+    const el = job.item.element;
+    z$(el).one('component:loaded', function() {
+      zuix.componentize(el);
     });
-    loadInline(job.item.element);
+    loadInline(el);
   }
 }
 
@@ -368,17 +370,20 @@ function loadInline(element, opts) {
     options.container = element;
   }
 
+  const setAsTemplate = function() {
+    v.attr(_optionAttributes.zComponent, null);
+    // View-only templates have no controller
+    if (util.isNoU(options.controller)) {
+      options.controller = function() {};
+    }
+  };
   let componentId = v.attr(_optionAttributes.zLoad);
   if (util.isNoU(componentId)) {
     const include = v.attr(_optionAttributes.zInclude);
     if (include != null) {
       componentId = resolvePath(include);
       v.attr(_optionAttributes.zInclude, componentId);
-      v.attr(_optionAttributes.zComponent, null);
-      // Static include hove no controller
-      if (util.isNoU(options.controller)) {
-        options.controller = function() {};
-      }
+      setAsTemplate();
     } else {
       return false;
     }
@@ -387,11 +392,7 @@ function loadInline(element, opts) {
     v.attr(_optionAttributes.zLoad, componentId);
     // check for `view` and `ctrl` type attributes
     if (componentId !== 'default' && v.attr(_optionAttributes.resourceType.view) !== null) {
-      v.attr(_optionAttributes.zComponent, null);
-      // Static includes have no controller
-      if (util.isNoU(options.controller)) {
-        options.controller = function() {};
-      }
+      setAsTemplate();
     } else if (componentId === 'default' || v.attr(_optionAttributes.resourceType.controller) !== null) {
       options.view = options.view || element;
       options.viewDeferred = true;
@@ -415,9 +416,31 @@ function loadInline(element, opts) {
 
   // inline attributes have precedence over ```options```
 
-  const model = v.attr(_optionAttributes.zModel);
-  if (!util.isNoU(model) && model.length > 0) {
-    options.model = parseOptions(element, model);
+  const exclusionList = [':on', ':model', ':behavior', ':ready']; // these are evaluated after component is created
+  const optionAttributes = Array.from(v.get().attributes)
+      .filter((a) => a.nodeName.startsWith(':') && !exclusionList.find((t) => a.nodeName.startsWith(t)));
+  optionAttributes.forEach((attribute) => {
+    const attr = attribute.nodeName;
+    const path = attr.match(/[^:]+/g);
+    let co = options;
+    path.forEach((p, i) => {
+      p = util.hyphensToCamelCase(p);
+      if (i === path.length - 1) {
+        let val;
+        try {
+          val = Function('return ' + attribute.nodeValue + ';')();
+        } catch (e) {
+          _log.warn(path.join(':'), p, attribute.nodeValue, e);
+        }
+        return co[p] = val;
+      }
+      co = co[p] = co[p] || {};
+    });
+  });
+
+  const on = v.attr(_optionAttributes.zOn);
+  if (!util.isNoU(on) && on.length > 0) {
+    options.on = parseOptions(element, on);
   }
 
   const behavior = v.attr(_optionAttributes.zBehavior);
@@ -425,9 +448,9 @@ function loadInline(element, opts) {
     options.behavior = parseOptions(element, behavior);
   }
 
-  const on = v.attr(_optionAttributes.zOn);
-  if (!util.isNoU(on) && on.length > 0) {
-    options.on = parseOptions(element, on);
+  const model = v.attr(_optionAttributes.zModel);
+  if (!util.isNoU(model) && model.length > 0) {
+    options.model = parseOptions(element, model);
   }
 
   const priority = v.attr(_optionAttributes.zPriority);
@@ -472,7 +495,7 @@ function resolvePath(path) {
 /** @private */
 function parseOptions(element, attributeValue) {
   if (typeof attributeValue === 'string') {
-    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.zLoad));
+    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.zLoad) + ',' + util.dom.queryAttribute(_optionAttributes.zInclude));
     if (parentComponent.get()) {
       // parent component context should be already loaded
       const context = zuix.context(parentComponent);
@@ -495,14 +518,14 @@ function applyOptions(element, options) {
   options = parseOptions(element, options);
   // TODO: should check if options object is valid
   if (element != null && options != null) {
-    if (options.lazyLoad != null) {
-      util.dom.setAttribute(element, _optionAttributes.zLazy, options.lazyLoad.toString().toLowerCase());
+    if (options.componentId != null) {
+      util.dom.setAttribute(element, _optionAttributes.zLoad, options.componentId.toString().toLowerCase());
     }
     if (options.contextId != null) {
       util.dom.setAttribute(element, _optionAttributes.zContext, options.contextId.toString().toLowerCase());
     }
-    if (options.componentId != null) {
-      util.dom.setAttribute(element, _optionAttributes.zLoad, options.componentId.toString().toLowerCase());
+    if (options.lazyLoad != null) {
+      util.dom.setAttribute(element, _optionAttributes.zLazy, options.lazyLoad.toString().toLowerCase());
     }
     // TODO: eventually map other attributes from options
   }

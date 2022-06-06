@@ -32,11 +32,7 @@ module.exports = {
   isNoU: function(obj) {
     return (typeof obj === 'undefined' || obj === null);
   },
-
-  isFunction: function(f) {
-    return typeof f === 'function';
-  },
-
+  // TODO: deprecate `objectEquals` method
   objectEquals: function(x, y) {
     if (x === null || x === undefined || y === null || y === undefined) {
       return x === y;
@@ -60,12 +56,12 @@ module.exports = {
       return false;
     }
 
-    // if they are dates, they must had equal valueOf
+    // if they are dates, they must have equal valueOf
     if (x instanceof Date) {
       return false;
     }
 
-    // if they are strictly equal, they both need to be object at least
+    // if they are strictly equal, they both need to be objects at least
     if (!(x instanceof Object)) {
       return false;
     }
@@ -75,12 +71,11 @@ module.exports = {
 
     // recursive object equality check
     const p = Object.keys(x);
-    return Object.keys(y).every(function(i) {
+    return Object.keys(y).every((i) => {
       return p.indexOf(i) !== -1;
-    }) &&
-            p.every(function(i) {
-              return util.objectEquals(x[i], y[i]);
-            });
+    }) && p.every( (i) => {
+      return this.objectEquals(x[i], y[i]);
+    });
   },
 
   propertyFromPath: function(o, s) {
@@ -130,7 +125,7 @@ module.exports = {
     if (obj === null || typeof obj !== 'object') {
       return obj;
     }
-    // Give temp the original obj's constructor
+    // Give temp the original object's constructor
     // var temp = obj.constructor();
     // for (var key in obj)
     //    temp[key] = cloneObject(obj[key]);
@@ -163,10 +158,10 @@ module.exports = {
   },
 
   hyphensToCamelCase: function(s) {
-    return s.replace(/-([a-z0-9_$-])/g, function(g) {
+    return s.replace(/--/g, ':').replace(/-([a-z0-9_$-])/g, function(g) {
       return '_$-'.indexOf(g[1]) > -1 || (+g[1]).toString() === g[1] ?
           '_' + g[1].replace('-', '_') : g[1].toUpperCase();
-    });
+    }).replace(/:/g, '-');
   },
 
   camelCaseToHyphens: function(s) {
@@ -199,7 +194,7 @@ module.exports = {
   dom: {
 
     queryAttribute: function(name, value, appendValue) {
-      const fields = name.split(',');
+      const fields = name.split(/[\s|,]+/g);
       let selector = '';
       fields.forEach(function(v, i) {
         if (value != null) {
@@ -217,7 +212,7 @@ module.exports = {
     getAttribute: function(element, name) {
       let value;
       if (typeof name === 'string' && name.indexOf(',') !== -1) {
-        const fields = name.split(',');
+        const fields = name.split(/[\s|,]+/g);
         for (let i = 0; i < fields.length; i++) {
           const f = fields[i];
           const a = element.getAttribute(f);
@@ -231,7 +226,7 @@ module.exports = {
     },
     setAttribute: function(element, name, value) {
       if (typeof name === 'string' && name.indexOf(',') !== -1) {
-        const fields = name.split(',');
+        const fields = name.split(/[\s|,]+/g);
         const _t = this;
         fields.forEach(function(f) {
           _t.setAttribute(element, f, value);

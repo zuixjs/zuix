@@ -123,10 +123,10 @@ const util = require('./Util.js');
  * @property {'transition'|'animation'} type The type of effect to play.
  * @property {Element|ZxQuery} target Target element.
  * @property {Array<string>|string} classes List of transition or animation classes to play.
- * @property {object} options Transition/animation options ('delay', 'duration', etc..).
- * @property {boolean} holdState Hold last transition/animation class.
- * @property {PlayFxCallback} onStep Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.
- * @property {PlayFxCallback} onEnd Called when all transitions/animations ended.
+ * @property {object} [options] Transition/animation options ('delay', 'duration', etc..).
+ * @property {boolean} [holdState] Hold last transition/animation class.
+ * @property {PlayFxCallback} [onStep] Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.
+ * @property {PlayFxCallback} [onEnd] Called when all transitions/animations ended.
  */
 
 /**
@@ -193,6 +193,21 @@ function removeAllEventHandlers(el) {
     }
   });
 }
+function getPlayFxConfig(type, target, options) {
+  let classes = options.classes;
+  if (typeof options === 'string') {
+    classes = options.split(/[\s|,]+/g);
+    options = {};
+  } else if (Array.isArray(options)) {
+    classes = options;
+    options = {};
+  }
+  return Object.assign({
+    type,
+    classes,
+    target
+  }, options);
+}
 
 /**
  * The constructor takes one optional argument that can be
@@ -227,8 +242,9 @@ function ZxQuery(element) {
   } else if (typeof element === 'string') {
     this._selection = document.documentElement.querySelectorAll(element);
   } else if (element !== null) { // if (typeof element === 'string') {
-    _log.e('ZxQuery cannot wrap object of this type.', (typeof element), element);
-    throw new Error('ZxQuery cannot wrap object of this type.');
+    const msg = 'ZxQuery cannot wrap object of this type.';
+    _log.e(msg, (typeof element), element);
+    throw new Error(msg);
   }
   return this;
 }
@@ -465,16 +481,14 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
     });
     return this;
   }
-  const events = eventPath.match(/\S+/g) || [];
+  const events = eventPath.split(/[\s|,]+/g) || [];
   let options;
   if (typeof eventHandler !== 'function') {
     options = eventHandler;
     eventHandler = options.handler;
   }
   this.each(function(k, el) {
-    z$.each(events, function(k, ev) {
-      addEventHandler(el, ev, eventHandler, options);
-    });
+    events.map((ev) => addEventHandler(el, ev, eventHandler, options));
   });
   return this;
 };
@@ -493,11 +507,9 @@ ZxQuery.prototype.off = function(eventPath, eventHandler) {
     });
     return this;
   }
-  const events = eventPath.match(/\S+/g) || [];
+  const events = eventPath.split(/[\s|,]+/g) || [];
   this.each(function(k, el) {
-    z$.each(events, function(k, ev) {
-      removeEventHandler(el, ev, eventHandler);
-    });
+    events.map((ev) => removeEventHandler(el, ev, eventHandler));
   });
   return this;
 };
@@ -566,13 +578,9 @@ ZxQuery.prototype.css = function(prop, val) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.addClass = function(className) {
-  const classes = className.match(/\S+/g) || [];
+  const classes = className.split(/[\s|,]+/g) || [];
   z$.each(this._selection, function(k, el) {
-    if (el.classList) {
-      z$.each(classes, function(k, cl) {
-        el.classList.add(cl);
-      });
-    } else el.className += ' ' + className;
+    classes.map((cl) => el.classList.add(cl));
   });
   return this;
 };
@@ -592,13 +600,9 @@ ZxQuery.prototype.hasClass = function(className) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.removeClass = function(className) {
-  const classes = className.match(/\S+/g) || [];
+  const classes = className.split(/[\s|,]+/g) || [];
   z$.each(this._selection, function(k, el) {
-    if (el.classList) {
-      z$.each(classes, function(k, cl) {
-        el.classList.remove(cl);
-      });
-    } else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    classes.map((cl) => el.classList.remove(cl));
   });
   return this;
 };
@@ -788,20 +792,7 @@ ZxQuery.prototype.hide = function() {
  * @return {ZxQuery}
  */
 ZxQuery.prototype.playTransition = function(options) {
-  let classes = options.classes;
-  if (typeof options === 'string') {
-    classes = options.split(' ');
-    options = {};
-  } else if (Array.isArray(options)) {
-    classes = options;
-    options = {};
-  }
-  const config = Object.assign({
-    classes,
-    target: this,
-    type: 'transition'
-  }, options);
-  z$.playFx(config);
+  z$.playFx(getPlayFxConfig('transition', this, options));
   return this;
 };
 /**
@@ -812,20 +803,7 @@ ZxQuery.prototype.playTransition = function(options) {
  * @return {ZxQuery}
  */
 ZxQuery.prototype.playAnimation = function(options) {
-  let classes = options.classes;
-  if (typeof options === 'string') {
-    classes = options.split(' ');
-    options = {};
-  } else if (Array.isArray(options)) {
-    classes = options;
-    options = {};
-  }
-  const config = Object.assign({
-    classes,
-    target: this,
-    type: 'animation'
-  }, options);
-  z$.playFx(config);
+  z$.playFx(getPlayFxConfig('animation', this, options));
   return this;
 };
 /**
@@ -921,14 +899,14 @@ ZxQueryStatic.ajax =
       const xhr = new XMLHttpRequest();
       xhr.onload = function() {
         if (xhr.status === 200) {
-          if (util.isFunction(options.success)) options.success(xhr.responseText);
+          if (options.success) options.success(xhr.responseText);
         } else {
-          if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status);
+          if (options.error) options.error(xhr, xhr.statusText, xhr.status);
         }
-        if (util.isFunction(options.then)) options.then(xhr);
+        if (options.then) options.then(xhr);
       };
       xhr.onerror = function(xhr, textStatus, errorThrown) {
-        if (util.isFunction(options.error)) options.error(xhr, textStatus, errorThrown);
+        if (options.error) options.error(xhr, textStatus, errorThrown);
       };
       if (typeof options.beforeSend == 'function') {
         options.beforeSend(xhr);
@@ -937,7 +915,7 @@ ZxQueryStatic.ajax =
         xhr.open('GET', url);
         xhr.send();
       } catch (e) {
-        if (util.isFunction(options.error)) options.error(xhr, xhr.statusText, xhr.status, e);
+        if (options.error) options.error(xhr, xhr.statusText, xhr.status, e);
       }
       return this;
     };
@@ -952,15 +930,11 @@ ZxQueryStatic.ajax =
  * @return {boolean}
  */
 ZxQueryStatic.hasClass = function(el, className) {
-  const classes = className.match(/\S+/g) || [];
+  const classes = className.split(/[\s|,]+/g) || [];
   let success = false;
   z$.each(classes, function(k, cl) {
-    if (el.classList) {
-      success = el.classList.contains(cl);
-    } else {
-      success = (new RegExp('(^| )' + cl + '( |$)', 'gi').test(el.className));
-    }
-    if (success) return false;
+    success = el.classList.contains(cl);
+    if (success) return false; // break loop
   });
   return success;
 };
@@ -974,7 +948,7 @@ ZxQueryStatic.hasClass = function(el, className) {
  * @return {boolean}
  */
 ZxQueryStatic.classExists = function(className) {
-  const classes = className.match(/\S+/g) || [];
+  const classes = className.split(/[\s|,]+/g) || [];
   let success = false;
   z$.each(classes, function(k, cl) {
     // Perform global style check
@@ -1140,54 +1114,6 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
   return style;
 };
 /**
- * Replaces CSS variables with provided values.
- *
- * @method replaceCssVars
- * @memberOf ZxQueryStatic
- * @alias zuix.$.replaceCssVars
- * @param {string} css Stylesheet text
- * @param {object} model Object containing variables fields and values.
- * @return {string} The new stylesheet text with variables replaced with values
- */
-ZxQueryStatic.replaceCssVars = function(css, model) {
-  const vars = new RegExp(/\B\$var\[(.*[^\[\]])]/g);
-  let outCss = '';
-  let matched = 0;
-  let currentIndex = 0;
-  let result;
-  while (result = vars.exec(css)) {
-    let value = result[0];
-    if (result.length > 1) {
-      const name = result[1];
-      // resolve dotted field path
-      let cur = model;
-      if (name.indexOf('.') > 0) {
-        const path = name.split('.');
-        for (let p = 0; p < path.length - 1; p++) {
-          cur = cur[path[p]];
-          if (typeof cur === 'undefined') {
-            break;
-          }
-        }
-        if (typeof cur !== 'undefined') {
-          value = cur[path[path.length - 1]];
-          matched++;
-        }
-      } else if (typeof cur[name] !== 'undefined') {
-        value = cur[name];
-        matched++;
-      }
-    }
-    outCss += css.substring(currentIndex, result.index)+value;
-    currentIndex = result.index+result[0].length;
-  }
-  if (matched > 0) {
-    outCss += css.substring(currentIndex);
-    css = outCss;
-  }
-  return css;
-};
-/**
  * Parses variables enclosed in single or double braces and calls the given callback for each parsed variable name.
  * If the callback returns a value, then the variable will be replaced with the given value.
  *
@@ -1213,7 +1139,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
       continue;
     }
     let value = result[0];
-    if (typeof callback === 'function') {
+    if (callback) {
       const r = callback(result[0]);
       if (!util.isNoU(r)) {
         value = r;
@@ -1408,7 +1334,7 @@ ZxQueryStatic.playFx = function(config) {
   if (config.classes == null) {
     config.classes = [];
   } else if (typeof config.classes === 'string') {
-    config.classes = config.classes.split(' ');
+    config.classes = config.classes.split(/[\s|,]+/g);
   }
   const classOut = config.classes.length > 1 && config.classes.shift();
   if (!$el.hasClass('--z-playing')) {
@@ -1424,7 +1350,7 @@ ZxQueryStatic.playFx = function(config) {
     if (expired) return;
     expired = true;
     if (config.classes.length > 1) {
-      if (typeof config.onStep === 'function') {
+      if (config.onStep) {
         config.onStep.call($el, $el, config.classes.slice(1));
       }
       _t.playFx(config);
@@ -1433,7 +1359,7 @@ ZxQueryStatic.playFx = function(config) {
         $el.removeClass(config.classes.shift());
       }
       $el.removeClass('--z-playing');
-      if (typeof config.onEnd === 'function') {
+      if (config.onEnd) {
         config.onEnd.call($el, $el);
       }
     }

@@ -196,7 +196,6 @@ export interface ZxQueryStatic {
     classExists(className: String): Boolean;
     wrapElement(containerTag: String, element: Element): Element;
     appendCss(css: String, target: Element, cssId: String): Element;
-    replaceCssVars(css: String, model: Object): String;
     replaceBraces(html: String, callback: Function): String;
     getClosest(elem: Element, selector: String): Element;
     getPosition(el: Element, tolerance?: Number): ElementPosition;

@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1724](../../zuix/Zuix.js#L1724)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1829](../../zuix/Zuix.js#L1829)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1735](../../zuix/Zuix.js#L1735)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1840](../../zuix/Zuix.js#L1840)
 
 -->
 
@@ -164,7 +164,7 @@ by passing a boolean value as argument.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1663](../../zuix/Zuix.js#L1663)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1768](../../zuix/Zuix.js#L1768)
 
 -->
 
@@ -199,7 +199,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1395](../../zuix/Zuix.js#L1395)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1488](../../zuix/Zuix.js#L1488)
 
 -->
 
@@ -239,7 +239,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1370](../../zuix/Zuix.js#L1370)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1463](../../zuix/Zuix.js#L1463)
 
 -->
 
@@ -277,7 +277,7 @@ order to actually load and display the component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1408](../../zuix/Zuix.js#L1408)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1501](../../zuix/Zuix.js#L1501)
 
 -->
 
@@ -294,7 +294,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1793](../../zuix/Zuix.js#L1793)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1898](../../zuix/Zuix.js#L1898)
 
 -->
 
@@ -310,7 +310,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1800](../../zuix/Zuix.js#L1800)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1905](../../zuix/Zuix.js#L1905)
 
 -->
 
@@ -337,7 +337,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1226](../../zuix/Zuix.js#L1226)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1319](../../zuix/Zuix.js#L1319)
 
 -->
 
@@ -374,7 +374,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1701](../../zuix/Zuix.js#L1701)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1806](../../zuix/Zuix.js#L1806)
 
 -->
 
@@ -400,7 +400,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1505](../../zuix/Zuix.js#L1505)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1598](../../zuix/Zuix.js#L1598)
 
 -->
 
@@ -487,7 +487,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1636](../../zuix/Zuix.js#L1636)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1741](../../zuix/Zuix.js#L1741)
 
 -->
 
@@ -513,7 +513,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1276](../../zuix/Zuix.js#L1276)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1369](../../zuix/Zuix.js#L1369)
 
 -->
 
@@ -579,7 +579,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1348](../../zuix/Zuix.js#L1348)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1441](../../zuix/Zuix.js#L1441)
 
 -->
 
@@ -647,7 +647,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1711](../../zuix/Zuix.js#L1711)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1816](../../zuix/Zuix.js#L1816)
 
 -->
 
@@ -655,31 +655,6 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 
 *[ObservableObject](../../observable/ObservableObject)*
  &dash; The observable object.
-
-<a name="parseAttributeArgs"></a>
-#### parseAttributeArgs(attributeName, $el, $view, contextData) &rarr; {Array.&lt;unknown>}
-
-// TODO: document method
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`attributeName`|||
-|`$el`|||
-|`$view`|||
-|`contextData`|||
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1854](../../zuix/Zuix.js#L1854)
-
--->
-
-##### Returns
-
-*Array.&lt;unknown>*
 
 <a name="runScriptlet"></a>
 #### runScriptlet(scriptCode, $el, $view, data) &rarr; {object|undefined}
@@ -698,7 +673,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1839](../../zuix/Zuix.js#L1839)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1943](../../zuix/Zuix.js#L1943)
 
 -->
 
@@ -721,7 +696,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1689](../../zuix/Zuix.js#L1689)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1794](../../zuix/Zuix.js#L1794)
 
 -->
 
@@ -754,7 +729,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1430](../../zuix/Zuix.js#L1430)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1523](../../zuix/Zuix.js#L1523)
 
 -->
 
@@ -777,7 +752,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1290](../../zuix/Zuix.js#L1290)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1383](../../zuix/Zuix.js#L1383)
 
 -->
 
@@ -811,7 +786,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1527](../../zuix/Zuix.js#L1527)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1620](../../zuix/Zuix.js#L1620)
 
 -->
 
@@ -1095,20 +1070,20 @@ of the component's host element.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.|
+|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.  HTML attribute equivalent: *z-context*.|
 |`container`|*Element* \| *undefined*|The container element.|
-|`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
-|`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
+|`model`|*JSON* \| *undefined*|The data model. HTML attribute equivalent: *z-model*.|
+|`view`|*Element* \| *undefined*|The view element.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.|
 |`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|
-|`html`|*boolean* \| *undefined*|Enables or disables HTML template loading (**default:** true).|
-|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false).|
-|`priority`|*number* \| *undefined*|Loading priority (**default:** 0).|
+|`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
+|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
+|`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
 |`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
@@ -1284,15 +1259,22 @@ Configuration object for `playFx`, `playTransition`, `playAnimation` utility met
 
 ##### Properties
 
-|Name|Type|Description|
-|----|----|-----------|
-|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
-|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
-|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
-|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
-|`holdState`|*boolean*|Hold last transition/animation class.|
-|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
-|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`type`|*'transition'* \| *'animation'*||
+           |The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*||
+           |Target element.|
+|`classes`|*Array.&lt;string>* \| *string*||
+           |List of transition or animation classes to play.|
+|`options`|*object*||*optional*<br>
+           |Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*||*optional*<br>
+           |Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
+           |Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
+           |Called when all transitions/animations ended.|
 
 <!--
 

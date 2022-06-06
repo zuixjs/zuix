@@ -57,6 +57,13 @@ function ViewObserver(context) {
         // eslint-disable-next-line no-unused-vars
         function(mutationsList, observer) {
           const zc = util.dom.queryAttribute(_optionAttributes.zComponent);
+          const findNode = function(node) {
+            for (let i = 0; i < node.attributes.length; i++) {
+              if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
+                return true;
+              }
+            }
+          };
           for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
               mutation.addedNodes.forEach(function(node) {
@@ -65,14 +72,7 @@ function ViewObserver(context) {
                   if (parent.get() == null) return;
                   if (_t.options().css !== false && parent.attr(_optionAttributes.resourceType.controller) == null) {
                     if ((parent.get() === _t._container || parent.get() === _t._view)) {
-                      let found = false;
-                      for (let i = 0; i < node.attributes.length; i++) {
-                        if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
-                          found = true;
-                          break;
-                        }
-                      }
-                      if (!found) {
+                      if (!findNode(node)) {
                         util.dom.setAttribute(node, _t.getCssId(), '');
                       }
                     }
@@ -84,14 +84,7 @@ function ViewObserver(context) {
                     } while (c < 10 && parent.get() != null && parent.attr(_optionAttributes.resourceType.controller) != null);
                     if (parent.get()) {
                       parent = zuix.context(parent);
-                      let found = false;
-                      for (let i = 0; i < node.attributes.length; i++) {
-                        if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
-                          found = true;
-                          break;
-                        }
-                      }
-                      if (!found) {
+                      if (!findNode(node)) {
                         util.dom.setAttribute(node, parent.getCssId(), '');
                         zuix.$(node).find('*').each(function() {
                           this.attr(parent.getCssId(), '');

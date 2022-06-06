@@ -428,20 +428,20 @@ of the component's host element.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.|
+|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.  HTML attribute equivalent: *z-context*.|
 |`container`|*Element* \| *undefined*|The container element.|
-|`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
-|`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
+|`model`|*JSON* \| *undefined*|The data model. HTML attribute equivalent: *z-model*.|
+|`view`|*Element* \| *undefined*|The view element.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.|
 |`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|
-|`html`|*boolean* \| *undefined*|Enables or disables HTML template loading (**default:** true).|
-|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false).|
-|`priority`|*number* \| *undefined*|Loading priority (**default:** 0).|
+|`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
+|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
+|`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
 |`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
@@ -617,15 +617,22 @@ Configuration object for `playFx`, `playTransition`, `playAnimation` utility met
 
 ##### Properties
 
-|Name|Type|Description|
-|----|----|-----------|
-|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
-|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
-|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
-|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
-|`holdState`|*boolean*|Hold last transition/animation class.|
-|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
-|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`type`|*'transition'* \| *'animation'*||
+           |The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*||
+           |Target element.|
+|`classes`|*Array.&lt;string>* \| *string*||
+           |List of transition or animation classes to play.|
+|`options`|*object*||*optional*<br>
+           |Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*||*optional*<br>
+           |Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
+           |Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
+           |Called when all transitions/animations ended.|
 
 <!--
 

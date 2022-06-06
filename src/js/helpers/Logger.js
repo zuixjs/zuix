@@ -27,11 +27,6 @@
 
 'use strict';
 
-const _console_m = [
-  'log', 'info', 'warn', 'error', 'debug', 'trace', 'dir', 'group',
-  'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd',
-  'dirxml', 'assert', 'count', 'markTimeline', 'timeStamp', 'clear'
-];
 const _bc = 'background-color:rgba(200,200,200,0.2);';
 const _bt = 'background-color:transparent;';
 const _c1 = 'color:#8a53ff;';
@@ -108,7 +103,7 @@ function Logger(ctx) {
     Array.prototype.push.call(args, '\n\n');
   };
   this.log = function(level, args) {
-    if (typeof _callback === 'function') {
+    if (_callback) {
       _callback.call(ctx, level, args);
     }
     // route event
@@ -138,24 +133,6 @@ function Logger(ctx) {
 Logger.prototype.monitor = function(callback) {
   // global callback for debugging purpose
   _callback = callback;
-};
-
-/**
- *
- * @param {boolean} enable
- * @return undefined
- */
-Logger.prototype.console = function(enable) {
-  if (enable) {
-    window.console = _console;
-  } else {
-    window.console = {};
-    for (let i = 0; i < _console_m.length; i++) {
-      if (!window.console[_console_m[i]]) {
-        window.console[_console_m[i]] = function() { };
-      }
-    }
-  }
 };
 
 /**

@@ -137,7 +137,7 @@ function ContextController(context) {
   this.eventRouter = function(e) {
     const v = _t.view();
     context._behaviorMap.concat(context._eventMap).forEach(function(em) {
-      if (em.eventPath === e.type && typeof em.handler === 'function') {
+      if (em.eventPath === e.type && em.handler) {
         em.handler.call(v, e, e.detail, v);
       }
     });
@@ -148,7 +148,7 @@ function ContextController(context) {
   let handler = null;
   if (options.on != null) {
     z$.each(options.on, function(ep, handler) {
-      _t.addEvent(ep, handler);
+      ep.split(/[\s|,]+/g).map((evt) => _t.addEvent(evt, handler));
     });
   }
   // create behavior map from context options
@@ -156,7 +156,7 @@ function ContextController(context) {
     for (const bp in options.behavior) {
       if (options.behavior.hasOwnProperty(bp)) {
         handler = options.behavior[bp];
-        _t.addBehavior(bp, handler);
+        bp.split(/[\s|,]+/g).map((evt) => _t.addEvent(evt, handler));
       }
     }
   }
@@ -215,7 +215,7 @@ ContextController.prototype.addTransition = function(className, properties, opti
       className,
       properties,
       options,
-      util.dom.getShadowRoot(this.context.container())
+      util.dom.getShadowRoot(this.context.view())
   );
   return this;
 };
@@ -325,8 +325,7 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
     let target = this.context.container();
     if (target == null) target = this.context.view();
     if (target != null) {
-      z$(target)
-          .trigger(eventPath, eventData);
+      z$(target).trigger(eventPath, eventData);
     }
     this.context.trigger(this.context, eventPath, eventData);
   } else {

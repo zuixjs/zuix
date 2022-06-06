@@ -81,7 +81,7 @@ Creates a ZxQuery wrapped element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 851](../../helpers/ZxQuery.js#L851)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 829](../../helpers/ZxQuery.js#L829)
 
 -->
 
@@ -110,7 +110,7 @@ Adds a CSS transition effect to the component stylesheet.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1354](../../helpers/ZxQuery.js#L1354)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1280](../../helpers/ZxQuery.js#L1280)
 
 -->
 
@@ -136,7 +136,7 @@ Appends a new stylesheet, or replaces an existing one, to the document.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1101](../../helpers/ZxQuery.js#L1101)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1075](../../helpers/ZxQuery.js#L1075)
 
 -->
 
@@ -159,7 +159,7 @@ Checks if a class exists by searching for it in all document stylesheets.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 967](../../helpers/ZxQuery.js#L967)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 941](../../helpers/ZxQuery.js#L941)
 
 -->
 
@@ -188,7 +188,7 @@ If the callback returns *false*, the iteration loop will interrupt.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 867](../../helpers/ZxQuery.js#L867)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 845](../../helpers/ZxQuery.js#L845)
 
 -->
 
@@ -211,7 +211,7 @@ Selects document elements matching the given *DOM* query selector.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 855](../../helpers/ZxQuery.js#L855)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 833](../../helpers/ZxQuery.js#L833)
 
 -->
 
@@ -235,7 +235,7 @@ Gets the closest parent matching the given query selector
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1232](../../helpers/ZxQuery.js#L1232)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1158](../../helpers/ZxQuery.js#L1158)
 
 -->
 
@@ -258,7 +258,7 @@ Gets the position of an element.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1250](../../helpers/ZxQuery.js#L1250)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1176](../../helpers/ZxQuery.js#L1176)
 
 -->
 
@@ -281,7 +281,7 @@ Checks if an element has got the specified CSS class.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 944](../../helpers/ZxQuery.js#L944)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 922](../../helpers/ZxQuery.js#L922)
 
 -->
 
@@ -303,7 +303,7 @@ Makes an HTTP request.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 906](../../helpers/ZxQuery.js#L906)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 884](../../helpers/ZxQuery.js#L884)
 
 -->
 
@@ -325,7 +325,7 @@ Plays transition effects or animations on a given element inside the component.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1393](../../helpers/ZxQuery.js#L1393)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1319](../../helpers/ZxQuery.js#L1319)
 
 -->
 
@@ -345,7 +345,7 @@ If the callback returns a value, then the variable will be replaced with the giv
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1190](../../helpers/ZxQuery.js#L1190)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1116](../../helpers/ZxQuery.js#L1116)
 
 -->
 
@@ -353,30 +353,6 @@ If the callback returns a value, then the variable will be replaced with the giv
 
 *string* \| *null*
  &dash; The new html code with variables replaced with values or null if no variable was replaced.
-
-<a name="replaceCssVars"></a>
-#### replaceCssVars(css, model) &rarr; {string}
-
-Replaces CSS variables with provided values.
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`css`|*string*|Stylesheet text|
-|`model`|*object*|Object containing variables fields and values.|
-
-<!--
-
-*Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1142](../../helpers/ZxQuery.js#L1142)
-
--->
-
-##### Returns
-
-*string*
- &dash; The new stylesheet text with variables replaced with values
 
 <a name="wrapElement"></a>
 #### wrapElement(containerTag, element) &rarr; {Element|HTMLElement}
@@ -393,7 +369,7 @@ Wraps an `Element` inside a container specified by a given tag name.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 1006](../../helpers/ZxQuery.js#L1006)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 980](../../helpers/ZxQuery.js#L980)
 
 -->
 
@@ -669,20 +645,20 @@ of the component's host element.
 
 |Name|Type|Description|
 |----|----|-----------|
-|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.|
+|`contextId`|*Object* \| *undefined*|The context id. HTML attribute equivalent: *z-context*. If not specified it will be randomly generated.  HTML attribute equivalent: *z-context*.|
 |`container`|*Element* \| *undefined*|The container element.|
-|`model`|*JSON* \| *undefined*|The data model.  HTML attribute equivalent: *z-model*.|
-|`view`|*Element* \| *undefined*|The view element. HTML attribute equivalent: *z-view*.|
+|`model`|*JSON* \| *undefined*|The data model. HTML attribute equivalent: *z-model*.|
+|`view`|*Element* \| *undefined*|The view element.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
-|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string.|
-|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string.|
+|`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.|
+|`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.|
 |`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
 |`encapsulation`|*boolean* \| *undefined*|Whether to use style encapsulation or not (**default:** false).|
 |`resetCss`|*boolean* \| *undefined*|Whether to reset view style to prevent inheriting from parent containers (**default:** false).|
 |`cext`|*string* \| *undefined*|When loading content of the view, appends the specified extension instead of *.html*.|
-|`html`|*boolean* \| *undefined*|Enables or disables HTML template loading (**default:** true).|
-|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false).|
-|`priority`|*number* \| *undefined*|Loading priority (**default:** 0).|
+|`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
+|`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
+|`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
 |`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
@@ -858,15 +834,22 @@ Configuration object for `playFx`, `playTransition`, `playAnimation` utility met
 
 ##### Properties
 
-|Name|Type|Description|
-|----|----|-----------|
-|`type`|*'transition'* \| *'animation'*|The type of effect to play.|
-|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*|Target element.|
-|`classes`|*Array.&lt;string>* \| *string*|List of transition or animation classes to play.|
-|`options`|*object*|Transition/animation options ('delay', 'duration', etc..).|
-|`holdState`|*boolean*|Hold last transition/animation class.|
-|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
-|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|Called when all transitions/animations ended.|
+|Name|Type|Argument|Description|
+|----|----|--------|-----------|
+|`type`|*'transition'* \| *'animation'*||
+           |The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*||
+           |Target element.|
+|`classes`|*Array.&lt;string>* \| *string*||
+           |List of transition or animation classes to play.|
+|`options`|*object*||*optional*<br>
+           |Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*||*optional*<br>
+           |Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
+           |Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
+           |Called when all transitions/animations ended.|
 
 <!--
 

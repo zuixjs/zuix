@@ -147,6 +147,31 @@ function dataBind(el, boundData) {
       z$(el).html('').append(v);
   }
 }
+/**
+ * Query binding adapter for resolving `boundField`->$el mapping
+ * @param {ComponentContext} _t
+ * @param {ZxQuery} $view
+ * @param {ZxQuery} $el
+ * @param {BindingAdapterCallback} fn The binding adapter callback
+ * @param {string} field Bound field name
+ */
+function queryAdapter(_t, $view, $el, fn, field) {
+  if (fn && !_t._disposed) {
+    (fn).call($view, $el, field, $view, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
+      // data adapter is not ready, retry after 1s
+      if (!_t._disposed) {
+        const timeoutId = $el.get().dataset.__zuix_refreshTimeout;
+        if (timeoutId && _queryAdapterRefreshTimeout[timeoutId]) {
+          clearTimeout(_queryAdapterRefreshTimeout[timeoutId]);
+        }
+        $el.get().dataset.__zuix_refreshTimeout =
+            setTimeout(function() {
+              queryAdapter(_t, $view, $el, fn, field);
+            }, retryMs ? retryMs : 500);
+      }
+    });
+  }
+}
 
 /**
  * The component context object represents the component instance itself, and it holds
@@ -172,7 +197,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   this.componentId = null;
   this.handlers = {refresh: function($view, $el, contextData, refreshCallback) {}};
   this.trigger = function(context, eventPath, eventValue) {
-    if (typeof eventCallback === 'function') {
+    if (eventCallback) {
       eventCallback(context, eventPath, eventValue);
     }
   };
@@ -231,29 +256,34 @@ function ComponentContext(zuixInstance, options, eventCallback) {
       // TODO: maybe implement a {ContextController} callback for this too
     },
     set: function(target, key, value, path, old) {
+      const view = this.context.$;
       if (target instanceof Element) {
         //  use the first part of the "path" as field name (eg. 'text.innerHTML' --> 'text')
         //  for binding data to view element
         path = path.split('.')[0];
         value = target;
       }
+      if (typeof value === 'function') {
+        let field = view.find(util.dom.queryAttribute(_optionAttributes.zBind, path));
+        if (field.get() == null) {
+          field = view.find(util.dom.queryAttribute(_optionAttributes.zField, path));
+        }
+        queryAdapter(this.context, view, field, value, key)
+        return;
+      }
       // update bound field if found in the view
-      const view = z$(this.context.view());
+      const bindFields = function(fld) {
+        if (fld.get() != null) {
+          fld.each(function(i, f) {
+            dataBind(f, value);
+          });
+        }
+      };
       if (view.get()) {
-        let fld = view.find(util.dom.queryAttribute(_optionAttributes.zBind, path));
-        if (fld.get() != null) {
-          fld.each(function(i, f) {
-            dataBind(f, value);
-          });
-        }
-        fld = view.find(util.dom.queryAttribute(_optionAttributes.zField, path));
-        if (fld.get() != null) {
-          fld.each(function(i, f) {
-            dataBind(f, value);
-          });
-        }
+        bindFields(view.find(util.dom.queryAttribute(_optionAttributes.zBind, path)));
+        bindFields(view.find(util.dom.queryAttribute(_optionAttributes.zField, path)));
         // call controller's 'update' method
-        if (this.context._c && typeof this.context._c.update === 'function') {
+        if (this.context._c && this.context._c.update) {
           this.context._c.update(target, key, value, path, old);
         }
       }
@@ -309,7 +339,7 @@ ComponentContext.prototype.dispose = function() {
         });
       }
     }
-    if (util.isFunction(this._c.dispose)) {
+    if (this._c.dispose) {
       this._c.dispose.call(this, this);
     }
   }
@@ -397,13 +427,14 @@ ComponentContext.prototype.view = function(view) {
       // add `z-field` from '#<field_name>' attributes
       for (let j = 0; j < el.attributes.length; j++) {
         const a = el.attributes.item(j);
-        const attributeName = a.name;
-        if (attributeName.length > 1 && attributeName.startsWith('#')) {
+        const v = a.value;
+        if (a.name.length > 1 && a.name.startsWith('#')) {
+          const attributeName = util.hyphensToCamelCase(a.name.substring(1));
           if ($el.attr(_optionAttributes.zField) == null) {
-            $el.attr(_optionAttributes.zField, attributeName.substring(1));
+            $el.attr(_optionAttributes.zField, attributeName);
           }
-          if ($el.attr(_optionAttributes.zBind) == null && a.value != null && a.value.length > 0) {
-            $el.attr(_optionAttributes.zBind, a.value);
+          if ($el.attr(_optionAttributes.zBind) == null && v != null && v.length > 0) {
+            $el.attr(_optionAttributes.zBind, v);
           }
         }
       }
@@ -600,7 +631,7 @@ ComponentContext.prototype.style = function(css) {
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._container));
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._view));
   } else if (typeof css === 'string') {
     // store original unparsed css (might be useful for debugging)
     this._css = css;
@@ -626,7 +657,7 @@ ComponentContext.prototype.style = function(css) {
     );
 
     // output css
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._container));
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._view));
   }
   this.checkEncapsulation();
   // TODO: should throw error if ```css``` is not a valid type
@@ -710,7 +741,7 @@ ComponentContext.prototype.model = function(model) {
     }
     this.modelToView();
     // call controller `update` method when whole model is updated
-    if (this._c != null && util.isFunction(this._c.update)) {
+    if (this._c != null && this._c.update) {
       this._c.update.call(this._c, null, null, null, null, this._c);
     }
   }
@@ -814,10 +845,10 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
   }
   if (inlineStyles[cssPath] != null) {
     context.style(inlineStyles[cssPath]);
-    if (util.isFunction(options.success)) {
+    if (options.success) {
       (options.success).call(context, inlineStyles[cssPath], context);
     }
-    if (util.isFunction(options.then)) {
+    if (options.then) {
       (options.then).call(context, context);
     }
   } else {
@@ -828,10 +859,10 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
       context.style(viewCss);
       inlineStyle.detach();
       inlineStyles[cssPath] = viewCss;
-      if (util.isFunction(options.success)) {
+      if (options.success) {
         (options.success).call(context, viewCss, context);
       }
-      if (util.isFunction(options.then)) {
+      if (options.then) {
         (options.then).call(context, context);
       }
     } else {
@@ -842,18 +873,18 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
         url: zuix.getResourcePath(cssPath),
         success: function(viewCss) {
           context.style(viewCss);
-          if (util.isFunction(options.success)) {
+          if (options.success) {
             (options.success).call(context, viewCss, context);
           }
         },
         error: function(err) {
           _log.e(err, context);
-          if (util.isFunction(options.error)) {
+          if (options.error) {
             (options.error).call(context, err, context);
           }
         },
         then: function() {
-          if (util.isFunction(options.then)) {
+          if (options.then) {
             (options.then).call(context, context);
           }
         }
@@ -905,10 +936,10 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
   }
   if (inlineViews[htmlPath] != null) {
     context.view(inlineViews[htmlPath]);
-    if (util.isFunction(options.success)) {
+    if (options.success) {
       (options.success).call(context, inlineViews[htmlPath], context);
     }
-    if (util.isFunction(options.then)) {
+    if (options.then) {
       (options.then).call(context, context);
     }
   } else {
@@ -919,21 +950,17 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         util.dom.cssNot(_optionAttributes.zComponent)
     ));
     if (inlineView.length() > 0) {
+      let styles;
       let inlineElement = inlineView.get(0);
       if (inlineElement.tagName.toLowerCase() === 'template') {
         inlineElement = inlineElement.cloneNode(true);
-        const styles = inlineElement.content.querySelectorAll('style');
-        if (styles) {
-          for (const s of styles) {
-            s.setAttribute('media', '#' + context.componentId);
-          }
-        }
+        styles = inlineElement.content.querySelectorAll('style');
       } else {
-        const styles = inlineElement.querySelectorAll('style[media="#"]');
-        if (styles) {
-          for (const s of styles) {
-            s.setAttribute('media', '#' + context.componentId);
-          }
+        styles = inlineElement.querySelectorAll('style[media="#"]');
+      }
+      if (styles) {
+        for (const s of styles) {
+          s.setAttribute('media', '#' + context.componentId);
         }
       }
       inlineViews[htmlPath] = inlineElement.innerHTML;
@@ -947,10 +974,10 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
       } else {
         context.view(inlineElement.innerHTML);
       }
-      if (util.isFunction(options.success)) {
+      if (options.success) {
         (options.success).call(context, inlineElement.innerHTML, context);
       }
-      if (util.isFunction(options.then)) {
+      if (options.then) {
         (options.then).call(context, context);
       }
     } else {
@@ -962,18 +989,18 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         url: zuix.getResourcePath(htmlPath),
         success: function(viewHtml) {
           context.view(viewHtml);
-          if (util.isFunction(options.success)) {
+          if (options.success) {
             (options.success).call(context, viewHtml, context);
           }
         },
         error: function(err) {
           _log.e(err, context);
-          if (util.isFunction(options.error)) {
+          if (options.error) {
             (options.error).call(context, err, context);
           }
         },
         then: function() {
-          if (util.isFunction(options.then)) {
+          if (options.then) {
             (options.then).call(context, context);
           }
         }
@@ -1043,42 +1070,10 @@ ComponentContext.prototype.modelToView = function() {
       if (boundField == null) {
         boundField = $el.attr(_optionAttributes.zField);
       }
-      const v = z$(_t._view);
-      // map `z-field`s as properties of the context's member '#' if the variable name is valid
-      try {
-        const f = util.hyphensToCamelCase(boundField);
-        Function('function testName(){ const ' + f + ' = "test"; }');
-        _t['#'][f] = _t.field(boundField);
-      } catch (e) {
-        // TODO: should at least log a 'Warning: unscriptable field name'
-        //console.log('ERROR', e);
-      }
-      /**
-       * Query binding adapter for resolving `boundField`->$el mapping
-       * @param {BindingAdapterCallback} fn The binding adapter callback
-       * @param {string} field Bound field name
-       */
-      const queryAdapter = function(fn, field) {
-        if (fn && !_t._disposed) {
-          (fn).call(v, $el, field, v, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
-            // data adapter is not ready, retry after 1s
-            if (!_t._disposed) {
-              const timeoutId = $el.get().dataset.__zuix_refreshTimeout;
-              if (timeoutId && _queryAdapterRefreshTimeout[timeoutId]) {
-                clearTimeout(_queryAdapterRefreshTimeout[timeoutId]);
-              }
-              $el.get().dataset.__zuix_refreshTimeout =
-                  setTimeout(function() {
-                    queryAdapter(fn, field);
-                  }, retryMs ? retryMs : 500);
-            }
-          });
-        }
-      };
       if (typeof _t._model === 'function') {
         // use a data model binding adapter
         // to resolve all model fields' values
-        queryAdapter(_t._model, boundField);
+        queryAdapter(_t, $view, $el, _t._model, boundField);
       } else {
         let boundData = util.propertyFromPath(_t._model, boundField);
         const altField = util.hyphensToCamelCase(boundField);
@@ -1090,12 +1085,31 @@ ComponentContext.prototype.modelToView = function() {
         if (typeof boundData === 'function') {
           // use data model's field binding adapter
           // to resolve boundField's value
-          queryAdapter(boundData, boundField);
+          queryAdapter(_t, $view, $el, boundData, boundField);
         } else if (boundData != null) {
           // use default binding method
           // to resolve boundField's value
           dataBind(el, boundData);
         }
+      }
+    });
+    // new fields might been have added after data-binding
+    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
+      if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
+        return true;
+      }
+      let boundField = $el.attr(_optionAttributes.zBind);
+      if (boundField == null) {
+        boundField = $el.attr(_optionAttributes.zField);
+      }
+      // map `z-field`s as properties of the context's member '#' if the variable name is valid
+      try {
+        const f = util.hyphensToCamelCase(boundField);
+        Function('function testName(){ const ' + f + ' = "test"; }');
+        _t['#'][f] = _t.field(boundField);
+      } catch (e) {
+        // TODO: should at least log a 'Warning: unscriptable field name'
+        //console.log('ERROR', e);
       }
     });
   }
