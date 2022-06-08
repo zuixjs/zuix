@@ -73,7 +73,8 @@ require('./ComponentCache');
  * @property {boolean|string|undefined} html It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.
  * @property {number|undefined} priority Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.
- * @property {ContextLoadedCallback|undefined} ready The loaded callback, triggered once the component is successfully loaded.
+ * @property {string|undefined} using Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.
+ * @property {ContextLoadedCallback|undefined} loaded The loaded callback, triggered once the component is successfully loaded.
  * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once all component's dependencies have been loaded.
  * @property {ContextErrorCallback|undefined} error The error callback, triggered when an error occurs.
  */
@@ -112,6 +113,7 @@ require('./ComponentCache');
  * @param {string|object} hashIdOrContext
  */
 
+// TODO: move _contextRoot and _componentCache to a WeakMap
 
 /**
  * @private
@@ -161,9 +163,10 @@ const _implicitLoadDefaultList = [
   util.dom.queryAttribute(_optionAttributes.zContext),
 //  util.dom.queryAttribute(_optionAttributes.zComponent),
   util.dom.queryAttribute(_optionAttributes.zOptions),
-  util.dom.queryAttribute(_optionAttributes.zModel),
-  util.dom.queryAttribute(_optionAttributes.zOn),
-  util.dom.queryAttribute(_optionAttributes.zBehavior),
+  util.dom.queryAttribute(_optionAttributes.zModel + ',:model'),
+  util.dom.queryAttribute(_optionAttributes.zOn + ',:on'),
+  util.dom.queryAttribute(_optionAttributes.zBehavior + ',:behavior'),
+  util.dom.queryAttribute(_optionAttributes.zUsing + ',:using'),
   util.dom.queryAttribute(_optionAttributes.zReady)
 ];
 
@@ -236,12 +239,9 @@ function Zuix() {
       },
       'get': function($view, $el, lastResult, refreshCallback) {
         let code = $el.attr('@get');
-        let resultAs = 'result';
-        if (code.indexOf(' as ') > 0) {
-          const parts = code.split(' as ');
-          code = parts[0];
-          resultAs = parts[1];
-        }
+        const parts = code.split(' as ');
+        code = parts[0];
+        const resultAs = parts[1] || 'result';
         const result = zuix.runScriptlet(code, $el, $view);
         if (result !== lastResult) {
           code = 'const ' + resultAs + ' = args; ' + $el.attr('@set');
@@ -654,14 +654,15 @@ function context(contextId, callback) {
         setTimeout(function() {
           callback.call(context, context);
         }, _componentReadyCallbackDelay);
-        return context;
+      } else {
+        z$(contextId).one('component:ready', function() {
+          context = zuix.context(this);
+          setTimeout(function() {
+            callback.call(context, context);
+          }, _componentReadyCallbackDelay);
+        });
       }
-      z$(contextId).one('component:ready', function() {
-        context = zuix.context(this);
-        setTimeout(function() {
-          callback.call(context, context);
-        }, _componentReadyCallbackDelay);
-      });
+      return null;
     } else callback.call(context, context);
   }
   return context;
@@ -942,8 +943,7 @@ function createComponent(context, task) {
 function isDirectComponentElement($view, $el) {
   const exclusionList = [
     ..._implicitLoadDefaultList,
-    util.dom.queryAttribute(_optionAttributes.zLoad),
-    util.dom.queryAttribute(_optionAttributes.zInclude)
+    util.dom.queryAttribute(_optionAttributes.zLoad)
   ].join(',');
   const $cv = $el.parent('pre,code,' + exclusionList);
   return $cv.get() === $view.get();
@@ -1005,10 +1005,11 @@ function initController(ctrl) {
     const optionAttributes = Array.from($view.get().attributes)
         .filter((a) => attributesList.find((t) => a.nodeName.startsWith(t)));
     optionAttributes.forEach((attribute) => {
+      let scriptlet = attribute.nodeValue;
+      if (!scriptlet) return;
       const attr = attribute.nodeName;
       const isRootOption = attr.lastIndexOf(':') < 2;
       let val;
-      let scriptlet = attribute.nodeValue;
       if (!scriptlet.match(/^[^<>()\[\]\-+\s!?/&£"=^#@:;,.*|]+$/g)) {
         scriptlet = `(event, args) => \{ ${attribute.nodeValue} \}`;
       }
@@ -1055,9 +1056,9 @@ function initController(ctrl) {
     // parse and allocate inline event handlers
     const allocateEventHandlers = function(ctx, $el) {
       Array.from($el.get().attributes).forEach((attribute) => {
+        let scriptlet = attribute.nodeValue;
         const attr = attribute.nodeName;
-        if (attr.startsWith('(') && attr.endsWith(')')) {
-          let scriptlet = attribute.nodeValue;
+        if (scriptlet && attr.startsWith('(') && attr.endsWith(')')) {
           if (!scriptlet.match(/^[^<>()\[\]\-+\s!?/&£"=^#@:;,.*|]+$/g)) {
             scriptlet = `(event, args) => \{ ${attribute.nodeValue} \}`;
           }
@@ -1158,7 +1159,7 @@ function initController(ctrl) {
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
           });
         }
-        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; let _this = null; zuix.context(this, (ctx) => _this = ctx); " + s) } catch (e) { console.error(\'SCRIPTLET ERROR\', e, s); }; return result };';
+        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; let _this = null; zuix.context(this, (ctx) => _this = ctx); " + s) } catch (e) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); }; return result };';
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';
@@ -1166,19 +1167,25 @@ function initController(ctrl) {
         viewRefreshScript.each(function(i, el, $el) {
           if (zuix.context($view) === ctx) {
             if ($el.attr('using') != null) {
-              usingComponents.push(...$el.attr('using').split(/[\s|,]+/g));
+              usingComponents.push(...$el.attr('using').split(/[;|,]+/g));
             }
             if ($el.parent().get() === $view.get() || $el.attr('for') === contextId) {
               userCode += $el.html() + ';';
             }
           }
         });
+        // using attribute on main view
+        if (ctx.options().using != null) {
+          usingComponents.push(...ctx.options().using.split(/[;|,]+/g));
+        }
 
         let componentsResolve = '';
         if (usingComponents.length > 0) {
           let waitingComponents = '';
           usingComponents.forEach(function(cid) {
-            const ctxVarName = util.hyphensToCamelCase(cid);
+            const asVar = cid.split(' as ');
+            cid = asVar[0];
+            const ctxVarName = util.hyphensToCamelCase(asVar[1]) || util.hyphensToCamelCase(cid);
             const varDeclarations = 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { ' + ctxVarName + ' = zuix.context("' + cid + '"';
             if (ctx._dependencyResolver !== false) {
               componentsResolve += varDeclarations + ', function(ctx) { ' + ctxVarName + ' = ctx; }); }';
@@ -1192,7 +1199,7 @@ function initController(ctrl) {
             componentsResolve += 'const resolved = function() { return ' + waitingComponents + 'true; };';
             ctx._dependencyResolver = Function(scriptHeader + componentsResolve + '; return { resolved }; }).call(this.$el.get(), this.$el, this.ctx, this.args);')
                 .call({$el, ctx, args: null});
-            if (!ctx._dependencyResolver.resolved()) {
+            if (!ctx._dependencyResolver.resolved() && refreshCallback) {
               // do not start the refresh handler yet,
               // wait for components requested with the "using" attribute
               return refreshCallback(contextData);
@@ -1245,7 +1252,7 @@ function initController(ctrl) {
         if (ctx._refreshHandler && !ctx._refreshHandler.initialized) {
           let loadedNested = true;
           allocated.forEach(function(h) {
-            if (h.$element.attr(_optionAttributes.zLoad) != null || h.$element.attr(_optionAttributes.zInclude) != null) {
+            if (h.$element.attr(_optionAttributes.zLoad) != null) {
               loadedNested = zuix.context(h.$element) != null && zuix.context(h.$element).isReady;
               return loadedNested;
             }
@@ -1940,8 +1947,10 @@ Zuix.prototype.resolveImplicitLoad = function(element) {
   z$(element)
       .find(implicitDefault)
       .each(function(i, el, $el) {
-        $el.attr(_optionAttributes.zLoad, 'default')
-            .attr(_optionAttributes.zLazy, 'false');
+        if (el.tagName.indexOf('-') === -1 && $el.attr(_optionAttributes.zLoad) == null) {
+          $el.attr(_optionAttributes.zLoad, 'default')
+              .attr(_optionAttributes.zLazy, 'false');
+        }
       });
 };
 
@@ -1979,7 +1988,7 @@ module.exports = function() {
   const zuix = new Zuix();
   if (window && document) {
     window.zuix = zuix;
-    const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-include][z-ready=true].visible-on-ready,[z-load][z-ready=true].visible-on-ready{opacity:1}[z-include]:not([z-ready=true]).visible-on-ready,[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
+    const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-load][z-ready=true].visible-on-ready{opacity:1}[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
     const refreshCallback = function() {
       zuix.componentize();

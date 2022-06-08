@@ -413,8 +413,7 @@ ComponentContext.prototype.view = function(view) {
   if (this._view != null) {
     // view style encapsulation
     const q = '*' +
-            util.dom.cssNot(_optionAttributes.zLoad).getAll() +
-            util.dom.cssNot(_optionAttributes.zInclude).getAll();
+            util.dom.cssNot(_optionAttributes.zLoad).getAll();
     // mark all elements with a css identifier attribute
     z$(this._view).attr(cssId, null).find(q).each(function(i, v) {
       this.attr(cssId, null);
@@ -590,8 +589,7 @@ ComponentContext.prototype.checkEncapsulation = function() {
     if (this._container != null || this._style != null) {
       // view style encapsulation
       const q = '*' +
-          util.dom.cssNot(_optionAttributes.zLoad).getAll() +
-          util.dom.cssNot(_optionAttributes.zInclude).getAll();
+          util.dom.cssNot(_optionAttributes.zLoad).getAll();
       // mark all elements with a css identifier attribute
       v.find(q).each(function(i, v) {
         this.attr(cssId, '');

@@ -39,8 +39,6 @@ const OptionAttributes = Object.freeze({
         'z-context',
   zField:
         'z-field',
-  zInclude:
-        'z-include',
   zLazy:
         'z-lazy',
   zLoad:
@@ -49,6 +47,8 @@ const OptionAttributes = Object.freeze({
         'z-loaded',
   zOptions:
         'z-options',
+  zUsing:
+        'z-using',
   zPriority:
         'z-priority',
   zView:

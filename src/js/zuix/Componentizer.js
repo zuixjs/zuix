@@ -213,8 +213,7 @@ function queueLoadables(element) {
     element = element.get();
   }
   // Select all loadable elements
-  const q = util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded)) + ',' +
-    util.dom.queryAttribute(_optionAttributes.zInclude, null, util.dom.cssNot(_optionAttributes.zLoaded));
+  const q = util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded));
   let waitingLoad = z$(element).find(q);
   waitingLoad = Array.prototype.slice.call(waitingLoad._selection);
   // Process elements options
@@ -379,14 +378,7 @@ function loadInline(element, opts) {
   };
   let componentId = v.attr(_optionAttributes.zLoad);
   if (util.isNoU(componentId)) {
-    const include = v.attr(_optionAttributes.zInclude);
-    if (include != null) {
-      componentId = resolvePath(include);
-      v.attr(_optionAttributes.zInclude, componentId);
-      setAsTemplate();
-    } else {
-      return false;
-    }
+    return false;
   } else {
     componentId = resolvePath(componentId);
     v.attr(_optionAttributes.zLoad, componentId);
@@ -453,6 +445,11 @@ function loadInline(element, opts) {
     options.model = parseOptions(element, model);
   }
 
+  const using = v.attr(_optionAttributes.zUsing);
+  if (!util.isNoU(using)) {
+    options.using = using;
+  }
+
   const priority = v.attr(_optionAttributes.zPriority);
   if (!util.isNoU(priority)) {
     options.priority = +(priority);
@@ -495,7 +492,7 @@ function resolvePath(path) {
 /** @private */
 function parseOptions(element, attributeValue) {
   if (typeof attributeValue === 'string') {
-    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.zLoad) + ',' + util.dom.queryAttribute(_optionAttributes.zInclude));
+    const parentComponent = z$(element).parent(util.dom.queryAttribute(_optionAttributes.zLoad));
     if (parentComponent.get()) {
       // parent component context should be already loaded
       const context = zuix.context(parentComponent);

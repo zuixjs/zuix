@@ -158,13 +158,14 @@ module.exports = {
   },
 
   hyphensToCamelCase: function(s) {
-    return s.replace(/--/g, ':').replace(/-([a-z0-9_$-])/g, function(g) {
+    return typeof s === 'string' ? s.replace(/--/g, ':').replace(/-([a-z0-9_$-])/g, function(g) {
       return '_$-'.indexOf(g[1]) > -1 || (+g[1]).toString() === g[1] ?
           '_' + g[1].replace('-', '_') : g[1].toUpperCase();
-    }).replace(/:/g, '-');
+    }).replace(/:/g, '-') : s;
   },
 
   camelCaseToHyphens: function(s) {
+    if (typeof s !== 'string') return s;
     s = s.replace(/(^\w)|(\s+\w)/g, function(letter) {
       return letter.toUpperCase();
     }).replace(/\s/g, '');
@@ -198,9 +199,9 @@ module.exports = {
       let selector = '';
       fields.forEach(function(v, i) {
         if (value != null) {
-          selector += '[' + v + '="' + value + '"]';
+          selector += '[' + CSS.escape(v) + '="' + value + '"]';
         } else {
-          selector += '[' + v + ']';
+          selector += '[' + CSS.escape(v) + ']';
         }
         if (appendValue) {
           selector += appendValue.get(i);
