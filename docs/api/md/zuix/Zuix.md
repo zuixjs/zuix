@@ -80,7 +80,7 @@ Allocates a new instance of *zuix.js*, JavaScript library for
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 180](../../zuix/Zuix.js#L180)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 185](../../zuix/Zuix.js#L185)
 
 -->
 
@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1829](../../zuix/Zuix.js#L1829)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1851](../../zuix/Zuix.js#L1851)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1840](../../zuix/Zuix.js#L1840)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1862](../../zuix/Zuix.js#L1862)
 
 -->
 
@@ -164,7 +164,7 @@ by passing a boolean value as argument.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1768](../../zuix/Zuix.js#L1768)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1790](../../zuix/Zuix.js#L1790)
 
 -->
 
@@ -199,7 +199,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1488](../../zuix/Zuix.js#L1488)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1510](../../zuix/Zuix.js#L1510)
 
 -->
 
@@ -239,7 +239,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1463](../../zuix/Zuix.js#L1463)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1485](../../zuix/Zuix.js#L1485)
 
 -->
 
@@ -277,7 +277,7 @@ order to actually load and display the component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1501](../../zuix/Zuix.js#L1501)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1523](../../zuix/Zuix.js#L1523)
 
 -->
 
@@ -294,7 +294,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1898](../../zuix/Zuix.js#L1898)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1920](../../zuix/Zuix.js#L1920)
 
 -->
 
@@ -310,7 +310,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1905](../../zuix/Zuix.js#L1905)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1927](../../zuix/Zuix.js#L1927)
 
 -->
 
@@ -337,7 +337,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1319](../../zuix/Zuix.js#L1319)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1341](../../zuix/Zuix.js#L1341)
 
 -->
 
@@ -374,7 +374,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1806](../../zuix/Zuix.js#L1806)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1828](../../zuix/Zuix.js#L1828)
 
 -->
 
@@ -400,7 +400,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1598](../../zuix/Zuix.js#L1598)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1620](../../zuix/Zuix.js#L1620)
 
 -->
 
@@ -487,7 +487,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1741](../../zuix/Zuix.js#L1741)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1763](../../zuix/Zuix.js#L1763)
 
 -->
 
@@ -513,7 +513,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1369](../../zuix/Zuix.js#L1369)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1391](../../zuix/Zuix.js#L1391)
 
 -->
 
@@ -579,7 +579,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1441](../../zuix/Zuix.js#L1441)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1463](../../zuix/Zuix.js#L1463)
 
 -->
 
@@ -647,7 +647,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1816](../../zuix/Zuix.js#L1816)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1838](../../zuix/Zuix.js#L1838)
 
 -->
 
@@ -673,7 +673,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1943](../../zuix/Zuix.js#L1943)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1967](../../zuix/Zuix.js#L1967)
 
 -->
 
@@ -696,7 +696,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1794](../../zuix/Zuix.js#L1794)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1816](../../zuix/Zuix.js#L1816)
 
 -->
 
@@ -729,7 +729,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1523](../../zuix/Zuix.js#L1523)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1545](../../zuix/Zuix.js#L1545)
 
 -->
 
@@ -752,7 +752,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1383](../../zuix/Zuix.js#L1383)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1405](../../zuix/Zuix.js#L1405)
 
 -->
 
@@ -786,7 +786,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1620](../../zuix/Zuix.js#L1620)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1642](../../zuix/Zuix.js#L1642)
 
 -->
 
@@ -1034,7 +1034,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 81](../../zuix/Zuix.js#L81)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 82](../../zuix/Zuix.js#L82)
 
 -->
 
@@ -1055,7 +1055,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 90](../../zuix/Zuix.js#L90)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 91](../../zuix/Zuix.js#L91)
 
 -->
 
@@ -1084,7 +1084,8 @@ of the component's host element.
 |`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
-|`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
+|`using`|*string* \| *undefined*|Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.|
+|`loaded`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
 
@@ -1112,7 +1113,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 99](../../zuix/Zuix.js#L99)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 100](../../zuix/Zuix.js#L100)
 
 -->
 
@@ -1226,7 +1227,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
+[helpers/Logger.js](../../helpers/Logger.js), [line 117](../../helpers/Logger.js#L117)
 
 -->
 
@@ -1317,7 +1318,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 107](../../zuix/Zuix.js#L107)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 108](../../zuix/Zuix.js#L108)
 
 -->
 

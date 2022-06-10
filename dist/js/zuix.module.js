@@ -1,4 +1,4 @@
-/* zuix.js v1.1.8 22.06.08 21:33:32 */
+/* zuix.js v1.1.9 22.06.10 19:00:13 */
 
 /******/ var __webpack_modules__ = ({
 
@@ -374,51 +374,6 @@ module.exports = {
   isNoU: function(obj) {
     return (typeof obj === 'undefined' || obj === null);
   },
-  // TODO: deprecate `objectEquals` method
-  objectEquals: function(x, y) {
-    if (x === null || x === undefined || y === null || y === undefined) {
-      return x === y;
-    }
-    // after this just checking type of one would be enough
-    if (x.constructor !== y.constructor) {
-      return false;
-    }
-    // if they are functions, they should exactly refer to same one (because of closures)
-    if (x instanceof Function) {
-      return x === y;
-    }
-    // if they are regexps, they should exactly refer to same one (it is hard to better equality check on current ES)
-    if (x instanceof RegExp) {
-      return x === y;
-    }
-    if (x === y || x.valueOf() === y.valueOf()) {
-      return true;
-    }
-    if (Array.isArray(x) && x.length !== y.length) {
-      return false;
-    }
-
-    // if they are dates, they must have equal valueOf
-    if (x instanceof Date) {
-      return false;
-    }
-
-    // if they are strictly equal, they both need to be objects at least
-    if (!(x instanceof Object)) {
-      return false;
-    }
-    if (!(y instanceof Object)) {
-      return false;
-    }
-
-    // recursive object equality check
-    const p = Object.keys(x);
-    return Object.keys(y).every((i) => {
-      return p.indexOf(i) !== -1;
-    }) && p.every( (i) => {
-      return this.objectEquals(x[i], y[i]);
-    });
-  },
 
   propertyFromPath: function(o, s) {
     if (typeof s !== 'string' || o == null) {
@@ -468,9 +423,6 @@ module.exports = {
       return obj;
     }
     // Give temp the original object's constructor
-    // var temp = obj.constructor();
-    // for (var key in obj)
-    //    temp[key] = cloneObject(obj[key]);
     let temp = obj;
     try {
       temp = obj.constructor();
@@ -539,11 +491,11 @@ module.exports = {
     queryAttribute: function(name, value, appendValue) {
       const fields = name.split(/[\s|,]+/g);
       let selector = '';
-      fields.forEach(function(v, i) {
+      fields.forEach(function(f, i) {
         if (value != null) {
-          selector += '[' + CSS.escape(v) + '="' + value + '"]';
+          selector += '[' + CSS.escape(f) + '="' + value + '"]';
         } else {
-          selector += '[' + CSS.escape(v) + ']';
+          selector += '[' + CSS.escape(f) + ']';
         }
         if (appendValue) {
           selector += appendValue.get(i);
@@ -1166,12 +1118,7 @@ ZxQuery.prototype.isEmpty = function() {
  * @return {ElementPosition}
  */
 ZxQuery.prototype.position = function() {
-  if (this._selection[0] != null) {
-    return z$.getPosition(this._selection[0]);
-  } else {
-    // TODO: check this out; should prevent this from happening
-    return {x: -1, y: -1, visible: false};
-  }
+  return z$.getPosition(this._selection[0]);
 };
 
 /**
@@ -1508,45 +1455,6 @@ ZxQueryStatic.each = function(items, iterationCallback) {
   }
   return this;
 };
-ZxQueryStatic.ajax =
-    /**
-     * Makes an HTTP request.
-     * @method http
-     * @memberOf ZxQueryStatic
-     * @alias zuix.$.http
-     * @param {ZxQueryHttpOptions} options
-     * @return {ZxQueryStatic}
-     */
-    ZxQueryStatic.http = function(options) {
-      let url;
-      if (!util.isNoU(options) && !util.isNoU(options.url)) {
-        url = options.url;
-      } else {
-        url = options;
-      }
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          if (options.success) options.success(xhr.responseText);
-        } else {
-          if (options.error) options.error(xhr, xhr.statusText, xhr.status);
-        }
-        if (options.then) options.then(xhr);
-      };
-      xhr.onerror = function(xhr, textStatus, errorThrown) {
-        if (options.error) options.error(xhr, textStatus, errorThrown);
-      };
-      if (typeof options.beforeSend == 'function') {
-        options.beforeSend(xhr);
-      }
-      try {
-        xhr.open('GET', url);
-        xhr.send();
-      } catch (e) {
-        if (options.error) options.error(xhr, xhr.statusText, xhr.status, e);
-      }
-      return this;
-    };
 /**
  * Checks if an element has got the specified CSS class.
  *
@@ -3227,9 +3135,10 @@ ComponentContext.prototype.style = function(css) {
   if (typeof css === 'undefined') return this._style;
   const cssId = this.getCssId();
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
+  const shadowRoot = util.dom.getShadowRoot(this._view);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._view));
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, shadowRoot);
   } else if (typeof css === 'string') {
     // store original unparsed css (might be useful for debugging)
     this._css = css;
@@ -3248,16 +3157,20 @@ ComponentContext.prototype.style = function(css) {
     // nest the CSS inside [z-component='<componentId>']
     // so that the style is only applied to this component type
     const cssIdAttr = '[' + cssId + ']';
-    css = z$.wrapCss(
-        cssIdAttr,
-        resetCss + '\n' + css,
-        this.options().encapsulation === true
-    );
+    if (!shadowRoot) {
+      css = z$.wrapCss(
+          cssIdAttr,
+          resetCss + '\n' + css,
+          this.options().encapsulation === true
+      );
+    }
 
     // output css
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._view));
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, shadowRoot);
   }
-  this.checkEncapsulation();
+  if (!shadowRoot) {
+    this.checkEncapsulation();
+  }
   // TODO: should throw error if ```css``` is not a valid type
   _log.t(this.componentId, 'view:style', 'timer:view:stop', cssId);
   return this;
@@ -3467,26 +3380,23 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
       if (cssPath == context.componentId) {
         cssPath += '.css';
       }
-      z$.ajax({
-        url: zuix.getResourcePath(cssPath),
-        success: function(viewCss) {
-          context.style(viewCss);
-          if (options.success) {
-            (options.success).call(context, viewCss, context);
-          }
-        },
-        error: function(err) {
-          _log.e(err, context);
-          if (options.error) {
-            (options.error).call(context, err, context);
-          }
-        },
-        then: function() {
-          if (options.then) {
-            (options.then).call(context, context);
-          }
-        }
-      });
+      fetch(zuix.getResourcePath(cssPath))
+          .then((response) => response.text())
+          .then((viewCss) => {
+            context.style(viewCss);
+            if (options.success) {
+              (options.success).call(context, viewCss, context);
+            }
+          }).catch((e) => {
+            _log.e(e, context);
+            if (options.error) {
+              (options.error).call(context, e, context);
+            }
+          }).finally(() => {
+            if (options.then) {
+              (options.then).call(context, context);
+            }
+          });
     }
   }
   return this;
@@ -3583,26 +3493,23 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
-      z$.ajax({
-        url: zuix.getResourcePath(htmlPath),
-        success: function(viewHtml) {
-          context.view(viewHtml);
-          if (options.success) {
-            (options.success).call(context, viewHtml, context);
-          }
-        },
-        error: function(err) {
-          _log.e(err, context);
-          if (options.error) {
-            (options.error).call(context, err, context);
-          }
-        },
-        then: function() {
-          if (options.then) {
-            (options.then).call(context, context);
-          }
-        }
-      });
+      fetch(zuix.getResourcePath(htmlPath))
+          .then((response) => response.text())
+          .then((viewHtml) => {
+            context.view(viewHtml);
+            if (options.success) {
+              (options.success).call(context, viewHtml, context);
+            }
+          }).catch((e) => {
+            _log.e(e, context);
+            if (options.error) {
+              (options.error).call(context, e, context);
+            }
+          }).finally(() => {
+            if (options.then) {
+              (options.then).call(context, context);
+            }
+          });
     }
   }
   return this;
@@ -5297,7 +5204,7 @@ const _componentReadyCallbackDelay = 10;
 /** @private */
 const _implicitLoadDefaultList = [
   util.dom.queryAttribute(_optionAttributes.zContext),
-//  util.dom.queryAttribute(_optionAttributes.zComponent),
+  //  util.dom.queryAttribute(_optionAttributes.zComponent),
   util.dom.queryAttribute(_optionAttributes.zOptions),
   util.dom.queryAttribute(_optionAttributes.zModel + ',:model'),
   util.dom.queryAttribute(_optionAttributes.zOn + ',:on'),
@@ -5769,39 +5676,37 @@ function createContext(options) {
  * @return {ComponentContext} The matching component's context or `null` if the context does not exist or not yet loaded.
  */
 function context(contextId, callback) {
-  let context = null;
+  let ctx = null;
   if (contextId instanceof z$.ZxQuery) {
     contextId = contextId.get();
-  } else if (typeof contextId === 'string') {
+  }
+  if (contextId instanceof Element && contextId.getAttribute('shadow')) {
+    contextId = contextId.getAttribute('shadow');
+  }
+  if (typeof contextId === 'string') {
     const ctx = z$.find(util.dom.queryAttribute(_optionAttributes.zContext, contextId));
     if (ctx.length() > 0) contextId = ctx.get();
   }
-  z$.each(_contextRoot, function(k, v) {
-    if ((contextId instanceof Element && (v.view() === contextId || v.container() === contextId)) ||
-            util.objectEquals(v.contextId, contextId)) {
-      context = v;
-      return false;
+  z$.each(_contextRoot, function(k, c) {
+    if (contextId === c.contextId || (contextId instanceof Element && (c.view() === contextId || c.container() === contextId))) {
+      ctx = c;
+      return false; // break the loop
     }
   });
-  if (callback && (contextId instanceof Element || contextId instanceof z$.ZxQuery)) {
-    if (context == null || !context.isReady) {
-      if (contextId instanceof Element && contextId.getAttribute('shadow')) {
-        context = zuix.context(contextId.getAttribute('shadow'));
-        setTimeout(function() {
-          callback.call(context, context);
+  if (callback) {
+    if (contextId instanceof Element && (ctx == null || !ctx.isReady)) {
+      zuix.$(contextId).one('component:ready', function() {
+        ctx = context(this);
+        setTimeout(() => {
+          callback.call(ctx, ctx);
         }, _componentReadyCallbackDelay);
-      } else {
-        z$(contextId).one('component:ready', function() {
-          context = zuix.context(this);
-          setTimeout(function() {
-            callback.call(context, context);
-          }, _componentReadyCallbackDelay);
-        });
-      }
+      });
       return null;
-    } else callback.call(context, context);
+    } else {
+      callback.call(ctx, ctx);
+    }
   }
-  return context;
+  return ctx;
 }
 
 /**
@@ -5856,9 +5761,9 @@ function setComponentCache(cache) {
 function getCachedComponent(componentId) {
   /** @type {ComponentCache | null} */
   let cached = null;
-  z$.each(_componentCache, function(k, v) {
-    if (util.objectEquals(v.componentId, componentId)) {
-      cached = v;
+  z$.each(_componentCache, function(k, c) {
+    if (c.componentId === componentId) {
+      cached = c;
       return false;
     }
   });
@@ -5882,37 +5787,34 @@ function loadController(context, task) {
     } else {
       const job = function(t) {
         const jsPath = context.componentId + '.js';
-        z$.ajax({
-          url: getResourcePath(jsPath),
-          success: function(ctrlJs) {
-            ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
-            try {
-              context.controller(getController(ctrlJs));
-              let cached = getCachedComponent(context.componentId);
-              if (cached == null) {
-                cached = {
-                  componentId: context.componentId,
-                  controller: context.controller()
-                };
-                _componentCache.push(cached);
+        fetch(zuix.getResourcePath(jsPath))
+            .then((response) => response.text())
+            .then((ctrlJs) => {
+              ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
+              try {
+                context.controller(getController(ctrlJs));
+                let cached = getCachedComponent(context.componentId);
+                if (cached == null) {
+                  cached = {
+                    componentId: context.componentId,
+                    controller: context.controller()
+                  };
+                  _componentCache.push(cached);
+                }
+              } catch (e) {
+                _log.e(new Error(), e, ctrlJs, context);
+                if (context.error) {
+                  (context.error).call(context, e, context);
+                }
               }
-            } catch (e) {
-              _log.e(new Error(), e, ctrlJs, context);
+            }).catch((e) => {
+              _log.e(e, new Error(), context);
               if (context.error) {
                 (context.error).call(context, e, context);
               }
-            }
-          },
-          error: function(err) {
-            _log.e(err, new Error(), context);
-            if (context.error) {
-              (context.error).call(context, err, context);
-            }
-          },
-          then: function() {
-            createComponent(context, t);
-          }
-        });
+            }).finally(() => {
+              createComponent(context, t);
+            });
       };
       if (util.isNoU(task)) {
         taskQueue('resource-loader').queue(context.componentId+':js', function() {
@@ -6109,7 +6011,6 @@ function initController(ctrl) {
     if (ctx.loaded) {
       (ctx.loaded).call(ctx, ctx);
     }
-
     // load pending resources
     if (_pendingResourceTask[ctx.componentId] != null) {
       const pendingRequests = _pendingResourceTask[ctx.componentId];
@@ -6119,19 +6020,15 @@ function initController(ctrl) {
         loadResources(context.c, context.o);
       }
     }
-
     // re-enable nested components loading
-    z$().one('componentize:end', function() {
-      setTimeout(function() {
-        $view.find(util.dom.queryAttribute(_optionAttributes.zLoaded, 'false', util.dom.cssNot(_optionAttributes.zComponent)))
-            .each(function(i, v) {
-              this.attr(_optionAttributes.zLoaded, null);
-            });
-        // render nested components
-        zuix.componentize($view);
-      });
-    });
+    $view.find(util.dom.queryAttribute(_optionAttributes.zLoaded, 'false', util.dom.cssNot(_optionAttributes.zComponent)))
+        .each(function(i, v) {
+          this.attr(_optionAttributes.zLoaded, null);
+        });
+    // render nested components
+    zuix.componentize($view);
   };
+
   contextLoaded();
   ctrl.trigger('component:loaded', $view, true);
 
@@ -6307,6 +6204,8 @@ function initController(ctrl) {
             }
             if ($el.parent().get() === $view.get() || $el.attr('for') === contextId) {
               userCode += $el.html() + ';';
+              // remove script tag from document
+              el.remove();
             }
           }
         });
@@ -6851,30 +6750,28 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         if (cached != null) {
           addResource(isCss ? cached.css : cached.controller);
         } else {
-          z$.ajax({
-            url: resourcePath,
-            success: function(resText) {
-              // TODO: add logging
-              /** @type {ComponentCache} */
-              const cached = {
-                componentId: cid,
-                view: null,
-                css: isCss ? resText : null,
-                controller: !isCss ? resText : null,
-                using: resourcePath
-              };
-              _componentCache.push(cached);
-              addResource(resText);
-            },
-            error: function() {
-              // TODO: add logging
-              head.removeChild(resource);
-              task.end();
-              if (callback) {
-                callback(resourcePath);
-              }
-            }
-          });
+          fetch(resourcePath)
+              .then((response) => response.text())
+              .then((resText) => {
+                // TODO: add logging
+                /** @type {ComponentCache} */
+                const cached = {
+                  componentId: cid,
+                  view: null,
+                  css: isCss ? resText : null,
+                  controller: !isCss ? resText : null,
+                  using: resourcePath
+                };
+                _componentCache.push(cached);
+                addResource(resText);
+              }).catch(() => {
+                // TODO: add logging
+                head.removeChild(resource);
+                task.end();
+                if (callback) {
+                  callback(resourcePath, null);
+                }
+              });
         }
       } else {
         // TODO: add logging
@@ -7118,7 +7015,7 @@ Zuix.prototype.utils = util;
  */
 module.exports = function() {
   if (window && window.zuix) {
-    //console.log('WARNING zuix.js already imported!');
+    // console.log('WARNING zuix.js already imported!');
     return window.zuix;
   }
   const zuix = new Zuix();
@@ -7130,7 +7027,7 @@ module.exports = function() {
       zuix.componentize();
     };
     window.ControllerInstance = ControllerInstance;
-//    window.addEventListener('DOMContentLoaded', refreshCallback);
+    //    window.addEventListener('DOMContentLoaded', refreshCallback);
     window.addEventListener('load', refreshCallback);
     window.addEventListener('resize', refreshCallback);
     window.addEventListener('pageshow', refreshCallback);

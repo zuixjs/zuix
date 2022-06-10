@@ -1160,7 +1160,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 81](../../zuix/Zuix.js#L81)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 82](../../zuix/Zuix.js#L82)
 
 -->
 
@@ -1181,7 +1181,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 90](../../zuix/Zuix.js#L90)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 91](../../zuix/Zuix.js#L91)
 
 -->
 
@@ -1210,7 +1210,8 @@ of the component's host element.
 |`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
-|`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
+|`using`|*string* \| *undefined*|Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.|
+|`loaded`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
 
@@ -1238,7 +1239,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 99](../../zuix/Zuix.js#L99)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 100](../../zuix/Zuix.js#L100)
 
 -->
 
@@ -1352,7 +1353,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
+[helpers/Logger.js](../../helpers/Logger.js), [line 117](../../helpers/Logger.js#L117)
 
 -->
 
@@ -1443,7 +1444,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 107](../../zuix/Zuix.js#L107)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 108](../../zuix/Zuix.js#L108)
 
 -->
 

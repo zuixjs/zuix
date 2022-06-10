@@ -538,12 +538,7 @@ ZxQuery.prototype.isEmpty = function() {
  * @return {ElementPosition}
  */
 ZxQuery.prototype.position = function() {
-  if (this._selection[0] != null) {
-    return z$.getPosition(this._selection[0]);
-  } else {
-    // TODO: check this out; should prevent this from happening
-    return {x: -1, y: -1, visible: false};
-  }
+  return z$.getPosition(this._selection[0]);
 };
 
 /**
@@ -880,45 +875,6 @@ ZxQueryStatic.each = function(items, iterationCallback) {
   }
   return this;
 };
-ZxQueryStatic.ajax =
-    /**
-     * Makes an HTTP request.
-     * @method http
-     * @memberOf ZxQueryStatic
-     * @alias zuix.$.http
-     * @param {ZxQueryHttpOptions} options
-     * @return {ZxQueryStatic}
-     */
-    ZxQueryStatic.http = function(options) {
-      let url;
-      if (!util.isNoU(options) && !util.isNoU(options.url)) {
-        url = options.url;
-      } else {
-        url = options;
-      }
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          if (options.success) options.success(xhr.responseText);
-        } else {
-          if (options.error) options.error(xhr, xhr.statusText, xhr.status);
-        }
-        if (options.then) options.then(xhr);
-      };
-      xhr.onerror = function(xhr, textStatus, errorThrown) {
-        if (options.error) options.error(xhr, textStatus, errorThrown);
-      };
-      if (typeof options.beforeSend == 'function') {
-        options.beforeSend(xhr);
-      }
-      try {
-        xhr.open('GET', url);
-        xhr.send();
-      } catch (e) {
-        if (options.error) options.error(xhr, xhr.statusText, xhr.status, e);
-      }
-      return this;
-    };
 /**
  * Checks if an element has got the specified CSS class.
  *

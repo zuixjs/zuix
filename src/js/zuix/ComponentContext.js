@@ -627,9 +627,10 @@ ComponentContext.prototype.style = function(css) {
   if (typeof css === 'undefined') return this._style;
   const cssId = this.getCssId();
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
+  const shadowRoot = util.dom.getShadowRoot(this._view);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._view));
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, shadowRoot);
   } else if (typeof css === 'string') {
     // store original unparsed css (might be useful for debugging)
     this._css = css;
@@ -648,16 +649,20 @@ ComponentContext.prototype.style = function(css) {
     // nest the CSS inside [z-component='<componentId>']
     // so that the style is only applied to this component type
     const cssIdAttr = '[' + cssId + ']';
-    css = z$.wrapCss(
-        cssIdAttr,
-        resetCss + '\n' + css,
-        this.options().encapsulation === true
-    );
+    if (!shadowRoot) {
+      css = z$.wrapCss(
+          cssIdAttr,
+          resetCss + '\n' + css,
+          this.options().encapsulation === true
+      );
+    }
 
     // output css
-    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, util.dom.getShadowRoot(this._view));
+    this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, shadowRoot);
   }
-  this.checkEncapsulation();
+  if (!shadowRoot) {
+    this.checkEncapsulation();
+  }
   // TODO: should throw error if ```css``` is not a valid type
   _log.t(this.componentId, 'view:style', 'timer:view:stop', cssId);
   return this;
@@ -867,26 +872,23 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
       if (cssPath == context.componentId) {
         cssPath += '.css';
       }
-      z$.ajax({
-        url: zuix.getResourcePath(cssPath),
-        success: function(viewCss) {
-          context.style(viewCss);
-          if (options.success) {
-            (options.success).call(context, viewCss, context);
-          }
-        },
-        error: function(err) {
-          _log.e(err, context);
-          if (options.error) {
-            (options.error).call(context, err, context);
-          }
-        },
-        then: function() {
-          if (options.then) {
-            (options.then).call(context, context);
-          }
-        }
-      });
+      fetch(zuix.getResourcePath(cssPath))
+          .then((response) => response.text())
+          .then((viewCss) => {
+            context.style(viewCss);
+            if (options.success) {
+              (options.success).call(context, viewCss, context);
+            }
+          }).catch((e) => {
+            _log.e(e, context);
+            if (options.error) {
+              (options.error).call(context, e, context);
+            }
+          }).finally(() => {
+            if (options.then) {
+              (options.then).call(context, context);
+            }
+          });
     }
   }
   return this;
@@ -983,26 +985,23 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
-      z$.ajax({
-        url: zuix.getResourcePath(htmlPath),
-        success: function(viewHtml) {
-          context.view(viewHtml);
-          if (options.success) {
-            (options.success).call(context, viewHtml, context);
-          }
-        },
-        error: function(err) {
-          _log.e(err, context);
-          if (options.error) {
-            (options.error).call(context, err, context);
-          }
-        },
-        then: function() {
-          if (options.then) {
-            (options.then).call(context, context);
-          }
-        }
-      });
+      fetch(zuix.getResourcePath(htmlPath))
+          .then((response) => response.text())
+          .then((viewHtml) => {
+            context.view(viewHtml);
+            if (options.success) {
+              (options.success).call(context, viewHtml, context);
+            }
+          }).catch((e) => {
+            _log.e(e, context);
+            if (options.error) {
+              (options.error).call(context, e, context);
+            }
+          }).finally(() => {
+            if (options.then) {
+              (options.then).call(context, context);
+            }
+          });
     }
   }
   return this;

@@ -163,7 +163,7 @@ Gets/Sets the component's controller handler.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 756](../../zuix/ComponentContext.js#L756)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 754](../../zuix/ComponentContext.js#L754)
 
 -->
 
@@ -200,7 +200,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 561](../../zuix/ComponentContext.js#L561)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 560](../../zuix/ComponentContext.js#L560)
 
 -->
 
@@ -242,7 +242,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1125](../../zuix/ComponentContext.js#L1125)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1123](../../zuix/ComponentContext.js#L1123)
 
 -->
 
@@ -269,7 +269,7 @@ changes.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 725](../../zuix/ComponentContext.js#L725)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 723](../../zuix/ComponentContext.js#L723)
 
 -->
 
@@ -336,7 +336,7 @@ is present on a field, data can be inherited from parent component.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1058](../../zuix/ComponentContext.js#L1058)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1056](../../zuix/ComponentContext.js#L1056)
 
 -->
 
@@ -360,7 +360,7 @@ Listens for a component event.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 799](../../zuix/ComponentContext.js#L799)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 797](../../zuix/ComponentContext.js#L797)
 
 -->
 
@@ -383,7 +383,7 @@ Gets/Sets the component's options.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 770](../../zuix/ComponentContext.js#L770)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 768](../../zuix/ComponentContext.js#L768)
 
 -->
 
@@ -410,7 +410,7 @@ element is returned.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 628](../../zuix/ComponentContext.js#L628)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 626](../../zuix/ComponentContext.js#L626)
 
 -->
 
@@ -459,7 +459,7 @@ declared in the component's view.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1018](../../zuix/ComponentContext.js#L1018)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1016](../../zuix/ComponentContext.js#L1016)
 
 -->
 
@@ -699,7 +699,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 81](../../zuix/Zuix.js#L81)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 82](../../zuix/Zuix.js#L82)
 
 -->
 
@@ -720,7 +720,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 90](../../zuix/Zuix.js#L90)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 91](../../zuix/Zuix.js#L91)
 
 -->
 
@@ -749,7 +749,8 @@ of the component's host element.
 |`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
-|`ready`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
+|`using`|*string* \| *undefined*|Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.|
+|`loaded`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|
 |`error`|*[ContextErrorCallback](#ContextErrorCallback)* \| *undefined*|The error callback, triggered when an error occurs.|
 
@@ -777,7 +778,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 99](../../zuix/Zuix.js#L99)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 100](../../zuix/Zuix.js#L100)
 
 -->
 
@@ -891,7 +892,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 122](../../helpers/Logger.js#L122)
+[helpers/Logger.js](../../helpers/Logger.js), [line 117](../../helpers/Logger.js#L117)
 
 -->
 
@@ -982,7 +983,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 107](../../zuix/Zuix.js#L107)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 108](../../zuix/Zuix.js#L108)
 
 -->
 
