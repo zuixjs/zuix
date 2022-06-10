@@ -983,7 +983,7 @@ function initController(ctrl) {
           this.attr(_optionAttributes.zLoaded, null);
         });
     // render nested components
-    zuix.componentize($view);
+    setTimeout(() => zuix.componentize($view));
   };
 
   contextLoaded();

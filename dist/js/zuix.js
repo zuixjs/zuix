@@ -1,4 +1,4 @@
-/* zuix.js v1.1.9 22.06.10 19:00:13 */
+/* zuix.js v1.1.10 22.06.10 19:58:26 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -6042,7 +6042,7 @@ function initController(ctrl) {
           this.attr(_optionAttributes.zLoaded, null);
         });
     // render nested components
-    zuix.componentize($view);
+    setTimeout(() => zuix.componentize($view));
   };
 
   contextLoaded();
