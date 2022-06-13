@@ -58,9 +58,8 @@ function ObservableObject(context, target, handler) {
  * @returns ObservableObject
  */
 ObservableObject.prototype.subscribe = function(observableListener) {
-  const _t = this;
-  this.handler.context.observableList.forEach(function(p) {
-    if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
+  this.handler.context.observableList.forEach((p) => {
+    if (p !== this && p.__listeners__.indexOf(observableListener) !== -1) {
       throw new Error('Listener already registered.');
     }
   });
@@ -84,10 +83,9 @@ ObservableObject.prototype.unsubscribe = function(observableListener) {
     this.revoke();
     // TODO: this is untested!!!
     // remove this observable and parent references to it
-    const _t = this;
-    this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
-      if (p === _t) return false;
-      const i = p.__parents__.indexOf(_t);
+    this.handler.context.observableList = this.handler.context.observableList.filter((p) => {
+      if (p === this) return false;
+      const i = p.__parents__.indexOf(this);
       if (i !== -1) {
         p.__parents__.splice(i, 1);
         // if child has no more parents nor listeners, then remove it as well

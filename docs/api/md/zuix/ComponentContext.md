@@ -86,7 +86,7 @@ all of its data such as the view template, the style, the controller, the data m
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 193](../../zuix/ComponentContext.js#L193)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 192](../../zuix/ComponentContext.js#L192)
 
 -->
 
@@ -141,7 +141,7 @@ otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 379](../../zuix/ComponentContext.js#L379)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 376](../../zuix/ComponentContext.js#L376)
 
 -->
 
@@ -179,7 +179,7 @@ Disposes the component context and all of its allocated resources.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 312](../../zuix/ComponentContext.js#L312)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 309](../../zuix/ComponentContext.js#L309)
 
 -->
 
@@ -200,7 +200,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 560](../../zuix/ComponentContext.js#L560)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 558](../../zuix/ComponentContext.js#L558)
 
 -->
 
@@ -242,7 +242,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1123](../../zuix/ComponentContext.js#L1123)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1109](../../zuix/ComponentContext.js#L1109)
 
 -->
 
@@ -336,7 +336,7 @@ is present on a field, data can be inherited from parent component.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1056](../../zuix/ComponentContext.js#L1056)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1043](../../zuix/ComponentContext.js#L1043)
 
 -->
 
@@ -410,7 +410,7 @@ element is returned.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 626](../../zuix/ComponentContext.js#L626)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 621](../../zuix/ComponentContext.js#L621)
 
 -->
 
@@ -442,7 +442,7 @@ argument is passed, the *ComponentContext* itself otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 399](../../zuix/ComponentContext.js#L399)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 396](../../zuix/ComponentContext.js#L396)
 
 -->
 
@@ -459,7 +459,7 @@ declared in the component's view.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1016](../../zuix/ComponentContext.js#L1016)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1002](../../zuix/ComponentContext.js#L1002)
 
 -->
 

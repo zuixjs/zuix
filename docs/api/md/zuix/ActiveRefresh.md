@@ -100,7 +100,7 @@ Pauses the refresh loop.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 140](../../zuix/ActiveRefresh.js#L140)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 139](../../zuix/ActiveRefresh.js#L139)
 
 -->
 
@@ -112,7 +112,7 @@ Resumes the refresh loop.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 148](../../zuix/ActiveRefresh.js#L148)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 147](../../zuix/ActiveRefresh.js#L147)
 
 -->
 
@@ -124,7 +124,7 @@ Starts the refresh loop.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 128](../../zuix/ActiveRefresh.js#L128)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 127](../../zuix/ActiveRefresh.js#L127)
 
 -->
 
@@ -136,7 +136,7 @@ Disposes this "ActiveRefresh" instance
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 117](../../zuix/ActiveRefresh.js#L117)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 116](../../zuix/ActiveRefresh.js#L116)
 
 -->
 

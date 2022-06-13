@@ -55,9 +55,9 @@ function ViewObserver(context) {
          * @private
          */
         // eslint-disable-next-line no-unused-vars
-        function(mutationsList, observer) {
+        (mutationsList, observer) => {
           const zc = util.dom.queryAttribute(_optionAttributes.zComponent);
-          const findNode = function(node) {
+          const findNode = (node) => {
             for (let i = 0; i < node.attributes.length; i++) {
               if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
                 return true;
@@ -66,7 +66,7 @@ function ViewObserver(context) {
           };
           for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-              mutation.addedNodes.forEach(function(node) {
+              mutation.addedNodes.forEach((node) => {
                 if (node instanceof Element) {
                   let parent = zuix.$(node).parent(zc);
                   if (parent.get() == null) return;

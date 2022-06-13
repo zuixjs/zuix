@@ -77,55 +77,51 @@ const util =
  */
 function ContextController(context) {
   const _t = this;
-
-  this._view = null;
-
-  this.context = context;
+  _t._view = null;
+  _t.context = context;
 
   /**
      * @protected
      * @type {!Array.<Element>}
      * */
-  this._childNodes = [];
+  _t._childNodes = [];
   /**
    * @type {function}
    * @ignore
    */
-  this.saveView = function() {
-    this.restoreView();
-    this.view().children().each(function(i, el) {
-      _t._childNodes.push(el);
-    });
+  _t.saveView = () => {
+    _t.restoreView();
+    _t.view()
+        .children()
+        .each((i, el) => _t._childNodes.push(el));
   };
-  this.restoreView = function() {
-    if (this._childNodes.length > 0) {
+  _t.restoreView = () => {
+    if (_t._childNodes.length > 0) {
       _t.view().html('');
-      z$.each(_t._childNodes, function(i, el) {
-        _t.view().append(el);
-      });
-      this._childNodes.length = 0;
+      z$.each(_t._childNodes, (i, el) =>
+        _t.view().append(el));
+      _t._childNodes.length = 0;
     }
   };
 
-  this.on = function(eventPath, handler) {
+  _t.on = (eventPath, handler) => {
     if (typeof eventPath === 'object' && handler == null) {
-      z$.each(eventPath, function(evt, hnd) {
-        _t.on(evt, hnd);
-      });
-      return this;
+      z$.each(eventPath, (evt, hnd) =>
+        _t.on(evt, hnd));
+      return _t;
     }
-    this.addEvent(eventPath, handler);
-    return this;
+    _t.addEvent(eventPath, handler);
+    return _t;
   };
   /**
    * @protected
    * @ignore
    */
-  this.mapEvent = function(eventMap, target, eventPath, handler) {
+  _t.mapEvent = (eventMap, target, eventPath, handler) => {
     if (target != null) {
-      target.off(eventPath, this.eventRouter);
+      target.off(eventPath, _t.eventRouter);
       eventMap.push({target, eventPath, handler});
-      target.on(eventPath, this.eventRouter);
+      target.on(eventPath, _t.eventRouter);
     } else {
       // TODO: should report missing target
     }
@@ -134,9 +130,9 @@ function ContextController(context) {
    * @protected
    * @ignore
    */
-  this.eventRouter = function(e) {
+  _t.eventRouter = (e) => {
     const v = _t.view();
-    context._behaviorMap.concat(context._eventMap).forEach(function(em) {
+    context._behaviorMap.concat(context._eventMap).forEach((em) => {
       if (em.eventPath === e.type && em.handler) {
         em.handler.call(v, e, e.detail, v);
       }
@@ -147,9 +143,8 @@ function ContextController(context) {
   const options = context.options();
   let handler = null;
   if (options.on != null) {
-    z$.each(options.on, function(ep, handler) {
-      ep.split(/[\s|,]+/g).map((evt) => _t.addEvent(evt, handler));
-    });
+    z$.each(options.on, (ep, handler) =>
+      ep.split(/[\s|,]+/g).map((evt) => _t.addEvent(evt, handler)));
   }
   // create behavior map from context options
   if (options.behavior != null) {
@@ -161,19 +156,18 @@ function ContextController(context) {
     }
   }
 
-  const isClass = function(v) {
-    return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
-  };
+  const isClass = (v) =>
+    typeof v === 'function' && /^\s*class\s+/.test(v.toString());
   if (isClass(context.controller())) {
     // >= ES6
-    const ctrl = new ((context.controller()).bind(this, this))();
+    const ctrl = new ((context.controller()).bind(_t, _t))();
     context.controller(ctrl);
   } else {
     // <= ES5
-    context.controller().call(this, this);
+    context.controller().call(_t, _t);
   }
 
-  return this;
+  return _t;
 }
 
 /**
@@ -256,20 +250,19 @@ ContextController.prototype.clearCache = function() {
 ContextController.prototype.view = function(filter) {
   const _t = this;
   // context view changed, dispose cached fields from previous attached view
-  if (this.context.view() != null || this._view !== this.context.view()) {
-    this.clearCache();
+  if (_t.context.view() || _t._view !== _t.context.view()) {
+    _t.clearCache();
     // TODO: !!!!
     // TODO: dispose also events on view change (!!!)
     // TODO: !!!!
-    this._view = z$(this.context.view());
-    this._view.field = function(fieldName) {
-      return _t.context.field(fieldName);
-    };
+    _t._view = z$(_t.context.view());
+    _t._view.field = (fieldName) =>
+      _t.context.field(fieldName);
   }
-  if (filter != null) {
-    return this._view.find(filter);
-  } else if (this._view !== null) {
-    return this._view;
+  if (filter) {
+    return _t._view.find(filter);
+  } else if (_t._view) {
+    return _t._view;
   } else {
     throw new Error('Not attached to a view yet.');
   }
@@ -282,7 +275,7 @@ ContextController.prototype.view = function(filter) {
  * @return {ContextController|object}
  */
 ContextController.prototype.model = function(model) {
-  if (model == null) {
+  if (!model) {
     return this.context.model();
   } else this.context.model(model);
   return this;
@@ -321,15 +314,20 @@ zuix.context('my-slide-show')
  * @return {ContextController}
  */
 ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
-  if (isHook === true) {
+  if (isHook) {
     let target = this.context.container();
-    if (target == null) target = this.context.view();
-    if (target != null) {
-      z$(target).trigger(eventPath, eventData);
+    if (!target) {
+      target = this.context.view();
     }
-    this.context.trigger(this.context, eventPath, eventData);
+    if (target) {
+      z$(target)
+          .trigger(eventPath, eventData);
+    }
+    this.context
+        .trigger(this.context, eventPath, eventData);
   } else {
-    this.view().trigger(eventPath, eventData);
+    this.view()
+        .trigger(eventPath, eventData);
   }
   return this;
 };
@@ -343,18 +341,15 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.expose = function(name, handler) {
-  const _t = this;
-  const expose = function(m, h) {
+  const expose = (m, h) => {
     if (h && (h.get || h.set)) {
-      Object.defineProperty(_t.context, m, h);
+      Object.defineProperty(this.context, m, h);
     } else {
-      _t.context[m] = h;
+      this.context[m] = h;
     }
   };
   if (typeof name === 'object') {
-    z$.each(name, function(k, v) {
-      expose(k, v);
-    });
+    z$.each(name, (k, v) => expose(k, v));
   } else {
     expose(name, handler);
   }
@@ -382,7 +377,8 @@ cp.loadCss({
  * @return {ContextController} The ```{ContextController}``` object itself.
  */
 ContextController.prototype.loadCss = function(options) {
-  this.context.loadCss(options);
+  this.context
+      .loadCss(options);
   return this;
 };
 /**
@@ -408,7 +404,8 @@ cp.loadHtml({
  */
 ContextController.prototype.loadHtml = function(options) {
   this.saveView();
-  this.context.loadHtml(options);
+  this.context
+      .loadHtml(options);
   return this;
 };
 /**

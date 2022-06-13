@@ -1,4 +1,4 @@
-/* zuix.js v1.1.10 22.06.10 19:58:26 */
+/* zuix.js v1.1.11 22.06.13 23:46:22 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -727,7 +727,9 @@ const util = __webpack_require__(826);
 /** @private */
 const supportsPassive = util.hasPassiveEvents();
 
-/** @private */
+/**
+ * @private
+ */
 const _zuix_events_mapping = [];
 function routeEvent(e) {
   triggerEventHandlers(this, e.type, e);
@@ -852,7 +854,7 @@ ZxQuery.prototype.length = function() {
  * @return {ZxQuery} A new *ZxQuery* object containing the matching parent element.
  */
 ZxQuery.prototype.parent = function(filter) {
-  if (!util.isNoU(filter)) {
+  if (filter) {
     return new ZxQuery(z$.getClosest(this._selection[0], filter));
   }
   return new ZxQuery(this._selection[0].parentNode);
@@ -866,7 +868,7 @@ ZxQuery.prototype.parent = function(filter) {
  */
 ZxQuery.prototype.children = function(filter) {
   // TODO: implement filtering
-  if (!util.isNoU(filter)) {
+  if (filter) {
     return new ZxQuery(this._selection[0].querySelectorAll(filter));
   }
   return new ZxQuery(this._selection[0].children);
@@ -889,7 +891,7 @@ ZxQuery.prototype.reverse = function() {
  * @return {Node|Element|HTMLElement} The *DOM* element.
  */
 ZxQuery.prototype.get = function(i) {
-  if (util.isNoU(i)) i = 0;
+  if (!i) i = 0;
   return this._selection[i];
 };
 /**
@@ -988,17 +990,17 @@ ZxQuery.prototype.each = function(iterationCallback) {
 ZxQuery.prototype.attr = function(attr, val) {
   const _t = this;
   if (typeof attr === 'object') {
-    z$.each(attr, function(i, v) {
-      _t.each(function(k, el) {
-        util.dom.setAttribute(el, i, v);
-      });
+    z$.each(attr, (i, v) => {
+      _t.each((k, el) =>
+        util.dom.setAttribute(el, i, v)
+      );
     });
   } else if (typeof val == 'undefined') {
     return util.dom.getAttribute(this._selection[0], attr);
   } else {
-    this.each(function(k, v) {
-      util.dom.setAttribute(this.get(), attr, val);
-    });
+    this.each((i, el) =>
+      util.dom.setAttribute(el, attr, val)
+    );
   }
   return this;
 };
@@ -1010,13 +1012,7 @@ ZxQuery.prototype.attr = function(attr, val) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.trigger = function(eventPath, eventData) {
-  let event;
-  if (window.CustomEvent) {
-    event = new CustomEvent(eventPath, {detail: eventData});
-  } else {
-    event = document.createEvent('CustomEvent');
-    event.initCustomEvent(eventPath, true, true, eventData);
-  }
+  const event = new CustomEvent(eventPath, {detail: eventData});
   this.each(function(k, el) {
     el.dispatchEvent(event);
   });
@@ -1032,7 +1028,7 @@ ZxQuery.prototype.trigger = function(eventPath, eventData) {
 ZxQuery.prototype.one = function(eventPath, eventHandler) {
   const _t = this;
   if (typeof eventPath === 'object' && eventHandler == null) {
-    z$.each(eventPath, function(evt, handler) {
+    z$.each(eventPath, (evt, handler) => {
       _t.one(evt, handler);
     });
     return this;
@@ -1062,9 +1058,7 @@ ZxQuery.prototype.one = function(eventPath, eventHandler) {
 ZxQuery.prototype.on = function(eventPath, eventHandler) {
   if (typeof eventPath === 'object' && eventHandler == null) {
     const _t = this;
-    z$.each(eventPath, function(evt, handler) {
-      _t.on(evt, handler);
-    });
+    z$.each(eventPath, (evt, handler) => _t.on(evt, handler));
     return this;
   }
   const events = eventPath.split(/[\s|,]+/g) || [];
@@ -1073,9 +1067,10 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
     options = eventHandler;
     eventHandler = options.handler;
   }
-  this.each(function(k, el) {
-    events.map((ev) => addEventHandler(el, ev, eventHandler, options));
-  });
+  this.each((k, el) =>
+    events.map((ev) =>
+      addEventHandler(el, ev, eventHandler, options)
+    ));
   return this;
 };
 /**
@@ -1088,15 +1083,14 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
 ZxQuery.prototype.off = function(eventPath, eventHandler) {
   if (typeof eventPath === 'object' && eventHandler == null) {
     const _t = this;
-    z$.each(eventPath, function(evt, handler) {
-      _t.off(evt, handler);
-    });
+    z$.each(eventPath, (evt, handler) => _t.off(evt, handler));
     return this;
   }
   const events = eventPath.split(/[\s|,]+/g) || [];
-  this.each(function(k, el) {
-    events.map((ev) => removeEventHandler(el, ev, eventHandler));
-  });
+  this.each((k, el) =>
+    events.map((ev) =>
+      removeEventHandler(el, ev, eventHandler)
+    ));
   return this;
 };
 /**
@@ -1105,9 +1099,7 @@ ZxQuery.prototype.off = function(eventPath, eventHandler) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.reset = function() {
-  this.each(function(k, el) {
-    removeAllEventHandlers(el);
-  });
+  this.each((k, el) => removeAllEventHandlers(el));
   return this;
 };
 /**
@@ -1136,19 +1128,15 @@ ZxQuery.prototype.position = function() {
  * @return {string|ZxQuery} The CSS property value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.css = function(prop, val) {
-  const _t = this;
   if (typeof prop === 'object') {
-    z$.each(prop, function(i, v) {
-      _t.each(function(k, el) {
-        el.style[i] = v;
-      });
-    });
+    z$.each(prop, (i, v) =>
+      this.each((k, el) =>
+        el.style[i] = v
+      ));
   } else if (util.isNoU(val)) {
     return this._selection[0].style[prop];
   } else {
-    _t.each(function(k, el) {
-      el.style[prop] = val;
-    });
+    this.each((k, el) => el.style[prop] = val);
   }
   return this;
 };
@@ -1160,9 +1148,9 @@ ZxQuery.prototype.css = function(prop, val) {
  */
 ZxQuery.prototype.addClass = function(className) {
   const classes = className.split(/[\s|,]+/g) || [];
-  z$.each(this._selection, function(k, el) {
-    classes.map((cl) => el.classList.add(cl));
-  });
+  z$.each(this._selection, (k, el) =>
+    classes.map((cl) => el.classList.add(cl))
+  );
   return this;
 };
 /**
@@ -1182,9 +1170,10 @@ ZxQuery.prototype.hasClass = function(className) {
  */
 ZxQuery.prototype.removeClass = function(className) {
   const classes = className.split(/[\s|,]+/g) || [];
-  z$.each(this._selection, function(k, el) {
-    classes.map((cl) => el.classList.remove(cl));
-  });
+  z$.each(this._selection, (k, el) =>
+    classes.map((cl) =>
+      el.classList.remove(cl)
+    ));
   return this;
 };
 /**
@@ -1198,9 +1187,7 @@ ZxQuery.prototype.html = function(htmlText) {
   if (util.isNoU(htmlText)) {
     return this._selection[0].innerHTML;
   }
-  this.each(function(k, el) {
-    el.innerHTML = htmlText;
-  });
+  this.each((k, el) => el.innerHTML = htmlText);
   return this;
 };
 /**
@@ -1215,9 +1202,7 @@ ZxQuery.prototype.checked = function(check) {
     const checked = this._selection[0].checked;
     return (checked != null && checked != 'false' && (checked || checked == 'checked'));
   }
-  this.each(function(k, el) {
-    el.checked = check;
-  });
+  this.each((k, el) => el.checked = check);
   return this;
 };
 /**
@@ -1231,9 +1216,7 @@ ZxQuery.prototype.value = function(value) {
   if (util.isNoU(value)) {
     return this._selection[0].value;
   }
-  this.each(function(k, el) {
-    el.value = value;
-  });
+  this.each((k, el) => el.value = value);
   return this;
 };
 /**
@@ -1292,7 +1275,8 @@ ZxQuery.prototype.detach = function() {
   const parent = el.parentNode;
   if (parent != null) {
     el.__zuix_oldParent = parent;
-    el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
+    el.__zuix_oldIndex = Array.prototype
+        .indexOf.call(parent.children, el);
     parent.removeChild(el);
     _log.t('Detached from parent', parent, el);
   }
@@ -1309,7 +1293,8 @@ ZxQuery.prototype.attach = function() {
     el.parentNode.removeChild(el);
   }
   if (el.parentNode == null && el.__zuix_oldParent != null) {
-    z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
+    z$(el.__zuix_oldParent)
+        .insert(el.__zuix_oldIndex, el);
     el.__zuix_oldParent = null;
     delete el.__zuix_oldParent;
     delete el.__zuix_oldIndex;
@@ -1327,9 +1312,9 @@ ZxQuery.prototype.display = function(mode) {
   if (util.isNoU(mode)) {
     return this._selection[0].style.display;
   }
-  z$.each(this._selection, function(k, el) {
-    el.style.display = mode;
-  });
+  z$.each(this._selection, (k, el) =>
+    el.style.display = mode
+  );
   return this;
 };
 /**
@@ -1343,9 +1328,9 @@ ZxQuery.prototype.visibility = function(mode) {
   if (util.isNoU(mode)) {
     return this._selection[0].style.visibility;
   }
-  z$.each(this._selection, function(k, el) {
-    el.style.visibility = mode;
-  });
+  z$.each(this._selection, (k, el) =>
+    el.style.visibility = mode
+  );
   return this;
 };
 /**
@@ -1474,9 +1459,11 @@ ZxQueryStatic.each = function(items, iterationCallback) {
 ZxQueryStatic.hasClass = function(el, className) {
   const classes = className.split(/[\s|,]+/g) || [];
   let success = false;
-  z$.each(classes, function(k, cl) {
+  z$.each(classes, (k, cl) => {
     success = el.classList.contains(cl);
-    if (success) return false; // break loop
+    if (success) {
+      return false; // break loop
+    }
   });
   return success;
 };
@@ -1492,15 +1479,15 @@ ZxQueryStatic.hasClass = function(el, className) {
 ZxQueryStatic.classExists = function(className) {
   const classes = className.split(/[\s|,]+/g) || [];
   let success = false;
-  z$.each(classes, function(k, cl) {
+  z$.each(classes, (k, cl) => {
     // Perform global style check
     const docStyles = document.styleSheets;
-    if (docStyles != null) {
+    if (docStyles) {
       for (let sx = 0; sx < docStyles.length; sx++) {
         // the try statement is needed because on Firefox accessing CSS rules
         // loaded from a remote source will raise a security exception
         try {
-          const classes = docStyles[sx].rules || docStyles[sx].cssRules;
+          const classes = docStyles[sx].cssRules;
           if (classes != null) {
             for (let cx = 0; cx < classes.length; cx++) {
               if (classes[cx].selectorText === cl) {
@@ -1559,7 +1546,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
         ruleParts = ruleParts.replace(/\n/g, '');
         const classes = ruleParts.split(',');
         let isAtRule = false;
-        z$.each(classes, function(k, v) {
+        z$.each(classes, (k, v) => {
           // TODO: deprecate the 'single dot' notation
           if (v.trim() === '.' || v.trim() === ':host') {
             // a single `.` means 'self' (the container itself)
@@ -1630,7 +1617,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
   const head = container || document.head || document.getElementsByTagName('head')[0];
   let style = null;
   // remove old style if already defined
-  if (!util.isNoU(target) && head.contains(target)) {
+  if (target && head.contains(target)) {
     head.removeChild(target);
   } else {
     const oldStyle = document.getElementById(cssId);
@@ -1641,16 +1628,11 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
   if (typeof css === 'string') {
     // output css
     style = document.createElement('style');
-    style.type = 'text/css';
     style.id = cssId;
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
+    style.appendChild(document.createTextNode(css));
   } else if (css instanceof Element) style = css;
   // Append new CSS
-  if (!util.isNoU(style)) {
+  if (style) {
     head.appendChild(style);
   }
   return style;
@@ -1683,7 +1665,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
     let value = result[0];
     if (callback) {
       const r = callback(result[0]);
-      if (!util.isNoU(r)) {
+      if (r != null) {
         value = r;
         matched++;
       }
@@ -1722,7 +1704,7 @@ ZxQueryStatic.getClosest = function(elem, selector) {
  * @memberOf ZxQueryStatic
  * @alias zuix.$.getPosition
  * @param {Element|HTMLElement} el
- * @param {number} [tolerance] Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
+ * @param {number} [tolerance] Distance in pixels from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
  * @return {ElementPosition}
  */
 ZxQueryStatic.getPosition = function(el, tolerance) {
@@ -1754,16 +1736,13 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     };
   })(el);
   position.visible = false;
-  let scrollable = el.offsetParent;
-  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
-    scrollable = document.body;
-  }
+  let scrollable = el.parentElement;
   if (scrollable != null) {
     if (scrollable !== document.body) {
       // find the scrollable container
-      let s = scrollable.offsetParent;
-      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
-        s = s.offsetParent;
+      let s = scrollable;
+      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight && s.offsetWidth === s.scrollWidth) {
+        s = s.parentElement;
       }
       if (s != null) scrollable = s;
     }
@@ -1842,13 +1821,13 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
     styleElement = document.createElement('style');
   }
   let props = ''; let transProps = '';
-  zuix.$.each(properties, function(k, v) {
+  z$.each(properties, (k, v) => {
     k = util.camelCaseToHyphens(k);
     props += '  ' + k + ': ' + v + ';\n';
     transProps += k + ', ';
   });
   let opts = '\n';
-  zuix.$.each(options, function(k, v) {
+  z$.each(options, (k, v) => {
     k = util.camelCaseToHyphens(k);
     opts += '  transition-' + k + ': ' + v + ';\n';
   });
@@ -1888,7 +1867,7 @@ ZxQueryStatic.playFx = function(config) {
   const style = getComputedStyle($el.get());
   const delay = (parseFloat(style[config.type + '-delay']) * 1000) || classOut ? 10 : 0;
   let expired = false;
-  const animationStart = function() {
+  const animationStart = () => {
     if (expired) return;
     expired = true;
     if (config.classes.length > 1) {
@@ -1906,7 +1885,7 @@ ZxQueryStatic.playFx = function(config) {
       }
     }
   };
-  const animationSetup = function() {
+  const animationSetup = () => {
     if (classOut) {
       $el.css(config.type, '')
           .removeClass(classOut);
@@ -2055,7 +2034,7 @@ function getPath(observable) {
     const co = observable;
     // TODO: this line is perhaps ambiguous how to resolve path if target[key] has more parents?
     observable = observable.__parents__[0];
-    if (observable != null && observable.__path__ != null) {
+    if (observable && observable.__path__) {
       path = '[\'' + co.__path__ + '\'].' + path;
     } else {
       path = co.__path__ + (!path.startsWith('[') ? '.' : '') + path;
@@ -2066,9 +2045,9 @@ function getPath(observable) {
 /** @private */
 function getListeners(observable) {
   const listeners = [];
-  observable.__parents__.forEach(function(po) {
-    listeners.push(...getListeners(po));
-  });
+  observable.__parents__.forEach((po) =>
+    listeners.push(...getListeners(po))
+  );
   listeners.push(...observable.__listeners__);
   return listeners;
 }
@@ -2077,9 +2056,7 @@ function getListeners(observable) {
 function deleteObservable(targetObservable) {
   getListeners(targetObservable).forEach(
       /** @param {ObservableListener} l */
-      function(l) {
-        targetObservable.unsubscribe(l);
-      }
+      (l) => targetObservable.unsubscribe(l)
   );
 }
 
@@ -2092,9 +2069,8 @@ function deleteObservable(targetObservable) {
 ObjectObserver.prototype.observable = function(obj) {
   /** @type {ObservableObject} */
   let observable;
-  const matches = this.observableList.filter(function(o) {
-    return obj === o.proxy || obj === o.target;
-  });
+  const matches = this.observableList.filter((o) =>
+    obj === o.proxy || obj === o.target);
   if (matches.length === 1) {
     observable = matches[0];
   }
@@ -2103,7 +2079,9 @@ ObjectObserver.prototype.observable = function(obj) {
       /** @type ObjectObserver */
       context: null,
       get: function(target, key) {
-        if (key === 'observableTarget') return target;
+        if (key === 'observableTarget') {
+          return target;
+        }
         if (key.toString() === 'Symbol(Symbol.toStringTag)') {
           return;
         }
@@ -2135,7 +2113,7 @@ ObjectObserver.prototype.observable = function(obj) {
         }
         const path = getPath(targetObservable) + key;
         // propagate to all listeners
-        listeners.forEach(function(l) {
+        listeners.forEach((l) => {
           if (l.get) {
             l.get(target, key, value, path);
           }
@@ -2153,7 +2131,7 @@ ObjectObserver.prototype.observable = function(obj) {
         const path = getPath(targetObservable) + key;
         getListeners(targetObservable).forEach(
             /** @param {ObservableListener} l */
-            function(l) {
+            (l) => {
               if (l.set) {
                 l.set(target, key, value, path, old);
               }
@@ -2245,9 +2223,8 @@ function ObservableObject(context, target, handler) {
  * @returns ObservableObject
  */
 ObservableObject.prototype.subscribe = function(observableListener) {
-  const _t = this;
-  this.handler.context.observableList.forEach(function(p) {
-    if (p !== _t && p.__listeners__.indexOf(observableListener) !== -1) {
+  this.handler.context.observableList.forEach((p) => {
+    if (p !== this && p.__listeners__.indexOf(observableListener) !== -1) {
       throw new Error('Listener already registered.');
     }
   });
@@ -2271,10 +2248,9 @@ ObservableObject.prototype.unsubscribe = function(observableListener) {
     this.revoke();
     // TODO: this is untested!!!
     // remove this observable and parent references to it
-    const _t = this;
-    this.handler.context.observableList = this.handler.context.observableList.filter(function(p) {
-      if (p === _t) return false;
-      const i = p.__parents__.indexOf(_t);
+    this.handler.context.observableList = this.handler.context.observableList.filter((p) => {
+      if (p === this) return false;
+      const i = p.__parents__.indexOf(this);
       if (i !== -1) {
         p.__parents__.splice(i, 1);
         // if child has no more parents nor listeners, then remove it as well
@@ -2365,30 +2341,27 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.refreshMs = _defaultRefreshDelay;
   this.paused = false;
   this.forceActive = false;
-  const _t = this;
   let initialized = false;
-  this.requestRefresh = function($v, $el, data) {
+  this.requestRefresh = ($v, $el, data) => {
     const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
     const isVisible = (isMainComponent && !initialized) || $el.position().visible;
-    const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && isVisible);
+    const isActive = this.forceActive || (!this.paused && $el.parent() != null && isVisible);
     /** @type {ActiveRefreshCallback} */
-    const refreshLoop = function(st, ms, active) {
-      if (st != null) _t.contextData = st;
+    const refreshLoop = (st, ms, active) => {
+      if (st != null) this.contextData = st;
       if (ms == null) ms = $el.attr('@delay') ? +$el.attr('@delay') : null;
-      if (ms != null) _t.refreshMs = ms;
+      if (ms != null) this.refreshMs = ms;
       if (active == null) active = $el.attr('@active') != null;
-      if (active != null) _t.forceActive = active;
+      if (active != null) this.forceActive = active;
       const ctx = zuix.context($v);
-      if (ctx != null && _t.refreshMs > 0) {
-        setTimeout(function() {
-          _t.requestRefresh($v, $el, _t.contextData);
-        }, isActive ? _t.refreshMs : 500); // 500ms for noop-loop
+      if (ctx != null && this.refreshMs > 0) {
+        setTimeout(() => this.requestRefresh($v, $el, this.contextData), isActive ? this.refreshMs : 500); // 500ms for noop-loop
         initialized = true;
       } else if (ctx == null) {
         // will not request refresh, loop
         // ends if context was disposed
         // TODO: cp.log.e(cp, 'activeRefresh:error:no_context', element, field, view);
-        _t.stop();
+        this.stop();
       }
     };
     if (isActive) {
@@ -2398,16 +2371,18 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       }
       // call the `refreshCallback` and wait for
       // its completion before next loop round
-      refreshCallback($v, $el, data, function(nextData, nextMsDelay, forceActive) {
-        refreshLoop(nextData, nextMsDelay, forceActive);
-      });
+      refreshCallback(
+          $v, $el, data,
+          (nextData, nextMsDelay, forceActive) =>
+            refreshLoop(nextData, nextMsDelay, forceActive)
+      );
     } else {
       if ($el._refreshActive) {
         $el._refreshActive = false;
         $el.trigger('refresh:inactive');
       }
       // noop-loop
-      refreshLoop(_t.contextData);
+      refreshLoop(this.contextData);
     }
   };
 }
@@ -2506,7 +2481,7 @@ module.exports = ActiveRefresh;
  */
 
 /** */
-module.exports = function() {
+module.exports = () => {
   // dummy module for JsDocs/Closure Compiler
 };
 
@@ -2608,9 +2583,8 @@ const _queryAdapterRefreshTimeout = [];
  * @param {ComponentContext} context
  * @returns {number}
  */
-function getComponentIndex(context) {
-  return _componentIndex[context.componentId];
-}
+const getComponentIndex = (context) =>
+  _componentIndex[context.componentId];
 
 /**
  * Bind provided data by automatically mapping it to the given element.
@@ -2619,7 +2593,7 @@ function getComponentIndex(context) {
  * @param {Object} boundData Data object to map data from
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-function dataBind(el, boundData) {
+const dataBind = (el, boundData) => {
   boundData = boundData.observableTarget || boundData;
   const value = (!util.isNoU(boundData.value) ? boundData.value :
       (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
@@ -2654,7 +2628,7 @@ function dataBind(el, boundData) {
       }
       break;
     case 'select':
-      z$.each(el.options, function(i, opt) {
+      z$.each(el.options, (i, opt) => {
         if (opt.value == value) {
           el.selectedIndex = i;
           return false;
@@ -2665,7 +2639,7 @@ function dataBind(el, boundData) {
       const v = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : document.createTextNode(boundData));
       z$(el).html('').append(v);
   }
-}
+};
 /**
  * Query binding adapter for resolving `boundField`->$el mapping
  * @param {ComponentContext} _t
@@ -2674,7 +2648,7 @@ function dataBind(el, boundData) {
  * @param {BindingAdapterCallback} fn The binding adapter callback
  * @param {string} field Bound field name
  */
-function queryAdapter(_t, $view, $el, fn, field) {
+const queryAdapter = (_t, $view, $el, fn, field) => {
   if (fn && !_t._disposed) {
     (fn).call($view, $el, field, $view, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
       // data adapter is not ready, retry after 1s
@@ -2690,7 +2664,7 @@ function queryAdapter(_t, $view, $el, fn, field) {
       }
     });
   }
-}
+};
 
 /**
  * The component context object represents the component instance itself, and it holds
@@ -2715,7 +2689,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
   this.handlers = {refresh: function($view, $el, contextData, refreshCallback) {}};
-  this.trigger = function(context, eventPath, eventValue) {
+  this.trigger = (context, eventPath, eventValue) => {
     if (eventCallback) {
       eventCallback(context, eventPath, eventValue);
     }
@@ -2791,11 +2765,9 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         return;
       }
       // update bound field if found in the view
-      const bindFields = function(fld) {
+      const bindFields = (fld) => {
         if (fld.get() != null) {
-          fld.each(function(i, f) {
-            dataBind(f, value);
-          });
+          fld.each((i, f) => dataBind(f, value));
         }
       };
       if (view.get()) {
@@ -2835,8 +2807,8 @@ ComponentContext.prototype.dispose = function() {
   this._disposed = true;
   // TODO: ... check out for more resources that could be freed
   this._viewObserver.stop();
-  if (!util.isNoU(this._c)) {
-    if (!util.isNoU(this._c.view())) {
+  if (this._c) {
+    if (this._c.view()) {
       this._c.trigger('component:dispose', this._c.view(), true);
       // TODO: restore all attributes state to the original state (before component creation)
       this._c.view()
@@ -2852,7 +2824,7 @@ ComponentContext.prototype.dispose = function() {
       // un-register event handlers associated to the view
       this._c.view().reset();
       // un-register event handlers for all cached fields accessed through cp.field(...) method
-      if (!util.isNoU(this._c._fieldCache)) {
+      if (this._c._fieldCache) {
         z$.each(this._c._fieldCache, /** @param {ZxQuery} v */ function(k, v) {
           v.reset();
         });
@@ -2865,10 +2837,10 @@ ComponentContext.prototype.dispose = function() {
   // un-register model observable
   this.model(null);
   // detach component view from its container (parent element)
-  if (!util.isNoU(this._c) && this._c._childNodes.length > 0) {
+  if (this._c && this._c._childNodes.length > 0) {
     this._c.view().html('');
     this._c.restoreView();
-    //if (!util.isNoU(this._c.view())) {
+    //if (this._c.view()) {
     //  // detach from parent
     //  this._c.view().detach();
     //}
@@ -2939,8 +2911,8 @@ ComponentContext.prototype.view = function(view) {
     });
   }
 
-  const initializeTemplateFields = function(v) {
-    v.find('*').each(function(i, el, $el) {
+  const initializeTemplateFields = (v) => {
+    v.find('*').each((i, el, $el) => {
       //if (!zuix.isDirectComponentElement(v, $el)) return;
       // add `z-field` from '#<field_name>' attributes
       for (let j = 0; j < el.attributes.length; j++) {
@@ -2989,20 +2961,20 @@ ComponentContext.prototype.view = function(view) {
 
     const v = z$(this._view);
     // Run embedded scripts
-    v.find('script:not([type=jscript])').each(function(i, el) {
-      if (this.attr(_optionAttributes.zuixLoaded) !== 'true') {
-        this.attr(_optionAttributes.zuixLoaded, 'true');
+    v.find('script:not([type=jscript])').each((i, el, $el) => {
+      if ($el.attr(_optionAttributes.zuixLoaded) !== 'true') {
+        $el.attr(_optionAttributes.zuixLoaded, 'true');
         /* if (el.src != null && el.src.length > 0) {
           var clonedScript = document.createElement('script');
           setAttribute(clonedScript, _optionAttributes.zuixLoaded, 'true');
           clonedScript.onload = function () {
               // TODO: ...
           };
-          if (!util.isNoU(this.type) && this.type.length > 0)
+          if (this.type && this.type.length > 0)
               clonedScript.type = this.type;
-          if (!util.isNoU(this.text) && this.text.length > 0)
+          if (this.text && this.text.length > 0)
               clonedScript.text = this.text;
-          if (!util.isNoU(this.src) && this.src.length > 0)
+          if (this.src && this.src.length > 0)
               clonedScript.src = this.src;
           this.get().parentNode.insertBefore(clonedScript, this.get());
         } else */
@@ -3022,7 +2994,9 @@ ComponentContext.prototype.view = function(view) {
       util.dom.setAttribute(this._view, _optionAttributes.zView, null);
       this._container.appendChild(this._view);
       this._view = this._container;
-    } else this._view = view;
+    } else {
+      this._view = view;
+    }
   }
 
   const v = z$(this._view);
@@ -3030,9 +3004,8 @@ ComponentContext.prototype.view = function(view) {
   initializeTemplateFields(v);
 
   // Disable loading of nested components until the component is ready
-  v.find(util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded))).each(function(i, v) {
-    this.attr(_optionAttributes.zLoaded, 'false');
-  });
+  v.find(util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded)))
+      .each((i, el, $el) => $el.attr(_optionAttributes.zLoaded, 'false'));
 
   // View style encapsulation
   this.checkEncapsulation();
@@ -3077,21 +3050,20 @@ zuix.context('field-test', (ctx) => {
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  */
 ComponentContext.prototype.field = function(fieldName) {
-  const _t = this;
-  const el = zuix.field(fieldName, this._view, this);
-  el.on = function(eventPath, eventHandler, eventData, isHook) {
+  const $el = zuix.field(fieldName, this._view, this);
+  $el.on = (eventPath, eventHandler, eventData, isHook) => {
     // route to another event (-> linked to another event)
     if (typeof eventHandler === 'string') {
       const eh = eventHandler;
-      eventHandler = function() {
-        if (_t._c) {
-          _t._c.trigger(eh, eventData, isHook);
+      eventHandler = () => {
+        if (this._c) {
+          this._c.trigger(eh, eventData, isHook);
         }
       };
     }
-    return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
+    return z$.ZxQuery.prototype.on.call($el, eventPath, eventHandler);
   };
-  return el;
+  return $el;
 };
 
 /**
@@ -3110,9 +3082,7 @@ ComponentContext.prototype.checkEncapsulation = function() {
       const q = '*' +
           util.dom.cssNot(_optionAttributes.zLoad).getAll();
       // mark all elements with a css identifier attribute
-      v.find(q).each(function(i, v) {
-        this.attr(cssId, '');
-      });
+      v.find(q).each((i, el, $el) => $el.attr(cssId, ''));
       // start view observer for dynamically adding the css identifier
       // attribute to elements added after view creation
       this._viewObserver.start();
@@ -3344,17 +3314,13 @@ ComponentContext.prototype.on = function(eventPath, eventHandler) {
  *
  * @private
  * @param {object} [options] The options object.
- * @param {boolean} [enableCaching] Enable HTTP.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadCss = function(options, enableCaching) {
+ComponentContext.prototype.loadCss = function(options) {
   const context = this;
-  if (util.isNoU(options)) options = {};
-  if (!util.isNoU(options.caching)) {
-    enableCaching = options.caching;
-  }
+  if (!options) options = {};
   let cssPath = context.componentId;
-  if (!util.isNoU(options.path)) {
+  if (options.path) {
     // path override with explicit option
     cssPath = options.path;
   }
@@ -3433,17 +3399,13 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
  *
  * @private
  * @param {object} [options] The options object.
- * @param {boolean} [enableCaching] Enable HTTP caching
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadHtml = function(options, enableCaching) {
+ComponentContext.prototype.loadHtml = function(options) {
   const context = this;
   let htmlPath = context.componentId;
-  if (util.isNoU(options)) options = {};
-  if (!util.isNoU(options.caching)) {
-    enableCaching = options.caching;
-  }
-  if (!util.isNoU(options.path)) {
+  if (!options) options = {};
+  if (options.path) {
     // path override with explicit option
     htmlPath = options.path;
   }
@@ -3500,7 +3462,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         (options.then).call(context, context);
       }
     } else {
-      const cext = util.isNoU(options.cext) ? '.html' : options.cext;
+      const cext = options.cext ? options.cext : '.html';
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
@@ -3536,27 +3498,28 @@ ComponentContext.prototype.viewToModel = function() {
   const model = {};
   const $view = z$(this._view);
   // create data model from inline view fields
-  $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
-    if (!zuix.isDirectComponentElement($view, $el)) {
-      return true;
-    }
-    const name = this.attr(_optionAttributes.zField);
-    // TODO: the following code is disabled because
-    //       causes "proxy revoked" exception when unloading and reloading a component
-    // dotted field path to nested objects
-    /*
-    if (name.indexOf('.')>0) {
-      const path = name.split('.');
-      let cur = model;
-      for (let p = 0; p < path.length - 1; p++) {
-        if (typeof cur[path[p]] === 'undefined') {
-          cur[path[p]] = {};
+  $view.find(util.dom.queryAttribute(_optionAttributes.zField))
+      .each((i, el, $el) => {
+        if (!zuix.isDirectComponentElement($view, $el)) {
+          return true;
         }
-        cur = cur[path[p]];
-      }
-      cur[path[path.length - 1]] = value;
-    } else*/ model[name] = el;
-  });
+        const name = $el.attr(_optionAttributes.zField);
+        // TODO: the following code is disabled because
+        //       causes "proxy revoked" exception when unloading and reloading a component
+        // dotted field path to nested objects
+        /*
+        if (name.indexOf('.')>0) {
+          const path = name.split('.');
+          let cur = model;
+          for (let p = 0; p < path.length - 1; p++) {
+            if (typeof cur[path[p]] === 'undefined') {
+              cur[path[p]] = {};
+            }
+            cur = cur[path[p]];
+          }
+          cur[path[path.length - 1]] = value;
+        } else*/ model[name] = el;
+      });
   this._model = zuix.observable(model)
       .subscribe(this._modelListener)
       .proxy;
@@ -3574,11 +3537,10 @@ ComponentContext.prototype.viewToModel = function() {
 ComponentContext.prototype.modelToView = function() {
   _log.t(this.componentId, 'model:view', 'timer:mv:start');
   if (this._view != null) {
-    const _t = this;
     // the '#' member contains all `z-field` mapped as a context['#'] property (ZxQuery object)
-    _t['#'] = {};
+    this['#'] = {};
     const $view = z$(this._view);
-    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
+    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each((i, el, $el) => {
       if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
@@ -3586,22 +3548,22 @@ ComponentContext.prototype.modelToView = function() {
       if (boundField == null) {
         boundField = $el.attr(_optionAttributes.zField);
       }
-      if (typeof _t._model === 'function') {
+      if (typeof this._model === 'function') {
         // use a data model binding adapter
         // to resolve all model fields' values
-        queryAdapter(_t, $view, $el, _t._model, boundField);
+        queryAdapter(this, $view, $el, this._model, boundField);
       } else {
-        let boundData = util.propertyFromPath(_t._model, boundField);
+        let boundData = util.propertyFromPath(this._model, boundField);
         const altField = util.hyphensToCamelCase(boundField);
-        const altData = util.propertyFromPath(_t._model, altField);
+        const altData = util.propertyFromPath(this._model, altField);
         if (boundData == null && altData != null) {
           boundField = altField;
-          boundData = util.propertyFromPath(_t._model, boundData);
+          boundData = util.propertyFromPath(this._model, boundData);
         }
         if (typeof boundData === 'function') {
           // use data model's field binding adapter
           // to resolve boundField's value
-          queryAdapter(_t, $view, $el, boundData, boundField);
+          queryAdapter(this, $view, $el, boundData, boundField);
         } else if (boundData != null) {
           // use default binding method
           // to resolve boundField's value
@@ -3610,7 +3572,7 @@ ComponentContext.prototype.modelToView = function() {
       }
     });
     // new fields might been have added after data-binding
-    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
+    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each((i, el, $el) => {
       if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
@@ -3622,7 +3584,7 @@ ComponentContext.prototype.modelToView = function() {
       try {
         const f = util.hyphensToCamelCase(boundField);
         Function('function testName(){ const ' + f + ' = "test"; }');
-        _t['#'][f] = _t.field(boundField);
+        this['#'][f] = this.field(boundField);
       } catch (e) {
         // TODO: should at least log a 'Warning: unscriptable field name'
         //console.log('ERROR', e);
@@ -3728,7 +3690,7 @@ module.exports = ComponentContext;
 const _optionAttributes =
     __webpack_require__(541);
 
-const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works only over HTTPS
+const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/1.2/';
 
 /**
  * TODO: describe this...
@@ -3738,12 +3700,12 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  */
 Componentizer.prototype.componentize = function(element) {
   if (isBusy) {
-    z$().one('componentize:step', function() {
-      requestAnimationFrame(function() {
+    z$().one('componentize:step', () =>
+      requestAnimationFrame(() => {
         isBusy = false;
         zuix.componentize(element);
-      });
-    });
+      })
+    );
     return this;
   }
   isBusy = true;
@@ -3762,6 +3724,7 @@ Componentizer.prototype.applyOptions = function(element, options) {
 
 Componentizer.prototype.loadInline = function(element, options) {
   loadInline(element, options);
+  return this;
 };
 
 Componentizer.prototype.resolvePath = function(path) {
@@ -3796,6 +3759,7 @@ Componentizer.prototype.dequeue = function(element) {
       break;
     }
   }
+  return this;
 };
 
 
@@ -3850,23 +3814,15 @@ const TaskItem = function() {
 };
 
 /** @private */
+const _lazyUpdateScrollRefresh = 150;
+
+/** @private */
 let _disableLazyLoading = false;
 /** @private */
 let _lazyLoadingThreshold = 1;
 
 /** @type {Zuix} **/
 let zuix = null;
-
-// Browser Agent / Bot detection
-/** @private */
-let _isCrawlerBotClient = false;
-if (navigator && navigator.userAgent) {
-  _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
-      .test(navigator.userAgent);
-}
-if (_isCrawlerBotClient) {
-  _log.d(navigator.userAgent, 'is a bot, ignoring `lazy-loading` option.');
-}
 
 let isBusy = false;
 
@@ -3891,7 +3847,7 @@ function lazyLoad(enable, threshold) {
   if (threshold != null) {
     _lazyLoadingThreshold = threshold;
   }
-  return !_isCrawlerBotClient && !_disableLazyLoading;
+  return !_disableLazyLoading;
 }
 /** @private */
 function addRequest(element) {
@@ -3963,7 +3919,6 @@ function queueLoadables(element) {
     }
   }
 
-
   if (_componentizeStats.queued !== _componentizeQueue.length || _componentizeStats.added !== added) {
     _log.t('componentize:count', _componentizeQueue.length, added);
     _componentizeStats.queued = _componentizeQueue.length;
@@ -3976,6 +3931,7 @@ function queueLoadables(element) {
   } else {
     zuix.$().trigger('componentize:step');
   }
+
   isBusy = false;
 }
 
@@ -4018,9 +3974,7 @@ function loadNext(element) {
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
     const el = job.item.element;
-    z$(el).one('component:loaded', function() {
-      zuix.componentize(el);
-    });
+    z$(el).one('component:loaded', () => zuix.componentize(el));
     loadInline(el);
   }
 }
@@ -4036,7 +3990,7 @@ function loadInline(element, opts) {
 
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.zOptions);
-  if (!util.isNoU(options)) {
+  if (options) {
     options = parseOptions(element, options);
     // copy passed options
     options = util.cloneObject(options) || {};
@@ -4051,7 +4005,7 @@ function loadInline(element, opts) {
   }
 
   const contextId = v.attr(_optionAttributes.zContext);
-  if (!util.isNoU(contextId)) {
+  if (contextId) {
     // inherit options from context if already exists
     const ctx = zuix.context(contextId);
     if (ctx !== null) {
@@ -4061,22 +4015,22 @@ function loadInline(element, opts) {
   }
 
   // Automatic view/container selection
-  if (util.isNoU(options.view) && !v.isEmpty()) {
+  if (!options.view && !v.isEmpty()) {
     options.view = element;
     options.viewDeferred = true;
-  } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty() && v.attr(_optionAttributes.resourceType.controller) == null) {
+  } else if (!options.view && !options.container && v.isEmpty() && v.attr(_optionAttributes.resourceType.controller) == null) {
     options.container = element;
   }
 
   const setAsTemplate = function() {
     v.attr(_optionAttributes.zComponent, null);
     // View-only templates have no controller
-    if (util.isNoU(options.controller)) {
+    if (!options.controller) {
       options.controller = function() {};
     }
   };
   let componentId = v.attr(_optionAttributes.zLoad);
-  if (util.isNoU(componentId)) {
+  if (!componentId) {
     return false;
   } else {
     componentId = resolvePath(componentId);
@@ -4095,9 +4049,9 @@ function loadInline(element, opts) {
         if (options.css === false) {
           options.css = '';
         }
-        styleElement.each(function(i, el, $el) {
-          options.css += '\n' + options.css + $el.html();
-        });
+        styleElement.each((i, el, $el) =>
+          options.css += '\n' + options.css + $el.html()
+        );
       }
       if (componentId === 'default') {
         options.controller = options.controller || function() {};
@@ -4130,27 +4084,27 @@ function loadInline(element, opts) {
   });
 
   const on = v.attr(_optionAttributes.zOn);
-  if (!util.isNoU(on) && on.length > 0) {
+  if (on) {
     options.on = parseOptions(element, on);
   }
 
   const behavior = v.attr(_optionAttributes.zBehavior);
-  if (!util.isNoU(behavior) && behavior.length > 0) {
+  if (behavior) {
     options.behavior = parseOptions(element, behavior);
   }
 
   const model = v.attr(_optionAttributes.zModel);
-  if (!util.isNoU(model) && model.length > 0) {
+  if (model) {
     options.model = parseOptions(element, model);
   }
 
   const using = v.attr(_optionAttributes.zUsing);
-  if (!util.isNoU(using)) {
+  if (using) {
     options.using = using;
   }
 
   const priority = v.attr(_optionAttributes.zPriority);
-  if (!util.isNoU(priority)) {
+  if (priority) {
     options.priority = +(priority);
   }
 
@@ -4170,7 +4124,7 @@ function resolvePath(path) {
     if (config != null) {
       switch (typeof config.libraryPath) {
         case 'object':
-          z$.each(config.libraryPath, function(k, v) {
+          z$.each(config.libraryPath, (k, v) => {
             if (path.startsWith(k + '/')) {
               libraryPath = v;
               return false;
@@ -4213,14 +4167,14 @@ function parseOptions(element, attributeValue) {
 function applyOptions(element, options) {
   options = parseOptions(element, options);
   // TODO: should check if options object is valid
-  if (element != null && options != null) {
-    if (options.componentId != null) {
+  if (element && options) {
+    if (options.componentId) {
       util.dom.setAttribute(element, _optionAttributes.zLoad, options.componentId.toString().toLowerCase());
     }
-    if (options.contextId != null) {
+    if (options.contextId) {
       util.dom.setAttribute(element, _optionAttributes.zContext, options.contextId.toString().toLowerCase());
     }
-    if (options.lazyLoad != null) {
+    if (options.lazyLoad) {
       util.dom.setAttribute(element, _optionAttributes.zLazy, options.lazyLoad.toString().toLowerCase());
     }
     // TODO: eventually map other attributes from options
@@ -4272,46 +4226,46 @@ function addLazyContainer(el) {
 /** @private */
 function lazyElementCheck(element) {
   // Check if element has explicit lazyLoad=false flag set
-  if (util.dom.getAttribute(element, _optionAttributes.zLazy) === 'false') {
+  const $el = z$(element);
+  const lazyParent = $el.parent(`[${_optionAttributes.zLazy}]`);
+  if ($el.attr(_optionAttributes.zLazy) === 'false' ||
+      (lazyParent.length() > 0 && lazyParent.attr(_optionAttributes.zLazy) === 'false') ) {
     return false;
   }
   // Check if element is already added to Lazy-Element list
-  let le = getLazyElement(element);
-  if (le == null) {
+  if (!getLazyElement(element)) {
     // Check if element inherits lazy-loading from a parent lazy container/scroll
     const q = util.dom.queryAttribute(_optionAttributes.zLazy, 'scroll') + ',' +
             util.dom.queryAttribute(_optionAttributes.zLazy, 'true');
-    const lazyContainer = element.parentNode && z$.getClosest(element.parentNode, q);
-    if (lazyContainer != null) {
-      le = addLazyElement(element);
+    const lazyContainer = $el.parent().parent(q).get();
+    if (lazyContainer) {
+      addLazyElement(element);
       // Check if the lazy container is already added to the lazy container list
       let lc = getLazyContainer(lazyContainer);
-      if (lc == null) {
+      if (!lc) {
         lc = addLazyContainer(lazyContainer);
         // if it's of type 'scroll' attach 'scroll' event handler
         if (util.dom.getAttribute(lazyContainer, _optionAttributes.zLazy) === 'scroll') {
           (function(instance, lc) {
             let lastScroll = new Date().getTime();
             let timeout;
-            z$(lc === document.body ? window : lc).on('scroll', function() {
+            z$(lc === document.body ? window : lc).on('scroll', () => {
               const now = new Date().getTime();
-              if (now - lastScroll > 100) {
+              if (now - lastScroll > _lazyUpdateScrollRefresh) {
                 lastScroll = now;
                 loadNext(lc);
               } else {
                 clearTimeout(timeout);
-                timeout = setTimeout(function() {
-                  loadNext(lc);
-                }, 150);
+                timeout = setTimeout(() => loadNext(lc), 100);
               }
             });
           })(this, lazyContainer);
         }
       }
       return true;
-    } else if (util.dom.getAttribute(element, _optionAttributes.zLazy) === 'true') {
+    } else if ($el.attr(_optionAttributes.zLazy) === 'true') {
       // element has explicit lazyLoad=true flag set
-      le = addLazyElement(element);
+      addLazyElement(element);
       return true;
     }
   } else return true;
@@ -4404,55 +4358,51 @@ const util =
  */
 function ContextController(context) {
   const _t = this;
-
-  this._view = null;
-
-  this.context = context;
+  _t._view = null;
+  _t.context = context;
 
   /**
      * @protected
      * @type {!Array.<Element>}
      * */
-  this._childNodes = [];
+  _t._childNodes = [];
   /**
    * @type {function}
    * @ignore
    */
-  this.saveView = function() {
-    this.restoreView();
-    this.view().children().each(function(i, el) {
-      _t._childNodes.push(el);
-    });
+  _t.saveView = () => {
+    _t.restoreView();
+    _t.view()
+        .children()
+        .each((i, el) => _t._childNodes.push(el));
   };
-  this.restoreView = function() {
-    if (this._childNodes.length > 0) {
+  _t.restoreView = () => {
+    if (_t._childNodes.length > 0) {
       _t.view().html('');
-      z$.each(_t._childNodes, function(i, el) {
-        _t.view().append(el);
-      });
-      this._childNodes.length = 0;
+      z$.each(_t._childNodes, (i, el) =>
+        _t.view().append(el));
+      _t._childNodes.length = 0;
     }
   };
 
-  this.on = function(eventPath, handler) {
+  _t.on = (eventPath, handler) => {
     if (typeof eventPath === 'object' && handler == null) {
-      z$.each(eventPath, function(evt, hnd) {
-        _t.on(evt, hnd);
-      });
-      return this;
+      z$.each(eventPath, (evt, hnd) =>
+        _t.on(evt, hnd));
+      return _t;
     }
-    this.addEvent(eventPath, handler);
-    return this;
+    _t.addEvent(eventPath, handler);
+    return _t;
   };
   /**
    * @protected
    * @ignore
    */
-  this.mapEvent = function(eventMap, target, eventPath, handler) {
+  _t.mapEvent = (eventMap, target, eventPath, handler) => {
     if (target != null) {
-      target.off(eventPath, this.eventRouter);
+      target.off(eventPath, _t.eventRouter);
       eventMap.push({target, eventPath, handler});
-      target.on(eventPath, this.eventRouter);
+      target.on(eventPath, _t.eventRouter);
     } else {
       // TODO: should report missing target
     }
@@ -4461,9 +4411,9 @@ function ContextController(context) {
    * @protected
    * @ignore
    */
-  this.eventRouter = function(e) {
+  _t.eventRouter = (e) => {
     const v = _t.view();
-    context._behaviorMap.concat(context._eventMap).forEach(function(em) {
+    context._behaviorMap.concat(context._eventMap).forEach((em) => {
       if (em.eventPath === e.type && em.handler) {
         em.handler.call(v, e, e.detail, v);
       }
@@ -4474,9 +4424,8 @@ function ContextController(context) {
   const options = context.options();
   let handler = null;
   if (options.on != null) {
-    z$.each(options.on, function(ep, handler) {
-      ep.split(/[\s|,]+/g).map((evt) => _t.addEvent(evt, handler));
-    });
+    z$.each(options.on, (ep, handler) =>
+      ep.split(/[\s|,]+/g).map((evt) => _t.addEvent(evt, handler)));
   }
   // create behavior map from context options
   if (options.behavior != null) {
@@ -4488,19 +4437,18 @@ function ContextController(context) {
     }
   }
 
-  const isClass = function(v) {
-    return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
-  };
+  const isClass = (v) =>
+    typeof v === 'function' && /^\s*class\s+/.test(v.toString());
   if (isClass(context.controller())) {
     // >= ES6
-    const ctrl = new ((context.controller()).bind(this, this))();
+    const ctrl = new ((context.controller()).bind(_t, _t))();
     context.controller(ctrl);
   } else {
     // <= ES5
-    context.controller().call(this, this);
+    context.controller().call(_t, _t);
   }
 
-  return this;
+  return _t;
 }
 
 /**
@@ -4583,20 +4531,19 @@ ContextController.prototype.clearCache = function() {
 ContextController.prototype.view = function(filter) {
   const _t = this;
   // context view changed, dispose cached fields from previous attached view
-  if (this.context.view() != null || this._view !== this.context.view()) {
-    this.clearCache();
+  if (_t.context.view() || _t._view !== _t.context.view()) {
+    _t.clearCache();
     // TODO: !!!!
     // TODO: dispose also events on view change (!!!)
     // TODO: !!!!
-    this._view = z$(this.context.view());
-    this._view.field = function(fieldName) {
-      return _t.context.field(fieldName);
-    };
+    _t._view = z$(_t.context.view());
+    _t._view.field = (fieldName) =>
+      _t.context.field(fieldName);
   }
-  if (filter != null) {
-    return this._view.find(filter);
-  } else if (this._view !== null) {
-    return this._view;
+  if (filter) {
+    return _t._view.find(filter);
+  } else if (_t._view) {
+    return _t._view;
   } else {
     throw new Error('Not attached to a view yet.');
   }
@@ -4609,7 +4556,7 @@ ContextController.prototype.view = function(filter) {
  * @return {ContextController|object}
  */
 ContextController.prototype.model = function(model) {
-  if (model == null) {
+  if (!model) {
     return this.context.model();
   } else this.context.model(model);
   return this;
@@ -4648,15 +4595,20 @@ zuix.context('my-slide-show')
  * @return {ContextController}
  */
 ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
-  if (isHook === true) {
+  if (isHook) {
     let target = this.context.container();
-    if (target == null) target = this.context.view();
-    if (target != null) {
-      z$(target).trigger(eventPath, eventData);
+    if (!target) {
+      target = this.context.view();
     }
-    this.context.trigger(this.context, eventPath, eventData);
+    if (target) {
+      z$(target)
+          .trigger(eventPath, eventData);
+    }
+    this.context
+        .trigger(this.context, eventPath, eventData);
   } else {
-    this.view().trigger(eventPath, eventData);
+    this.view()
+        .trigger(eventPath, eventData);
   }
   return this;
 };
@@ -4670,18 +4622,15 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.expose = function(name, handler) {
-  const _t = this;
-  const expose = function(m, h) {
+  const expose = (m, h) => {
     if (h && (h.get || h.set)) {
-      Object.defineProperty(_t.context, m, h);
+      Object.defineProperty(this.context, m, h);
     } else {
-      _t.context[m] = h;
+      this.context[m] = h;
     }
   };
   if (typeof name === 'object') {
-    z$.each(name, function(k, v) {
-      expose(k, v);
-    });
+    z$.each(name, (k, v) => expose(k, v));
   } else {
     expose(name, handler);
   }
@@ -4709,7 +4658,8 @@ cp.loadCss({
  * @return {ContextController} The ```{ContextController}``` object itself.
  */
 ContextController.prototype.loadCss = function(options) {
-  this.context.loadCss(options);
+  this.context
+      .loadCss(options);
   return this;
 };
 /**
@@ -4735,7 +4685,8 @@ cp.loadHtml({
  */
 ContextController.prototype.loadHtml = function(options) {
   this.saveView();
-  this.context.loadHtml(options);
+  this.context
+      .loadHtml(options);
   return this;
 };
 /**
@@ -4812,12 +4763,11 @@ module.exports = ContextController;
  * @constructor
  */
 function ControllerInstance(controller) {
-  const _t = this;
   controller.init = this.onInit.bind(this);
   controller.create = this.onCreate.bind(this);
   controller.dispose = this.onDispose.bind(this);
-  controller.update = function(target, key, value, path, old) {
-    return _t.onUpdate.call(_t, target, key, value, path, old);
+  controller.update = (target, key, value, path, old) => {
+    return this.onUpdate.call(this, target, key, value, path, old);
   };
   Object.assign(this, controller);
   Object.assign(this, Object.getPrototypeOf(controller));
@@ -4988,9 +4938,9 @@ function ViewObserver(context) {
          * @private
          */
         // eslint-disable-next-line no-unused-vars
-        function(mutationsList, observer) {
+        (mutationsList, observer) => {
           const zc = util.dom.queryAttribute(_optionAttributes.zComponent);
-          const findNode = function(node) {
+          const findNode = (node) => {
             for (let i = 0; i < node.attributes.length; i++) {
               if (node.attributes[i].name.startsWith(_optionAttributes.cssIdPrefix)) {
                 return true;
@@ -4999,7 +4949,7 @@ function ViewObserver(context) {
           };
           for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-              mutation.addedNodes.forEach(function(node) {
+              mutation.addedNodes.forEach((node) => {
                 if (node instanceof Element) {
                   let parent = zuix.$(node).parent(zc);
                   if (parent.get() == null) return;
@@ -5195,7 +5145,7 @@ const resourceLoadTask = [];
  * @return {TaskQueue}
  */
 const taskQueue = function(tid) {
-  if (util.isNoU(_componentTask[tid])) {
+  if (!_componentTask[tid]) {
     _componentTask[tid] = new TaskQueue(function(tq, eventPath, eventValue) {
       trigger(tq, eventPath, eventValue);
     });
@@ -5242,7 +5192,8 @@ const _implicitLoadDefaultList = [
  * @return {Zuix}
  */
 function Zuix() {
-  _componentizer.setHost(this);
+  const _t = this;
+  _componentizer.setHost(_t);
   /**
    * @type {Array}
    * @private
@@ -5285,38 +5236,27 @@ function Zuix() {
         });
         contextData[field] = $el.value();
       },
-      // TODO: deprecate '@on` handler, use `(<event_name>)="<handler>"` instead
-      'on': function($view, $el, lastResult, refreshCallback, attributeName) {
-        const code = $el.attr(attributeName);
-        const eventName = attributeName.split(':').slice(1).join(':');
-        $el.on(eventName, function(e) {
-          const eventHandler = zuix.runScriptlet(code, $el, $view);
-          if (typeof eventHandler === 'function') {
-            eventHandler.call($el.get(), e, $el);
-          }
-        });
-      },
       'get': function($view, $el, lastResult, refreshCallback) {
         let code = $el.attr('@get');
         const parts = code.split(' as ');
         code = parts[0];
         const resultAs = parts[1] || 'result';
-        const result = zuix.runScriptlet(code, $el, $view);
+        const result = _t.runScriptlet(code, $el, $view);
         if (result !== lastResult) {
           code = 'const ' + resultAs + ' = args; ' + $el.attr('@set');
-          zuix.runScriptlet(code, $el, $view, result);
+          _t.runScriptlet(code, $el, $view, result);
           lastResult = result;
         }
         refreshCallback(lastResult);
       },
       'set': function($view, $el, lastResult, refreshCallback) {
         if ($el.attr('@get')) return;
-        zuix.runScriptlet($el.attr('@set'), $el, $view);
+        _t.runScriptlet($el.attr('@set'), $el, $view);
         refreshCallback(lastResult);
       },
       'disable-if': function($view, $el, lastResult, refreshCallback) {
         const code = $el.attr('@disable-if');
-        const result = zuix.runScriptlet(code, $el, $view);
+        const result = _t.runScriptlet(code, $el, $view);
         if (result !== lastResult) {
           $el.attr({disabled: result ? '' : null});
           lastResult = result;
@@ -5325,7 +5265,7 @@ function Zuix() {
       },
       'hide-if': function($view, $el, lastResult, refreshCallback) {
         const code = $el.attr('@hide-if');
-        const result = zuix.runScriptlet(code, $el, $view);
+        const result = _t.runScriptlet(code, $el, $view);
         if (result !== lastResult) {
           result ? $el.css({visibility: 'hidden'}) : $el.css({visibility: 'visible'});
           lastResult = result;
@@ -5334,12 +5274,12 @@ function Zuix() {
       },
       'if': function($view, $el, lastResult, refreshCallback) {
         const code = $el.attr('@if');
-        const result = zuix.runScriptlet(code, $el, $view);
+        const result = _t.runScriptlet(code, $el, $view);
         if (result !== lastResult) {
           if (result) {
-            zuix.runScriptlet($el.attr('@then'), $el, $view);
+            _t.runScriptlet($el.attr('@then'), $el, $view);
           } else {
-            zuix.runScriptlet($el.attr('@else'), $el, $view);
+            _t.runScriptlet($el.attr('@else'), $el, $view);
           }
           lastResult = result;
         }
@@ -5383,28 +5323,26 @@ function controller(handler) {
  *
  */
 function field(fieldName, container, context) {
-  if (util.isNoU(context)) {
+  if (!context) {
     context = this;
   }
   if (context._fieldCache == null) {
     context._fieldCache = {};
   }
-
   let el = null;
   if (typeof context._fieldCache[fieldName] === 'undefined') {
     el = z$(container)
         .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[' + CSS.escape('#' + fieldName) + ']');
-    if (el != null && el.length() > 0) {
+    if (el.length() > 0) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
-      if (el.length() === 1 && util.isNoU(el.field)) {
-        el.field = function(name) {
-          return field(name, el, el);
-        };
+      if (el.length() === 1 && !el.field) {
+        el.field = (name) => field(name, el, el);
       }
     }
-  } else el = context._fieldCache[fieldName];
-
+  } else {
+    el = context._fieldCache[fieldName];
+  }
   return el;
 }
 
@@ -5421,11 +5359,11 @@ function load(componentId, options) {
   componentId = _componentizer.resolvePath(componentId);
   /** @type {ComponentContext} */
   let ctx = null;
-  if (!util.isNoU(options)) {
+  if (options) {
     // the `componentId` property is mandatory for `createContext` to work properly
     options.componentId = componentId;
     // check if context has its unique id assigned
-    if (!util.isNoU(options.contextId)) {
+    if (options.contextId) {
       // if it does, try to pick it from allocated contexts list
       ctx = context(options.contextId);
       if (ctx !== null) {
@@ -5457,7 +5395,7 @@ function load(componentId, options) {
     ctx.componentId = componentId;
     /*
          TODO: to be fixed
-         if (!util.isNoU(context.view())) {
+         if (context.view()) {
          // TODO: implement this code in a context.detach() method
          //context.controller().pause()
          context.view().detach();
@@ -5518,22 +5456,16 @@ function loadResources(ctx, options) {
     if (options.css !== false && typeof options.css !== 'string') {
       resourceLoadTask[ctx.componentId].step(ctx.componentId+':css');
       ctx.loadCss({
-        success: function(css) {
-          cachedComponent.css = css;
-        },
-        error: function(err) {
-          _log.e(err, ctx);
-        },
-        then: function() {
-          loadController(ctx, resourceLoadTask[ctx.componentId]);
-        }
+        success: (css) => cachedComponent.css = css,
+        error: (err) => _log.e(err, ctx),
+        then: () => loadController(ctx, resourceLoadTask[ctx.componentId])
       });
     } else {
       loadController(ctx, resourceLoadTask[ctx.componentId]);
     }
   };
 
-  if (util.isNoU(options.view)) {
+  if (!options.view) {
     if (cachedComponent !== null) {
       if (cachedComponent.view != null) {
         ctx.view(cachedComponent.view);
@@ -5551,14 +5483,14 @@ function loadResources(ctx, options) {
 
     // if not able to inherit the view from the base cachedComponent
     // or from an inline element, then load the view from web
-    if (util.isNoU(ctx.view())) {
+    if (!ctx.view()) {
       // Load View
       taskQueue('resource-loader').queue(ctx.componentId+':html', function() {
         resourceLoadTask[ctx.componentId] = this;
 
         ctx.loadHtml({
           cext: options.cext,
-          success: function(html) {
+          success: (html) => {
             if (cachedComponent == null) {
               cachedComponent = cacheComponent(ctx);
             }
@@ -5566,7 +5498,7 @@ function loadResources(ctx, options) {
             delete cachedComponent.controller;
             loadStyles(resourceLoadTask);
           },
-          error: function(err) {
+          error: (err) => {
             _log.e(err, ctx);
             if (options.error) {
               (ctx.error).call(ctx, err, ctx);
@@ -5601,7 +5533,7 @@ function loadResources(ctx, options) {
  * @param context {ComponentContext|ZxQuery|Element}
  */
 function unload(context) {
-  const dispose = function(ctx) {
+  const dispose = (ctx) => {
     if (ctx instanceof Element) {
       const el = ctx;
       ctx = zuix.context(el);
@@ -5609,14 +5541,12 @@ function unload(context) {
       // it's a lazy-loadable element not yet loaded
       _componentizer.dequeue(el);
     }
-    if (!util.isNoU(ctx) && ctx.dispose) {
+    if (ctx && ctx.dispose) {
       ctx.dispose();
     }
   };
   if (context && context.each) {
-    context.each(function(i, el) {
-      dispose(el);
-    });
+    context.each((i, el) => dispose(el));
   } else {
     dispose(context);
   }
@@ -5657,7 +5587,7 @@ function loadComponent(elements, componentId, type, options) {
           el.attr(attribute.nodeName, null);
         }
       });
-      setTimeout(function() {
+      setTimeout(() => {
         // move childNodes to shadow view
         while (el.get().firstChild) {
           shadowView.appendChild(el.get().firstChild);
@@ -5672,9 +5602,7 @@ function loadComponent(elements, componentId, type, options) {
       _componentizer.loadInline(el, options);
     }
   };
-  elements.each(function(i, el, $el) {
-    load($el);
-  });
+  elements.each((i, el, $el) => load($el));
 }
 
 /** @private */
@@ -5687,7 +5615,7 @@ function createContext(options) {
 /**
  *
  * @private
- * @param {Element|ZxQuery|object} contextId The `contextId` or the component's host element.
+ * @param {Element|ZxQuery|string} contextId The `contextId` or the component's host element.
  * @param {ContextReadyCallback} [callback] The callback function that will pass the component's context object once loaded and ready.
  * @return {ComponentContext} The matching component's context or `null` if the context does not exist or not yet loaded.
  */
@@ -5699,27 +5627,31 @@ function context(contextId, callback) {
   if (contextId instanceof Element && contextId.getAttribute('shadow')) {
     contextId = contextId.getAttribute('shadow');
   }
-  if (typeof contextId === 'string') {
-    const ctx = z$.find(util.dom.queryAttribute(_optionAttributes.zContext, contextId));
-    if (ctx.length() > 0) contextId = ctx.get();
-  }
-  z$.each(_contextRoot, function(k, c) {
+  // lookup `contextId` in the context registry
+  z$.each(_contextRoot, (k, c) => {
     if (contextId === c.contextId || (contextId instanceof Element && (c.view() === contextId || c.container() === contextId))) {
       ctx = c;
       return false; // break the loop
     }
   });
   if (callback) {
-    if (contextId instanceof Element && (ctx == null || !ctx.isReady)) {
-      zuix.$(contextId).one('component:ready', function() {
-        ctx = context(this);
-        setTimeout(() => {
-          callback.call(ctx, ctx);
-        }, _componentReadyCallbackDelay);
-      });
-      return null;
-    } else {
+    const cb = (ctx) => setTimeout(() => {
       callback.call(ctx, ctx);
+    }, _componentReadyCallbackDelay);
+    if (ctx && ctx.isReady) {
+      cb(ctx);
+    } else if (typeof contextId === 'string') {
+      const cel = z$.find(util.dom.queryAttribute(_optionAttributes.zContext, contextId));
+      if (cel.length() > 0) {
+        context(cel, (ctx) =>
+            ctx ? cb(ctx) : context(contextId, callback)
+        );
+      }
+    } else if (contextId instanceof Element) {
+      zuix.$(contextId).one('component:ready', function() {
+        ctx = _contextRoot.find((c) => (c.view() === contextId || c.container() === contextId));
+        cb(ctx);
+      });
     }
   }
   return ctx;
@@ -5732,7 +5664,7 @@ function context(contextId, callback) {
  * @param {function|undefined} [handler]
  */
 function hook(path, handler) {
-  if (util.isNoU(handler)) {
+  if (!handler) {
     delete _hooksCallbacks[path];
   } else {
     if (_hooksCallbacks[path]) {
@@ -5777,7 +5709,7 @@ function setComponentCache(cache) {
 function getCachedComponent(componentId) {
   /** @type {ComponentCache | null} */
   let cached = null;
-  z$.each(_componentCache, function(k, c) {
+  z$.each(_componentCache, (k, c) => {
     if (c.componentId === componentId) {
       cached = c;
       return false;
@@ -5794,7 +5726,7 @@ function getCachedComponent(componentId) {
 function loadController(context, task) {
   if (typeof context.options().controller === 'undefined' && context.controller() === null) {
     _log.d(context.componentId, 'controller:load');
-    if (!util.isNoU(task)) {
+    if (task) {
       task.step(context.componentId+':js');
     }
     if (_globalControllerHandlers[context.componentId]) {
@@ -5832,7 +5764,7 @@ function loadController(context, task) {
               createComponent(context, t);
             });
       };
-      if (util.isNoU(task)) {
+      if (!task) {
         taskQueue('resource-loader').queue(context.componentId+':js', function() {
           job(resourceLoadTask[context.componentId] = this);
         }, context.options().priority);
@@ -5865,7 +5797,7 @@ function cacheComponent(context) {
  */
 function createComponent(context, task) {
   resourceLoadTask[context.componentId] = null;
-  if (!util.isNoU(context.view())) {
+  if (context.view()) {
     let cached = getCachedComponent(context.componentId);
     if (!context.options().viewDeferred) {
       if (cached === null) {
@@ -5893,19 +5825,19 @@ function createComponent(context, task) {
       if (c.init) {
         c.init();
       }
-      const endTask = function() {
+      const endTask = () => {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
         task && task.end();
         v.attr(_optionAttributes.zReady, 'true');
       };
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
-      if (!util.isNoU(c.view()) && c.view().attr(_optionAttributes.zComponent) == null) {
+      if (c.view() && c.view().attr(_optionAttributes.zComponent) == null) {
         // add the `zComponent` attribute
         c.view().attr(_optionAttributes.zComponent, '');
       }
       // if no model is supplied, try auto-create from view fields
-      if (util.isNoU(context.model()) && !util.isNoU(context.view())) {
+      if (context.model() == null && context.view()) {
         context.viewToModel();
       }
 
@@ -5926,7 +5858,7 @@ function createComponent(context, task) {
           _log.d(context.componentId, 'component:deferred:load');
         }
 
-        const loadViewTask = function() {
+        const loadViewTask = () => {
           if (context.options().html !== false) {
             if (typeof context.options().html === 'string') {
               cached.view = context.options().html;
@@ -5934,17 +5866,17 @@ function createComponent(context, task) {
             if (cached.view == null) {
               context.loadHtml({
                 cext: context.options().cext,
-                success: function(html) {
+                success: (html) => {
                   cached.view = html;
                   _log.d(context.componentId, 'component:deferred:html');
                 },
-                error: function(err) {
+                error: (err) => {
                   _log.e(err, context);
                   if (context.options().error) {
                     (context.options().error).call(context, err, context);
                   }
                 },
-                then: function() {
+                then: () => {
                   _log.d(context.componentId, 'controller:create:2');
                   endTask();
                 }
@@ -5962,13 +5894,11 @@ function createComponent(context, task) {
         if (context.options().css !== false && typeof context.options().css !== 'string') {
           if (cached.css == null) {
             context.loadCss({
-              success: function(css) {
+              success: (css) => {
                 cached.css = css;
                 _log.d(context.componentId, 'component:deferred:css');
               },
-              then: function() {
-                loadViewTask();
-              }
+              then: () =>loadViewTask()
             });
           } else {
             context.style(cached.css);
@@ -6022,7 +5952,7 @@ function initController(ctrl) {
   }
   ctrl.trigger('view:create', $view);
 
-  const contextLoaded = function() {
+  const contextLoaded = () => {
     // set component loaded
     if (ctx.loaded) {
       (ctx.loaded).call(ctx, ctx);
@@ -6048,7 +5978,7 @@ function initController(ctrl) {
   contextLoaded();
   ctrl.trigger('component:loaded', $view, true);
 
-  const contextReady = function() {
+  const contextReady = () => {
     // parse option attributes
     const attributesList = [':on', ':model', ':behavior', ':ready']; // these are evaluated after component is created
     const optionAttributes = Array.from($view.get().attributes)
@@ -6103,7 +6033,7 @@ function initController(ctrl) {
       }
     });
     // parse and allocate inline event handlers
-    const allocateEventHandlers = function(ctx, $el) {
+    const allocateEventHandlers = (ctx, $el) => {
       Array.from($el.get().attributes).forEach((attribute) => {
         let scriptlet = attribute.nodeValue;
         const attr = attribute.nodeName;
@@ -6122,7 +6052,7 @@ function initController(ctrl) {
       });
     };
     if (zuix.context($view) === ctx) {
-      $view.find('*').each(function(i, el, $el) {
+      $view.find('*').each((i, el, $el) => {
         if (isDirectComponentElement($view, $el)) {
           allocateEventHandlers(ctx, $el);
         }
@@ -6138,7 +6068,7 @@ function initController(ctrl) {
   /** @type {Object.<string, ActiveRefreshHandler>} */
   const globalHandlers = zuix.store('handlers');
   // Creates active-refresh handlers from '@' attributes
-  const allocateRefreshHandlers = function($view, $el) {
+  const allocateRefreshHandlers = ($view, $el) => {
     const el = $el.get();
     const allocatedHandlers = [];
     for (let j = 0; j < el.attributes.length; j++) {
@@ -6153,9 +6083,9 @@ function initController(ctrl) {
           activeTagHandler = globalHandlers[handlerName];
         }
         if (activeTagHandler) {
-          const h = zuix.activeRefresh($view, $el, ctrl.model(), function($v, $element, data, refreshCallback) {
+          const h = zuix.activeRefresh($view, $el, ctrl.model(), ($v, $element, data, refreshCallback) => {
             // TODO: should `$v` and/or `$element` be passed here?
-            const runActiveTagHandler = function() {
+            const runActiveTagHandler = () => {
               activeTagHandler.call(el, $view, $el, data, refreshCallback, activeTagName);
             };
             if ($el.attr(_optionAttributes.zLoad) && $el.attr(_optionAttributes.zReady) !== 'true') {
@@ -6180,7 +6110,7 @@ function initController(ctrl) {
   const contextId = ctx.contextId;
   const viewRefreshScript = $view.find(':scope > [type="jscript"]');
   viewRefreshScript._selection = viewRefreshScript._selection.concat(z$(document).find('[type="jscript"][for="' + contextId + '"]')._selection);
-  ctx.handlers.refresh = function($view, $el, contextData, refreshCallback) {
+  ctx.handlers.refresh = ($view, $el, contextData, refreshCallback) => {
     if (!ctx._disposed) {
       if (ctx._dependencyResolver && !ctx._dependencyResolver.resolved()) {
         // not all requested components are ready, retry on next refresh
@@ -6201,19 +6131,19 @@ function initController(ctrl) {
 
         // add local vars from fields
         if (ctx['#']) {
-          z$.each(ctx['#'], function(k, v) {
+          z$.each(ctx['#'], (k, v) => {
             const f = util.hyphensToCamelCase(k);
             code += 'const $' + f + ' = context["#"].' + f + ';';
             code += 'const ' + f + ' = $' + f + '.get();';
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
           });
         }
-        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; let _this = null; zuix.context(this, (ctx) => _this = ctx); " + s) } catch (e) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); }; return result };';
+        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); }; return result };';
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';
         usingComponents.push(contextId); // map contextId to a local variable
-        viewRefreshScript.each(function(i, el, $el) {
+        viewRefreshScript.each((i, el, $el) => {
           if (zuix.context($view) === ctx) {
             if ($el.attr('using') != null) {
               usingComponents.push(...$el.attr('using').split(/[;|,]+/g));
@@ -6233,16 +6163,17 @@ function initController(ctrl) {
         let componentsResolve = '';
         if (usingComponents.length > 0) {
           let waitingComponents = '';
-          usingComponents.forEach(function(cid) {
+          usingComponents.forEach((cid) => {
             const asVar = cid.split(' as ');
             cid = asVar[0];
             const ctxVarName = util.hyphensToCamelCase(asVar[1]) || util.hyphensToCamelCase(cid);
-            const varDeclarations = 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { ' + ctxVarName + ' = zuix.context("' + cid + '"';
+            const varDeclarations = 'let ' + ctxVarName + ' = window["' + ctxVarName + '"]; if (' + ctxVarName + ' == null) { const tc = zuix.context("' + cid + '"';
             if (ctx._dependencyResolver !== false) {
-              componentsResolve += varDeclarations + ', function(ctx) { ' + ctxVarName + ' = ctx; }); }';
+              componentsResolve += varDeclarations + ', (ctx) => ' + ctxVarName + ' = ctx);';
             } else {
-              componentsResolve += varDeclarations + '); }';
+              componentsResolve += varDeclarations + ');';
             }
+            componentsResolve += 'if (tc && tc.isReady) ' + ctxVarName + ' = tc; }';
             waitingComponents += ctxVarName + ' && ';
           });
           // if "using" components are not ready, retry on the next refresh call
@@ -6284,7 +6215,7 @@ function initController(ctrl) {
 
   // Allocate refresh handlers
   const allocated = [];
-  $view.find('*').each(function(i, el, $el) {
+  $view.find('*').each((i, el, $el) => {
     if (
       !isDirectComponentElement($view, $el) ||
         (zuix.context($view) !== ctx)
@@ -6298,11 +6229,11 @@ function initController(ctrl) {
     const refreshDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('refreshdelay') : null;
     const handlersDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('handlersdelay') : null;
     // init refresh handler / first paint
-    ctx.handlers.refresh.call($view.get(), $view, $view, ctrl.model(), function(contextData, delay) {
-      zuix.activeRefresh($view, $view, contextData, function($v, $element, data, refreshCallback) {
+    ctx.handlers.refresh.call($view.get(), $view, $view, ctrl.model(), (contextData, delay) => {
+      zuix.activeRefresh($view, $view, contextData, ($v, $element, data, refreshCallback) => {
         if (ctx._refreshHandler && !ctx._refreshHandler.initialized) {
           let loadedNested = true;
-          allocated.forEach(function(h) {
+          allocated.forEach((h) => {
             if (h.$element.attr(_optionAttributes.zLoad) != null) {
               loadedNested = zuix.context(h.$element) != null && zuix.context(h.$element).isReady;
               return loadedNested;
@@ -6312,9 +6243,7 @@ function initController(ctrl) {
           if (canStart) {
             ctx._refreshHandler.initialized = true;
             // start '@' handlers
-            allocated.forEach(function(h) {
-              h.start(handlersDelay);
-            });
+            allocated.forEach((h) => h.start(handlersDelay));
             ctx.$.removeClass('not-ready');
             contextReady();
           } else if (!ctx.$.hasClass('not-ready')) {
@@ -6342,7 +6271,7 @@ function initController(ctrl) {
  * @return {ContextControllerHandler}
  */
 function getController(javascriptCode) {
-  let instance = function(ctx) { };
+  let instance = (ctx) => { };
   if (typeof javascriptCode === 'string') {
     try {
       const ctrl = Function(util.normalizeControllerCode(javascriptCode))();
@@ -6554,36 +6483,12 @@ zuix.context('my-slide-show', function(ctx) {
 });
 ```
  *
- * @param {Element|ZxQuery|object} contextId The `contextId` or the component's host element.
+ * @param {Element|ZxQuery|string} contextId The `contextId` or the component's host element.
  * @param {ContextReadyCallback} [callback] The callback function that will pass the component's context object once loaded and ready.
  * @return {ComponentContext} The matching component's context or `null` if the context does not exist or not yet loaded.
  */
 Zuix.prototype.context = function(contextId, callback) {
   return context.call(this, contextId, callback);
-};
-/**
- * Creates the component specified by `componentId` and returns its `{ComponentContext}` object.
- * The returned component it's unloaded and detached from the DOM and it must be explicitly attached.
- * After attaching it to the DOM, `zuix.componentize([<container>])` must be called in
- * order to actually load and display the component.
- *
- * @param {string} componentId Identifier name of the component to create
- * @param {ContextOptions|undefined} [options] Component context options
- * @return {ComponentContext} The `ComponentContext` instance of the created component.
- */
-Zuix.prototype.createComponent = function(componentId, options) {
-  if (options == null) options = {};
-  if (util.isNoU(options.contextId)) {
-    options.contextId = 'zuix-ctx-' + (++_contextSeqNum);
-  }
-  if (context(options.contextId) != null) {
-    throw new Error('Context already exists.');
-  } else {
-    options.container = document.createElement('div');
-    options.componentId = componentId;
-    _componentizer.applyOptions(options.container, options);
-  }
-  return createContext(options);
 };
 /**
  * Triggers the event specified by `eventPath`.
@@ -6704,13 +6609,13 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
           contextId: hashId,
           view: '',
           priority: -10,
-          ready: function(componentContext) {
+          ready: (componentContext) => {
             task.end();
             if (callback) {
               callback(resourcePath, componentContext);
             }
           },
-          error: function() {
+          error: () => {
             task.end();
             if (callback) {
               callback(resourcePath, null);
@@ -6740,7 +6645,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         head.appendChild(resource);
 
         // TODO: add logging
-        const addResource = function(text) {
+        const addResource = (text) => {
           // TODO: add logging
           if (isCss) {
             if (resource.styleSheet) {
@@ -6806,7 +6711,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
  * Enables/Disables lazy-loading or gets the current setting.
  *
  * @param {boolean} [enable] Enable or disable lazy loading.
- * @param {number} [threshold] Load-ahead threshold (default is 1.0 => 100% of view size).
+ * @param {number} [threshold] Load-ahead threshold in pixels. When < 0, elements will be loaded before entering the viewport for the given amount of pixels. Positive values will delay loading of element until the entered the viewport for at least the given number of pixels.
  * @return {Zuix|boolean} *true* if lazy-loading is enabled, *false* otherwise.
  */
 Zuix.prototype.lazyLoad = function(enable, threshold) {
@@ -6874,9 +6779,7 @@ Zuix.prototype.store = function(name, value) {
  * @param {string} path Loadable resource *id*
  * @return {string} The resource's path.
  */
-Zuix.prototype.getResourcePath = function(path) {
-  return getResourcePath(path);
-};
+Zuix.prototype.getResourcePath = (path) => getResourcePath(path);
 /**
  * Gets an observable instance of the given object. Based on
  * the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy?retiredLocale=it) object.
@@ -6884,9 +6787,7 @@ Zuix.prototype.getResourcePath = function(path) {
  * @param {object} obj Object to observe
  * @return {ObservableObject} The observable object.
  */
-Zuix.prototype.observable = function(obj) {
-  return _objectObserver.observable(obj);
-};
+Zuix.prototype.observable = (obj) => _objectObserver.observable(obj);
 
 /**
  * Active-Refresh factory method.
@@ -6897,9 +6798,8 @@ Zuix.prototype.observable = function(obj) {
  * @param {ActiveRefreshHandler} refreshCallback The refresh handler function
  * @return {ActiveRefresh} The ActiveRefresh object. Invoke the `start()` method on the returned object, to actually activate the refresh handler.
  */
-Zuix.prototype.activeRefresh = function($view, $element, contextData, refreshCallback) {
-  return new ActiveRefresh($view, $element, contextData, refreshCallback);
-};
+Zuix.prototype.activeRefresh = ($view, $element, contextData, refreshCallback) =>
+  new ActiveRefresh($view, $element, contextData, refreshCallback);
 
 /**
  * Gets/Sets the application's data bundle (all components and scripts used in the page packed into a single object).
@@ -6909,7 +6809,7 @@ Zuix.prototype.activeRefresh = function($view, $element, contextData, refreshCal
  * @return {Zuix|Array.<BundleItem>}
  */
 Zuix.prototype.bundle = function(bundleData, callback) {
-  if (util.isNoU(bundleData)) {
+  if (!bundleData) {
     return _componentCache;
   } else if (bundleData && typeof bundleData === 'boolean') {
     _log.t('bundle:start');
@@ -6917,8 +6817,8 @@ Zuix.prototype.bundle = function(bundleData, callback) {
     _componentizer.lazyLoad(false);
     _componentizer.componentize();
     if (callback) {
-      const waitLoop = function(w) {
-        setTimeout(function() {
+      const waitLoop = (w) => {
+        setTimeout(() => {
           if (_componentizer.willLoadMore()) {
             _log.t('bundle:wait');
             w(w);
@@ -6959,43 +6859,35 @@ Zuix.prototype.ObjectObserver = ObjectObserver;
 /** @private */
 Zuix.prototype.ZxQuery = z$.ZxQuery;
 /** @private */
-Zuix.prototype.setComponentCache = function(componentCache) {
-  setComponentCache(componentCache);
-};
+Zuix.prototype.setComponentCache = (componentCache) => setComponentCache(componentCache);
 /**
  * Dumps content of the components cache. Mainly for debugging purpose.
  * @return {Array<ComponentCache>}
  */
-Zuix.prototype.dumpCache = function() {
-  return _componentCache;
-};
+Zuix.prototype.dumpCache = () => _componentCache;
 /**
  * Dumps allocated component's contexts. Mainly for debugging purpose.
  * @return {Array<ComponentContext>}
  */
-Zuix.prototype.dumpContexts = function() {
-  return _contextRoot;
-};
+Zuix.prototype.dumpContexts = () => _contextRoot;
 
 
 /** @package
   * @private */
-Zuix.prototype.isDirectComponentElement = function($view, $el) {
-  return isDirectComponentElement($view, $el);
-};
+Zuix.prototype.isDirectComponentElement = ($view, $el) => isDirectComponentElement($view, $el);
 /** @package
   * @private */
-Zuix.prototype.resolveImplicitLoad = function(element) {
+Zuix.prototype.resolveImplicitLoad = (element) => {
   // Resolve implicit loadable component
   const notLoad = util.dom.cssNot(_optionAttributes.zLoad).get();
   const notReady = util.dom.cssNot(_optionAttributes.zReady).get();
   const implicitDefault = _implicitLoadDefaultList
-      .map(function(a) {
+      .map((a) => {
         return a + notLoad + notReady;
       }).join(',');
   z$(element)
       .find(implicitDefault)
-      .each(function(i, el, $el) {
+      .each((i, el, $el) => {
         if (el.tagName.indexOf('-') === -1 && $el.attr(_optionAttributes.zLoad) == null) {
           $el.attr(_optionAttributes.zLoad, 'default')
               .attr(_optionAttributes.zLazy, 'false');
@@ -7013,7 +6905,7 @@ Zuix.prototype.resolveImplicitLoad = function(element) {
  * @param {object|undefined} [data] Custom data
  * @return {object|undefined}
  */
-Zuix.prototype.runScriptlet = function(scriptCode, $el, $view, data) {
+Zuix.prototype.runScriptlet = (scriptCode, $el, $view, data) => {
   const ctx = zuix.context($view);
   if (ctx && ctx._refreshHandler) {
     return ctx._refreshHandler.runScriptlet.call($el.get(), $el, scriptCode, data);
@@ -7029,7 +6921,7 @@ Zuix.prototype.utils = util;
 /**
  * @return {Zuix}
  */
-module.exports = function() {
+module.exports = () => {
   if (window && window.zuix) {
     // console.log('WARNING zuix.js already imported!');
     return window.zuix;
@@ -7039,9 +6931,7 @@ module.exports = function() {
     window.zuix = zuix;
     const globalStyle = '[z-view]{display:none;}[type="jscript"],[media*="#"]{display:none;}[z-load][z-ready=true].visible-on-ready{opacity:1}[z-load]:not([z-ready=true]).visible-on-ready{opacity:0;visibility:hidden}';
     zuix.$.appendCss(globalStyle, null, 'zuix-global');
-    const refreshCallback = function() {
-      zuix.componentize();
-    };
+    const refreshCallback = () => zuix.componentize();
     window.ControllerInstance = ControllerInstance;
     //    window.addEventListener('DOMContentLoaded', refreshCallback);
     window.addEventListener('load', refreshCallback);

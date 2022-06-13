@@ -64,30 +64,27 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
   this.refreshMs = _defaultRefreshDelay;
   this.paused = false;
   this.forceActive = false;
-  const _t = this;
   let initialized = false;
-  this.requestRefresh = function($v, $el, data) {
+  this.requestRefresh = ($v, $el, data) => {
     const isMainComponent = $v.get() === $el.get() && zuix.context($v) != null;
     const isVisible = (isMainComponent && !initialized) || $el.position().visible;
-    const isActive = _t.forceActive || (!_t.paused && $el.parent() != null && isVisible);
+    const isActive = this.forceActive || (!this.paused && $el.parent() != null && isVisible);
     /** @type {ActiveRefreshCallback} */
-    const refreshLoop = function(st, ms, active) {
-      if (st != null) _t.contextData = st;
+    const refreshLoop = (st, ms, active) => {
+      if (st != null) this.contextData = st;
       if (ms == null) ms = $el.attr('@delay') ? +$el.attr('@delay') : null;
-      if (ms != null) _t.refreshMs = ms;
+      if (ms != null) this.refreshMs = ms;
       if (active == null) active = $el.attr('@active') != null;
-      if (active != null) _t.forceActive = active;
+      if (active != null) this.forceActive = active;
       const ctx = zuix.context($v);
-      if (ctx != null && _t.refreshMs > 0) {
-        setTimeout(function() {
-          _t.requestRefresh($v, $el, _t.contextData);
-        }, isActive ? _t.refreshMs : 500); // 500ms for noop-loop
+      if (ctx != null && this.refreshMs > 0) {
+        setTimeout(() => this.requestRefresh($v, $el, this.contextData), isActive ? this.refreshMs : 500); // 500ms for noop-loop
         initialized = true;
       } else if (ctx == null) {
         // will not request refresh, loop
         // ends if context was disposed
         // TODO: cp.log.e(cp, 'activeRefresh:error:no_context', element, field, view);
-        _t.stop();
+        this.stop();
       }
     };
     if (isActive) {
@@ -97,16 +94,18 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       }
       // call the `refreshCallback` and wait for
       // its completion before next loop round
-      refreshCallback($v, $el, data, function(nextData, nextMsDelay, forceActive) {
-        refreshLoop(nextData, nextMsDelay, forceActive);
-      });
+      refreshCallback(
+          $v, $el, data,
+          (nextData, nextMsDelay, forceActive) =>
+            refreshLoop(nextData, nextMsDelay, forceActive)
+      );
     } else {
       if ($el._refreshActive) {
         $el._refreshActive = false;
         $el.trigger('refresh:inactive');
       }
       // noop-loop
-      refreshLoop(_t.contextData);
+      refreshLoop(this.contextData);
     }
   };
 }

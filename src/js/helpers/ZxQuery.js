@@ -141,7 +141,9 @@ const util = require('./Util.js');
 /** @private */
 const supportsPassive = util.hasPassiveEvents();
 
-/** @private */
+/**
+ * @private
+ */
 const _zuix_events_mapping = [];
 function routeEvent(e) {
   triggerEventHandlers(this, e.type, e);
@@ -266,7 +268,7 @@ ZxQuery.prototype.length = function() {
  * @return {ZxQuery} A new *ZxQuery* object containing the matching parent element.
  */
 ZxQuery.prototype.parent = function(filter) {
-  if (!util.isNoU(filter)) {
+  if (filter) {
     return new ZxQuery(z$.getClosest(this._selection[0], filter));
   }
   return new ZxQuery(this._selection[0].parentNode);
@@ -280,7 +282,7 @@ ZxQuery.prototype.parent = function(filter) {
  */
 ZxQuery.prototype.children = function(filter) {
   // TODO: implement filtering
-  if (!util.isNoU(filter)) {
+  if (filter) {
     return new ZxQuery(this._selection[0].querySelectorAll(filter));
   }
   return new ZxQuery(this._selection[0].children);
@@ -303,7 +305,7 @@ ZxQuery.prototype.reverse = function() {
  * @return {Node|Element|HTMLElement} The *DOM* element.
  */
 ZxQuery.prototype.get = function(i) {
-  if (util.isNoU(i)) i = 0;
+  if (!i) i = 0;
   return this._selection[i];
 };
 /**
@@ -402,17 +404,17 @@ ZxQuery.prototype.each = function(iterationCallback) {
 ZxQuery.prototype.attr = function(attr, val) {
   const _t = this;
   if (typeof attr === 'object') {
-    z$.each(attr, function(i, v) {
-      _t.each(function(k, el) {
-        util.dom.setAttribute(el, i, v);
-      });
+    z$.each(attr, (i, v) => {
+      _t.each((k, el) =>
+        util.dom.setAttribute(el, i, v)
+      );
     });
   } else if (typeof val == 'undefined') {
     return util.dom.getAttribute(this._selection[0], attr);
   } else {
-    this.each(function(k, v) {
-      util.dom.setAttribute(this.get(), attr, val);
-    });
+    this.each((i, el) =>
+      util.dom.setAttribute(el, attr, val)
+    );
   }
   return this;
 };
@@ -424,13 +426,7 @@ ZxQuery.prototype.attr = function(attr, val) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.trigger = function(eventPath, eventData) {
-  let event;
-  if (window.CustomEvent) {
-    event = new CustomEvent(eventPath, {detail: eventData});
-  } else {
-    event = document.createEvent('CustomEvent');
-    event.initCustomEvent(eventPath, true, true, eventData);
-  }
+  const event = new CustomEvent(eventPath, {detail: eventData});
   this.each(function(k, el) {
     el.dispatchEvent(event);
   });
@@ -446,7 +442,7 @@ ZxQuery.prototype.trigger = function(eventPath, eventData) {
 ZxQuery.prototype.one = function(eventPath, eventHandler) {
   const _t = this;
   if (typeof eventPath === 'object' && eventHandler == null) {
-    z$.each(eventPath, function(evt, handler) {
+    z$.each(eventPath, (evt, handler) => {
       _t.one(evt, handler);
     });
     return this;
@@ -476,9 +472,7 @@ ZxQuery.prototype.one = function(eventPath, eventHandler) {
 ZxQuery.prototype.on = function(eventPath, eventHandler) {
   if (typeof eventPath === 'object' && eventHandler == null) {
     const _t = this;
-    z$.each(eventPath, function(evt, handler) {
-      _t.on(evt, handler);
-    });
+    z$.each(eventPath, (evt, handler) => _t.on(evt, handler));
     return this;
   }
   const events = eventPath.split(/[\s|,]+/g) || [];
@@ -487,9 +481,10 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
     options = eventHandler;
     eventHandler = options.handler;
   }
-  this.each(function(k, el) {
-    events.map((ev) => addEventHandler(el, ev, eventHandler, options));
-  });
+  this.each((k, el) =>
+    events.map((ev) =>
+      addEventHandler(el, ev, eventHandler, options)
+    ));
   return this;
 };
 /**
@@ -502,15 +497,14 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
 ZxQuery.prototype.off = function(eventPath, eventHandler) {
   if (typeof eventPath === 'object' && eventHandler == null) {
     const _t = this;
-    z$.each(eventPath, function(evt, handler) {
-      _t.off(evt, handler);
-    });
+    z$.each(eventPath, (evt, handler) => _t.off(evt, handler));
     return this;
   }
   const events = eventPath.split(/[\s|,]+/g) || [];
-  this.each(function(k, el) {
-    events.map((ev) => removeEventHandler(el, ev, eventHandler));
-  });
+  this.each((k, el) =>
+    events.map((ev) =>
+      removeEventHandler(el, ev, eventHandler)
+    ));
   return this;
 };
 /**
@@ -519,9 +513,7 @@ ZxQuery.prototype.off = function(eventPath, eventHandler) {
  * @return {ZxQuery} The *ZxQuery* object itself.
  */
 ZxQuery.prototype.reset = function() {
-  this.each(function(k, el) {
-    removeAllEventHandlers(el);
-  });
+  this.each((k, el) => removeAllEventHandlers(el));
   return this;
 };
 /**
@@ -550,19 +542,15 @@ ZxQuery.prototype.position = function() {
  * @return {string|ZxQuery} The CSS property value when no *val* specified, otherwise the *ZxQuery* object itself.
  */
 ZxQuery.prototype.css = function(prop, val) {
-  const _t = this;
   if (typeof prop === 'object') {
-    z$.each(prop, function(i, v) {
-      _t.each(function(k, el) {
-        el.style[i] = v;
-      });
-    });
+    z$.each(prop, (i, v) =>
+      this.each((k, el) =>
+        el.style[i] = v
+      ));
   } else if (util.isNoU(val)) {
     return this._selection[0].style[prop];
   } else {
-    _t.each(function(k, el) {
-      el.style[prop] = val;
-    });
+    this.each((k, el) => el.style[prop] = val);
   }
   return this;
 };
@@ -574,9 +562,9 @@ ZxQuery.prototype.css = function(prop, val) {
  */
 ZxQuery.prototype.addClass = function(className) {
   const classes = className.split(/[\s|,]+/g) || [];
-  z$.each(this._selection, function(k, el) {
-    classes.map((cl) => el.classList.add(cl));
-  });
+  z$.each(this._selection, (k, el) =>
+    classes.map((cl) => el.classList.add(cl))
+  );
   return this;
 };
 /**
@@ -596,9 +584,10 @@ ZxQuery.prototype.hasClass = function(className) {
  */
 ZxQuery.prototype.removeClass = function(className) {
   const classes = className.split(/[\s|,]+/g) || [];
-  z$.each(this._selection, function(k, el) {
-    classes.map((cl) => el.classList.remove(cl));
-  });
+  z$.each(this._selection, (k, el) =>
+    classes.map((cl) =>
+      el.classList.remove(cl)
+    ));
   return this;
 };
 /**
@@ -612,9 +601,7 @@ ZxQuery.prototype.html = function(htmlText) {
   if (util.isNoU(htmlText)) {
     return this._selection[0].innerHTML;
   }
-  this.each(function(k, el) {
-    el.innerHTML = htmlText;
-  });
+  this.each((k, el) => el.innerHTML = htmlText);
   return this;
 };
 /**
@@ -629,9 +616,7 @@ ZxQuery.prototype.checked = function(check) {
     const checked = this._selection[0].checked;
     return (checked != null && checked != 'false' && (checked || checked == 'checked'));
   }
-  this.each(function(k, el) {
-    el.checked = check;
-  });
+  this.each((k, el) => el.checked = check);
   return this;
 };
 /**
@@ -645,9 +630,7 @@ ZxQuery.prototype.value = function(value) {
   if (util.isNoU(value)) {
     return this._selection[0].value;
   }
-  this.each(function(k, el) {
-    el.value = value;
-  });
+  this.each((k, el) => el.value = value);
   return this;
 };
 /**
@@ -706,7 +689,8 @@ ZxQuery.prototype.detach = function() {
   const parent = el.parentNode;
   if (parent != null) {
     el.__zuix_oldParent = parent;
-    el.__zuix_oldIndex = Array.prototype.indexOf.call(parent.children, el);
+    el.__zuix_oldIndex = Array.prototype
+        .indexOf.call(parent.children, el);
     parent.removeChild(el);
     _log.t('Detached from parent', parent, el);
   }
@@ -723,7 +707,8 @@ ZxQuery.prototype.attach = function() {
     el.parentNode.removeChild(el);
   }
   if (el.parentNode == null && el.__zuix_oldParent != null) {
-    z$(el.__zuix_oldParent).insert(el.__zuix_oldIndex, el);
+    z$(el.__zuix_oldParent)
+        .insert(el.__zuix_oldIndex, el);
     el.__zuix_oldParent = null;
     delete el.__zuix_oldParent;
     delete el.__zuix_oldIndex;
@@ -741,9 +726,9 @@ ZxQuery.prototype.display = function(mode) {
   if (util.isNoU(mode)) {
     return this._selection[0].style.display;
   }
-  z$.each(this._selection, function(k, el) {
-    el.style.display = mode;
-  });
+  z$.each(this._selection, (k, el) =>
+    el.style.display = mode
+  );
   return this;
 };
 /**
@@ -757,9 +742,9 @@ ZxQuery.prototype.visibility = function(mode) {
   if (util.isNoU(mode)) {
     return this._selection[0].style.visibility;
   }
-  z$.each(this._selection, function(k, el) {
-    el.style.visibility = mode;
-  });
+  z$.each(this._selection, (k, el) =>
+    el.style.visibility = mode
+  );
   return this;
 };
 /**
@@ -888,9 +873,11 @@ ZxQueryStatic.each = function(items, iterationCallback) {
 ZxQueryStatic.hasClass = function(el, className) {
   const classes = className.split(/[\s|,]+/g) || [];
   let success = false;
-  z$.each(classes, function(k, cl) {
+  z$.each(classes, (k, cl) => {
     success = el.classList.contains(cl);
-    if (success) return false; // break loop
+    if (success) {
+      return false; // break loop
+    }
   });
   return success;
 };
@@ -906,15 +893,15 @@ ZxQueryStatic.hasClass = function(el, className) {
 ZxQueryStatic.classExists = function(className) {
   const classes = className.split(/[\s|,]+/g) || [];
   let success = false;
-  z$.each(classes, function(k, cl) {
+  z$.each(classes, (k, cl) => {
     // Perform global style check
     const docStyles = document.styleSheets;
-    if (docStyles != null) {
+    if (docStyles) {
       for (let sx = 0; sx < docStyles.length; sx++) {
         // the try statement is needed because on Firefox accessing CSS rules
         // loaded from a remote source will raise a security exception
         try {
-          const classes = docStyles[sx].rules || docStyles[sx].cssRules;
+          const classes = docStyles[sx].cssRules;
           if (classes != null) {
             for (let cx = 0; cx < classes.length; cx++) {
               if (classes[cx].selectorText === cl) {
@@ -973,7 +960,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
         ruleParts = ruleParts.replace(/\n/g, '');
         const classes = ruleParts.split(',');
         let isAtRule = false;
-        z$.each(classes, function(k, v) {
+        z$.each(classes, (k, v) => {
           // TODO: deprecate the 'single dot' notation
           if (v.trim() === '.' || v.trim() === ':host') {
             // a single `.` means 'self' (the container itself)
@@ -1044,7 +1031,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
   const head = container || document.head || document.getElementsByTagName('head')[0];
   let style = null;
   // remove old style if already defined
-  if (!util.isNoU(target) && head.contains(target)) {
+  if (target && head.contains(target)) {
     head.removeChild(target);
   } else {
     const oldStyle = document.getElementById(cssId);
@@ -1055,16 +1042,11 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
   if (typeof css === 'string') {
     // output css
     style = document.createElement('style');
-    style.type = 'text/css';
     style.id = cssId;
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
+    style.appendChild(document.createTextNode(css));
   } else if (css instanceof Element) style = css;
   // Append new CSS
-  if (!util.isNoU(style)) {
+  if (style) {
     head.appendChild(style);
   }
   return style;
@@ -1097,7 +1079,7 @@ ZxQueryStatic.replaceBraces = function(html, callback) {
     let value = result[0];
     if (callback) {
       const r = callback(result[0]);
-      if (!util.isNoU(r)) {
+      if (r != null) {
         value = r;
         matched++;
       }
@@ -1136,7 +1118,7 @@ ZxQueryStatic.getClosest = function(elem, selector) {
  * @memberOf ZxQueryStatic
  * @alias zuix.$.getPosition
  * @param {Element|HTMLElement} el
- * @param {number} [tolerance] Distance from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
+ * @param {number} [tolerance] Distance in pixels from viewport's boundaries for the element to be considered 'visible' (this is mainly used for lazy-loading).
  * @return {ElementPosition}
  */
 ZxQueryStatic.getPosition = function(el, tolerance) {
@@ -1168,16 +1150,13 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     };
   })(el);
   position.visible = false;
-  let scrollable = el.offsetParent;
-  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
-    scrollable = document.body;
-  }
+  let scrollable = el.parentElement;
   if (scrollable != null) {
     if (scrollable !== document.body) {
       // find the scrollable container
-      let s = scrollable.offsetParent;
-      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
-        s = s.offsetParent;
+      let s = scrollable;
+      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight && s.offsetWidth === s.scrollWidth) {
+        s = s.parentElement;
       }
       if (s != null) scrollable = s;
     }
@@ -1256,13 +1235,13 @@ ZxQueryStatic.addTransition = function(cssId, scope, className, properties, opti
     styleElement = document.createElement('style');
   }
   let props = ''; let transProps = '';
-  zuix.$.each(properties, function(k, v) {
+  z$.each(properties, (k, v) => {
     k = util.camelCaseToHyphens(k);
     props += '  ' + k + ': ' + v + ';\n';
     transProps += k + ', ';
   });
   let opts = '\n';
-  zuix.$.each(options, function(k, v) {
+  z$.each(options, (k, v) => {
     k = util.camelCaseToHyphens(k);
     opts += '  transition-' + k + ': ' + v + ';\n';
   });
@@ -1302,7 +1281,7 @@ ZxQueryStatic.playFx = function(config) {
   const style = getComputedStyle($el.get());
   const delay = (parseFloat(style[config.type + '-delay']) * 1000) || classOut ? 10 : 0;
   let expired = false;
-  const animationStart = function() {
+  const animationStart = () => {
     if (expired) return;
     expired = true;
     if (config.classes.length > 1) {
@@ -1320,7 +1299,7 @@ ZxQueryStatic.playFx = function(config) {
       }
     }
   };
-  const animationSetup = function() {
+  const animationSetup = () => {
     if (classOut) {
       $el.css(config.type, '')
           .removeClass(classOut);

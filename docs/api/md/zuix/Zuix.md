@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1851](../../zuix/Zuix.js#L1851)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1792](../../zuix/Zuix.js#L1792)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1862](../../zuix/Zuix.js#L1862)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1802](../../zuix/Zuix.js#L1802)
 
 -->
 
@@ -164,7 +164,7 @@ by passing a boolean value as argument.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1790](../../zuix/Zuix.js#L1790)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1735](../../zuix/Zuix.js#L1735)
 
 -->
 
@@ -193,13 +193,13 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`contextId`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *object*|  |The `contextId` or the component's host element.|
+|`contextId`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *string*|  |The `contextId` or the component's host element.|
 |`callback`|*[ContextReadyCallback](#ContextReadyCallback)*|*optional*  |The callback function that will pass the component's context object once loaded and ready.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1510](../../zuix/Zuix.js#L1510)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1481](../../zuix/Zuix.js#L1481)
 
 -->
 
@@ -239,7 +239,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1485](../../zuix/Zuix.js#L1485)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1456](../../zuix/Zuix.js#L1456)
 
 -->
 
@@ -259,33 +259,6 @@ ctrl = zuix.controller(function(cp) {
 }).for('path/to/component_name');
 ```
 
-<a name="createComponent"></a>
-#### createComponent(componentId, options) &rarr; {[ComponentContext](../../zuix/ComponentContext)}
-
-Creates the component specified by `componentId` and returns its `{ComponentContext}` object.
-The returned component it's unloaded and detached from the DOM and it must be explicitly attached.
-After attaching it to the DOM, `zuix.componentize([<container>])` must be called in
-order to actually load and display the component.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`componentId`|*string*|  |Identifier name of the component to create|
-|`options`|*[ContextOptions](#ContextOptions)* \| *undefined*|*optional*  |Component context options|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1523](../../zuix/Zuix.js#L1523)
-
--->
-
-##### Returns
-
-*[ComponentContext](../../zuix/ComponentContext)*
- &dash; The `ComponentContext` instance of the created component.
-
 <a name="dumpCache"></a>
 #### dumpCache() &rarr; {Array.&lt;<a href="#ComponentCache">ComponentCache</a>>}
 
@@ -294,7 +267,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1920](../../zuix/Zuix.js#L1920)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1858](../../zuix/Zuix.js#L1858)
 
 -->
 
@@ -310,7 +283,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1927](../../zuix/Zuix.js#L1927)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1863](../../zuix/Zuix.js#L1863)
 
 -->
 
@@ -337,7 +310,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1341](../../zuix/Zuix.js#L1341)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1312](../../zuix/Zuix.js#L1312)
 
 -->
 
@@ -374,7 +347,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1828](../../zuix/Zuix.js#L1828)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1773](../../zuix/Zuix.js#L1773)
 
 -->
 
@@ -400,7 +373,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1620](../../zuix/Zuix.js#L1620)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1567](../../zuix/Zuix.js#L1567)
 
 -->
 
@@ -482,12 +455,12 @@ Enables/Disables lazy-loading or gets the current setting.
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
 |`enable`|*boolean*|*optional*  |Enable or disable lazy loading.|
-|`threshold`|*number*|*optional*  |Load-ahead threshold (default is 1.0 => 100% of view size).|
+|`threshold`|*number*|*optional*  |Load-ahead threshold in pixels. When < 0, elements will be loaded before entering the viewport for the given amount of pixels. Positive values will delay loading of element until the entered the viewport for at least the given number of pixels.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1763](../../zuix/Zuix.js#L1763)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1708](../../zuix/Zuix.js#L1708)
 
 -->
 
@@ -513,7 +486,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1391](../../zuix/Zuix.js#L1391)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1362](../../zuix/Zuix.js#L1362)
 
 -->
 
@@ -579,7 +552,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1463](../../zuix/Zuix.js#L1463)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1434](../../zuix/Zuix.js#L1434)
 
 -->
 
@@ -647,7 +620,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1838](../../zuix/Zuix.js#L1838)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1781](../../zuix/Zuix.js#L1781)
 
 -->
 
@@ -673,7 +646,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1967](../../zuix/Zuix.js#L1967)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1899](../../zuix/Zuix.js#L1899)
 
 -->
 
@@ -696,7 +669,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1816](../../zuix/Zuix.js#L1816)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1761](../../zuix/Zuix.js#L1761)
 
 -->
 
@@ -729,7 +702,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1545](../../zuix/Zuix.js#L1545)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1492](../../zuix/Zuix.js#L1492)
 
 -->
 
@@ -752,7 +725,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1405](../../zuix/Zuix.js#L1405)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1376](../../zuix/Zuix.js#L1376)
 
 -->
 
@@ -786,7 +759,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1642](../../zuix/Zuix.js#L1642)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1589](../../zuix/Zuix.js#L1589)
 
 -->
 

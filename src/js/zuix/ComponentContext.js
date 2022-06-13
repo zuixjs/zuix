@@ -89,9 +89,8 @@ const _queryAdapterRefreshTimeout = [];
  * @param {ComponentContext} context
  * @returns {number}
  */
-function getComponentIndex(context) {
-  return _componentIndex[context.componentId];
-}
+const getComponentIndex = (context) =>
+  _componentIndex[context.componentId];
 
 /**
  * Bind provided data by automatically mapping it to the given element.
@@ -100,7 +99,7 @@ function getComponentIndex(context) {
  * @param {Object} boundData Data object to map data from
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-function dataBind(el, boundData) {
+const dataBind = (el, boundData) => {
   boundData = boundData.observableTarget || boundData;
   const value = (!util.isNoU(boundData.value) ? boundData.value :
       (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : boundData));
@@ -135,7 +134,7 @@ function dataBind(el, boundData) {
       }
       break;
     case 'select':
-      z$.each(el.options, function(i, opt) {
+      z$.each(el.options, (i, opt) => {
         if (opt.value == value) {
           el.selectedIndex = i;
           return false;
@@ -146,7 +145,7 @@ function dataBind(el, boundData) {
       const v = (!util.isNoU(boundData.innerHTML) ? boundData.innerHTML : document.createTextNode(boundData));
       z$(el).html('').append(v);
   }
-}
+};
 /**
  * Query binding adapter for resolving `boundField`->$el mapping
  * @param {ComponentContext} _t
@@ -155,7 +154,7 @@ function dataBind(el, boundData) {
  * @param {BindingAdapterCallback} fn The binding adapter callback
  * @param {string} field Bound field name
  */
-function queryAdapter(_t, $view, $el, fn, field) {
+const queryAdapter = (_t, $view, $el, fn, field) => {
   if (fn && !_t._disposed) {
     (fn).call($view, $el, field, $view, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
       // data adapter is not ready, retry after 1s
@@ -171,7 +170,7 @@ function queryAdapter(_t, $view, $el, fn, field) {
       }
     });
   }
-}
+};
 
 /**
  * The component context object represents the component instance itself, and it holds
@@ -196,7 +195,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
   this.handlers = {refresh: function($view, $el, contextData, refreshCallback) {}};
-  this.trigger = function(context, eventPath, eventValue) {
+  this.trigger = (context, eventPath, eventValue) => {
     if (eventCallback) {
       eventCallback(context, eventPath, eventValue);
     }
@@ -272,11 +271,9 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         return;
       }
       // update bound field if found in the view
-      const bindFields = function(fld) {
+      const bindFields = (fld) => {
         if (fld.get() != null) {
-          fld.each(function(i, f) {
-            dataBind(f, value);
-          });
+          fld.each((i, f) => dataBind(f, value));
         }
       };
       if (view.get()) {
@@ -316,8 +313,8 @@ ComponentContext.prototype.dispose = function() {
   this._disposed = true;
   // TODO: ... check out for more resources that could be freed
   this._viewObserver.stop();
-  if (!util.isNoU(this._c)) {
-    if (!util.isNoU(this._c.view())) {
+  if (this._c) {
+    if (this._c.view()) {
       this._c.trigger('component:dispose', this._c.view(), true);
       // TODO: restore all attributes state to the original state (before component creation)
       this._c.view()
@@ -333,7 +330,7 @@ ComponentContext.prototype.dispose = function() {
       // un-register event handlers associated to the view
       this._c.view().reset();
       // un-register event handlers for all cached fields accessed through cp.field(...) method
-      if (!util.isNoU(this._c._fieldCache)) {
+      if (this._c._fieldCache) {
         z$.each(this._c._fieldCache, /** @param {ZxQuery} v */ function(k, v) {
           v.reset();
         });
@@ -346,10 +343,10 @@ ComponentContext.prototype.dispose = function() {
   // un-register model observable
   this.model(null);
   // detach component view from its container (parent element)
-  if (!util.isNoU(this._c) && this._c._childNodes.length > 0) {
+  if (this._c && this._c._childNodes.length > 0) {
     this._c.view().html('');
     this._c.restoreView();
-    //if (!util.isNoU(this._c.view())) {
+    //if (this._c.view()) {
     //  // detach from parent
     //  this._c.view().detach();
     //}
@@ -420,8 +417,8 @@ ComponentContext.prototype.view = function(view) {
     });
   }
 
-  const initializeTemplateFields = function(v) {
-    v.find('*').each(function(i, el, $el) {
+  const initializeTemplateFields = (v) => {
+    v.find('*').each((i, el, $el) => {
       //if (!zuix.isDirectComponentElement(v, $el)) return;
       // add `z-field` from '#<field_name>' attributes
       for (let j = 0; j < el.attributes.length; j++) {
@@ -470,20 +467,20 @@ ComponentContext.prototype.view = function(view) {
 
     const v = z$(this._view);
     // Run embedded scripts
-    v.find('script:not([type=jscript])').each(function(i, el) {
-      if (this.attr(_optionAttributes.zuixLoaded) !== 'true') {
-        this.attr(_optionAttributes.zuixLoaded, 'true');
+    v.find('script:not([type=jscript])').each((i, el, $el) => {
+      if ($el.attr(_optionAttributes.zuixLoaded) !== 'true') {
+        $el.attr(_optionAttributes.zuixLoaded, 'true');
         /* if (el.src != null && el.src.length > 0) {
           var clonedScript = document.createElement('script');
           setAttribute(clonedScript, _optionAttributes.zuixLoaded, 'true');
           clonedScript.onload = function () {
               // TODO: ...
           };
-          if (!util.isNoU(this.type) && this.type.length > 0)
+          if (this.type && this.type.length > 0)
               clonedScript.type = this.type;
-          if (!util.isNoU(this.text) && this.text.length > 0)
+          if (this.text && this.text.length > 0)
               clonedScript.text = this.text;
-          if (!util.isNoU(this.src) && this.src.length > 0)
+          if (this.src && this.src.length > 0)
               clonedScript.src = this.src;
           this.get().parentNode.insertBefore(clonedScript, this.get());
         } else */
@@ -503,7 +500,9 @@ ComponentContext.prototype.view = function(view) {
       util.dom.setAttribute(this._view, _optionAttributes.zView, null);
       this._container.appendChild(this._view);
       this._view = this._container;
-    } else this._view = view;
+    } else {
+      this._view = view;
+    }
   }
 
   const v = z$(this._view);
@@ -511,9 +510,8 @@ ComponentContext.prototype.view = function(view) {
   initializeTemplateFields(v);
 
   // Disable loading of nested components until the component is ready
-  v.find(util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded))).each(function(i, v) {
-    this.attr(_optionAttributes.zLoaded, 'false');
-  });
+  v.find(util.dom.queryAttribute(_optionAttributes.zLoad, null, util.dom.cssNot(_optionAttributes.zLoaded)))
+      .each((i, el, $el) => $el.attr(_optionAttributes.zLoaded, 'false'));
 
   // View style encapsulation
   this.checkEncapsulation();
@@ -558,21 +556,20 @@ zuix.context('field-test', (ctx) => {
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  */
 ComponentContext.prototype.field = function(fieldName) {
-  const _t = this;
-  const el = zuix.field(fieldName, this._view, this);
-  el.on = function(eventPath, eventHandler, eventData, isHook) {
+  const $el = zuix.field(fieldName, this._view, this);
+  $el.on = (eventPath, eventHandler, eventData, isHook) => {
     // route to another event (-> linked to another event)
     if (typeof eventHandler === 'string') {
       const eh = eventHandler;
-      eventHandler = function() {
-        if (_t._c) {
-          _t._c.trigger(eh, eventData, isHook);
+      eventHandler = () => {
+        if (this._c) {
+          this._c.trigger(eh, eventData, isHook);
         }
       };
     }
-    return z$.ZxQuery.prototype.on.call(this, eventPath, eventHandler);
+    return z$.ZxQuery.prototype.on.call($el, eventPath, eventHandler);
   };
-  return el;
+  return $el;
 };
 
 /**
@@ -591,9 +588,7 @@ ComponentContext.prototype.checkEncapsulation = function() {
       const q = '*' +
           util.dom.cssNot(_optionAttributes.zLoad).getAll();
       // mark all elements with a css identifier attribute
-      v.find(q).each(function(i, v) {
-        this.attr(cssId, '');
-      });
+      v.find(q).each((i, el, $el) => $el.attr(cssId, ''));
       // start view observer for dynamically adding the css identifier
       // attribute to elements added after view creation
       this._viewObserver.start();
@@ -825,17 +820,13 @@ ComponentContext.prototype.on = function(eventPath, eventHandler) {
  *
  * @private
  * @param {object} [options] The options object.
- * @param {boolean} [enableCaching] Enable HTTP.
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadCss = function(options, enableCaching) {
+ComponentContext.prototype.loadCss = function(options) {
   const context = this;
-  if (util.isNoU(options)) options = {};
-  if (!util.isNoU(options.caching)) {
-    enableCaching = options.caching;
-  }
+  if (!options) options = {};
   let cssPath = context.componentId;
-  if (!util.isNoU(options.path)) {
+  if (options.path) {
     // path override with explicit option
     cssPath = options.path;
   }
@@ -914,17 +905,13 @@ ComponentContext.prototype.loadCss = function(options, enableCaching) {
  *
  * @private
  * @param {object} [options] The options object.
- * @param {boolean} [enableCaching] Enable HTTP caching
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
-ComponentContext.prototype.loadHtml = function(options, enableCaching) {
+ComponentContext.prototype.loadHtml = function(options) {
   const context = this;
   let htmlPath = context.componentId;
-  if (util.isNoU(options)) options = {};
-  if (!util.isNoU(options.caching)) {
-    enableCaching = options.caching;
-  }
-  if (!util.isNoU(options.path)) {
+  if (!options) options = {};
+  if (options.path) {
     // path override with explicit option
     htmlPath = options.path;
   }
@@ -981,7 +968,7 @@ ComponentContext.prototype.loadHtml = function(options, enableCaching) {
         (options.then).call(context, context);
       }
     } else {
-      const cext = util.isNoU(options.cext) ? '.html' : options.cext;
+      const cext = options.cext ? options.cext : '.html';
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
@@ -1017,27 +1004,28 @@ ComponentContext.prototype.viewToModel = function() {
   const model = {};
   const $view = z$(this._view);
   // create data model from inline view fields
-  $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
-    if (!zuix.isDirectComponentElement($view, $el)) {
-      return true;
-    }
-    const name = this.attr(_optionAttributes.zField);
-    // TODO: the following code is disabled because
-    //       causes "proxy revoked" exception when unloading and reloading a component
-    // dotted field path to nested objects
-    /*
-    if (name.indexOf('.')>0) {
-      const path = name.split('.');
-      let cur = model;
-      for (let p = 0; p < path.length - 1; p++) {
-        if (typeof cur[path[p]] === 'undefined') {
-          cur[path[p]] = {};
+  $view.find(util.dom.queryAttribute(_optionAttributes.zField))
+      .each((i, el, $el) => {
+        if (!zuix.isDirectComponentElement($view, $el)) {
+          return true;
         }
-        cur = cur[path[p]];
-      }
-      cur[path[path.length - 1]] = value;
-    } else*/ model[name] = el;
-  });
+        const name = $el.attr(_optionAttributes.zField);
+        // TODO: the following code is disabled because
+        //       causes "proxy revoked" exception when unloading and reloading a component
+        // dotted field path to nested objects
+        /*
+        if (name.indexOf('.')>0) {
+          const path = name.split('.');
+          let cur = model;
+          for (let p = 0; p < path.length - 1; p++) {
+            if (typeof cur[path[p]] === 'undefined') {
+              cur[path[p]] = {};
+            }
+            cur = cur[path[p]];
+          }
+          cur[path[path.length - 1]] = value;
+        } else*/ model[name] = el;
+      });
   this._model = zuix.observable(model)
       .subscribe(this._modelListener)
       .proxy;
@@ -1055,11 +1043,10 @@ ComponentContext.prototype.viewToModel = function() {
 ComponentContext.prototype.modelToView = function() {
   _log.t(this.componentId, 'model:view', 'timer:mv:start');
   if (this._view != null) {
-    const _t = this;
     // the '#' member contains all `z-field` mapped as a context['#'] property (ZxQuery object)
-    _t['#'] = {};
+    this['#'] = {};
     const $view = z$(this._view);
-    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
+    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each((i, el, $el) => {
       if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
@@ -1067,22 +1054,22 @@ ComponentContext.prototype.modelToView = function() {
       if (boundField == null) {
         boundField = $el.attr(_optionAttributes.zField);
       }
-      if (typeof _t._model === 'function') {
+      if (typeof this._model === 'function') {
         // use a data model binding adapter
         // to resolve all model fields' values
-        queryAdapter(_t, $view, $el, _t._model, boundField);
+        queryAdapter(this, $view, $el, this._model, boundField);
       } else {
-        let boundData = util.propertyFromPath(_t._model, boundField);
+        let boundData = util.propertyFromPath(this._model, boundField);
         const altField = util.hyphensToCamelCase(boundField);
-        const altData = util.propertyFromPath(_t._model, altField);
+        const altData = util.propertyFromPath(this._model, altField);
         if (boundData == null && altData != null) {
           boundField = altField;
-          boundData = util.propertyFromPath(_t._model, boundData);
+          boundData = util.propertyFromPath(this._model, boundData);
         }
         if (typeof boundData === 'function') {
           // use data model's field binding adapter
           // to resolve boundField's value
-          queryAdapter(_t, $view, $el, boundData, boundField);
+          queryAdapter(this, $view, $el, boundData, boundField);
         } else if (boundData != null) {
           // use default binding method
           // to resolve boundField's value
@@ -1091,7 +1078,7 @@ ComponentContext.prototype.modelToView = function() {
       }
     });
     // new fields might been have added after data-binding
-    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each(function(i, el, $el) {
+    $view.find(util.dom.queryAttribute(_optionAttributes.zField)).each((i, el, $el) => {
       if (!zuix.isDirectComponentElement($view, $el) && $el.attr('inherits') !== 'true') {
         return true;
       }
@@ -1103,7 +1090,7 @@ ComponentContext.prototype.modelToView = function() {
       try {
         const f = util.hyphensToCamelCase(boundField);
         Function('function testName(){ const ' + f + ' = "test"; }');
-        _t['#'][f] = _t.field(boundField);
+        this['#'][f] = this.field(boundField);
       } catch (e) {
         // TODO: should at least log a 'Warning: unscriptable field name'
         //console.log('ERROR', e);

@@ -127,7 +127,7 @@ Unsubscribe a listener
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 77](../../observable/ObservableObject.js#L77)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 76](../../observable/ObservableObject.js#L76)
 
 -->
 

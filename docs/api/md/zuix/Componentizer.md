@@ -75,7 +75,7 @@ main table code {
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 179](../../zuix/Componentizer.js#L179)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 173](../../zuix/Componentizer.js#L173)
 
 -->
 
@@ -118,7 +118,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 87](../../zuix/Componentizer.js#L87)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 88](../../zuix/Componentizer.js#L88)
 
 -->
 
@@ -139,7 +139,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 108](../../zuix/Componentizer.js#L108)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 110](../../zuix/Componentizer.js#L110)
 
 -->
 
@@ -153,7 +153,7 @@ Enable/Disable lazy-loading, or get current value.
 <!--
 
 *Source:*
-[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 76](../../zuix/Componentizer.js#L76)
+[zuix/Componentizer.js](../../zuix/Componentizer.js), [line 77](../../zuix/Componentizer.js#L77)
 
 -->
 

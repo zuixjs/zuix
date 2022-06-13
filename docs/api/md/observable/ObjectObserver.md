@@ -97,7 +97,7 @@ Get an observable instance of an object for detecting changes.
 <!--
 
 *Source:*
-[observable/ObjectObserver.js](../../observable/ObjectObserver.js), [line 87](../../observable/ObjectObserver.js#L87)
+[observable/ObjectObserver.js](../../observable/ObjectObserver.js), [line 85](../../observable/ObjectObserver.js#L85)
 
 -->
 

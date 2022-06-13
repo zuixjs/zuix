@@ -1,7 +1,11 @@
 {
   "env": {
     "es6": true,
-    "browser": true
+    "browser": true,
+    "commonjs": true
+  },
+  "globals": {
+    "zuix": true
   },
   "extends": "google",
   "rules": {
@@ -22,6 +26,7 @@
     }],
     "camelcase": 1,
     "no-unused-vars": 1,
+    "no-undef": "error",
     "no-extend-native": 1,
     "prefer-spread": 1,
     "prefer-rest-params": 1,

@@ -45,6 +45,6 @@
  */
 
 /** */
-module.exports = function() {
+module.exports = () => {
   // dummy module for JsDocs/Closure Compiler
 };

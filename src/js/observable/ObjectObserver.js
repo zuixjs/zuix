@@ -50,7 +50,7 @@ function getPath(observable) {
     const co = observable;
     // TODO: this line is perhaps ambiguous how to resolve path if target[key] has more parents?
     observable = observable.__parents__[0];
-    if (observable != null && observable.__path__ != null) {
+    if (observable && observable.__path__) {
       path = '[\'' + co.__path__ + '\'].' + path;
     } else {
       path = co.__path__ + (!path.startsWith('[') ? '.' : '') + path;
@@ -61,9 +61,9 @@ function getPath(observable) {
 /** @private */
 function getListeners(observable) {
   const listeners = [];
-  observable.__parents__.forEach(function(po) {
-    listeners.push(...getListeners(po));
-  });
+  observable.__parents__.forEach((po) =>
+    listeners.push(...getListeners(po))
+  );
   listeners.push(...observable.__listeners__);
   return listeners;
 }
@@ -72,9 +72,7 @@ function getListeners(observable) {
 function deleteObservable(targetObservable) {
   getListeners(targetObservable).forEach(
       /** @param {ObservableListener} l */
-      function(l) {
-        targetObservable.unsubscribe(l);
-      }
+      (l) => targetObservable.unsubscribe(l)
   );
 }
 
@@ -87,9 +85,8 @@ function deleteObservable(targetObservable) {
 ObjectObserver.prototype.observable = function(obj) {
   /** @type {ObservableObject} */
   let observable;
-  const matches = this.observableList.filter(function(o) {
-    return obj === o.proxy || obj === o.target;
-  });
+  const matches = this.observableList.filter((o) =>
+    obj === o.proxy || obj === o.target);
   if (matches.length === 1) {
     observable = matches[0];
   }
@@ -98,7 +95,9 @@ ObjectObserver.prototype.observable = function(obj) {
       /** @type ObjectObserver */
       context: null,
       get: function(target, key) {
-        if (key === 'observableTarget') return target;
+        if (key === 'observableTarget') {
+          return target;
+        }
         if (key.toString() === 'Symbol(Symbol.toStringTag)') {
           return;
         }
@@ -130,7 +129,7 @@ ObjectObserver.prototype.observable = function(obj) {
         }
         const path = getPath(targetObservable) + key;
         // propagate to all listeners
-        listeners.forEach(function(l) {
+        listeners.forEach((l) => {
           if (l.get) {
             l.get(target, key, value, path);
           }
@@ -148,7 +147,7 @@ ObjectObserver.prototype.observable = function(obj) {
         const path = getPath(targetObservable) + key;
         getListeners(targetObservable).forEach(
             /** @param {ObservableListener} l */
-            function(l) {
+            (l) => {
               if (l.set) {
                 l.set(target, key, value, path, old);
               }

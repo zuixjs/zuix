@@ -33,12 +33,11 @@
  * @constructor
  */
 function ControllerInstance(controller) {
-  const _t = this;
   controller.init = this.onInit.bind(this);
   controller.create = this.onCreate.bind(this);
   controller.dispose = this.onDispose.bind(this);
-  controller.update = function(target, key, value, path, old) {
-    return _t.onUpdate.call(_t, target, key, value, path, old);
+  controller.update = (target, key, value, path, old) => {
+    return this.onUpdate.call(this, target, key, value, path, old);
   };
   Object.assign(this, controller);
   Object.assign(this, Object.getPrototypeOf(controller));

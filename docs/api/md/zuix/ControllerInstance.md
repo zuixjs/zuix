@@ -109,7 +109,7 @@ Adds a behavior handler.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 197](../../zuix/ContextController.js#L197)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 191](../../zuix/ContextController.js#L191)
 
 -->
 
@@ -135,7 +135,7 @@ Adds an event handler.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 186](../../zuix/ContextController.js#L186)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 180](../../zuix/ContextController.js#L180)
 
 -->
 
@@ -162,7 +162,7 @@ Adds a CSS transition effect to the component stylesheet.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 208](../../zuix/ContextController.js#L208)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 202](../../zuix/ContextController.js#L202)
 
 -->
 
@@ -177,7 +177,7 @@ Clears the fields cache.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 235](../../zuix/ContextController.js#L235)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 229](../../zuix/ContextController.js#L229)
 
 -->
 
@@ -201,7 +201,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 345](../../zuix/ContextController.js#L345)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 343](../../zuix/ContextController.js#L343)
 
 -->
 
@@ -228,7 +228,7 @@ Same as [ComponentContext&ndash;field](../ComponentContext/#field).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 229](../../zuix/ContextController.js#L229)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 223](../../zuix/ContextController.js#L223)
 
 -->
 
@@ -255,7 +255,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 439](../../zuix/ContextController.js#L439)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 436](../../zuix/ContextController.js#L436)
 
 -->
 
@@ -294,7 +294,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 384](../../zuix/ContextController.js#L384)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 379](../../zuix/ContextController.js#L379)
 
 -->
 
@@ -336,7 +336,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 409](../../zuix/ContextController.js#L409)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 405](../../zuix/ContextController.js#L405)
 
 -->
 
@@ -377,7 +377,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 284](../../zuix/ContextController.js#L284)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 277](../../zuix/ContextController.js#L277)
 
 -->
 
@@ -391,7 +391,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 54](../../zuix/ControllerInstance.js#L54)
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 53](../../zuix/ControllerInstance.js#L53)
 
 -->
 
@@ -401,7 +401,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 59](../../zuix/ControllerInstance.js#L59)
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 58](../../zuix/ControllerInstance.js#L58)
 
 -->
 
@@ -411,7 +411,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 49](../../zuix/ControllerInstance.js#L49)
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 48](../../zuix/ControllerInstance.js#L48)
 
 -->
 
@@ -421,7 +421,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 65](../../zuix/ControllerInstance.js#L65)
+[zuix/ControllerInstance.js](../../zuix/ControllerInstance.js), [line 64](../../zuix/ControllerInstance.js#L64)
 
 -->
 
@@ -437,7 +437,7 @@ Same as [ComponentContext&ndash;options](../ComponentContext/#options).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 296](../../zuix/ContextController.js#L296)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 289](../../zuix/ContextController.js#L289)
 
 -->
 
@@ -469,7 +469,7 @@ in case `isHook` is set to true, use the
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 323](../../zuix/ContextController.js#L323)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 316](../../zuix/ContextController.js#L316)
 
 -->
 
@@ -509,7 +509,7 @@ gets the view elements matching the given `filter`
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 256](../../zuix/ContextController.js#L256)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 250](../../zuix/ContextController.js#L250)
 
 -->
 

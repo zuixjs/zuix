@@ -29,7 +29,7 @@
 const _optionAttributes =
     require('./OptionAttributes');
 
-const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works only over HTTPS
+const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/1.2/';
 
 /**
  * TODO: describe this...
@@ -39,12 +39,12 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/'; // CORS works
  */
 Componentizer.prototype.componentize = function(element) {
   if (isBusy) {
-    z$().one('componentize:step', function() {
-      requestAnimationFrame(function() {
+    z$().one('componentize:step', () =>
+      requestAnimationFrame(() => {
         isBusy = false;
         zuix.componentize(element);
-      });
-    });
+      })
+    );
     return this;
   }
   isBusy = true;
@@ -63,6 +63,7 @@ Componentizer.prototype.applyOptions = function(element, options) {
 
 Componentizer.prototype.loadInline = function(element, options) {
   loadInline(element, options);
+  return this;
 };
 
 Componentizer.prototype.resolvePath = function(path) {
@@ -97,6 +98,7 @@ Componentizer.prototype.dequeue = function(element) {
       break;
     }
   }
+  return this;
 };
 
 
@@ -151,23 +153,15 @@ const TaskItem = function() {
 };
 
 /** @private */
+const _lazyUpdateScrollRefresh = 150;
+
+/** @private */
 let _disableLazyLoading = false;
 /** @private */
 let _lazyLoadingThreshold = 1;
 
 /** @type {Zuix} **/
 let zuix = null;
-
-// Browser Agent / Bot detection
-/** @private */
-let _isCrawlerBotClient = false;
-if (navigator && navigator.userAgent) {
-  _isCrawlerBotClient = new RegExp(/bot|googlebot|crawler|spider|robot|crawling/i)
-      .test(navigator.userAgent);
-}
-if (_isCrawlerBotClient) {
-  _log.d(navigator.userAgent, 'is a bot, ignoring `lazy-loading` option.');
-}
 
 let isBusy = false;
 
@@ -192,7 +186,7 @@ function lazyLoad(enable, threshold) {
   if (threshold != null) {
     _lazyLoadingThreshold = threshold;
   }
-  return !_isCrawlerBotClient && !_disableLazyLoading;
+  return !_disableLazyLoading;
 }
 /** @private */
 function addRequest(element) {
@@ -264,7 +258,6 @@ function queueLoadables(element) {
     }
   }
 
-
   if (_componentizeStats.queued !== _componentizeQueue.length || _componentizeStats.added !== added) {
     _log.t('componentize:count', _componentizeQueue.length, added);
     _componentizeStats.queued = _componentizeQueue.length;
@@ -277,6 +270,7 @@ function queueLoadables(element) {
   } else {
     zuix.$().trigger('componentize:step');
   }
+
   isBusy = false;
 }
 
@@ -319,9 +313,7 @@ function loadNext(element) {
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
     const el = job.item.element;
-    z$(el).one('component:loaded', function() {
-      zuix.componentize(el);
-    });
+    z$(el).one('component:loaded', () => zuix.componentize(el));
     loadInline(el);
   }
 }
@@ -337,7 +329,7 @@ function loadInline(element, opts) {
 
   /** @type {ContextOptions} */
   let options = v.attr(_optionAttributes.zOptions);
-  if (!util.isNoU(options)) {
+  if (options) {
     options = parseOptions(element, options);
     // copy passed options
     options = util.cloneObject(options) || {};
@@ -352,7 +344,7 @@ function loadInline(element, opts) {
   }
 
   const contextId = v.attr(_optionAttributes.zContext);
-  if (!util.isNoU(contextId)) {
+  if (contextId) {
     // inherit options from context if already exists
     const ctx = zuix.context(contextId);
     if (ctx !== null) {
@@ -362,22 +354,22 @@ function loadInline(element, opts) {
   }
 
   // Automatic view/container selection
-  if (util.isNoU(options.view) && !v.isEmpty()) {
+  if (!options.view && !v.isEmpty()) {
     options.view = element;
     options.viewDeferred = true;
-  } else if (util.isNoU(options.view) && util.isNoU(options.container) && v.isEmpty() && v.attr(_optionAttributes.resourceType.controller) == null) {
+  } else if (!options.view && !options.container && v.isEmpty() && v.attr(_optionAttributes.resourceType.controller) == null) {
     options.container = element;
   }
 
   const setAsTemplate = function() {
     v.attr(_optionAttributes.zComponent, null);
     // View-only templates have no controller
-    if (util.isNoU(options.controller)) {
+    if (!options.controller) {
       options.controller = function() {};
     }
   };
   let componentId = v.attr(_optionAttributes.zLoad);
-  if (util.isNoU(componentId)) {
+  if (!componentId) {
     return false;
   } else {
     componentId = resolvePath(componentId);
@@ -396,9 +388,9 @@ function loadInline(element, opts) {
         if (options.css === false) {
           options.css = '';
         }
-        styleElement.each(function(i, el, $el) {
-          options.css += '\n' + options.css + $el.html();
-        });
+        styleElement.each((i, el, $el) =>
+          options.css += '\n' + options.css + $el.html()
+        );
       }
       if (componentId === 'default') {
         options.controller = options.controller || function() {};
@@ -431,27 +423,27 @@ function loadInline(element, opts) {
   });
 
   const on = v.attr(_optionAttributes.zOn);
-  if (!util.isNoU(on) && on.length > 0) {
+  if (on) {
     options.on = parseOptions(element, on);
   }
 
   const behavior = v.attr(_optionAttributes.zBehavior);
-  if (!util.isNoU(behavior) && behavior.length > 0) {
+  if (behavior) {
     options.behavior = parseOptions(element, behavior);
   }
 
   const model = v.attr(_optionAttributes.zModel);
-  if (!util.isNoU(model) && model.length > 0) {
+  if (model) {
     options.model = parseOptions(element, model);
   }
 
   const using = v.attr(_optionAttributes.zUsing);
-  if (!util.isNoU(using)) {
+  if (using) {
     options.using = using;
   }
 
   const priority = v.attr(_optionAttributes.zPriority);
-  if (!util.isNoU(priority)) {
+  if (priority) {
     options.priority = +(priority);
   }
 
@@ -471,7 +463,7 @@ function resolvePath(path) {
     if (config != null) {
       switch (typeof config.libraryPath) {
         case 'object':
-          z$.each(config.libraryPath, function(k, v) {
+          z$.each(config.libraryPath, (k, v) => {
             if (path.startsWith(k + '/')) {
               libraryPath = v;
               return false;
@@ -514,14 +506,14 @@ function parseOptions(element, attributeValue) {
 function applyOptions(element, options) {
   options = parseOptions(element, options);
   // TODO: should check if options object is valid
-  if (element != null && options != null) {
-    if (options.componentId != null) {
+  if (element && options) {
+    if (options.componentId) {
       util.dom.setAttribute(element, _optionAttributes.zLoad, options.componentId.toString().toLowerCase());
     }
-    if (options.contextId != null) {
+    if (options.contextId) {
       util.dom.setAttribute(element, _optionAttributes.zContext, options.contextId.toString().toLowerCase());
     }
-    if (options.lazyLoad != null) {
+    if (options.lazyLoad) {
       util.dom.setAttribute(element, _optionAttributes.zLazy, options.lazyLoad.toString().toLowerCase());
     }
     // TODO: eventually map other attributes from options
@@ -573,46 +565,46 @@ function addLazyContainer(el) {
 /** @private */
 function lazyElementCheck(element) {
   // Check if element has explicit lazyLoad=false flag set
-  if (util.dom.getAttribute(element, _optionAttributes.zLazy) === 'false') {
+  const $el = z$(element);
+  const lazyParent = $el.parent(`[${_optionAttributes.zLazy}]`);
+  if ($el.attr(_optionAttributes.zLazy) === 'false' ||
+      (lazyParent.length() > 0 && lazyParent.attr(_optionAttributes.zLazy) === 'false') ) {
     return false;
   }
   // Check if element is already added to Lazy-Element list
-  let le = getLazyElement(element);
-  if (le == null) {
+  if (!getLazyElement(element)) {
     // Check if element inherits lazy-loading from a parent lazy container/scroll
     const q = util.dom.queryAttribute(_optionAttributes.zLazy, 'scroll') + ',' +
             util.dom.queryAttribute(_optionAttributes.zLazy, 'true');
-    const lazyContainer = element.parentNode && z$.getClosest(element.parentNode, q);
-    if (lazyContainer != null) {
-      le = addLazyElement(element);
+    const lazyContainer = $el.parent().parent(q).get();
+    if (lazyContainer) {
+      addLazyElement(element);
       // Check if the lazy container is already added to the lazy container list
       let lc = getLazyContainer(lazyContainer);
-      if (lc == null) {
+      if (!lc) {
         lc = addLazyContainer(lazyContainer);
         // if it's of type 'scroll' attach 'scroll' event handler
         if (util.dom.getAttribute(lazyContainer, _optionAttributes.zLazy) === 'scroll') {
           (function(instance, lc) {
             let lastScroll = new Date().getTime();
             let timeout;
-            z$(lc === document.body ? window : lc).on('scroll', function() {
+            z$(lc === document.body ? window : lc).on('scroll', () => {
               const now = new Date().getTime();
-              if (now - lastScroll > 100) {
+              if (now - lastScroll > _lazyUpdateScrollRefresh) {
                 lastScroll = now;
                 loadNext(lc);
               } else {
                 clearTimeout(timeout);
-                timeout = setTimeout(function() {
-                  loadNext(lc);
-                }, 150);
+                timeout = setTimeout(() => loadNext(lc), 100);
               }
             });
           })(this, lazyContainer);
         }
       }
       return true;
-    } else if (util.dom.getAttribute(element, _optionAttributes.zLazy) === 'true') {
+    } else if ($el.attr(_optionAttributes.zLazy) === 'true') {
       // element has explicit lazyLoad=true flag set
-      le = addLazyElement(element);
+      addLazyElement(element);
       return true;
     }
   } else return true;
