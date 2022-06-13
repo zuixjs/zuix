@@ -1150,13 +1150,16 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     };
   })(el);
   position.visible = false;
-  let scrollable = el.parentElement;
+  let scrollable = el.offsetParent;
+  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
+    scrollable = document.body;
+  }
   if (scrollable != null) {
     if (scrollable !== document.body) {
       // find the scrollable container
-      let s = scrollable;
-      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight && s.offsetWidth === s.scrollWidth) {
-        s = s.parentElement;
+      let s = scrollable.offsetParent;
+      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
+        s = s.offsetParent;
       }
       if (s != null) scrollable = s;
     }

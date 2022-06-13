@@ -1,4 +1,4 @@
-/* zuix.js v1.1.11 22.06.13 23:46:22 */
+/* zuix.js v1.1.12 22.06.14 01:42:17 */
 
 /******/ var __webpack_modules__ = ({
 
@@ -1730,13 +1730,16 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     };
   })(el);
   position.visible = false;
-  let scrollable = el.parentElement;
+  let scrollable = el.offsetParent;
+  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
+    scrollable = document.body;
+  }
   if (scrollable != null) {
     if (scrollable !== document.body) {
       // find the scrollable container
-      let s = scrollable;
-      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight && s.offsetWidth === s.scrollWidth) {
-        s = s.parentElement;
+      let s = scrollable.offsetParent;
+      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
+        s = s.offsetParent;
       }
       if (s != null) scrollable = s;
     }
