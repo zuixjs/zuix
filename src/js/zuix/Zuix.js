@@ -1,6 +1,7 @@
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +19,7 @@
 /*
  *
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  *
@@ -324,7 +325,7 @@ function field(fieldName, container, context) {
   if (typeof context._fieldCache[fieldName] === 'undefined') {
     el = z$(container)
         .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[' + CSS.escape('#' + fieldName) + ']');
-    if (el.length() > 0) {
+    if (el.length()) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
       if (el.length() === 1 && !el.field) {
@@ -633,7 +634,7 @@ function context(contextId, callback) {
       cb(ctx);
     } else if (typeof contextId === 'string') {
       const cel = z$.find(util.dom.queryAttribute(_optionAttributes.zContext, contextId));
-      if (cel.length() > 0) {
+      if (cel.length()) {
         context(cel, (ctx) =>
             ctx ? cb(ctx) : context(contextId, callback)
         );
@@ -1216,9 +1217,9 @@ function initController(ctrl) {
 
   // Allocate main component's 'refresh' handler
   // if there is the JScript or any '@' handler
-  if (allocated.length > 0 || viewRefreshScript.length() > 0) {
-    const refreshDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('refreshdelay') : null;
-    const handlersDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('handlersdelay') : null;
+  if (allocated.length > 0 || viewRefreshScript.length()) {
+    const refreshDelay = viewRefreshScript.length() ? viewRefreshScript.attr('refreshdelay') : null;
+    const handlersDelay = viewRefreshScript.length() ? viewRefreshScript.attr('handlersdelay') : null;
     // init refresh handler / first paint
     ctx.handlers.refresh.call($view.get(), $view, $view, ctrl.model(), (contextData, delay) => {
       zuix.activeRefresh($view, $view, contextData, ($v, $element, data, refreshCallback) => {

@@ -1,4 +1,4 @@
-/* zuix.js v1.1.12 22.06.14 01:42:17 */
+/* zuix.js v1.1.13 22.06.16 00:19:35 */
 
 /******/ var __webpack_modules__ = ({
 
@@ -7,7 +7,8 @@
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +27,7 @@
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -215,7 +216,8 @@ module.exports = function(ctx) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -234,7 +236,7 @@ module.exports = function(ctx) {
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -342,7 +344,8 @@ module.exports = TaskQueue;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -361,7 +364,7 @@ module.exports = TaskQueue;
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -580,7 +583,8 @@ module.exports = {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -599,7 +603,7 @@ module.exports = {
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -939,7 +943,7 @@ ZxQuery.prototype.index = function(el) {
   if (this.length() === 1 && el == null) {
     const elements = Array.from(this.parent().children()._selection);
     return elements.indexOf(target);
-  } else if (this.length() > 0 && el != null) {
+  } else if (this.length() && el != null) {
     return this._selection.indexOf(el.get());
   }
   return -1;
@@ -1730,19 +1734,15 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     };
   })(el);
   position.visible = false;
-  let scrollable = el.offsetParent;
-  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
-    scrollable = document.body;
-  }
+  const getScrollParent = (el) => {
+    if (!(el instanceof Element)) return document.body;
+    const style = getComputedStyle(el);
+    return (el.scrollHeight >= el.clientHeight || el.scrollWidth >= el.clientWidth) &&
+    (!/^(visible|hidden)/.test(style.overflowY || 'visible') || !/^(visible|hidden)/.test(style.overflowX || 'visible')) ?
+        el : (getScrollParent(el.parentElement) || document.body);
+  };
+  const scrollable = getScrollParent(el.parentNode);
   if (scrollable != null) {
-    if (scrollable !== document.body) {
-      // find the scrollable container
-      let s = scrollable.offsetParent;
-      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
-        s = s.offsetParent;
-      }
-      if (s != null) scrollable = s;
-    }
     let r1 = scrollable.getBoundingClientRect();
     if (scrollable === document.body) {
       // modify from read-only object
@@ -1760,18 +1760,21 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     if (tolerance == null) tolerance = 0;
     const r2 = el.getBoundingClientRect();
     // visible status
-    let visible = !(r2.left-1 > r1.right - tolerance ||
-        r2.right+1 < r1.left + tolerance ||
-        r2.top-1 > r1.bottom - tolerance ||
-        r2.bottom+1 < r1.top + tolerance);
-    if (scrollable !== document.body) {
-      visible = visible && z$(scrollable).position().visible;
-    }
-    let parentNode = el.parentNode;
-    while (parentNode && parentNode instanceof Element && visible) {
-      const parentStyle = getComputedStyle(parentNode);
-      visible = visible && parentStyle.display !== 'none' && parentStyle.visibility !== 'hidden';
-      parentNode = parentNode.parentNode;
+    let visible = getComputedStyle(el).display !== 'none';
+    if (visible) {
+      visible = !(r2.left-1 > r1.right - tolerance ||
+          r2.right+1 < r1.left + tolerance ||
+          r2.top-1 > r1.bottom - tolerance ||
+          r2.bottom+1 < r1.top + tolerance);
+      if (scrollable !== document.body) {
+        visible = visible && z$(scrollable).position().visible;
+      }
+      let parentNode = el.parentNode;
+      while (parentNode && parentNode instanceof Element && visible) {
+        const parentStyle = getComputedStyle(parentNode);
+        visible = visible && parentStyle.display !== 'none' && parentStyle.visibility !== 'hidden';
+        parentNode = parentNode.parentNode;
+      }
     }
     position.visible = visible;
     // viewport-relative frame position
@@ -1942,7 +1945,8 @@ module.exports = ZxQueryStatic;
 /*!
  * @license
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1960,7 +1964,7 @@ module.exports = ZxQueryStatic;
 /**
  *
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -1979,7 +1983,8 @@ module.exports = __webpack_require__(459)();
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1998,7 +2003,7 @@ module.exports = __webpack_require__(459)();
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -2159,7 +2164,8 @@ module.exports = ObjectObserver;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2178,7 +2184,7 @@ module.exports = ObjectObserver;
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -2270,7 +2276,8 @@ module.exports = ObservableObject;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2288,7 +2295,7 @@ module.exports = ObservableObject;
 /*
  *
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  *
@@ -2429,7 +2436,8 @@ module.exports = ActiveRefresh;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2447,7 +2455,7 @@ module.exports = ActiveRefresh;
 /*
  *
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -2486,7 +2494,8 @@ module.exports = () => {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2505,7 +2514,7 @@ module.exports = () => {
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -3065,7 +3074,7 @@ ComponentContext.prototype.field = function(fieldName) {
 ComponentContext.prototype.checkEncapsulation = function() {
   const v = z$(this._view);
   const cssId = this.getCssId();
-  if (v.length() > 0 && this._options.css !== false) {
+  if (v.length() && this._options.css !== false) {
     v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
     // if both the container and the style are null
     // then this is just a controller attached to a pre-existent view
@@ -3333,7 +3342,7 @@ ComponentContext.prototype.loadCss = function(options) {
     }
   } else {
     const inlineStyle = z$().find('style[media="#' + cssPath + '"],style[media="' + cssPath + '"]');
-    if (inlineStyle.length() > 0) {
+    if (inlineStyle.length()) {
       const styleElement = inlineStyle.get(0);
       const viewCss = styleElement.innerText;
       context.style(viewCss);
@@ -3422,7 +3431,7 @@ ComponentContext.prototype.loadHtml = function(options) {
         htmlPath,
         util.dom.cssNot(_optionAttributes.zComponent)
     ));
-    if (inlineView.length() > 0) {
+    if (inlineView.length()) {
       let styles;
       let inlineElement = inlineView.get(0);
       if (inlineElement.tagName.toLowerCase() === 'template') {
@@ -3652,7 +3661,8 @@ module.exports = ComponentContext;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3671,7 +3681,7 @@ module.exports = ComponentContext;
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -3973,7 +3983,7 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element, opts) {
   const v = z$(element);
-  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length() > 0) {
+  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length()) {
     //_log.w('Skipped', element);
     return false;
   }
@@ -4036,7 +4046,7 @@ function loadInline(element, opts) {
       options.css = options.css || false;
       // custom inline view style
       const styleElement = v.children('[media="#"]');
-      if (styleElement.length() > 0 && styleElement.parent().get() === v.get()) {
+      if (styleElement.length() && styleElement.parent().get() === v.get()) {
         if (options.css === false) {
           options.css = '';
         }
@@ -4220,7 +4230,7 @@ function lazyElementCheck(element) {
   const $el = z$(element);
   const lazyParent = $el.parent(`[${_optionAttributes.zLazy}]`);
   if ($el.attr(_optionAttributes.zLazy) === 'false' ||
-      (lazyParent.length() > 0 && lazyParent.attr(_optionAttributes.zLazy) === 'false') ) {
+      (lazyParent.length() && lazyParent.attr(_optionAttributes.zLazy) === 'false') ) {
     return false;
   }
   // Check if element is already added to Lazy-Element list
@@ -4228,7 +4238,8 @@ function lazyElementCheck(element) {
     // Check if element inherits lazy-loading from a parent lazy container/scroll
     const q = util.dom.queryAttribute(_optionAttributes.zLazy, 'scroll') + ',' +
             util.dom.queryAttribute(_optionAttributes.zLazy, 'true');
-    const lazyContainer = $el.parent().parent(q).get();
+    const p = $el.parent();
+    const lazyContainer = p.length() ? p.parent(q).get() : null;
     if (lazyContainer) {
       addLazyElement(element);
       // Check if the lazy container is already added to the lazy container list
@@ -4271,7 +4282,8 @@ function lazyElementCheck(element) {
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4290,7 +4302,7 @@ function lazyElementCheck(element) {
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -4719,7 +4731,8 @@ module.exports = ContextController;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4738,7 +4751,7 @@ module.exports = ContextController;
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -4793,7 +4806,8 @@ module.exports = ControllerInstance;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4812,7 +4826,7 @@ module.exports = ControllerInstance;
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -4871,7 +4885,8 @@ module.exports = OptionAttributes;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4890,7 +4905,7 @@ module.exports = OptionAttributes;
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -4996,7 +5011,8 @@ module.exports = ViewObserver;
 
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5014,7 +5030,7 @@ module.exports = ViewObserver;
 /*
  *
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  *
@@ -5320,7 +5336,7 @@ function field(fieldName, container, context) {
   if (typeof context._fieldCache[fieldName] === 'undefined') {
     el = z$(container)
         .find(util.dom.queryAttribute(_optionAttributes.zField, fieldName) + ',[' + CSS.escape('#' + fieldName) + ']');
-    if (el.length() > 0) {
+    if (el.length()) {
       context._fieldCache[fieldName] = el;
       // extend the returned `ZxQuery` object adding the `field` method
       if (el.length() === 1 && !el.field) {
@@ -5629,7 +5645,7 @@ function context(contextId, callback) {
       cb(ctx);
     } else if (typeof contextId === 'string') {
       const cel = z$.find(util.dom.queryAttribute(_optionAttributes.zContext, contextId));
-      if (cel.length() > 0) {
+      if (cel.length()) {
         context(cel, (ctx) =>
             ctx ? cb(ctx) : context(contextId, callback)
         );
@@ -6212,9 +6228,9 @@ function initController(ctrl) {
 
   // Allocate main component's 'refresh' handler
   // if there is the JScript or any '@' handler
-  if (allocated.length > 0 || viewRefreshScript.length() > 0) {
-    const refreshDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('refreshdelay') : null;
-    const handlersDelay = viewRefreshScript.length() > 0 ? viewRefreshScript.attr('handlersdelay') : null;
+  if (allocated.length > 0 || viewRefreshScript.length()) {
+    const refreshDelay = viewRefreshScript.length() ? viewRefreshScript.attr('refreshdelay') : null;
+    const handlersDelay = viewRefreshScript.length() ? viewRefreshScript.attr('handlersdelay') : null;
     // init refresh handler / first paint
     ctx.handlers.refresh.call($view.get(), $view, $view, ctrl.model(), (contextData, delay) => {
       zuix.activeRefresh($view, $view, contextData, ($v, $element, data, refreshCallback) => {

@@ -1,6 +1,7 @@
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -579,7 +580,7 @@ ComponentContext.prototype.field = function(fieldName) {
 ComponentContext.prototype.checkEncapsulation = function() {
   const v = z$(this._view);
   const cssId = this.getCssId();
-  if (v.length() > 0 && this._options.css !== false) {
+  if (v.length() && this._options.css !== false) {
     v.attr(cssId, ''); // this will also tell when multiple controllers are handling the same view
     // if both the container and the style are null
     // then this is just a controller attached to a pre-existent view
@@ -847,7 +848,7 @@ ComponentContext.prototype.loadCss = function(options) {
     }
   } else {
     const inlineStyle = z$().find('style[media="#' + cssPath + '"],style[media="' + cssPath + '"]');
-    if (inlineStyle.length() > 0) {
+    if (inlineStyle.length()) {
       const styleElement = inlineStyle.get(0);
       const viewCss = styleElement.innerText;
       context.style(viewCss);
@@ -936,7 +937,7 @@ ComponentContext.prototype.loadHtml = function(options) {
         htmlPath,
         util.dom.cssNot(_optionAttributes.zComponent)
     ));
-    if (inlineView.length() > 0) {
+    if (inlineView.length()) {
       let styles;
       let inlineElement = inlineView.get(0);
       if (inlineElement.tagName.toLowerCase() === 'template') {

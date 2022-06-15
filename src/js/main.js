@@ -2,7 +2,8 @@
 /*!
  * @license
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +21,7 @@
 /**
  *
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */

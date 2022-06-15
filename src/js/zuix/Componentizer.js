@@ -1,6 +1,7 @@
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -321,7 +322,7 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element, opts) {
   const v = z$(element);
-  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length() > 0) {
+  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length()) {
     //_log.w('Skipped', element);
     return false;
   }
@@ -384,7 +385,7 @@ function loadInline(element, opts) {
       options.css = options.css || false;
       // custom inline view style
       const styleElement = v.children('[media="#"]');
-      if (styleElement.length() > 0 && styleElement.parent().get() === v.get()) {
+      if (styleElement.length() && styleElement.parent().get() === v.get()) {
         if (options.css === false) {
           options.css = '';
         }
@@ -568,7 +569,7 @@ function lazyElementCheck(element) {
   const $el = z$(element);
   const lazyParent = $el.parent(`[${_optionAttributes.zLazy}]`);
   if ($el.attr(_optionAttributes.zLazy) === 'false' ||
-      (lazyParent.length() > 0 && lazyParent.attr(_optionAttributes.zLazy) === 'false') ) {
+      (lazyParent.length() && lazyParent.attr(_optionAttributes.zLazy) === 'false') ) {
     return false;
   }
   // Check if element is already added to Lazy-Element list
@@ -576,7 +577,8 @@ function lazyElementCheck(element) {
     // Check if element inherits lazy-loading from a parent lazy container/scroll
     const q = util.dom.queryAttribute(_optionAttributes.zLazy, 'scroll') + ',' +
             util.dom.queryAttribute(_optionAttributes.zLazy, 'true');
-    const lazyContainer = $el.parent().parent(q).get();
+    const p = $el.parent();
+    const lazyContainer = p.length() ? p.parent(q).get() : null;
     if (lazyContainer) {
       addLazyElement(element);
       // Check if the lazy container is already added to the lazy container list

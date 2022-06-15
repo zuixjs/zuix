@@ -1,6 +1,7 @@
 /*
  * Copyright 2015-2022 G-Labs. All Rights Reserved.
- *         https://zuixjs.github.io/zuix
+ *
+ *           https://zuixjs.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@
  *
  *  This file is part of
  *  zUIx, Javascript library for component-based development.
- *        https://zuixjs.github.io/zuix
+ *        https://zuixjs.org
  *
  * @author Generoso Martello  -  https://github.com/genemars
  */
@@ -359,7 +360,7 @@ ZxQuery.prototype.index = function(el) {
   if (this.length() === 1 && el == null) {
     const elements = Array.from(this.parent().children()._selection);
     return elements.indexOf(target);
-  } else if (this.length() > 0 && el != null) {
+  } else if (this.length() && el != null) {
     return this._selection.indexOf(el.get());
   }
   return -1;
@@ -1150,19 +1151,15 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     };
   })(el);
   position.visible = false;
-  let scrollable = el.offsetParent;
-  if (scrollable == null && (getComputedStyle(el).position === 'fixed' || getComputedStyle(el).position === 'absolute')) {
-    scrollable = document.body;
-  }
+  const getScrollParent = (el) => {
+    if (!(el instanceof Element)) return document.body;
+    const style = getComputedStyle(el);
+    return (el.scrollHeight >= el.clientHeight || el.scrollWidth >= el.clientWidth) &&
+    (!/^(visible|hidden)/.test(style.overflowY || 'visible') || !/^(visible|hidden)/.test(style.overflowX || 'visible')) ?
+        el : (getScrollParent(el.parentElement) || document.body);
+  };
+  const scrollable = getScrollParent(el.parentNode);
   if (scrollable != null) {
-    if (scrollable !== document.body) {
-      // find the scrollable container
-      let s = scrollable.offsetParent;
-      while (s != null && s.offsetParent !== null && s.offsetHeight === s.scrollHeight) {
-        s = s.offsetParent;
-      }
-      if (s != null) scrollable = s;
-    }
     let r1 = scrollable.getBoundingClientRect();
     if (scrollable === document.body) {
       // modify from read-only object
@@ -1180,18 +1177,21 @@ ZxQueryStatic.getPosition = function(el, tolerance) {
     if (tolerance == null) tolerance = 0;
     const r2 = el.getBoundingClientRect();
     // visible status
-    let visible = !(r2.left-1 > r1.right - tolerance ||
-        r2.right+1 < r1.left + tolerance ||
-        r2.top-1 > r1.bottom - tolerance ||
-        r2.bottom+1 < r1.top + tolerance);
-    if (scrollable !== document.body) {
-      visible = visible && z$(scrollable).position().visible;
-    }
-    let parentNode = el.parentNode;
-    while (parentNode && parentNode instanceof Element && visible) {
-      const parentStyle = getComputedStyle(parentNode);
-      visible = visible && parentStyle.display !== 'none' && parentStyle.visibility !== 'hidden';
-      parentNode = parentNode.parentNode;
+    let visible = getComputedStyle(el).display !== 'none';
+    if (visible) {
+      visible = !(r2.left-1 > r1.right - tolerance ||
+          r2.right+1 < r1.left + tolerance ||
+          r2.top-1 > r1.bottom - tolerance ||
+          r2.bottom+1 < r1.top + tolerance);
+      if (scrollable !== document.body) {
+        visible = visible && z$(scrollable).position().visible;
+      }
+      let parentNode = el.parentNode;
+      while (parentNode && parentNode instanceof Element && visible) {
+        const parentStyle = getComputedStyle(parentNode);
+        visible = visible && parentStyle.display !== 'none' && parentStyle.visibility !== 'hidden';
+        parentNode = parentNode.parentNode;
+      }
     }
     position.visible = visible;
     // viewport-relative frame position
