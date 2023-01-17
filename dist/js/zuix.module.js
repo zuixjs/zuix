@@ -1,5 +1,3 @@
-/* zuix.js v1.1.13 22.06.16 00:19:35 */
-
 /******/ var __webpack_modules__ = ({
 
 /***/ 381:
@@ -5476,7 +5474,8 @@ function loadResources(ctx, options) {
       }
       if (options.css !== false && typeof options.css !== 'string') {
         options.css = false;
-        if (!cachedComponent.css_applied) {
+        const shadowRoot = util.dom.getShadowRoot(ctx.view());
+        if (!cachedComponent.css_applied || shadowRoot) {
           cachedComponent.css_applied = true;
           ctx.style(cachedComponent.css);
           _log.t(ctx.componentId + ':css', 'component:cached:css');

@@ -465,7 +465,8 @@ function loadResources(ctx, options) {
       }
       if (options.css !== false && typeof options.css !== 'string') {
         options.css = false;
-        if (!cachedComponent.css_applied) {
+        const shadowRoot = util.dom.getShadowRoot(ctx.view());
+        if (!cachedComponent.css_applied || shadowRoot) {
           cachedComponent.css_applied = true;
           ctx.style(cachedComponent.css);
           _log.t(ctx.componentId + ':css', 'component:cached:css');
