@@ -1,3 +1,5 @@
+/* zuix.js v1.1.15 23.04.12 14:01:03 */
+
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -3371,7 +3373,8 @@ ComponentContext.prototype.loadCss = function(options) {
       if (cssPath == context.componentId) {
         cssPath += '.css';
       }
-      fetch(zuix.getResourcePath(cssPath), zuix.store('settings').fetchOptions)
+      const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+      fetch(zuix.getResourcePath(cssPath), fetchOptions)
           .then((response) => response.text())
           .then((viewCss) => {
             context.style(viewCss);
@@ -3480,7 +3483,8 @@ ComponentContext.prototype.loadHtml = function(options) {
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
-      fetch(zuix.getResourcePath(htmlPath), zuix.store('settings').fetchOptions)
+      const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+      fetch(zuix.getResourcePath(htmlPath), fetchOptions)
           .then((response) => response.text())
           .then((viewHtml) => {
             context.view(viewHtml);
@@ -5762,7 +5766,8 @@ function loadController(context, task) {
     } else {
       const job = function(t) {
         const jsPath = context.componentId + '.js';
-        fetch(zuix.getResourcePath(jsPath), zuix.store('settings').fetchOptions)
+        const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+        fetch(zuix.getResourcePath(jsPath), fetchOptions)
             .then((response) => response.text())
             .then((ctrlJs) => {
               try {
@@ -6737,7 +6742,8 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         if (cached != null) {
           addResource(isCss ? cached.css : cached.controller);
         } else {
-          fetch(resourcePath)
+          const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+          fetch(resourcePath, fetchOptions)
               .then((response) => response.text())
               .then((resText) => {
                 // TODO: add logging

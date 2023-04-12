@@ -729,7 +729,8 @@ function loadController(context, task) {
     } else {
       const job = function(t) {
         const jsPath = context.componentId + '.js';
-        fetch(zuix.getResourcePath(jsPath), zuix.store('settings')?.fetchOptions)
+        const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+        fetch(zuix.getResourcePath(jsPath), fetchOptions)
             .then((response) => response.text())
             .then((ctrlJs) => {
               try {
@@ -1704,7 +1705,8 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         if (cached != null) {
           addResource(isCss ? cached.css : cached.controller);
         } else {
-          fetch(resourcePath, zuix.store('settings')?.fetchOptions)
+          const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+          fetch(resourcePath, fetchOptions)
               .then((response) => response.text())
               .then((resText) => {
                 // TODO: add logging

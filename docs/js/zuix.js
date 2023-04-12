@@ -1,4 +1,4 @@
-/* zuix.js v1.1.14 23.01.17 19:48:09 */
+/* zuix.js v1.1.15 23.04.12 14:01:03 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -1625,7 +1625,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
     head.removeChild(target);
   } else {
     const oldStyle = document.getElementById(cssId);
-    if (oldStyle != null) {
+    if (oldStyle && head.contains(oldStyle)) {
       head.removeChild(oldStyle);
     }
   }
@@ -2819,6 +2819,11 @@ ComponentContext.prototype.dispose = function() {
   this._disposed = true;
   // TODO: ... check out for more resources that could be freed
   this._viewObserver.stop();
+  // remove styles
+  this.style(null);
+  // un-register model observable
+  this.model(null);
+  // reset view/event handlers
   if (this._c) {
     if (this._c.view()) {
       this._c.trigger('component:dispose', this._c.view(), true);
@@ -2846,8 +2851,6 @@ ComponentContext.prototype.dispose = function() {
       this._c.dispose.call(this, this);
     }
   }
-  // un-register model observable
-  this.model(null);
   // detach component view from its container (parent element)
   if (this._c && this._c._childNodes.length > 0) {
     this._c.view().html('');
@@ -3258,10 +3261,11 @@ ComponentContext.prototype.model = function(model) {
  * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function(controller) {
+  const componentId = this.componentId;
   if (typeof controller === 'undefined') return this._controller;
   // TODO: should dispose previous context controller first,
   // TODO: alternatively should not allow _controller reassignment and throw an error
-  else this._controller = controller; // can be null
+  else this._controller = typeof controller === 'string' ? zuix.controller(controller, {componentId}) : controller; // can be null
   return this;
 };
 
@@ -3369,7 +3373,8 @@ ComponentContext.prototype.loadCss = function(options) {
       if (cssPath == context.componentId) {
         cssPath += '.css';
       }
-      fetch(zuix.getResourcePath(cssPath))
+      const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+      fetch(zuix.getResourcePath(cssPath), fetchOptions)
           .then((response) => response.text())
           .then((viewCss) => {
             context.style(viewCss);
@@ -3478,7 +3483,8 @@ ComponentContext.prototype.loadHtml = function(options) {
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
-      fetch(zuix.getResourcePath(htmlPath))
+      const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+      fetch(zuix.getResourcePath(htmlPath), fetchOptions)
           .then((response) => response.text())
           .then((viewHtml) => {
             context.view(viewHtml);
@@ -4452,15 +4458,19 @@ function ContextController(context) {
     }
   }
 
-  const isClass = (v) =>
-    typeof v === 'function' && /^\s*class\s+/.test(v.toString());
-  if (isClass(context.controller())) {
-    // >= ES6
-    const ctrl = new ((context.controller()).bind(_t, _t))();
-    context.controller(ctrl);
-  } else {
-    // <= ES5
-    context.controller().call(_t, _t);
+  try {
+    const isClass = (v) =>
+      typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+    if (isClass(context.controller())) {
+      // >= ES6
+      const ctrl = new ((context.controller()).bind(_t, _t))();
+      context.controller(ctrl);
+    } else {
+      // <= ES5
+      context.controller().call(_t, _t);
+    }
+  } catch (e) {
+    console.log(e);
   }
 
   return _t;
@@ -5218,6 +5228,7 @@ function Zuix() {
    * @private
    */
   this._store = {
+    settings: {fetchOptions: {}},
     config: {
       'title': 'zUIx.js app',
       'baseUrl': '/',
@@ -5755,12 +5766,19 @@ function loadController(context, task) {
     } else {
       const job = function(t) {
         const jsPath = context.componentId + '.js';
-        fetch(zuix.getResourcePath(jsPath))
+        const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+        fetch(zuix.getResourcePath(jsPath), fetchOptions)
             .then((response) => response.text())
             .then((ctrlJs) => {
-              ctrlJs += '\n//# sourceURL="'+context.componentId + '.js"\n';
               try {
-                context.controller(getController(ctrlJs));
+                context.controller(ctrlJs, {
+                  error: (e) => {
+                    if (context.error) {
+                      (context.error).call(context, e, context);
+                    }
+                  },
+                  componentId: context.componentId
+                });
                 let cached = getCachedComponent(context.componentId);
                 if (cached == null) {
                   cached = {
@@ -5842,15 +5860,27 @@ function createComponent(context, task) {
       /** @type {ContextController} */
       const c = context._c = new ContextController(context);
       c.log = __webpack_require__(381)(context.contextId);
-      if (c.init) {
-        c.init();
-      }
+
       const endTask = () => {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
         task && task.end();
         v.attr(_optionAttributes.zReady, 'true');
       };
+
+      if (c.init) {
+        try {
+          c.init();
+        } catch (err) {
+          endTask();
+          if (err && context.options().error) {
+            (context.options().error)
+                .call(context, err, context);
+          }
+          return;
+        }
+      }
+
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
       if (c.view() && c.view().attr(_optionAttributes.zComponent) == null) {
         // add the `zComponent` attribute
@@ -5968,7 +5998,14 @@ function initController(ctrl) {
   // tender lifecycle moments
   const $view = ctrl.view();
   if (ctrl.create) {
-    ctrl.create();
+    try {
+      ctrl.create();
+    } catch (err) {
+      if (err && ctx.options().error) {
+        (ctx.options().error)
+            .call(ctx, err, ctx);
+      }
+    }
   }
   ctrl.trigger('view:create', $view);
 
@@ -6288,19 +6325,23 @@ function initController(ctrl) {
  // TODO: refactor this method name
  * @private
  * @param javascriptCode string
+ * @param {{error: function}} [callback] Optional error callback
  * @return {ContextControllerHandler}
  */
-function getController(javascriptCode) {
+function getController(javascriptCode, callback) {
   let instance = (ctx) => { };
   if (typeof javascriptCode === 'string') {
     try {
       const ctrl = Function(util.normalizeControllerCode(javascriptCode))();
       if (typeof ctrl !== 'function') {
-        throw new Error('Unexpected module type: "' + (typeof ctrl) + '"');
+        throw new Error('Unexpected controller type: "' + (typeof ctrl) + '"');
       }
       instance = ctrl;
     } catch (e) {
       // TODO: should trigger a global hook
+      if (callback && typeof callback.error === 'function') {
+        callback.error(e);
+      }
       // eg. 'controller:error'
       _log.e(this, e, javascriptCode);
     }
@@ -6479,10 +6520,17 @@ ctrl = zuix.controller(function(cp) {
 }).for('path/to/component_name');
 ```
  *
- * @param {ContextControllerHandler} handler Function called to initialize the component controller that will be passed as argument of this function
+ * @param {ContextControllerHandler|string} handler Function called to initialize the component controller that will be passed as argument of this function
+ * @param {{error: function, componentId?: string}} [options] Optional controller options / callback
  * @return {ContextControllerHandler} The allocated controller handler.
  */
-Zuix.prototype.controller = function(handler) {
+Zuix.prototype.controller = function(handler, options) {
+  if (typeof handler === 'string') {
+    if (options.componentId) {
+      handler += '\n//# sourceURL="' + options.componentId + '.js"\n';
+    }
+    handler = getController(handler, options);
+  }
   return controller.call(this, handler);
 };
 /**
@@ -6674,11 +6722,14 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
               resource.appendChild(document.createTextNode(text));
             }
           } else {
+            const actualDefine = window['define'];
+            window['define'] = undefined;
             if (resource.innerText) {
               resource.innerText = text;
             } else {
               resource.appendChild(document.createTextNode(text));
             }
+            window['define'] = actualDefine;
           }
           task.end();
           if (callback) {
@@ -6691,7 +6742,8 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         if (cached != null) {
           addResource(isCss ? cached.css : cached.controller);
         } else {
-          fetch(resourcePath)
+          const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+          fetch(resourcePath, fetchOptions)
               .then((response) => response.text())
               .then((resText) => {
                 // TODO: add logging
@@ -6878,7 +6930,10 @@ Zuix.prototype.TaskQueue = TaskQueue;
 Zuix.prototype.ObjectObserver = ObjectObserver;
 /** @private */
 Zuix.prototype.ZxQuery = z$.ZxQuery;
-/** @private */
+/**
+ * Sets components cache.
+ * @return void
+ */
 Zuix.prototype.setComponentCache = (componentCache) => setComponentCache(componentCache);
 /**
  * Dumps content of the components cache. Mainly for debugging purpose.
@@ -6927,7 +6982,7 @@ Zuix.prototype.resolveImplicitLoad = (element) => {
  */
 Zuix.prototype.runScriptlet = (scriptCode, $el, $view, data) => {
   const ctx = zuix.context($view);
-  if (ctx && ctx._refreshHandler) {
+  if (ctx && ctx._refreshHandler && $el.get().isConnected) {
     return ctx._refreshHandler.runScriptlet.call($el.get(), $el, scriptCode, data);
   }
 };
