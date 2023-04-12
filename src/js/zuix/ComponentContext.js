@@ -314,6 +314,11 @@ ComponentContext.prototype.dispose = function() {
   this._disposed = true;
   // TODO: ... check out for more resources that could be freed
   this._viewObserver.stop();
+  // remove styles
+  this.style(null);
+  // un-register model observable
+  this.model(null);
+  // reset view/event handlers
   if (this._c) {
     if (this._c.view()) {
       this._c.trigger('component:dispose', this._c.view(), true);
@@ -341,8 +346,6 @@ ComponentContext.prototype.dispose = function() {
       this._c.dispose.call(this, this);
     }
   }
-  // un-register model observable
-  this.model(null);
   // detach component view from its container (parent element)
   if (this._c && this._c._childNodes.length > 0) {
     this._c.view().html('');
@@ -753,10 +756,11 @@ ComponentContext.prototype.model = function(model) {
  * @return {ComponentContext|ContextControllerHandler}
  */
 ComponentContext.prototype.controller = function(controller) {
+  const componentId = this.componentId;
   if (typeof controller === 'undefined') return this._controller;
   // TODO: should dispose previous context controller first,
   // TODO: alternatively should not allow _controller reassignment and throw an error
-  else this._controller = controller; // can be null
+  else this._controller = typeof controller === 'string' ? zuix.controller(controller, {componentId}) : controller; // can be null
   return this;
 };
 
@@ -864,7 +868,7 @@ ComponentContext.prototype.loadCss = function(options) {
       if (cssPath == context.componentId) {
         cssPath += '.css';
       }
-      fetch(zuix.getResourcePath(cssPath))
+      fetch(zuix.getResourcePath(cssPath), zuix.store('settings')?.fetchOptions)
           .then((response) => response.text())
           .then((viewCss) => {
             context.style(viewCss);
@@ -973,7 +977,7 @@ ComponentContext.prototype.loadHtml = function(options) {
       if (htmlPath == context.componentId) {
         htmlPath += cext;
       }
-      fetch(zuix.getResourcePath(htmlPath))
+      fetch(zuix.getResourcePath(htmlPath), zuix.store('settings')?.fetchOptions)
           .then((response) => response.text())
           .then((viewHtml) => {
             context.view(viewHtml);

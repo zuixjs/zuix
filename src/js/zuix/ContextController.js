@@ -157,15 +157,19 @@ function ContextController(context) {
     }
   }
 
-  const isClass = (v) =>
-    typeof v === 'function' && /^\s*class\s+/.test(v.toString());
-  if (isClass(context.controller())) {
-    // >= ES6
-    const ctrl = new ((context.controller()).bind(_t, _t))();
-    context.controller(ctrl);
-  } else {
-    // <= ES5
-    context.controller().call(_t, _t);
+  try {
+    const isClass = (v) =>
+      typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+    if (isClass(context.controller())) {
+      // >= ES6
+      const ctrl = new ((context.controller()).bind(_t, _t))();
+      context.controller(ctrl);
+    } else {
+      // <= ES5
+      context.controller().call(_t, _t);
+    }
+  } catch (e) {
+    console.log(e);
   }
 
   return _t;

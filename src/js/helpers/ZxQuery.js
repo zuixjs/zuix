@@ -1036,7 +1036,7 @@ ZxQueryStatic.appendCss = function(css, target, cssId, container) {
     head.removeChild(target);
   } else {
     const oldStyle = document.getElementById(cssId);
-    if (oldStyle != null) {
+    if (oldStyle && head.contains(oldStyle)) {
       head.removeChild(oldStyle);
     }
   }

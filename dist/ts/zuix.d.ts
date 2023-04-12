@@ -30,7 +30,7 @@ export interface Zuix {
     field(fieldName: String, container?: Element): ZxQuery;
     load(componentId: String, options?: ContextOptions): ComponentContext;
     unload(context: ComponentContext | Element): Zuix;
-    controller(handler: ContextControllerHandler): ContextControllerHandler;
+    controller(handler: ContextControllerHandler | string, callback?: {error?: Function, componentId?: string}): ContextControllerHandler;
     context(contextId: Element | ZxQuery | Object, callback?: Function): ComponentContext;
     createComponent(componentId: String, options?: ContextOptions): ComponentContext;
     loadComponent(elements: Element | ZxQuery, componentId: string, type?: 'view' | 'ctrl', options?: ContextOptions);
@@ -45,8 +45,9 @@ export interface Zuix {
     observable(obj: Object): ObservableObject;
     bundle(bundleData: BundleItem[], callback?: Function): Zuix | BundleItem[];
     $: ZxQueryStatic;
-    dumpCache(): ComponentCache[];
     dumpContexts(): ComponentContext[];
+    dumpCache(): ComponentCache[];
+    setComponentCache(cache: ComponentCache[]): void;
 }
 export interface ContextControllerHandler {
     (cp: ContextController): void;
