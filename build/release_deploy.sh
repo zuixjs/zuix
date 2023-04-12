@@ -29,6 +29,6 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ];
     #publishPackages
     echo "-----"
     echo "Automatic NPM publishing is disabled, do not forget to"
-    echo "manually run 'npm publish' both from './' and './dist' folders"
+    echo "manually run 'npm publish' from './dist' folder"
     echo "-----"
 fi

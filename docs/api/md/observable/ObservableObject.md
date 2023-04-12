@@ -85,7 +85,7 @@ ObservableObject class.
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 38](../../observable/ObservableObject.js#L38)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 39](../../observable/ObservableObject.js#L39)
 
 -->
 
@@ -105,7 +105,7 @@ Subscribe a listener to this observable events
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 60](../../observable/ObservableObject.js#L60)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 61](../../observable/ObservableObject.js#L61)
 
 -->
 
@@ -127,7 +127,7 @@ Unsubscribe a listener
 <!--
 
 *Source:*
-[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 76](../../observable/ObservableObject.js#L76)
+[observable/ObservableObject.js](../../observable/ObservableObject.js), [line 77](../../observable/ObservableObject.js#L77)
 
 -->
 
@@ -153,7 +153,7 @@ The callback for setting data and delay of next refresh request.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 40](../../zuix/ActiveRefresh.js#L40)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 41](../../zuix/ActiveRefresh.js#L41)
 
 -->
 
@@ -178,7 +178,7 @@ The Active-Refresh function that will be called for each refresh request.
 <!--
 
 *Source:*
-[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 28](../../zuix/ActiveRefresh.js#L28)
+[zuix/ActiveRefresh.js](../../zuix/ActiveRefresh.js), [line 29](../../zuix/ActiveRefresh.js#L29)
 
 -->
 
@@ -199,7 +199,7 @@ Binding adapter callback.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 62](../../zuix/ComponentContext.js#L62)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 63](../../zuix/ComponentContext.js#L63)
 
 -->
 
@@ -217,7 +217,7 @@ Binding adapter refresh callback
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 72](../../zuix/ComponentContext.js#L72)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 73](../../zuix/ComponentContext.js#L73)
 
 -->
 
@@ -237,7 +237,7 @@ Bundle item object.
 <!--
 
 *Source:*
-[zuix/ComponentCache.js](../../zuix/ComponentCache.js), [line 38](../../zuix/ComponentCache.js#L38)
+[zuix/ComponentCache.js](../../zuix/ComponentCache.js), [line 39](../../zuix/ComponentCache.js#L39)
 
 -->
 
@@ -260,7 +260,7 @@ Component cache object.
 <!--
 
 *Source:*
-[zuix/ComponentCache.js](../../zuix/ComponentCache.js), [line 26](../../zuix/ComponentCache.js#L26)
+[zuix/ComponentCache.js](../../zuix/ComponentCache.js), [line 27](../../zuix/ComponentCache.js#L27)
 
 -->
 
@@ -272,7 +272,7 @@ Function that gets called after loading, when the component is actually created 
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 52](../../zuix/ContextController.js#L52)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 53](../../zuix/ContextController.js#L53)
 
 -->
 
@@ -284,7 +284,7 @@ Function called when the component is about to be disposed.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 58](../../zuix/ContextController.js#L58)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 59](../../zuix/ContextController.js#L59)
 
 -->
 
@@ -306,7 +306,7 @@ and it is used to initialize its controller.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 42](../../zuix/ComponentContext.js#L42)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 43](../../zuix/ComponentContext.js#L43)
 
 -->
 
@@ -318,7 +318,7 @@ Function that gets called after loading and before the component is created.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 46](../../zuix/ContextController.js#L46)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 47](../../zuix/ContextController.js#L47)
 
 -->
 
@@ -340,7 +340,7 @@ Function called when the data model of the component is updated
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 34](../../zuix/ContextController.js#L34)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 35](../../zuix/ContextController.js#L35)
 
 -->
 
@@ -366,7 +366,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 82](../../zuix/Zuix.js#L82)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 83](../../zuix/Zuix.js#L83)
 
 -->
 
@@ -387,7 +387,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 91](../../zuix/Zuix.js#L91)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 92](../../zuix/Zuix.js#L92)
 
 -->
 
@@ -424,7 +424,7 @@ of the component's host element.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 56](../../zuix/Zuix.js#L56)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 57](../../zuix/Zuix.js#L57)
 
 -->
 
@@ -445,7 +445,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 100](../../zuix/Zuix.js#L100)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 101](../../zuix/Zuix.js#L101)
 
 -->
 
@@ -467,7 +467,7 @@ The `ElementPosition` object returned by the `position()` method.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 54](../../helpers/ZxQuery.js#L54)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 55](../../helpers/ZxQuery.js#L55)
 
 -->
 
@@ -490,7 +490,7 @@ Callback function used with the `each(..)` method.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 36](../../helpers/ZxQuery.js#L36)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 37](../../helpers/ZxQuery.js#L37)
 
 -->
 
@@ -514,7 +514,7 @@ with the `on` method occurs.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 51](../../zuix/ComponentContext.js#L51)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 52](../../zuix/ComponentContext.js#L52)
 
 -->
 
@@ -536,7 +536,7 @@ The `IterationCallback` function.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 65](../../helpers/ZxQuery.js#L65)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 66](../../helpers/ZxQuery.js#L66)
 
 -->
 
@@ -559,7 +559,7 @@ Callback function for monitoring all log messages.
 <!--
 
 *Source:*
-[helpers/Logger.js](../../helpers/Logger.js), [line 117](../../helpers/Logger.js#L117)
+[helpers/Logger.js](../../helpers/Logger.js), [line 118](../../helpers/Logger.js#L118)
 
 -->
 
@@ -581,7 +581,7 @@ Callback function used with the `each(..)` method.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 132](../../helpers/ZxQuery.js#L132)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 133](../../helpers/ZxQuery.js#L133)
 
 -->
 
@@ -612,7 +612,7 @@ Configuration object for `playFx`, `playTransition`, `playAnimation` utility met
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 119](../../helpers/ZxQuery.js#L119)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 120](../../helpers/ZxQuery.js#L120)
 
 -->
 
@@ -631,7 +631,7 @@ Relative position.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 46](../../helpers/ZxQuery.js#L46)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 47](../../helpers/ZxQuery.js#L47)
 
 -->
 
@@ -650,7 +650,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 108](../../zuix/Zuix.js#L108)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 109](../../zuix/Zuix.js#L109)
 
 -->
 
@@ -671,7 +671,7 @@ The `ZxQueryHttpBeforeSendCallback` function.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 74](../../helpers/ZxQuery.js#L74)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 75](../../helpers/ZxQuery.js#L75)
 
 -->
 
@@ -694,7 +694,7 @@ The `ZxQueryHttpErrorCallback` function.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 90](../../helpers/ZxQuery.js#L90)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 91](../../helpers/ZxQuery.js#L91)
 
 -->
 
@@ -716,7 +716,7 @@ zuix.$.http options object.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 108](../../helpers/ZxQuery.js#L108)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 109](../../helpers/ZxQuery.js#L109)
 
 -->
 
@@ -737,7 +737,7 @@ The `ZxQueryHttpSuccessCallback` function.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 82](../../helpers/ZxQuery.js#L82)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 83](../../helpers/ZxQuery.js#L83)
 
 -->
 
@@ -758,6 +758,6 @@ The `ZxQueryHttpThenCallback` function.
 <!--
 
 *Source:*
-[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 100](../../helpers/ZxQuery.js#L100)
+[helpers/ZxQuery.js](../../helpers/ZxQuery.js), [line 101](../../helpers/ZxQuery.js#L101)
 
 -->

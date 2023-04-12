@@ -1484,7 +1484,7 @@ ctrl = zuix.controller(function(cp) {
 ```
  *
  * @param {ContextControllerHandler|string} handler Function called to initialize the component controller that will be passed as argument of this function
- * @param {{error: function, componentId?: string}} [options] Optional controller options / callback
+ * @param {{error: function}|{error: function, componentId: string}} [options] Optional controller options / callback
  * @return {ContextControllerHandler} The allocated controller handler.
  */
 Zuix.prototype.controller = function(handler, options) {
