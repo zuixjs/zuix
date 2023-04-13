@@ -27,8 +27,10 @@
 
 'use strict';
 
+const _loggerFactory =
+    require('../helpers/Logger');
 const _log =
-    require('../helpers/Logger')('ComponentContext.js');
+    _loggerFactory('ComponentContext.js');
 const _optionAttributes =
     require('./OptionAttributes');
 const z$ =
@@ -192,63 +194,69 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
  */
 function ComponentContext(zuixInstance, options, eventCallback) {
   zuix = zuixInstance;
-  this._options = null;
+  Object.defineProperty(this, '_options', {enumerable: false, writable: true, value: null});
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
-  this.handlers = {refresh: function($view, $el, contextData, refreshCallback) {}};
-  this.trigger = (context, eventPath, eventValue) => {
-    if (eventCallback) {
-      eventCallback(context, eventPath, eventValue);
-    }
-  };
+  Object.defineProperty(this, 'handlers', {enumerable: false, writable: true, value: {
+    refresh: function($view, $el, contextData, refreshCallback) {}}
+  });
+  Object.defineProperty(this, 'trigger', {enumerable: false, writable: true, value:
+        (context, eventPath, eventValue) => {
+          if (eventCallback) {
+            eventCallback(context, eventPath, eventValue);
+          }
+        }});
 
   /** @protected */
-  this._container = null;
+  Object.defineProperty(this, '_container', {enumerable: false, writable: true, value: null});
 
   /** @protected */
-  this._model = null;
+  Object.defineProperty(this, '_model', {enumerable: false, writable: true, value: null});
   /** @protected */
-  this._view = null;
+  Object.defineProperty(this, '_view', {enumerable: false, writable: true, value: null});
   /** @protected */
-  this._css = null;
+  Object.defineProperty(this, '_css', {enumerable: false, writable: true, value: null});
   /** @protected */
-  this._style = null;
+  Object.defineProperty(this, '_style', {enumerable: false, writable: true, value: null});
   /**
      * @protected
      * @type {ContextControllerHandler}
      */
-  this._controller = null;
+  Object.defineProperty(this, '_controller', {enumerable: false, writable: true, value: null});
 
   /**
      * Define the local behavior handler for this context instance only.
      * Any global behavior matching the same `componentId` will be overridden.
      *
+     * // TODO: this might not be used anymore (verify and deprecate)
+     *
      * @function behavior
      * @param handler_fn {function}
      */
-  this.behavior = null;
+  Object.defineProperty(this, 'behavior', {enumerable: false, writable: true, value: null});
 
   /** @package */
-  this._eventMap = [];
+  Object.defineProperty(this, '_eventMap', {enumerable: false, writable: true, value: []});
   /** @package */
-  this._behaviorMap = [];
+  Object.defineProperty(this, '_behaviorMap', {enumerable: false, writable: true, value: []});
 
   /**
    * @package
    * @type {!Array.<ZxQuery>}
    **/
-  this._fieldCache = [];
+  Object.defineProperty(this, '_fieldCache', {enumerable: false, writable: true, value: []});
 
   /**
      * @protected
      * @type {ContextController}
      */
-  this._c = null;
+  Object.defineProperty(this, '_c', {enumerable: false, writable: true, value: null});
 
   /**
      * @protected
      * @type {ObservableListener}
      */
+  Object.defineProperty(this, '_modelListener', {enumerable: false, writable: true, value: null});
   this._modelListener = Object.assign({
     /** @type {ComponentContext} */
     context: null,
@@ -292,12 +300,21 @@ function ComponentContext(zuixInstance, options, eventCallback) {
      * @type {ViewObserver}
      * @private
      */
-  this._viewObserver = new ViewObserver(this);
+  Object.defineProperty(this, '_viewObserver', {enumerable: false, writable: true, value: new ViewObserver(this)});
   /**
    * @type {boolean}
    * @private
    */
-  this._disposed = false;
+  Object.defineProperty(this, '_disposed', {enumerable: false, writable: true, value: false});
+
+  /** @private */
+  Object.defineProperty(this, '#', {enumerable: false, writable: true, value: {}});
+  /** @private */
+  Object.defineProperty(this, '_', {enumerable: false, writable: true, value: {}});
+  /** @private */
+  Object.defineProperty(this, '_refreshHandler', {enumerable: false, writable: true, value: null});
+  /** @private */
+  Object.defineProperty(this, '_dependencyResolver', {enumerable: false, writable: true, value: null});
 
   this.options(options);
 
@@ -761,6 +778,7 @@ ComponentContext.prototype.controller = function(controller) {
   // TODO: should dispose previous context controller first,
   // TODO: alternatively should not allow _controller reassignment and throw an error
   else this._controller = typeof controller === 'string' ? zuix.controller(controller, {componentId}) : controller; // can be null
+  this._controller.log = _loggerFactory(this.componentId);
   return this;
 };
 

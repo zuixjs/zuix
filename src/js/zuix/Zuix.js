@@ -27,8 +27,10 @@
 
 'use strict';
 
+const _loggerFactory =
+    require('../helpers/Logger');
 const _log =
-    require('../helpers/Logger')('Zuix.js');
+    _loggerFactory('Zuix.js');
 const util =
     require('../helpers/Util');
 const z$ =
@@ -822,8 +824,8 @@ function createComponent(context, task) {
       // TODO: should use 'require' instead of 'new Controller' ... ?
       /** @type {ContextController} */
       const c = context._c = new ContextController(context);
-      c.log = require('../helpers/Logger')(context.contextId);
-
+      c.log = _loggerFactory(context.contextId);
+console.log(context.componentId, c.log, context._c);
       const endTask = () => {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
@@ -1158,7 +1160,13 @@ function initController(ctrl) {
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
           });
         }
-        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); }; return result };';
+        // add explicit local vars defined via {ContextController}.delcare(...)
+        if (ctx['_']) {
+          z$.each(ctx['_'], (f, v) => {
+            code += 'const ' + f + ' = context["_"].' + f + ';';
+          });
+        }
+        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';

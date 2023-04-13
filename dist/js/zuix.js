@@ -1,5 +1,3 @@
-/* zuix.js v1.1.15 23.04.12 14:01:03 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -2532,8 +2530,10 @@ module.exports = () => {
 
 
 
+const _loggerFactory =
+    __webpack_require__(381);
 const _log =
-    __webpack_require__(381)('ComponentContext.js');
+    _loggerFactory('ComponentContext.js');
 const _optionAttributes =
     __webpack_require__(541);
 const z$ =
@@ -2697,63 +2697,69 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
  */
 function ComponentContext(zuixInstance, options, eventCallback) {
   zuix = zuixInstance;
-  this._options = null;
+  Object.defineProperty(this, '_options', {enumerable: false, writable: true, value: null});
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
-  this.handlers = {refresh: function($view, $el, contextData, refreshCallback) {}};
-  this.trigger = (context, eventPath, eventValue) => {
-    if (eventCallback) {
-      eventCallback(context, eventPath, eventValue);
-    }
-  };
+  Object.defineProperty(this, 'handlers', {enumerable: false, writable: true, value: {
+    refresh: function($view, $el, contextData, refreshCallback) {}}
+  });
+  Object.defineProperty(this, 'trigger', {enumerable: false, writable: true, value:
+        (context, eventPath, eventValue) => {
+          if (eventCallback) {
+            eventCallback(context, eventPath, eventValue);
+          }
+        }});
 
   /** @protected */
-  this._container = null;
+  Object.defineProperty(this, '_container', {enumerable: false, writable: true, value: null});
 
   /** @protected */
-  this._model = null;
+  Object.defineProperty(this, '_model', {enumerable: false, writable: true, value: null});
   /** @protected */
-  this._view = null;
+  Object.defineProperty(this, '_view', {enumerable: false, writable: true, value: null});
   /** @protected */
-  this._css = null;
+  Object.defineProperty(this, '_css', {enumerable: false, writable: true, value: null});
   /** @protected */
-  this._style = null;
+  Object.defineProperty(this, '_style', {enumerable: false, writable: true, value: null});
   /**
      * @protected
      * @type {ContextControllerHandler}
      */
-  this._controller = null;
+  Object.defineProperty(this, '_controller', {enumerable: false, writable: true, value: null});
 
   /**
      * Define the local behavior handler for this context instance only.
      * Any global behavior matching the same `componentId` will be overridden.
      *
+     * // TODO: this might not be used anymore (verify and deprecate)
+     *
      * @function behavior
      * @param handler_fn {function}
      */
-  this.behavior = null;
+  Object.defineProperty(this, 'behavior', {enumerable: false, writable: true, value: null});
 
   /** @package */
-  this._eventMap = [];
+  Object.defineProperty(this, '_eventMap', {enumerable: false, writable: true, value: []});
   /** @package */
-  this._behaviorMap = [];
+  Object.defineProperty(this, '_behaviorMap', {enumerable: false, writable: true, value: []});
 
   /**
    * @package
    * @type {!Array.<ZxQuery>}
    **/
-  this._fieldCache = [];
+  Object.defineProperty(this, '_fieldCache', {enumerable: false, writable: true, value: []});
 
   /**
      * @protected
      * @type {ContextController}
      */
-  this._c = null;
+  Object.defineProperty(this, '_c', {enumerable: false, writable: true, value: null});
 
   /**
      * @protected
      * @type {ObservableListener}
      */
+  Object.defineProperty(this, '_modelListener', {enumerable: false, writable: true, value: null});
   this._modelListener = Object.assign({
     /** @type {ComponentContext} */
     context: null,
@@ -2797,12 +2803,21 @@ function ComponentContext(zuixInstance, options, eventCallback) {
      * @type {ViewObserver}
      * @private
      */
-  this._viewObserver = new ViewObserver(this);
+  Object.defineProperty(this, '_viewObserver', {enumerable: false, writable: true, value: new ViewObserver(this)});
   /**
    * @type {boolean}
    * @private
    */
-  this._disposed = false;
+  Object.defineProperty(this, '_disposed', {enumerable: false, writable: true, value: false});
+
+  /** @private */
+  Object.defineProperty(this, '#', {enumerable: false, writable: true, value: {}});
+  /** @private */
+  Object.defineProperty(this, '_', {enumerable: false, writable: true, value: {}});
+  /** @private */
+  Object.defineProperty(this, '_refreshHandler', {enumerable: false, writable: true, value: null});
+  /** @private */
+  Object.defineProperty(this, '_dependencyResolver', {enumerable: false, writable: true, value: null});
 
   this.options(options);
 
@@ -3266,6 +3281,7 @@ ComponentContext.prototype.controller = function(controller) {
   // TODO: should dispose previous context controller first,
   // TODO: alternatively should not allow _controller reassignment and throw an error
   else this._controller = typeof controller === 'string' ? zuix.controller(controller, {componentId}) : controller; // can be null
+  this._controller.log = _loggerFactory(this.componentId);
   return this;
 };
 
@@ -4379,33 +4395,43 @@ const util =
  */
 function ContextController(context) {
   const _t = this;
-  _t._view = null;
-  _t.context = context;
+  Object.defineProperty(_t, 'context', {
+    enumerable: true, writable: true,
+    value: context
+  });
+  Object.defineProperty(_t, '_view', {
+    enumerable: false, writable: true,
+    value: null
+  });
 
   /**
-     * @protected
-     * @type {!Array.<Element>}
-     * */
-  _t._childNodes = [];
+   * @protected
+   * @type {!Array.<Element>}
+   **/
+  Object.defineProperty(_t, '_childNodes', {
+    enumerable: false, writable: true,
+    value: []
+  });
   /**
    * @type {function}
    * @ignore
    */
-  _t.saveView = () => {
+  Object.defineProperty(_t, 'saveView', {enumerable: false, writable: true, value: () => {
     _t.restoreView();
     _t.view()
         .children()
         .each((i, el) => _t._childNodes.push(el));
-  };
-  _t.restoreView = () => {
+  }});
+  Object.defineProperty(_t, 'restoreView', {enumerable: false, writable: true, value: () => {
     if (_t._childNodes.length > 0) {
       _t.view().html('');
       z$.each(_t._childNodes, (i, el) =>
         _t.view().append(el));
       _t._childNodes.length = 0;
     }
-  };
+  }});
 
+  Object.defineProperty(_t, 'on', {enumerable: false, writable: true});
   _t.on = (eventPath, handler) => {
     if (typeof eventPath === 'object' && handler == null) {
       z$.each(eventPath, (evt, hnd) =>
@@ -4419,6 +4445,7 @@ function ContextController(context) {
    * @protected
    * @ignore
    */
+  Object.defineProperty(_t, 'mapEvent', {enumerable: false, writable: true});
   _t.mapEvent = (eventMap, target, eventPath, handler) => {
     if (target != null) {
       target.off(eventPath, _t.eventRouter);
@@ -4432,6 +4459,7 @@ function ContextController(context) {
    * @protected
    * @ignore
    */
+  Object.defineProperty(_t, 'eventRouter', {enumerable: false, writable: true});
   _t.eventRouter = (e) => {
     const v = _t.view();
     context._behaviorMap.concat(context._eventMap).forEach((em) => {
@@ -4465,6 +4493,7 @@ function ContextController(context) {
       // >= ES6
       const ctrl = new ((context.controller()).bind(_t, _t))();
       context.controller(ctrl);
+console.log(context.componentId, context.controller());
     } else {
       // <= ES5
       context.controller().call(_t, _t);
@@ -4651,13 +4680,43 @@ ContextController.prototype.expose = function(name, handler) {
     if (h && (h.get || h.set)) {
       Object.defineProperty(this.context, m, h);
     } else {
-      this.context[m] = h;
+      if (h === undefined) {
+        delete this.context[m];
+      } else {
+        this.context[m] = h;
+      }
     }
   };
   if (typeof name === 'object') {
     z$.each(name, (k, v) => expose(k, v));
   } else {
     expose(name, handler);
+  }
+  return this;
+};
+/**
+ * Declare fields that are visible in the view template scripting scope.
+ *
+ * @param {string|JSON} name Name of the declared method/property, or list of name/value pairs
+ * @param {function} [handler] Function or property descriptor.
+ * @return {ContextController} The `{ContextController}` itself.
+ */
+ContextController.prototype.declare = function(name, handler) {
+  const declare = (m, h) => {
+    if (h && (h.get || h.set)) {
+      Object.defineProperty(this.context['_'], m, h);
+    } else {
+      if (h === undefined) {
+        delete this.context['_'][m];
+      } else {
+        this.context['_'][m] = h;
+      }
+    }
+  };
+  if (typeof name === 'object') {
+    z$.each(name, (k, v) => declare(k, v));
+  } else {
+    declare(name, handler);
   }
   return this;
 };
@@ -5064,8 +5123,10 @@ module.exports = ViewObserver;
 
 
 
+const _loggerFactory =
+    __webpack_require__(381);
 const _log =
-    __webpack_require__(381)('Zuix.js');
+    _loggerFactory('Zuix.js');
 const util =
     __webpack_require__(826);
 const z$ =
@@ -5859,8 +5920,8 @@ function createComponent(context, task) {
       // TODO: should use 'require' instead of 'new Controller' ... ?
       /** @type {ContextController} */
       const c = context._c = new ContextController(context);
-      c.log = __webpack_require__(381)(context.contextId);
-
+      c.log = _loggerFactory(context.contextId);
+console.log(context.componentId, c.log, context._c);
       const endTask = () => {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);
@@ -6195,7 +6256,13 @@ function initController(ctrl) {
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
           });
         }
-        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); }; return result };';
+        // add explicit local vars defined via {ContextController}.delcare(...)
+        if (ctx['_']) {
+          z$.each(ctx['_'], (f, v) => {
+            code += 'const ' + f + ' = context["_"].' + f + ';';
+          });
+        }
+        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';
@@ -6521,7 +6588,7 @@ ctrl = zuix.controller(function(cp) {
 ```
  *
  * @param {ContextControllerHandler|string} handler Function called to initialize the component controller that will be passed as argument of this function
- * @param {{error: function, componentId?: string}} [options] Optional controller options / callback
+ * @param {{error: function}|{error: function, componentId: string}} [options] Optional controller options / callback
  * @return {ContextControllerHandler} The allocated controller handler.
  */
 Zuix.prototype.controller = function(handler, options) {

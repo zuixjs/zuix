@@ -44,25 +44,25 @@
     var self = this;
     props.forEach(function(prop) {
         if (!prop) { return; }
-?><?js  if (props.hasName) {
-          ?>
-|`<?js= prop.name ?>`<?js
+?>
+|<?js  if (props.hasName) {
+          ?>`<?js= prop.name ?>`|<?js
         } ?><?js
         if (prop.type && prop.type.names) {
-           ?>|<?js= prop.type.names.map(p => '*'+self.linkto(p)+'*').join(' \\| ') ?>|<?js
-        } ?><?js
+           ?><?js= prop.type.names.map(p => '*'+self.linkto(p)+'*').join(' \\| ') ?><?js
+        } ?>|<?js
         if (props.hasAttributes) {
-           ?>|<?js if (prop.optional) {
-             ?>*optional*<br><?js
-           } ?>
-           <?js if (prop.nullable) {
-               ?>*nullable*<br><?js
+           ?><?js if (prop.optional) {
+             ?>*optional* <?js
+           } ?><?js
+           if (prop.nullable) {
+               ?>*nullable* <?js
            } ?>|<?js
         } ?><?js
         if (props.hasDefault) {
            ?><?js if (typeof prop.defaultvalue !== 'undefined') {
-                  ?>|<?js= self.htmlsafe(prop.defaultvalue) ?><?js
-           } ?><?js
+                  ?><?js= self.htmlsafe(prop.defaultvalue) ?><?js
+           } ?>|<?js
         } ?><?js= prop.description ?>|<?js
         if (prop.subprops) {
               ?>**Properties**

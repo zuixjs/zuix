@@ -78,33 +78,43 @@ const util =
  */
 function ContextController(context) {
   const _t = this;
-  _t._view = null;
-  _t.context = context;
+  Object.defineProperty(_t, 'context', {
+    enumerable: true, writable: true,
+    value: context
+  });
+  Object.defineProperty(_t, '_view', {
+    enumerable: false, writable: true,
+    value: null
+  });
 
   /**
-     * @protected
-     * @type {!Array.<Element>}
-     * */
-  _t._childNodes = [];
+   * @protected
+   * @type {!Array.<Element>}
+   **/
+  Object.defineProperty(_t, '_childNodes', {
+    enumerable: false, writable: true,
+    value: []
+  });
   /**
    * @type {function}
    * @ignore
    */
-  _t.saveView = () => {
+  Object.defineProperty(_t, 'saveView', {enumerable: false, writable: true, value: () => {
     _t.restoreView();
     _t.view()
         .children()
         .each((i, el) => _t._childNodes.push(el));
-  };
-  _t.restoreView = () => {
+  }});
+  Object.defineProperty(_t, 'restoreView', {enumerable: false, writable: true, value: () => {
     if (_t._childNodes.length > 0) {
       _t.view().html('');
       z$.each(_t._childNodes, (i, el) =>
         _t.view().append(el));
       _t._childNodes.length = 0;
     }
-  };
+  }});
 
+  Object.defineProperty(_t, 'on', {enumerable: false, writable: true});
   _t.on = (eventPath, handler) => {
     if (typeof eventPath === 'object' && handler == null) {
       z$.each(eventPath, (evt, hnd) =>
@@ -118,6 +128,7 @@ function ContextController(context) {
    * @protected
    * @ignore
    */
+  Object.defineProperty(_t, 'mapEvent', {enumerable: false, writable: true});
   _t.mapEvent = (eventMap, target, eventPath, handler) => {
     if (target != null) {
       target.off(eventPath, _t.eventRouter);
@@ -131,6 +142,7 @@ function ContextController(context) {
    * @protected
    * @ignore
    */
+  Object.defineProperty(_t, 'eventRouter', {enumerable: false, writable: true});
   _t.eventRouter = (e) => {
     const v = _t.view();
     context._behaviorMap.concat(context._eventMap).forEach((em) => {
@@ -164,6 +176,7 @@ function ContextController(context) {
       // >= ES6
       const ctrl = new ((context.controller()).bind(_t, _t))();
       context.controller(ctrl);
+console.log(context.componentId, context.controller());
     } else {
       // <= ES5
       context.controller().call(_t, _t);
@@ -350,13 +363,43 @@ ContextController.prototype.expose = function(name, handler) {
     if (h && (h.get || h.set)) {
       Object.defineProperty(this.context, m, h);
     } else {
-      this.context[m] = h;
+      if (h === undefined) {
+        delete this.context[m];
+      } else {
+        this.context[m] = h;
+      }
     }
   };
   if (typeof name === 'object') {
     z$.each(name, (k, v) => expose(k, v));
   } else {
     expose(name, handler);
+  }
+  return this;
+};
+/**
+ * Declare fields that are visible in the view template scripting scope.
+ *
+ * @param {string|JSON} name Name of the declared method/property, or list of name/value pairs
+ * @param {function} [handler] Function or property descriptor.
+ * @return {ContextController} The `{ContextController}` itself.
+ */
+ContextController.prototype.declare = function(name, handler) {
+  const declare = (m, h) => {
+    if (h && (h.get || h.set)) {
+      Object.defineProperty(this.context['_'], m, h);
+    } else {
+      if (h === undefined) {
+        delete this.context['_'][m];
+      } else {
+        this.context['_'][m] = h;
+      }
+    }
+  };
+  if (typeof name === 'object') {
+    z$.each(name, (k, v) => declare(k, v));
+  } else {
+    declare(name, handler);
   }
   return this;
 };

@@ -993,7 +993,7 @@ Binding adapter callback.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 63](../../zuix/ComponentContext.js#L63)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 65](../../zuix/ComponentContext.js#L65)
 
 -->
 
@@ -1011,7 +1011,7 @@ Binding adapter refresh callback
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 73](../../zuix/ComponentContext.js#L73)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 75](../../zuix/ComponentContext.js#L75)
 
 -->
 
@@ -1100,7 +1100,7 @@ and it is used to initialize its controller.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 43](../../zuix/ComponentContext.js#L43)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 45](../../zuix/ComponentContext.js#L45)
 
 -->
 
@@ -1160,7 +1160,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 83](../../zuix/Zuix.js#L83)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 85](../../zuix/Zuix.js#L85)
 
 -->
 
@@ -1181,7 +1181,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 92](../../zuix/Zuix.js#L92)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 94](../../zuix/Zuix.js#L94)
 
 -->
 
@@ -1218,7 +1218,7 @@ of the component's host element.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 57](../../zuix/Zuix.js#L57)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 59](../../zuix/Zuix.js#L59)
 
 -->
 
@@ -1239,7 +1239,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 101](../../zuix/Zuix.js#L101)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 103](../../zuix/Zuix.js#L103)
 
 -->
 
@@ -1308,7 +1308,7 @@ with the `on` method occurs.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 52](../../zuix/ComponentContext.js#L52)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 54](../../zuix/ComponentContext.js#L54)
 
 -->
 
@@ -1388,20 +1388,13 @@ Configuration object for `playFx`, `playTransition`, `playAnimation` utility met
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`type`|*'transition'* \| *'animation'*||
-           |The type of effect to play.|
-|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*||
-           |Target element.|
-|`classes`|*Array.&lt;string>* \| *string*||
-           |List of transition or animation classes to play.|
-|`options`|*object*||*optional*<br>
-           |Transition/animation options ('delay', 'duration', etc..).|
-|`holdState`|*boolean*||*optional*<br>
-           |Hold last transition/animation class.|
-|`onStep`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
-           |Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
-|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*||*optional*<br>
-           |Called when all transitions/animations ended.|
+|`type`|*'transition'* \| *'animation'*||The type of effect to play.|
+|`target`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)*||Target element.|
+|`classes`|*Array.&lt;string>* \| *string*||List of transition or animation classes to play.|
+|`options`|*object*|*optional* |Transition/animation options ('delay', 'duration', etc..).|
+|`holdState`|*boolean*|*optional* |Hold last transition/animation class.|
+|`onStep`|*[PlayFxCallback](#PlayFxCallback)*|*optional* |Since class list can contain more than just two classes, this callback will be called after each pair of transition/animation ended.|
+|`onEnd`|*[PlayFxCallback](#PlayFxCallback)*|*optional* |Called when all transitions/animations ended.|
 
 <!--
 
@@ -1444,7 +1437,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 109](../../zuix/Zuix.js#L109)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 111](../../zuix/Zuix.js#L111)
 
 -->
 
