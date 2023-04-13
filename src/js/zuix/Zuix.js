@@ -825,7 +825,6 @@ function createComponent(context, task) {
       /** @type {ContextController} */
       const c = context._c = new ContextController(context);
       c.log = _loggerFactory(context.contextId);
-console.log(context.componentId, c.log, context._c);
       const endTask = () => {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);

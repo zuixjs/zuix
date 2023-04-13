@@ -1,4 +1,4 @@
-/* zuix.js v1.1.16 23.04.13 11:33:27 */
+/* zuix.js v1.1.16 23.04.13 11:52:48 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -4495,7 +4495,6 @@ function ContextController(context) {
       // >= ES6
       const ctrl = new ((context.controller()).bind(_t, _t))();
       context.controller(ctrl);
-console.log(context.componentId, context.controller());
     } else {
       // <= ES5
       context.controller().call(_t, _t);
@@ -5923,7 +5922,6 @@ function createComponent(context, task) {
       /** @type {ContextController} */
       const c = context._c = new ContextController(context);
       c.log = _loggerFactory(context.contextId);
-console.log(context.componentId, c.log, context._c);
       const endTask = () => {
         task && _log.d(context.componentId, 'controller:create:deferred');
         initController(c);

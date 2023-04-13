@@ -176,7 +176,6 @@ function ContextController(context) {
       // >= ES6
       const ctrl = new ((context.controller()).bind(_t, _t))();
       context.controller(ctrl);
-console.log(context.componentId, context.controller());
     } else {
       // <= ES5
       context.controller().call(_t, _t);
