@@ -183,6 +183,7 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
  * @property {string} componentId The component identifier "`[<path>/]<name>`".
  * @property {string} path Gets the base path of this component.
  * @property {string} name Gets the name of this component (last part of the path).
+ * @property {boolean} isReady Gets/Sets the component's ready state.
  * @property {ZxQuery} $ Access the view of this component. Use this to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
  * @property {Object.<string, ActiveRefreshHandler>} handlers List component-local `@` handlers.
  *
@@ -194,18 +195,22 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
  */
 function ComponentContext(zuixInstance, options, eventCallback) {
   zuix = zuixInstance;
-  Object.defineProperty(this, '_options', {enumerable: false, writable: true, value: null});
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
   Object.defineProperty(this, 'handlers', {enumerable: false, writable: true, value: {
     refresh: function($view, $el, contextData, refreshCallback) {}}
   });
+
+  /** @package */
   Object.defineProperty(this, 'trigger', {enumerable: false, writable: true, value:
         (context, eventPath, eventValue) => {
           if (eventCallback) {
             eventCallback(context, eventPath, eventValue);
           }
         }});
+
+  /** @protected */
+  Object.defineProperty(this, '_options', {enumerable: false, writable: true, value: null});
 
   /** @protected */
   Object.defineProperty(this, '_container', {enumerable: false, writable: true, value: null});
@@ -256,7 +261,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
      * @protected
      * @type {ObservableListener}
      */
-  Object.defineProperty(this, '_modelListener', {enumerable: false, writable: true, value: null});
+  Object.defineProperty(this, '_modelListener', {enumerable: false, writable: true});
   this._modelListener = Object.assign({
     /** @type {ComponentContext} */
     context: null,
@@ -312,9 +317,9 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   /** @private */
   Object.defineProperty(this, '_', {enumerable: false, writable: true, value: {}});
   /** @private */
-  Object.defineProperty(this, '_refreshHandler', {enumerable: false, writable: true, value: null});
+  Object.defineProperty(this, '_refreshHandler', {enumerable: false, writable: true});
   /** @private */
-  Object.defineProperty(this, '_dependencyResolver', {enumerable: false, writable: true, value: null});
+  Object.defineProperty(this, '_dependencyResolver', {enumerable: false, writable: true});
 
   this.options(options);
 

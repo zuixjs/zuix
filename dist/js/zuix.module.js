@@ -1,5 +1,3 @@
-/* zuix.js v1.1.17 23.04.13 11:58:59 */
-
 /******/ var __webpack_modules__ = ({
 
 /***/ 381:
@@ -2677,6 +2675,7 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
  * @property {string} componentId The component identifier "`[<path>/]<name>`".
  * @property {string} path Gets the base path of this component.
  * @property {string} name Gets the name of this component (last part of the path).
+ * @property {boolean} isReady Gets/Sets the component's ready state.
  * @property {ZxQuery} $ Access the view of this component. Use this to register event handlers for elements in this view to take advantage of automatic event unsubscription and view fields caching.
  * @property {Object.<string, ActiveRefreshHandler>} handlers List component-local `@` handlers.
  *
@@ -2688,18 +2687,22 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
  */
 function ComponentContext(zuixInstance, options, eventCallback) {
   zuix = zuixInstance;
-  Object.defineProperty(this, '_options', {enumerable: false, writable: true, value: null});
   this.contextId = (options == null || options.contextId == null) ? null : options.contextId;
   this.componentId = null;
   Object.defineProperty(this, 'handlers', {enumerable: false, writable: true, value: {
     refresh: function($view, $el, contextData, refreshCallback) {}}
   });
+
+  /** @package */
   Object.defineProperty(this, 'trigger', {enumerable: false, writable: true, value:
         (context, eventPath, eventValue) => {
           if (eventCallback) {
             eventCallback(context, eventPath, eventValue);
           }
         }});
+
+  /** @protected */
+  Object.defineProperty(this, '_options', {enumerable: false, writable: true, value: null});
 
   /** @protected */
   Object.defineProperty(this, '_container', {enumerable: false, writable: true, value: null});
@@ -2750,7 +2753,7 @@ function ComponentContext(zuixInstance, options, eventCallback) {
      * @protected
      * @type {ObservableListener}
      */
-  Object.defineProperty(this, '_modelListener', {enumerable: false, writable: true, value: null});
+  Object.defineProperty(this, '_modelListener', {enumerable: false, writable: true});
   this._modelListener = Object.assign({
     /** @type {ComponentContext} */
     context: null,
@@ -2806,9 +2809,9 @@ function ComponentContext(zuixInstance, options, eventCallback) {
   /** @private */
   Object.defineProperty(this, '_', {enumerable: false, writable: true, value: {}});
   /** @private */
-  Object.defineProperty(this, '_refreshHandler', {enumerable: false, writable: true, value: null});
+  Object.defineProperty(this, '_refreshHandler', {enumerable: false, writable: true});
   /** @private */
-  Object.defineProperty(this, '_dependencyResolver', {enumerable: false, writable: true, value: null});
+  Object.defineProperty(this, '_dependencyResolver', {enumerable: false, writable: true});
 
   this.options(options);
 
@@ -4490,6 +4493,9 @@ function ContextController(context) {
     console.log(e);
   }
 
+  // add members to this controller instance
+  Object.assign(context.controller(), options.controllerMembers);
+
   return _t;
 }
 
@@ -4655,8 +4661,7 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
   return this;
 };
 /**
- * Exposes a method or property declared in the private
- * scope of the controller, as a public member of the
+ * Declare fields that are available as public members of the
  * component context object.
  *
  * @param {string|JSON} name Name of the exposed method/property, or list of name/value pairs
@@ -4683,7 +4688,7 @@ ContextController.prototype.expose = function(name, handler) {
   return this;
 };
 /**
- * Declare fields that are visible in the view template scripting scope.
+ * Declare fields that are available in the view's scripting scope.
  *
  * @param {string|JSON} name Name of the declared method/property, or list of name/value pairs
  * @param {function} [handler] Function or property descriptor.
@@ -5148,6 +5153,7 @@ __webpack_require__(854);
  * @property {JSON|undefined} model The data model. HTML attribute equivalent: *z-model*.
  * @property {Element|undefined} view The view element.
  * @property {ContextControllerHandler|undefined} controller The controller handler.
+ * @property {Object} controllerMembers Additional methods/properties to add to the context controller.
  * @property {Object.<string, EventCallback>|Object.<string, string>|undefined} on The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.
  * @property {Object.<string, EventCallback>|Object.<string, string>|undefined} behavior The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.
  * @property {HTMLStyleElement|string|boolean|undefined} css Custom stylesheet to apply to the component's view.

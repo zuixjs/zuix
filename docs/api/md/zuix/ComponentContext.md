@@ -86,7 +86,7 @@ all of its data such as the view template, the style, the controller, the data m
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 195](../../zuix/ComponentContext.js#L195)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 196](../../zuix/ComponentContext.js#L196)
 
 -->
 
@@ -111,6 +111,11 @@ Gets the base path of this component.
 #### name &rarr; *string*
 
 Gets the name of this component (last part of the path).
+
+<a name="isReady"></a>
+#### isReady &rarr; *boolean*
+
+Gets/Sets the component's ready state.
 
 <a name="$"></a>
 #### $ &rarr; *[ZxQuery](../../helpers/ZxQuery)*
@@ -141,7 +146,7 @@ otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 397](../../zuix/ComponentContext.js#L397)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 402](../../zuix/ComponentContext.js#L402)
 
 -->
 
@@ -163,7 +168,7 @@ Gets/Sets the component's controller handler.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 775](../../zuix/ComponentContext.js#L775)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 780](../../zuix/ComponentContext.js#L780)
 
 -->
 
@@ -179,7 +184,7 @@ Disposes the component context and all of its allocated resources.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 327](../../zuix/ComponentContext.js#L327)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 332](../../zuix/ComponentContext.js#L332)
 
 -->
 
@@ -200,7 +205,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 579](../../zuix/ComponentContext.js#L579)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 584](../../zuix/ComponentContext.js#L584)
 
 -->
 
@@ -242,7 +247,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1134](../../zuix/ComponentContext.js#L1134)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1139](../../zuix/ComponentContext.js#L1139)
 
 -->
 
@@ -269,7 +274,7 @@ changes.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 744](../../zuix/ComponentContext.js#L744)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 749](../../zuix/ComponentContext.js#L749)
 
 -->
 
@@ -336,7 +341,7 @@ is present on a field, data can be inherited from parent component.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1068](../../zuix/ComponentContext.js#L1068)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1073](../../zuix/ComponentContext.js#L1073)
 
 -->
 
@@ -360,7 +365,7 @@ Listens for a component event.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 820](../../zuix/ComponentContext.js#L820)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 825](../../zuix/ComponentContext.js#L825)
 
 -->
 
@@ -383,7 +388,7 @@ Gets/Sets the component's options.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 791](../../zuix/ComponentContext.js#L791)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 796](../../zuix/ComponentContext.js#L796)
 
 -->
 
@@ -410,7 +415,7 @@ element is returned.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 642](../../zuix/ComponentContext.js#L642)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 647](../../zuix/ComponentContext.js#L647)
 
 -->
 
@@ -442,7 +447,7 @@ argument is passed, the *ComponentContext* itself otherwise.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 417](../../zuix/ComponentContext.js#L417)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 422](../../zuix/ComponentContext.js#L422)
 
 -->
 
@@ -459,7 +464,7 @@ declared in the component's view.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1027](../../zuix/ComponentContext.js#L1027)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1032](../../zuix/ComponentContext.js#L1032)
 
 -->
 
@@ -699,7 +704,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 85](../../zuix/Zuix.js#L85)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 86](../../zuix/Zuix.js#L86)
 
 -->
 
@@ -720,7 +725,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 94](../../zuix/Zuix.js#L94)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 95](../../zuix/Zuix.js#L95)
 
 -->
 
@@ -740,6 +745,7 @@ of the component's host element.
 |`model`|*JSON* \| *undefined*|The data model. HTML attribute equivalent: *z-model*.|
 |`view`|*Element* \| *undefined*|The view element.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
+|`controllerMembers`|*Object*|Additional methods/properties to add to the context controller.|
 |`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.|
 |`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.|
 |`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
@@ -778,7 +784,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 103](../../zuix/Zuix.js#L103)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 104](../../zuix/Zuix.js#L104)
 
 -->
 
@@ -976,7 +982,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 111](../../zuix/Zuix.js#L111)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 112](../../zuix/Zuix.js#L112)
 
 -->
 

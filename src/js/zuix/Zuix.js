@@ -67,6 +67,7 @@ require('./ComponentCache');
  * @property {JSON|undefined} model The data model. HTML attribute equivalent: *z-model*.
  * @property {Element|undefined} view The view element.
  * @property {ContextControllerHandler|undefined} controller The controller handler.
+ * @property {Object} controllerMembers Additional methods/properties to add to the context controller.
  * @property {Object.<string, EventCallback>|Object.<string, string>|undefined} on The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.
  * @property {Object.<string, EventCallback>|Object.<string, string>|undefined} behavior The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.
  * @property {HTMLStyleElement|string|boolean|undefined} css Custom stylesheet to apply to the component's view.

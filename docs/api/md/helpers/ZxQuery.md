@@ -1160,7 +1160,7 @@ Callback function triggered if an error occurs when loading a component.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 85](../../zuix/Zuix.js#L85)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 86](../../zuix/Zuix.js#L86)
 
 -->
 
@@ -1181,7 +1181,7 @@ Callback function triggered when a component is created, after all of its depend
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 94](../../zuix/Zuix.js#L94)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 95](../../zuix/Zuix.js#L95)
 
 -->
 
@@ -1201,6 +1201,7 @@ of the component's host element.
 |`model`|*JSON* \| *undefined*|The data model. HTML attribute equivalent: *z-model*.|
 |`view`|*Element* \| *undefined*|The view element.|
 |`controller`|*[ContextControllerHandler](#ContextControllerHandler)* \| *undefined*|The controller handler.|
+|`controllerMembers`|*Object*|Additional methods/properties to add to the context controller.|
 |`on`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for standard and component's events. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-on*.|
 |`behavior`|*Object.&lt;string, <a href="#EventCallback">EventCallback</a>>* \| *Object.&lt;string, string>* \| *undefined*|The map of event handlers for behaviors. An event can also be simply routed to another component's event by specifying the mapped event name string. HTML attribute equivalent: *z-behavior*.|
 |`css`|*HTMLStyleElement* \| *string* \| *boolean* \| *undefined*|Custom stylesheet to apply to the component's view.|
@@ -1239,7 +1240,7 @@ Callback function triggered when a component has been successfully loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 103](../../zuix/Zuix.js#L103)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 104](../../zuix/Zuix.js#L104)
 
 -->
 
@@ -1437,7 +1438,7 @@ Callback in response to a `zuix.using` request.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 111](../../zuix/Zuix.js#L111)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 112](../../zuix/Zuix.js#L112)
 
 -->
 

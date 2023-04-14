@@ -184,6 +184,9 @@ function ContextController(context) {
     console.log(e);
   }
 
+  // add members to this controller instance
+  Object.assign(context.controller(), options.controllerMembers);
+
   return _t;
 }
 
@@ -349,8 +352,7 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
   return this;
 };
 /**
- * Exposes a method or property declared in the private
- * scope of the controller, as a public member of the
+ * Declare fields that are available as public members of the
  * component context object.
  *
  * @param {string|JSON} name Name of the exposed method/property, or list of name/value pairs
@@ -377,7 +379,7 @@ ContextController.prototype.expose = function(name, handler) {
   return this;
 };
 /**
- * Declare fields that are visible in the view template scripting scope.
+ * Declare fields that are available in the view's scripting scope.
  *
  * @param {string|JSON} name Name of the declared method/property, or list of name/value pairs
  * @param {function} [handler] Function or property descriptor.
