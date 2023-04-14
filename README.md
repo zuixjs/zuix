@@ -9,7 +9,7 @@
   <a href="https://github.com/zuixjs/zuix/blob/master/LICENSE.TXT"><img src="https://img.shields.io/npm/l/zuix-dist.svg?style=for-the-badge" alt="License"></a>
 </p>
 
-# [zuix.js v1.1.17](https://zuixjs.github.io/zuixjs.org)
+# [zuix.js v1.1.18](https://zuixjs.github.io/zuixjs.org)
 
 A lightweight JavaScript library to support you in creating amazing component-based websites and applications.
 - [Website and Documentation](https://zuixjs.github.io/zuixjs.org)
