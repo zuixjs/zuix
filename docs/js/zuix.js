@@ -1,4 +1,4 @@
-/* zuix.js v1.1.18 23.04.14 23:03:53 */
+/* zuix.js v1.1.19 23.04.17 09:58:27 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -2839,10 +2839,13 @@ ComponentContext.prototype.dispose = function() {
     return;
   }
   this._disposed = true;
-  // TODO: ... check out for more resources that could be freed
   this._viewObserver.stop();
+
   // remove styles
-  this.style(null);
+  // TODO: do not remove style if component is still cached or being in use somewhere else
+  //this.style(null);
+  // TODO: ... check out for more resources that could be freed
+
   // un-register model observable
   this.model(null);
   // reset view/event handlers
