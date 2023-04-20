@@ -336,9 +336,12 @@ ComponentContext.prototype.dispose = function() {
   this._disposed = true;
   this._viewObserver.stop();
 
-  // remove styles
-  // TODO: do not remove style if component is still cached or being in use somewhere else
-  //this.style(null);
+  // only remove style if component's view is a ShadowRoot
+  const shadowRoot = util.dom.getShadowRoot(this._view);
+  if (shadowRoot) {
+    this.style(null);
+  }
+
   // TODO: ... check out for more resources that could be freed
 
   // un-register model observable
@@ -1141,7 +1144,7 @@ ComponentContext.prototype.modelToView = function() {
  */
 ComponentContext.prototype.getCssId = function() {
   let override = '';
-  if (typeof this._options.css === 'string') {
+  if (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view)) {
     override = '_' + this.contextId;
   }
   return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;

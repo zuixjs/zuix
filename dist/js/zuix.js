@@ -1,5 +1,3 @@
-/* zuix.js v1.1.19 23.04.17 09:58:27 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -1611,7 +1609,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
  * @method appendCss
  * @memberOf ZxQueryStatic
  * @alias zuix.$.appendCss
- * @param {string} css Stylesheet text
+ * @param {string|Element|HTMLElement} css Stylesheet text
  * @param {Element|HTMLElement|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
  * @param {Node|undefined} [container] The container where to append the style element
@@ -2841,9 +2839,12 @@ ComponentContext.prototype.dispose = function() {
   this._disposed = true;
   this._viewObserver.stop();
 
-  // remove styles
-  // TODO: do not remove style if component is still cached or being in use somewhere else
-  //this.style(null);
+  // only remove style if component's view is a ShadowRoot
+  const shadowRoot = util.dom.getShadowRoot(this._view);
+  if (shadowRoot) {
+    this.style(null);
+  }
+
   // TODO: ... check out for more resources that could be freed
 
   // un-register model observable
@@ -3646,7 +3647,7 @@ ComponentContext.prototype.modelToView = function() {
  */
 ComponentContext.prototype.getCssId = function() {
   let override = '';
-  if (typeof this._options.css === 'string') {
+  if (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view)) {
     override = '_' + this.contextId;
   }
   return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;
@@ -3926,7 +3927,7 @@ function queueLoadables(element) {
     let level = 0;
     let parent = el.parentNode;
     let ignore = false;
-    while (parent != null && parent !== document) {
+    while (parent != null && parent !== document && !(parent instanceof ShadowRoot)) {
       level++;
       if (util.dom.getAttribute(parent, _optionAttributes.zView) != null) {
         ignore = true;

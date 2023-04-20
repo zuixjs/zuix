@@ -1022,7 +1022,7 @@ ZxQueryStatic.wrapCss = function(wrapperRule, css, encapsulate) {
  * @method appendCss
  * @memberOf ZxQueryStatic
  * @alias zuix.$.appendCss
- * @param {string} css Stylesheet text
+ * @param {string|Element|HTMLElement} css Stylesheet text
  * @param {Element|HTMLElement|null} target Existing style element to replace
  * @param {string} cssId id to assign to the stylesheet
  * @param {Node|undefined} [container] The container where to append the style element

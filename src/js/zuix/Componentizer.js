@@ -221,7 +221,7 @@ function queueLoadables(element) {
     let level = 0;
     let parent = el.parentNode;
     let ignore = false;
-    while (parent != null && parent !== document) {
+    while (parent != null && parent !== document && !(parent instanceof ShadowRoot)) {
       level++;
       if (util.dom.getAttribute(parent, _optionAttributes.zView) != null) {
         ignore = true;
