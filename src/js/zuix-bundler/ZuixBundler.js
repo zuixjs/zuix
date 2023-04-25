@@ -99,5 +99,6 @@ module.exports = function() {
     return;
   }
   zuix.saveBundle = saveBundle;
+  zuix.saveBlob = fileSaver.saveAs;
   return zuix;
 };

@@ -169,6 +169,7 @@ const _implicitLoadDefaultList = [
   util.dom.queryAttribute(_optionAttributes.zOptions),
   util.dom.queryAttribute(_optionAttributes.zModel + ',:model'),
   util.dom.queryAttribute(_optionAttributes.zOn + ',:on'),
+  util.dom.queryAttribute(_optionAttributes.zCss + ',:css'),
   util.dom.queryAttribute(_optionAttributes.zBehavior + ',:behavior'),
   util.dom.queryAttribute(_optionAttributes.zUsing + ',:using'),
   util.dom.queryAttribute(_optionAttributes.zReady)
@@ -462,7 +463,10 @@ function loadResources(ctx, options) {
   };
 
   if (!options.view) {
-    if (cachedComponent !== null) {
+    if (options.html) {
+      ctx.view(options.html);
+      _log.t(ctx.componentId+':html', 'component:options:html');
+    } else if (cachedComponent !== null) {
       if (cachedComponent.view != null) {
         ctx.view(cachedComponent.view);
         _log.t(ctx.componentId+':html', 'component:cached:html');
@@ -476,6 +480,10 @@ function loadResources(ctx, options) {
           _log.t(ctx.componentId + ':css', 'component:cached:css');
         }
       }
+    }
+    if (typeof options.css === 'string') {
+      ctx.style(options.css);
+      _log.t(ctx.componentId + ':css', 'component:options:css');
     }
 
     // if not able to inherit the view from the base cachedComponent
@@ -539,7 +547,9 @@ function unload(context) {
       _componentizer.dequeue(el);
     }
     if (ctx && ctx.dispose) {
-      ctx.dispose();
+      util.catchContextError(ctx, () => {
+        ctx.dispose();
+      });
     }
   };
   if (context && context.each) {
@@ -581,7 +591,9 @@ function loadComponent(elements, componentId, type, options) {
       Array.from(el.get().attributes).forEach((attribute) => {
         if (!attribute.nodeName.match(/^[(#@)]/)) {
           shadowView.setAttribute(attribute.nodeName, attribute.nodeValue);
-          el.attr(attribute.nodeName, null);
+          if (attribute.nodeName !== _optionAttributes.zField) {
+            el.attr(attribute.nodeName, null);
+          }
         }
       });
       setTimeout(() => {
@@ -599,7 +611,7 @@ function loadComponent(elements, componentId, type, options) {
       _componentizer.loadInline(el, options);
     }
   };
-  elements.each((i, el, $el) => load($el));
+  elements.each((i, el, $el) => !$el.attr(_optionAttributes.zLoaded) && load($el));
 }
 
 /** @private */
@@ -834,16 +846,14 @@ function createComponent(context, task) {
       };
 
       if (c.init) {
-        try {
+        let error = false;
+        util.catchContextError(context, () => {
           c.init();
-        } catch (err) {
+        }, (err) => {
           endTask();
-          if (err && context.options().error) {
-            (context.options().error)
-                .call(context, err, context);
-          }
-          return;
-        }
+          error = true;
+        });
+        if (error) return;
       }
 
       // TODO: when loading multiple controllers perhaps some code paths can be skipped -- check/optimize this!
@@ -963,21 +973,18 @@ function initController(ctrl) {
   // tender lifecycle moments
   const $view = ctrl.view();
   if (ctrl.create) {
-    try {
+    util.catchContextError(ctx, () => {
       ctrl.create();
-    } catch (err) {
-      if (err && ctx.options().error) {
-        (ctx.options().error)
-            .call(ctx, err, ctx);
-      }
-    }
+    });
   }
   ctrl.trigger('view:create', $view);
 
   const contextLoaded = () => {
     // set component loaded
     if (ctx.loaded) {
-      (ctx.loaded).call(ctx, ctx);
+      util.catchContextError(ctx, () => {
+        (ctx.loaded).call(ctx, ctx);
+      });
     }
     // load pending resources
     if (_pendingResourceTask[ctx.componentId] != null) {
@@ -1082,7 +1089,9 @@ function initController(ctrl) {
     }
     // set component ready
     if (ctx.ready) {
-      (ctx.ready).call(ctx, ctx);
+      util.catchContextError(ctx, () => {
+        (ctx.ready).call(ctx, ctx);
+      });
     }
     ctrl.trigger('component:ready', $view, true);
   };
@@ -1149,7 +1158,7 @@ function initController(ctrl) {
       // allocate refresh handler on the first "paint" request
       if (!refreshHandler) {
         const scriptHeader = 'return (function($this, context, args){const $ = context.$; const model = context.model(); ';
-        let code = '"use strict"; expose = {}; function refresh() {}; function ready() { return true; }; ';
+        let code = '"use strict"; expose = {}; ';
 
         // add local vars from fields
         if (ctx['#']) {
@@ -1165,6 +1174,15 @@ function initController(ctrl) {
           z$.each(ctx['_'], (f, v) => {
             code += 'const ' + f + ' = context["_"].' + f + ';';
           });
+          if (ctx['_']['refresh'] === undefined) {
+            code += 'function refresh() {}; ';
+          }
+          if (ctx['_']['ready'] === undefined) {
+            code += 'function ready() { return true; }; ';
+          }
+        } else {
+          code += 'function refresh() {}; ';
+          code += 'function ready() { return true; }; ';
         }
         code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
 
@@ -1700,7 +1718,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
             } else {
               resource.appendChild(document.createTextNode(text));
             }
-            window['define'] = actualDefine;
+            window['define'] = window['define'] || actualDefine;
           }
           task.end();
           if (callback) {

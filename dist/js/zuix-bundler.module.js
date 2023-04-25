@@ -1,5 +1,3 @@
-/* zuix.js v1.1.20 23.04.20 11:23:09 */
-
 /******/ var __webpack_modules__ = ({
 
 /***/ 460:
@@ -464,6 +462,7 @@ module.exports = function() {
     return;
   }
   zuix.saveBundle = saveBundle;
+  zuix.saveBlob = fileSaver.saveAs;
   return zuix;
 };
 
@@ -502,37 +501,39 @@ module.exports = function() {
 
 const OptionAttributes = Object.freeze({
   zModel:
-        'z-model',
+    'z-model',
   zBind:
-        'z-bind',
+    'z-bind',
   zBehavior:
-        'z-behavior',
+    'z-behavior',
   zOn:
-        'z-on',
+    'z-on',
+  zCss:
+    'z-css',
   zComponent:
-        'z-component',
+    'z-component',
   zContext:
-        'z-context',
+    'z-context',
   zField:
-        'z-field',
+    'z-field',
   zLazy:
-        'z-lazy',
+    'z-lazy',
   zLoad:
-        'z-load',
+    'z-load',
   zLoaded:
-        'z-loaded',
+    'z-loaded',
   zOptions:
-        'z-options',
+    'z-options',
   zUsing:
-        'z-using',
+    'z-using',
   zPriority:
-        'z-priority',
+    'z-priority',
   zView:
-        'z-view',
+    'z-view',
   zuixLoaded:
-        'zuix-loaded',
+    'zuix-loaded',
   zReady:
-        'z-ready',
+    'z-ready',
   // Types attributes
   resourceType: {
     view: 'view',
@@ -541,7 +542,7 @@ const OptionAttributes = Object.freeze({
   },
   // Identifiers attributes
   cssIdPrefix:
-      'z-css-'
+    'z-css-'
 });
 
 module.exports = OptionAttributes;

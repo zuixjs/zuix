@@ -294,8 +294,11 @@ function ComponentContext(zuixInstance, options, eventCallback) {
         bindFields(view.find(util.dom.queryAttribute(_optionAttributes.zBind, path)));
         bindFields(view.find(util.dom.queryAttribute(_optionAttributes.zField, path)));
         // call controller's 'update' method
-        if (this.context._c && this.context._c.update) {
-          this.context._c.update(target, key, value, path, old);
+        const ctrl = this.context._c;
+        if (ctrl && ctrl.update) {
+          util.catchContextError(this.context, () => {
+            ctrl.update(target, key, value, path, old);
+          });
         }
       }
     }
@@ -371,7 +374,9 @@ ComponentContext.prototype.dispose = function() {
       }
     }
     if (this._c.dispose) {
-      this._c.dispose.call(this, this);
+      util.catchContextError(this, () => {
+        this._c.dispose.call(this, this);
+      });
     }
   }
   // detach component view from its container (parent element)
@@ -772,7 +777,9 @@ ComponentContext.prototype.model = function(model) {
     this.modelToView();
     // call controller `update` method when whole model is updated
     if (this._c != null && this._c.update) {
-      this._c.update.call(this._c, null, null, null, null, this._c);
+      util.catchContextError(this, () => {
+        this._c.update.call(this._c, null, null, null, null, this._c);
+      });
     }
   }
   return this._model;

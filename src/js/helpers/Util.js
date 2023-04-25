@@ -145,6 +145,20 @@ module.exports = {
     }
   },
 
+  catchContextError: function(ctx, fn, errorCallback) {
+    try {
+      fn();
+    } catch (err) {
+      if (errorCallback) errorCallback(err);
+      if (err && ctx.options().error) {
+        (ctx.options().error)
+            .call(ctx, err, ctx);
+      } else {
+        console.error(err);
+      }
+    }
+  },
+
   dom: {
 
     queryAttribute: function(name, value, appendValue) {

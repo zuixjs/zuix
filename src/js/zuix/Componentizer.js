@@ -428,6 +428,11 @@ function loadInline(element, opts) {
     options.on = parseOptions(element, on);
   }
 
+  const css = v.attr(_optionAttributes.zCss);
+  if (css) {
+    options.css = parseOptions(element, css);
+  }
+
   const behavior = v.attr(_optionAttributes.zBehavior);
   if (behavior) {
     options.behavior = parseOptions(element, behavior);
