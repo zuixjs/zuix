@@ -478,7 +478,7 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
   }
   const events = eventPath.split(/[\s|,]+/g) || [];
   let options;
-  if (typeof eventHandler !== 'function') {
+  if (eventHandler && typeof eventHandler !== 'function') {
     options = eventHandler;
     eventHandler = options.handler;
   }

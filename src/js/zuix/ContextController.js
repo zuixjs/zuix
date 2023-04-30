@@ -107,9 +107,15 @@ function ContextController(context) {
   }});
   Object.defineProperty(_t, 'restoreView', {enumerable: false, writable: true, value: () => {
     if (_t._childNodes.length > 0) {
-      _t.view().html('');
-      z$.each(_t._childNodes, (i, el) =>
-        _t.view().append(el));
+      let v = _t.view();
+      if ((v.get().parentNode instanceof ShadowRoot)) {
+        v = _t.options().__shadowRoot;
+      }
+      if (v) {
+        v.html('');
+        z$.each(_t._childNodes, (i, el) =>
+          v.append(el));
+      }
       _t._childNodes.length = 0;
     }
   }});
@@ -190,6 +196,28 @@ function ContextController(context) {
   return _t;
 }
 
+/**
+ * Loads a CSS, script or a singleton component. Resources loaded
+ * with this method are available in the global scope and can also be
+ * included in the application bundle.
+ * If the component is a custom element, styles will be loaded as a component-local
+ * stylesheets and placed inside its ShadowDOM.
+ *
+ * @example
+```js
+ this.using('script', 'https://some.cdn.js/moment.min.js', function(){
+  // can start using moment.js
+});
+```
+ * @param {string} resourceType Either *'style'*, *'script'* or *'component'*
+ * @param {string} resourcePath Relative or absolute resource url path
+ * @param {ResourceUsingCallback} [callback] Callback function to call once resource is loaded
+ * @return {ContextController} The `{ContextController}` object itself.
+ */
+ContextController.prototype.using = function(resourceType, resourcePath, callback) {
+  zuix.using(resourceType, resourcePath, callback, this.context);
+  return this;
+};
 /**
  * Adds an event handler.
  *

@@ -41,6 +41,8 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/1.2/';
 Componentizer.prototype.componentize = function(element) {
   if (isBusy) {
     z$().one('componentize:step', () =>
+      // TODO: should be `requestIdleCallback`
+      //       but it's not supported by Safari yet
       requestAnimationFrame(() => {
         isBusy = false;
         zuix.componentize(element);
@@ -314,7 +316,6 @@ function loadNext(element) {
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
     const el = job.item.element;
-    z$(el).one('component:loaded', () => zuix.componentize(el));
     loadInline(el);
   }
 }
@@ -322,7 +323,7 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element, opts) {
   const v = z$(element);
-  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length()) {
+  if (v.attr(_optionAttributes.zLoaded) === true || v.attr(_optionAttributes.zLoaded) === false || v.parent('pre,code').length()) {
     //_log.w('Skipped', element);
     return false;
   }
@@ -401,9 +402,8 @@ function loadInline(element, opts) {
 
   // inline attributes have precedence over ```options```
 
-  const exclusionList = [':on', ':model', ':behavior', ':ready']; // these are evaluated after component is created
   const optionAttributes = Array.from(v.get().attributes)
-      .filter((a) => a.nodeName.startsWith(':') && !exclusionList.find((t) => a.nodeName.startsWith(t)));
+      .filter((a) => a.nodeName.startsWith(':'));
   optionAttributes.forEach((attribute) => {
     const attr = attribute.nodeName;
     const path = attr.match(/[^:]+/g);
@@ -412,8 +412,70 @@ function loadInline(element, opts) {
       p = util.hyphensToCamelCase(p);
       if (i === path.length - 1) {
         let val;
+        // Seek parentContext if any
+        let parentContext = null;
+        if (v.parent().get() instanceof ShadowRoot) {
+          parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zContext}]`);
+        } else {
+          parentContext = v.parent(`[${_optionAttributes.zContext}]`);
+        }
+        parentContext = zuix.context(parentContext);
         try {
-          val = Function('return ' + attribute.nodeValue + ';')();
+          if (parentContext) {
+            // evaluate option attributes value in the parent component scripting context
+            let scriptlet = attribute.nodeValue;
+            if (!scriptlet) return;
+            const attr = attribute.nodeName;
+            const isRootOption = attr.lastIndexOf(':') < 2;
+            if (!scriptlet.match(/^[^<>()\[\]\-+\s!?/&£"=^#@:;,.*|]+$/g)) {
+              scriptlet = `(event, args) => \{ ${attribute.nodeValue} \}`;
+            }
+            if (attr.startsWith(':model') || isRootOption) {
+              scriptlet = `(${attribute.nodeValue})`;
+            }
+            try {
+              val = zuix.runScriptlet(scriptlet, v, parentContext.$, null);
+            } catch (e) {
+              _log.warn(attr, attribute.nodeValue, e);
+            }
+
+            if (val == null) return; // TODO: should report a warning?
+
+            if (attr === ':ready') {
+              co.ready = val;
+              return;
+            }
+            if (attr === ':error') {
+              co.error = val;
+              return;
+            }
+            if (attr.startsWith(':on') || attr.startsWith(':behavior')) {
+              if (isRootOption) {
+                co.on = val;
+                return;
+              }
+              const eventName = attr.substring(attr.indexOf(':', 1) + 1);
+              const optionField = (attr.startsWith(':behavior') ? co.behavior : co.on) || {};
+              optionField[eventName] = val;
+            } else if (attr.startsWith(':model')) {
+              if (isRootOption) {
+                co.model = val;
+                return;
+              }
+              const path = attr.match(/[^:]+/g).splice(1);
+              let model = co.model || {};
+              path.forEach((p, i) => {
+                p = util.hyphensToCamelCase(p);
+                if (i === path.length - 1) {
+                  return model[p] = val;
+                }
+                model = model[p] = model[p] || {};
+              });
+            }
+          } else {
+            // evaluate expression in the global scripting context
+            val = Function('return ' + attribute.nodeValue + ';')();
+          }
         } catch (e) {
           _log.warn(path.join(':'), p, attribute.nodeValue, e);
         }

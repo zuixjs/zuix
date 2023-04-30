@@ -1,5 +1,3 @@
-/* zuix.js v1.1.21 23.04.26 00:43:33 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -1081,7 +1079,7 @@ ZxQuery.prototype.on = function(eventPath, eventHandler) {
   }
   const events = eventPath.split(/[\s|,]+/g) || [];
   let options;
-  if (typeof eventHandler !== 'function') {
+  if (eventHandler && typeof eventHandler !== 'function') {
     options = eventHandler;
     eventHandler = options.handler;
   }
@@ -3770,6 +3768,8 @@ const LIBRARY_PATH_DEFAULT = 'https://zuixjs.github.io/zkit/lib/1.2/';
 Componentizer.prototype.componentize = function(element) {
   if (isBusy) {
     z$().one('componentize:step', () =>
+      // TODO: should be `requestIdleCallback`
+      //       but it's not supported by Safari yet
       requestAnimationFrame(() => {
         isBusy = false;
         zuix.componentize(element);
@@ -4043,7 +4043,6 @@ function loadNext(element) {
   const job = getNextLoadable();
   if (job != null && job.item != null && job.item.element != null) {
     const el = job.item.element;
-    z$(el).one('component:loaded', () => zuix.componentize(el));
     loadInline(el);
   }
 }
@@ -4051,7 +4050,7 @@ function loadNext(element) {
 /** @protected */
 function loadInline(element, opts) {
   const v = z$(element);
-  if (v.attr(_optionAttributes.zLoaded) != null || v.parent('pre,code').length()) {
+  if (v.attr(_optionAttributes.zLoaded) === true || v.attr(_optionAttributes.zLoaded) === false || v.parent('pre,code').length()) {
     //_log.w('Skipped', element);
     return false;
   }
@@ -4130,9 +4129,8 @@ function loadInline(element, opts) {
 
   // inline attributes have precedence over ```options```
 
-  const exclusionList = [':on', ':model', ':behavior', ':ready']; // these are evaluated after component is created
   const optionAttributes = Array.from(v.get().attributes)
-      .filter((a) => a.nodeName.startsWith(':') && !exclusionList.find((t) => a.nodeName.startsWith(t)));
+      .filter((a) => a.nodeName.startsWith(':'));
   optionAttributes.forEach((attribute) => {
     const attr = attribute.nodeName;
     const path = attr.match(/[^:]+/g);
@@ -4141,8 +4139,70 @@ function loadInline(element, opts) {
       p = util.hyphensToCamelCase(p);
       if (i === path.length - 1) {
         let val;
+        // Seek parentContext if any
+        let parentContext = null;
+        if (v.parent().get() instanceof ShadowRoot) {
+          parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zContext}]`);
+        } else {
+          parentContext = v.parent(`[${_optionAttributes.zContext}]`);
+        }
+        parentContext = zuix.context(parentContext);
         try {
-          val = Function('return ' + attribute.nodeValue + ';')();
+          if (parentContext) {
+            // evaluate option attributes value in the parent component scripting context
+            let scriptlet = attribute.nodeValue;
+            if (!scriptlet) return;
+            const attr = attribute.nodeName;
+            const isRootOption = attr.lastIndexOf(':') < 2;
+            if (!scriptlet.match(/^[^<>()\[\]\-+\s!?/&£"=^#@:;,.*|]+$/g)) {
+              scriptlet = `(event, args) => \{ ${attribute.nodeValue} \}`;
+            }
+            if (attr.startsWith(':model') || isRootOption) {
+              scriptlet = `(${attribute.nodeValue})`;
+            }
+            try {
+              val = zuix.runScriptlet(scriptlet, v, parentContext.$, null);
+            } catch (e) {
+              _log.warn(attr, attribute.nodeValue, e);
+            }
+
+            if (val == null) return; // TODO: should report a warning?
+
+            if (attr === ':ready') {
+              co.ready = val;
+              return;
+            }
+            if (attr === ':error') {
+              co.error = val;
+              return;
+            }
+            if (attr.startsWith(':on') || attr.startsWith(':behavior')) {
+              if (isRootOption) {
+                co.on = val;
+                return;
+              }
+              const eventName = attr.substring(attr.indexOf(':', 1) + 1);
+              const optionField = (attr.startsWith(':behavior') ? co.behavior : co.on) || {};
+              optionField[eventName] = val;
+            } else if (attr.startsWith(':model')) {
+              if (isRootOption) {
+                co.model = val;
+                return;
+              }
+              const path = attr.match(/[^:]+/g).splice(1);
+              let model = co.model || {};
+              path.forEach((p, i) => {
+                p = util.hyphensToCamelCase(p);
+                if (i === path.length - 1) {
+                  return model[p] = val;
+                }
+                model = model[p] = model[p] || {};
+              });
+            }
+          } else {
+            // evaluate expression in the global scripting context
+            val = Function('return ' + attribute.nodeValue + ';')();
+          }
         } catch (e) {
           _log.warn(path.join(':'), p, attribute.nodeValue, e);
         }
@@ -4463,9 +4523,15 @@ function ContextController(context) {
   }});
   Object.defineProperty(_t, 'restoreView', {enumerable: false, writable: true, value: () => {
     if (_t._childNodes.length > 0) {
-      _t.view().html('');
-      z$.each(_t._childNodes, (i, el) =>
-        _t.view().append(el));
+      let v = _t.view();
+      if ((v.get().parentNode instanceof ShadowRoot)) {
+        v = _t.options().__shadowRoot;
+      }
+      if (v) {
+        v.html('');
+        z$.each(_t._childNodes, (i, el) =>
+          v.append(el));
+      }
       _t._childNodes.length = 0;
     }
   }});
@@ -4546,6 +4612,28 @@ function ContextController(context) {
   return _t;
 }
 
+/**
+ * Loads a CSS, script or a singleton component. Resources loaded
+ * with this method are available in the global scope and can also be
+ * included in the application bundle.
+ * If the component is a custom element, styles will be loaded as a component-local
+ * stylesheets and placed inside its ShadowDOM.
+ *
+ * @example
+```js
+ this.using('script', 'https://some.cdn.js/moment.min.js', function(){
+  // can start using moment.js
+});
+```
+ * @param {string} resourceType Either *'style'*, *'script'* or *'component'*
+ * @param {string} resourcePath Relative or absolute resource url path
+ * @param {ResourceUsingCallback} [callback] Callback function to call once resource is loaded
+ * @return {ContextController} The `{ContextController}` object itself.
+ */
+ContextController.prototype.using = function(resourceType, resourcePath, callback) {
+  zuix.using(resourceType, resourcePath, callback, this.context);
+  return this;
+};
 /**
  * Adds an event handler.
  *
@@ -5215,6 +5303,7 @@ __webpack_require__(854);
  * @property {boolean|string|undefined} html It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.
  * @property {number|undefined} priority Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.
+ * @property {boolean|undefined} fetchOptions Options to be used when fetching this component resources.
  * @property {string|undefined} using Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.
  * @property {ContextLoadedCallback|undefined} loaded The loaded callback, triggered once the component is successfully loaded.
  * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once all component's dependencies have been loaded.
@@ -5686,13 +5775,22 @@ function unload(context) {
     }
     if (ctx && ctx.dispose) {
       util.catchContextError(ctx, () => {
+        // unload nested components as well
+        ctx.$
+            .find(`[${_optionAttributes.zLoaded}],[shadow]`)
+            .each((i, el) => {
+              unload(el);
+            });
+        // dispose context
         ctx.dispose();
       });
     }
   };
   if (context && context.each) {
+    // ZxQuery instance
     context.each((i, el) => dispose(el));
   } else {
+    // ComponentContext instance
     dispose(context);
   }
 }
@@ -5719,6 +5817,7 @@ function loadComponent(elements, componentId, type, options) {
     let sr = el.get().shadowRoot;
     if (sr == null && options && options.container instanceof ShadowRoot) {
       sr = options.container;
+      options.__shadowRoot = el;
       delete options.container;
     } else if (sr && options) { // mode = 'open'
       delete options.container;
@@ -5728,9 +5827,13 @@ function loadComponent(elements, componentId, type, options) {
       // move attributes to shadow view
       Array.from(el.get().attributes).forEach((attribute) => {
         if (!attribute.nodeName.match(/^[(#@)]/)) {
-          shadowView.setAttribute(attribute.nodeName, attribute.nodeValue);
-          if (attribute.nodeName !== _optionAttributes.zField) {
-            el.attr(attribute.nodeName, null);
+          try {
+            shadowView.setAttribute(attribute.nodeName, attribute.nodeValue);
+            if (attribute.nodeName !== _optionAttributes.zField) {
+              el.attr(attribute.nodeName, null);
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       });
@@ -5739,7 +5842,12 @@ function loadComponent(elements, componentId, type, options) {
         while (el.get().firstChild) {
           shadowView.appendChild(el.get().firstChild);
         }
-        sr.appendChild(shadowView);
+        try {
+          sr.appendChild(shadowView);
+        } catch (e) {
+          console.error(e);
+          return;
+        }
         zuix.context(shadowView, (ctx) => {
           el.attr('shadow', ctx.contextId);
         });
@@ -5749,7 +5857,9 @@ function loadComponent(elements, componentId, type, options) {
       _componentizer.loadInline(el, options);
     }
   };
-  elements.each((i, el, $el) => !$el.attr(_optionAttributes.zLoaded) && load($el));
+  elements.each((i, el, $el) => {
+    !($el.attr(_optionAttributes.zLoaded) === true || $el.attr(_optionAttributes.zLoaded) === false) && load($el)
+  });
 }
 
 /** @private */
@@ -5882,7 +5992,7 @@ function loadController(context, task) {
     } else {
       const job = function(t) {
         const jsPath = context.componentId + '.js';
-        const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+        const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : context.options().fetchOptions || undefined;
         fetch(zuix.getResourcePath(jsPath), fetchOptions)
             .then((response) => response.text())
             .then((ctrlJs) => {
@@ -6134,7 +6244,8 @@ function initController(ctrl) {
       }
     }
     // re-enable nested components loading
-    $view.find(util.dom.queryAttribute(_optionAttributes.zLoaded, 'false', util.dom.cssNot(_optionAttributes.zComponent)))
+    const q = util.dom.queryAttribute(_optionAttributes.zLoaded, 'false', util.dom.cssNot(_optionAttributes.zComponent));
+    $view.find(q)
         .each(function(i, v) {
           this.attr(_optionAttributes.zLoaded, null);
         });
@@ -6146,59 +6257,6 @@ function initController(ctrl) {
   ctrl.trigger('component:loaded', $view, true);
 
   const contextReady = () => {
-    // parse option attributes
-    const attributesList = [':on', ':model', ':behavior', ':ready']; // these are evaluated after component is created
-    const optionAttributes = Array.from($view.get().attributes)
-        .filter((a) => attributesList.find((t) => a.nodeName.startsWith(t)));
-    optionAttributes.forEach((attribute) => {
-      let scriptlet = attribute.nodeValue;
-      if (!scriptlet) return;
-      const attr = attribute.nodeName;
-      const isRootOption = attr.lastIndexOf(':') < 2;
-      let val;
-      if (!scriptlet.match(/^[^<>()\[\]\-+\s!?/&£"=^#@:;,.*|]+$/g)) {
-        scriptlet = `(event, args) => \{ ${attribute.nodeValue} \}`;
-      }
-      if (attr.startsWith(':model') || isRootOption) {
-        scriptlet = `(${attribute.nodeValue})`;
-      }
-      try {
-        val = zuix.runScriptlet(scriptlet, $view, $view, null);
-      } catch (e) {
-        _log.warn(attr, attribute.nodeValue, e);
-      }
-      if (val == null) return; // TODO: should report a warning?
-      if (attr === ':ready') {
-        ctx.ready = val;
-        return;
-      }
-      if (attr.startsWith(':on') || attr.startsWith(':behavior')) {
-        if (isRootOption) {
-          ctrl.on(val);
-          return;
-        }
-        const eventName = attr.substring(attr.indexOf(':', 1) + 1);
-        if (attr.startsWith(':behavior')) {
-          ctrl.addBehavior(eventName, val);
-        } else {
-          ctrl.addEvent(eventName, val);
-        }
-      } else if (attr.startsWith(':model')) {
-        if (isRootOption) {
-          ctx.model(val);
-          return;
-        }
-        const path = attr.match(/[^:]+/g).splice(1);
-        let co = ctx.model();
-        path.forEach((p, i) => {
-          p = util.hyphensToCamelCase(p);
-          if (i === path.length - 1) {
-            return co[p] = val;
-          }
-          co = co[p] = co[p] || {};
-        });
-      }
-    });
     // parse and allocate inline event handlers
     const allocateEventHandlers = (ctx, $el) => {
       Array.from($el.get().attributes).forEach((attribute) => {
@@ -6305,9 +6363,10 @@ function initController(ctrl) {
             code += 'const $' + f + ' = context["#"].' + f + ';';
             code += 'const ' + f + ' = $' + f + '.get();';
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
+            code += 'new MutationObserver((a,b) => { zuix.context(' + f + ', function(c) { _' + f + ' = c; });}).observe(' + f + ',{attributes:true,attributeFilter: ["shadow"]});';
           });
         }
-        // add explicit local vars defined via {ContextController}.delcare(...)
+        // add explicit local vars defined via {ContextController}.declare(...)
         if (ctx['_']) {
           z$.each(ctx['_'], (f, v) => {
             code += 'const ' + f + ' = context["_"].' + f + ';';
@@ -6378,12 +6437,14 @@ function initController(ctrl) {
 
         const scriptFooter = code + '; return { refresh, runScriptlet, ready, expose }; }).call(this.$el.get(), this.$el, this.ctx, this.args);';
         // create the refresh handler
-        refreshHandler = ctx._refreshHandler = Function(scriptHeader + ';' + scriptFooter)
-            .call({$el, ctx, args: null});
-        // expose public methods if declared
-        if (refreshHandler.expose) {
-          Object.assign(ctx, refreshHandler.expose);
-        }
+        util.catchContextError(ctx, () => {
+          refreshHandler = ctx._refreshHandler = Function(scriptHeader + ';' + scriptFooter)
+              .call({$el, ctx, args: null});
+          // expose public methods if declared
+          if (refreshHandler.expose) {
+            Object.assign(ctx, refreshHandler.expose);
+          }
+        });
       }
       // call refresh method for the first time, if found
       if (!ctx._dependencyResolver && refreshHandler.refresh) {
@@ -6773,8 +6834,8 @@ Zuix.prototype.hook = function(eventPath, eventHandler) {
   return this;
 };
 /**
- * Loads a CSS, script or singleton component. Resources loaded
- * through this method are available in the global scope and can also be
+ * Loads a CSS, script or a singleton component. Resources loaded
+ * with this method are available in the global scope and can also be
  * included in the application bundle.
  *
  * @example
@@ -6787,7 +6848,7 @@ zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
  * @param {string} resourceType Either *'style'*, *'script'* or *'component'*
  * @param {string} resourcePath Relative or absolute resource url path
  * @param {ResourceUsingCallback} [callback] Callback function to call once resource is loaded
- * @param {ComponentContext} [ctx] The target context.
+ * @param {ComponentContext} [ctx] The target context. Mandatory when loading resources for a component with ShadowDOM (custom element).
  * @return {Zuix} The `{Zuix}` object itself.
  */
 Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
@@ -6869,7 +6930,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         if (cached != null) {
           addResource(isCss ? cached.css : cached.controller);
         } else {
-          const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : undefined;
+          const fetchOptions = zuix.store('settings') ? zuix.store('settings').fetchOptions : (ctx ? ctx.options().fetchOptions : undefined);
           fetch(resourcePath, fetchOptions)
               .then((response) => response.text())
               .then((resText) => {
