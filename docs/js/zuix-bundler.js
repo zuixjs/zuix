@@ -1,4 +1,4 @@
-/* zuix.js v1.1.21 23.04.26 00:43:33 */
+/* zuix.js v1.1.22 23.04.30 22:03:42 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
