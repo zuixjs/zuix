@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1834](../../zuix/Zuix.js#L1834)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1845](../../zuix/Zuix.js#L1845)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1844](../../zuix/Zuix.js#L1844)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1855](../../zuix/Zuix.js#L1855)
 
 -->
 
@@ -164,7 +164,7 @@ by passing a boolean value as argument.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1777](../../zuix/Zuix.js#L1777)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1788](../../zuix/Zuix.js#L1788)
 
 -->
 
@@ -199,7 +199,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1519](../../zuix/Zuix.js#L1519)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1530](../../zuix/Zuix.js#L1530)
 
 -->
 
@@ -240,7 +240,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1488](../../zuix/Zuix.js#L1488)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1499](../../zuix/Zuix.js#L1499)
 
 -->
 
@@ -268,7 +268,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1903](../../zuix/Zuix.js#L1903)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1914](../../zuix/Zuix.js#L1914)
 
 -->
 
@@ -284,7 +284,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1908](../../zuix/Zuix.js#L1908)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1919](../../zuix/Zuix.js#L1919)
 
 -->
 
@@ -311,7 +311,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1343](../../zuix/Zuix.js#L1343)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1354](../../zuix/Zuix.js#L1354)
 
 -->
 
@@ -348,7 +348,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1815](../../zuix/Zuix.js#L1815)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1826](../../zuix/Zuix.js#L1826)
 
 -->
 
@@ -374,7 +374,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1605](../../zuix/Zuix.js#L1605)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1616](../../zuix/Zuix.js#L1616)
 
 -->
 
@@ -461,7 +461,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1750](../../zuix/Zuix.js#L1750)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1761](../../zuix/Zuix.js#L1761)
 
 -->
 
@@ -487,7 +487,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1393](../../zuix/Zuix.js#L1393)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1404](../../zuix/Zuix.js#L1404)
 
 -->
 
@@ -553,7 +553,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1465](../../zuix/Zuix.js#L1465)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1476](../../zuix/Zuix.js#L1476)
 
 -->
 
@@ -621,7 +621,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1823](../../zuix/Zuix.js#L1823)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1834](../../zuix/Zuix.js#L1834)
 
 -->
 
@@ -647,7 +647,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1944](../../zuix/Zuix.js#L1944)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1955](../../zuix/Zuix.js#L1955)
 
 -->
 
@@ -663,7 +663,7 @@ Sets components cache.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1898](../../zuix/Zuix.js#L1898)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1909](../../zuix/Zuix.js#L1909)
 
 -->
 
@@ -686,7 +686,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1803](../../zuix/Zuix.js#L1803)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1814](../../zuix/Zuix.js#L1814)
 
 -->
 
@@ -719,7 +719,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1530](../../zuix/Zuix.js#L1530)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1541](../../zuix/Zuix.js#L1541)
 
 -->
 
@@ -742,7 +742,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1407](../../zuix/Zuix.js#L1407)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1418](../../zuix/Zuix.js#L1418)
 
 -->
 
@@ -776,7 +776,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1627](../../zuix/Zuix.js#L1627)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1638](../../zuix/Zuix.js#L1638)
 
 -->
 
@@ -1075,7 +1075,7 @@ of the component's host element.
 |`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
-|`fetchOptions`|*boolean* \| *undefined*|Options to be used when fetching this component resources.|
+|`fetchOptions`|*Object* \| *undefined*|Options to be used when fetching this component resources.|
 |`using`|*string* \| *undefined*|Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.|
 |`loaded`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|

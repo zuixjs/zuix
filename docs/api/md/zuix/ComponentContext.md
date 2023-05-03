@@ -168,7 +168,7 @@ Gets/Sets the component's controller handler.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 793](../../zuix/ComponentContext.js#L793)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 795](../../zuix/ComponentContext.js#L795)
 
 -->
 
@@ -205,7 +205,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 595](../../zuix/ComponentContext.js#L595)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 597](../../zuix/ComponentContext.js#L597)
 
 -->
 
@@ -247,7 +247,7 @@ Gets the CSS identifier of this component's style.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1152](../../zuix/ComponentContext.js#L1152)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1154](../../zuix/ComponentContext.js#L1154)
 
 -->
 
@@ -274,7 +274,7 @@ changes.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 760](../../zuix/ComponentContext.js#L760)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 762](../../zuix/ComponentContext.js#L762)
 
 -->
 
@@ -341,7 +341,7 @@ is present on a field, data can be inherited from parent component.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1086](../../zuix/ComponentContext.js#L1086)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1088](../../zuix/ComponentContext.js#L1088)
 
 -->
 
@@ -365,7 +365,7 @@ Listens for a component event.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 838](../../zuix/ComponentContext.js#L838)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 840](../../zuix/ComponentContext.js#L840)
 
 -->
 
@@ -388,7 +388,7 @@ Gets/Sets the component's options.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 809](../../zuix/ComponentContext.js#L809)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 811](../../zuix/ComponentContext.js#L811)
 
 -->
 
@@ -415,7 +415,7 @@ element is returned.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 658](../../zuix/ComponentContext.js#L658)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 660](../../zuix/ComponentContext.js#L660)
 
 -->
 
@@ -464,7 +464,7 @@ declared in the component's view.
 <!--
 
 *Source:*
-[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1045](../../zuix/ComponentContext.js#L1045)
+[zuix/ComponentContext.js](../../zuix/ComponentContext.js), [line 1047](../../zuix/ComponentContext.js#L1047)
 
 -->
 
@@ -755,7 +755,7 @@ of the component's host element.
 |`html`|*boolean* \| *string* \| *undefined*|It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.|
 |`lazyLoad`|*boolean* \| *undefined*|Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.|
 |`priority`|*number* \| *undefined*|Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.|
-|`fetchOptions`|*boolean* \| *undefined*|Options to be used when fetching this component resources.|
+|`fetchOptions`|*Object* \| *undefined*|Options to be used when fetching this component resources.|
 |`using`|*string* \| *undefined*|Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.|
 |`loaded`|*[ContextLoadedCallback](#ContextLoadedCallback)* \| *undefined*|The loaded callback, triggered once the component is successfully loaded.|
 |`ready`|*[ContextReadyCallback](#ContextReadyCallback)* \| *undefined*|The ready callback, triggered once all component's dependencies have been loaded.|

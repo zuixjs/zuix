@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -393,6 +393,7 @@ function loadInline(element, opts) {
         styleElement.each((i, el, $el) =>
           options.css += '\n' + options.css + $el.html()
         );
+        styleElement.detach();
       }
       if (componentId === 'default') {
         options.controller = options.controller || function() {};
@@ -408,7 +409,7 @@ function loadInline(element, opts) {
     const attr = attribute.nodeName;
     const path = attr.match(/[^:]+/g);
     let co = options;
-    path.forEach((p, i) => {
+    path && path.forEach((p, i) => {
       p = util.hyphensToCamelCase(p);
       if (i === path.length - 1) {
         let val;

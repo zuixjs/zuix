@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -149,6 +149,7 @@ module.exports = {
     try {
       fn();
     } catch (err) {
+      ctx._error = err;
       if (errorCallback) errorCallback(err);
       if (err && ctx.options().error) {
         (ctx.options().error)

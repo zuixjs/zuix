@@ -1,5 +1,3 @@
-/* zuix.js v1.1.22 23.04.30 22:03:42 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -11,7 +9,7 @@ var zuix;
 /* eslint-disable */
 /*!
  * @license
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -368,7 +366,7 @@ module.exports = function serialize(obj, options) {
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -479,7 +477,7 @@ module.exports = function() {
 /***/ (function(module) {
 
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *

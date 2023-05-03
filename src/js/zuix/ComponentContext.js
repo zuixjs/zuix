@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -398,7 +398,7 @@ ComponentContext.prototype.dispose = function() {
   // remove contexts from zuix contexts list
   const contexts = zuix.dumpContexts();
   const idx = contexts.indexOf(this);
-  contexts.splice(idx, 1);
+  if (idx !== -1) contexts.splice(idx, 1);
 };
 
 /**
@@ -521,7 +521,9 @@ ComponentContext.prototype.view = function(view) {
               clonedScript.src = this.src;
           this.get().parentNode.insertBefore(clonedScript, this.get());
         } else */
-        Function(el.innerHTML).call(window);
+        util.catchContextError(this, () => {
+          Function(el.innerHTML).call(window);
+        }, (err) => console.error(err));
       }
     });
 
@@ -681,7 +683,7 @@ ComponentContext.prototype.style = function(css) {
     // nest the CSS inside [z-component='<componentId>']
     // so that the style is only applied to this component type
     const cssIdAttr = '[' + cssId + ']';
-    if (!shadowRoot) {
+    if (!shadowRoot || this.componentId === 'default') {
       css = z$.wrapCss(
           cssIdAttr,
           resetCss + '\n' + css,
@@ -1151,7 +1153,8 @@ ComponentContext.prototype.modelToView = function() {
  */
 ComponentContext.prototype.getCssId = function() {
   let override = '';
-  if (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view)) {
+  if (this.componentId === 'default' ||
+      (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view))) {
     override = '_' + this.contextId;
   }
   return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;

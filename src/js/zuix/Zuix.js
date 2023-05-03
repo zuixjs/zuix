@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -77,7 +77,7 @@ require('./ComponentCache');
  * @property {boolean|string|undefined} html It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.
  * @property {number|undefined} priority Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.
- * @property {boolean|undefined} fetchOptions Options to be used when fetching this component resources.
+ * @property {Object|undefined} fetchOptions Options to be used when fetching this component resources.
  * @property {string|undefined} using Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.
  * @property {ContextLoadedCallback|undefined} loaded The loaded callback, triggered once the component is successfully loaded.
  * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once all component's dependencies have been loaded.
@@ -539,6 +539,7 @@ function loadResources(ctx, options) {
  * @param context {ComponentContext|ZxQuery|Element}
  */
 function unload(context) {
+  const contexts = zuix.dumpContexts();
   const dispose = (ctx) => {
     if (ctx instanceof Element) {
       const el = ctx;
@@ -547,15 +548,19 @@ function unload(context) {
       // it's a lazy-loadable element not yet loaded
       _componentizer.dequeue(el);
     }
-    if (ctx && ctx.dispose) {
-      util.catchContextError(ctx, () => {
-        // unload nested components as well
-        ctx.$
-            .find(`[${_optionAttributes.zLoaded}],[shadow]`)
-            .each((i, el) => {
+    if (ctx) {
+      const idx = contexts.indexOf(ctx);
+      if (idx !== -1) contexts.splice(idx, 1);
+      // unload nested components as well
+      ctx.$
+          .find(`[${_optionAttributes.zLoaded}],[shadow]`)
+          .each((i, el) => {
+            util.catchContextError(ctx, () => {
               unload(el);
             });
-        // dispose context
+          });
+      // dispose context
+      util.catchContextError(ctx, () => {
         ctx.dispose();
       });
     }
@@ -1155,7 +1160,7 @@ function initController(ctrl) {
           code += 'function refresh() {}; ';
           code += 'function ready() { return true; }; ';
         }
-        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
+        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { context._error = e; console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';
@@ -1258,7 +1263,12 @@ function initController(ctrl) {
               return loadedNested;
             }
           });
-          const canStart = loadedNested && ctx.isReady === true && ctx._refreshHandler.ready();
+          let canStart = loadedNested && ctx.isReady === true;
+          util.catchContextError(ctx, () => {
+            canStart = canStart && ctx._refreshHandler.ready();
+          }, (err) => {
+            canStart = false;
+          });
           if (canStart) {
             ctx._refreshHandler.initialized = true;
             // start '@' handlers
@@ -1269,12 +1279,12 @@ function initController(ctrl) {
             ctx.$.addClass('not-ready');
           }
           refreshCallback(data, refreshDelay, true);
-        } else {
+        } else if (ctx._error == null) {
           ctx.handlers.refresh.call($view.get(), $view, $view, data, refreshCallback);
         }
       }).start(refreshDelay);
     });
-  } else {
+  } else if (ctx._error == null) {
     ctx.handlers.refresh.call($view.get(), $view, $view);
     contextReady();
   }

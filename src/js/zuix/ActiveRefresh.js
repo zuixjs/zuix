@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -78,10 +78,10 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       if (active == null) active = $el.attr('@active') != null;
       if (active != null) this.forceActive = active;
       const ctx = zuix.context($v);
-      if (ctx != null && this.refreshMs > 0) {
+      if (ctx != null && ctx._error == null && this.refreshMs > 0) {
         setTimeout(() => this.requestRefresh($v, $el, this.contextData), isActive ? this.refreshMs : 500); // 500ms for noop-loop
         initialized = true;
-      } else if (ctx == null) {
+      } else if (ctx == null || ctx._error != null) {
         // will not request refresh, loop
         // ends if context was disposed
         // TODO: cp.log.e(cp, 'activeRefresh:error:no_context', element, field, view);
