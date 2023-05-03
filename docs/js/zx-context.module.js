@@ -1,13 +1,10 @@
 class ZxContext extends HTMLElement {
+  context = null;
+  container = null;
+
   constructor(props) {
     super();
-
-    this.container = document.createElement('div');
-    this.context = null;
-
-    this.attachShadow({mode: 'closed'})
-        .append(this.container);
-
+    this.shadowView = this.attachShadow({mode: 'closed'});
     const loadComponent = this.attributes.getNamedItem('load');
     if (loadComponent) {
       const parentComponent = zuix.$(this).parent('[z-load]');
@@ -24,7 +21,9 @@ class ZxContext extends HTMLElement {
   }
 
   connectedCallback() {
-    // TODO:  ...
+    const commonStyle = new CSSStyleSheet();
+    commonStyle.replaceSync(zuix.$.find('style#zuix-global').html());
+    this.shadowView.adoptedStyleSheets = [ commonStyle ];
   }
 
   disconnectedCallback() {
@@ -32,6 +31,15 @@ class ZxContext extends HTMLElement {
   }
 
   load(componentId, options) {
+    if (this.container != null) {
+      zuix.unload(this.container);
+      this.shadowView.removeChild(this.container);
+      this.container = null;
+      this.shadowView.innerHTML = '';
+    }
+    this.container = document.createElement('div');
+    this.container.classList.add('visible-on-ready');
+    this.shadowView.append(this.container);
     options = options || {};
     let contextOptions = ((o) => ({
       container: this.shadowRoot,
@@ -48,12 +56,10 @@ class ZxContext extends HTMLElement {
         if (typeof o.error === 'function') {
           o.error(err);
         }
-        throw err;
+        console.error(err);
       }
     }))(options);
     delete options.container;
-    delete options.ready;
-    delete options.error;
     contextOptions = Object.assign(contextOptions, options);
     zuix.loadComponent(this.container, componentId, null, contextOptions);
   }

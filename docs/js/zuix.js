@@ -1,4 +1,4 @@
-/* zuix.js v1.1.22 23.04.30 22:03:42 */
+/* zuix.js v1.1.23 23.05.03 20:59:26 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -9,7 +9,7 @@ var zuix;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -219,7 +219,7 @@ module.exports = function(ctx) {
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -348,7 +348,7 @@ module.exports = TaskQueue;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -498,6 +498,7 @@ module.exports = {
     try {
       fn();
     } catch (err) {
+      ctx._error = err;
       if (errorCallback) errorCallback(err);
       if (err && ctx.options().error) {
         (ctx.options().error)
@@ -602,7 +603,7 @@ module.exports = {
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -1965,7 +1966,7 @@ module.exports = ZxQueryStatic;
 /* eslint-disable */
 /*!
  * @license
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -2004,7 +2005,7 @@ module.exports = __webpack_require__(459)();
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -2186,7 +2187,7 @@ module.exports = ObjectObserver;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -2299,7 +2300,7 @@ module.exports = ObservableObject;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -2378,10 +2379,10 @@ function ActiveRefresh($v, $el, data, refreshCallback) {
       if (active == null) active = $el.attr('@active') != null;
       if (active != null) this.forceActive = active;
       const ctx = zuix.context($v);
-      if (ctx != null && this.refreshMs > 0) {
+      if (ctx != null && ctx._error == null && this.refreshMs > 0) {
         setTimeout(() => this.requestRefresh($v, $el, this.contextData), isActive ? this.refreshMs : 500); // 500ms for noop-loop
         initialized = true;
-      } else if (ctx == null) {
+      } else if (ctx == null || ctx._error != null) {
         // will not request refresh, loop
         // ends if context was disposed
         // TODO: cp.log.e(cp, 'activeRefresh:error:no_context', element, field, view);
@@ -2459,7 +2460,7 @@ module.exports = ActiveRefresh;
 /***/ (function(module) {
 
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -2518,7 +2519,7 @@ module.exports = () => {
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -2917,7 +2918,7 @@ ComponentContext.prototype.dispose = function() {
   // remove contexts from zuix contexts list
   const contexts = zuix.dumpContexts();
   const idx = contexts.indexOf(this);
-  contexts.splice(idx, 1);
+  if (idx !== -1) contexts.splice(idx, 1);
 };
 
 /**
@@ -3040,7 +3041,9 @@ ComponentContext.prototype.view = function(view) {
               clonedScript.src = this.src;
           this.get().parentNode.insertBefore(clonedScript, this.get());
         } else */
-        Function(el.innerHTML).call(window);
+        util.catchContextError(this, () => {
+          Function(el.innerHTML).call(window);
+        }, (err) => console.error(err));
       }
     });
 
@@ -3200,7 +3203,7 @@ ComponentContext.prototype.style = function(css) {
     // nest the CSS inside [z-component='<componentId>']
     // so that the style is only applied to this component type
     const cssIdAttr = '[' + cssId + ']';
-    if (!shadowRoot) {
+    if (!shadowRoot || this.componentId === 'default') {
       css = z$.wrapCss(
           cssIdAttr,
           resetCss + '\n' + css,
@@ -3670,7 +3673,8 @@ ComponentContext.prototype.modelToView = function() {
  */
 ComponentContext.prototype.getCssId = function() {
   let override = '';
-  if (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view)) {
+  if (this.componentId === 'default' ||
+      (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view))) {
     override = '_' + this.contextId;
   }
   return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;
@@ -3728,7 +3732,7 @@ module.exports = ComponentContext;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -4122,6 +4126,7 @@ function loadInline(element, opts) {
         styleElement.each((i, el, $el) =>
           options.css += '\n' + options.css + $el.html()
         );
+        styleElement.detach();
       }
       if (componentId === 'default') {
         options.controller = options.controller || function() {};
@@ -4137,7 +4142,7 @@ function loadInline(element, opts) {
     const attr = attribute.nodeName;
     const path = attr.match(/[^:]+/g);
     let co = options;
-    path.forEach((p, i) => {
+    path && path.forEach((p, i) => {
       p = util.hyphensToCamelCase(p);
       if (i === path.length - 1) {
         let val;
@@ -4417,7 +4422,7 @@ function lazyElementCheck(element) {
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -4943,7 +4948,7 @@ module.exports = ContextController;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -5018,7 +5023,7 @@ module.exports = ControllerInstance;
 /***/ (function(module) {
 
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -5100,7 +5105,7 @@ module.exports = OptionAttributes;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -5227,7 +5232,7 @@ module.exports = ViewObserver;
 
 "use strict";
 /*
- * Copyright 2015-2022 G-Labs. All Rights Reserved.
+ * Copyright 2015-2023 G-Labs. All Rights Reserved.
  *
  *           https://zuixjs.org
  *
@@ -5305,7 +5310,7 @@ __webpack_require__(854);
  * @property {boolean|string|undefined} html It can be set to `false`, to disable HTML template loading, or it can be set to a string containing the inline HTML template code.
  * @property {boolean|undefined} lazyLoad Enables or disables lazy-loading (**default:** false). HTML attribute equivalent: *z-lazy*.
  * @property {number|undefined} priority Loading priority (**default:** 0). HTML attribute equivalent: *z-priority*.
- * @property {boolean|undefined} fetchOptions Options to be used when fetching this component resources.
+ * @property {Object|undefined} fetchOptions Options to be used when fetching this component resources.
  * @property {string|undefined} using Comma separated contexts' id list of components used in this context. A variable with camel-case converted name for each referenced context, will be available in the local scripting scope.
  * @property {ContextLoadedCallback|undefined} loaded The loaded callback, triggered once the component is successfully loaded.
  * @property {ContextReadyCallback|undefined} ready The ready callback, triggered once all component's dependencies have been loaded.
@@ -5767,6 +5772,7 @@ function loadResources(ctx, options) {
  * @param context {ComponentContext|ZxQuery|Element}
  */
 function unload(context) {
+  const contexts = zuix.dumpContexts();
   const dispose = (ctx) => {
     if (ctx instanceof Element) {
       const el = ctx;
@@ -5775,15 +5781,19 @@ function unload(context) {
       // it's a lazy-loadable element not yet loaded
       _componentizer.dequeue(el);
     }
-    if (ctx && ctx.dispose) {
-      util.catchContextError(ctx, () => {
-        // unload nested components as well
-        ctx.$
-            .find(`[${_optionAttributes.zLoaded}],[shadow]`)
-            .each((i, el) => {
+    if (ctx) {
+      const idx = contexts.indexOf(ctx);
+      if (idx !== -1) contexts.splice(idx, 1);
+      // unload nested components as well
+      ctx.$
+          .find(`[${_optionAttributes.zLoaded}],[shadow]`)
+          .each((i, el) => {
+            util.catchContextError(ctx, () => {
               unload(el);
             });
-        // dispose context
+          });
+      // dispose context
+      util.catchContextError(ctx, () => {
         ctx.dispose();
       });
     }
@@ -6383,7 +6393,7 @@ function initController(ctrl) {
           code += 'function refresh() {}; ';
           code += 'function ready() { return true; }; ';
         }
-        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
+        code += 'function runScriptlet($el, s, args) { let result; try { result = eval("const $this = $el; const _this = zuix.context(this); " + s) } catch (e) { if (!$el._lastError || $el._lastError.toString() !== e.toString()) { context._error = e; console.error(\'SCRIPTLET ERROR\', e, \'\\n\', context, this, \'\\n\', s); if (context.error) context.error(e); } $el._lastError = e; }; return result };';
 
         // add custom "jscript" code / collects "using" components
         const usingComponents = []; let userCode = '';
@@ -6486,7 +6496,12 @@ function initController(ctrl) {
               return loadedNested;
             }
           });
-          const canStart = loadedNested && ctx.isReady === true && ctx._refreshHandler.ready();
+          let canStart = loadedNested && ctx.isReady === true;
+          util.catchContextError(ctx, () => {
+            canStart = canStart && ctx._refreshHandler.ready();
+          }, (err) => {
+            canStart = false;
+          });
           if (canStart) {
             ctx._refreshHandler.initialized = true;
             // start '@' handlers
@@ -6497,12 +6512,12 @@ function initController(ctrl) {
             ctx.$.addClass('not-ready');
           }
           refreshCallback(data, refreshDelay, true);
-        } else {
+        } else if (ctx._error == null) {
           ctx.handlers.refresh.call($view.get(), $view, $view, data, refreshCallback);
         }
       }).start(refreshDelay);
     });
-  } else {
+  } else if (ctx._error == null) {
     ctx.handlers.refresh.call($view.get(), $view, $view);
     contextReady();
   }
