@@ -202,7 +202,7 @@ module.exports = {
         });
       } else if (value === null) {
         element.removeAttribute(name, value);
-      } else {
+      } else if (element.getAttribute(name) !== value) {
         element.setAttribute(name, value);
       }
     },

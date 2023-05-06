@@ -162,11 +162,11 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
     (fn).call($view, $el, field, $view, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
       // data adapter is not ready, retry after 1s
       if (!_t._disposed) {
-        const timeoutId = $el.get().dataset.__zuix_refreshTimeout;
+        const timeoutId = $el.get().__zuix_refreshTimeout;
         if (timeoutId && _queryAdapterRefreshTimeout[timeoutId]) {
           clearTimeout(_queryAdapterRefreshTimeout[timeoutId]);
         }
-        $el.get().dataset.__zuix_refreshTimeout =
+        $el.get().__zuix_refreshTimeout =
             setTimeout(function() {
               queryAdapter(_t, $view, $el, fn, field);
             }, retryMs ? retryMs : 500);

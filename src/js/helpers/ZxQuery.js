@@ -546,12 +546,12 @@ ZxQuery.prototype.css = function(prop, val) {
   if (typeof prop === 'object') {
     z$.each(prop, (i, v) =>
       this.each((k, el) =>
-        el.style[i] = v
+          el.style[i] !== v ? el.style[i] = v : null
       ));
   } else if (util.isNoU(val)) {
     return this._selection[0].style[prop];
   } else {
-    this.each((k, el) => el.style[prop] = val);
+    this.each((k, el) => el.style[prop] !== val ? el.style[prop] = val : null);
   }
   return this;
 };
@@ -602,7 +602,7 @@ ZxQuery.prototype.html = function(htmlText) {
   if (util.isNoU(htmlText)) {
     return this._selection[0].innerHTML;
   }
-  this.each((k, el) => el.innerHTML = htmlText);
+  this.each((k, el) => el.innerHTML !== htmlText ? el.innerHTML = htmlText : null);
   return this;
 };
 /**
@@ -617,7 +617,7 @@ ZxQuery.prototype.checked = function(check) {
     const checked = this._selection[0].checked;
     return (checked != null && checked != 'false' && (checked || checked == 'checked'));
   }
-  this.each((k, el) => el.checked = check);
+  this.each((k, el) => el.checked !== check ? el.checked = check : null);
   return this;
 };
 /**
@@ -631,7 +631,7 @@ ZxQuery.prototype.value = function(value) {
   if (util.isNoU(value)) {
     return this._selection[0].value;
   }
-  this.each((k, el) => el.value = value);
+  this.each((k, el) => el.value !== value ? el.value = value : null);
   return this;
 };
 /**

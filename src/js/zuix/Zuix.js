@@ -627,10 +627,10 @@ function loadComponent(elements, componentId, type, options) {
           console.error(e);
           return;
         }
+        _componentizer.loadInline(shadowView, options);
         zuix.context(shadowView, (ctx) => {
           el.attr('shadow', ctx.contextId);
         });
-        _componentizer.loadInline(shadowView, options);
       });
     } else {
       _componentizer.loadInline(el, options);
@@ -825,7 +825,7 @@ function cacheComponent(context) {
   const cached = {
     componentId: context.componentId,
     view: c.innerHTML,
-    css: typeof context.options().css === 'string' ? null : context._css,
+    css: context._css || context.options().css,
     controller: context.controller()
   };
   _componentCache.push(cached);
