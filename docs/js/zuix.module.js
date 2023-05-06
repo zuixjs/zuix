@@ -1,4 +1,4 @@
-/* zuix.js v1.1.23 23.05.03 20:59:26 */
+/* zuix.js v1.1.24 23.05.06 19:59:07 */
 
 /******/ var __webpack_modules__ = ({
 
@@ -546,7 +546,7 @@ module.exports = {
         });
       } else if (value === null) {
         element.removeAttribute(name, value);
-      } else {
+      } else if (element.getAttribute(name) !== value) {
         element.setAttribute(name, value);
       }
     },
@@ -1144,12 +1144,12 @@ ZxQuery.prototype.css = function(prop, val) {
   if (typeof prop === 'object') {
     z$.each(prop, (i, v) =>
       this.each((k, el) =>
-        el.style[i] = v
+          el.style[i] !== v ? el.style[i] = v : null
       ));
   } else if (util.isNoU(val)) {
     return this._selection[0].style[prop];
   } else {
-    this.each((k, el) => el.style[prop] = val);
+    this.each((k, el) => el.style[prop] !== val ? el.style[prop] = val : null);
   }
   return this;
 };
@@ -1200,7 +1200,7 @@ ZxQuery.prototype.html = function(htmlText) {
   if (util.isNoU(htmlText)) {
     return this._selection[0].innerHTML;
   }
-  this.each((k, el) => el.innerHTML = htmlText);
+  this.each((k, el) => el.innerHTML !== htmlText ? el.innerHTML = htmlText : null);
   return this;
 };
 /**
@@ -1215,7 +1215,7 @@ ZxQuery.prototype.checked = function(check) {
     const checked = this._selection[0].checked;
     return (checked != null && checked != 'false' && (checked || checked == 'checked'));
   }
-  this.each((k, el) => el.checked = check);
+  this.each((k, el) => el.checked !== check ? el.checked = check : null);
   return this;
 };
 /**
@@ -1229,7 +1229,7 @@ ZxQuery.prototype.value = function(value) {
   if (util.isNoU(value)) {
     return this._selection[0].value;
   }
-  this.each((k, el) => el.value = value);
+  this.each((k, el) => el.value !== value ? el.value = value : null);
   return this;
 };
 /**
@@ -2671,11 +2671,11 @@ const queryAdapter = (_t, $view, $el, fn, field) => {
     (fn).call($view, $el, field, $view, /** @type {BindingAdapterRefreshCallback} */ function(retryMs) {
       // data adapter is not ready, retry after 1s
       if (!_t._disposed) {
-        const timeoutId = $el.get().dataset.__zuix_refreshTimeout;
+        const timeoutId = $el.get().__zuix_refreshTimeout;
         if (timeoutId && _queryAdapterRefreshTimeout[timeoutId]) {
           clearTimeout(_queryAdapterRefreshTimeout[timeoutId]);
         }
-        $el.get().dataset.__zuix_refreshTimeout =
+        $el.get().__zuix_refreshTimeout =
             setTimeout(function() {
               queryAdapter(_t, $view, $el, fn, field);
             }, retryMs ? retryMs : 500);
@@ -5844,10 +5844,10 @@ function loadComponent(elements, componentId, type, options) {
           console.error(e);
           return;
         }
+        _componentizer.loadInline(shadowView, options);
         zuix.context(shadowView, (ctx) => {
           el.attr('shadow', ctx.contextId);
         });
-        _componentizer.loadInline(shadowView, options);
       });
     } else {
       _componentizer.loadInline(el, options);
@@ -6042,7 +6042,7 @@ function cacheComponent(context) {
   const cached = {
     componentId: context.componentId,
     view: c.innerHTML,
-    css: typeof context.options().css === 'string' ? null : context._css,
+    css: context._css || context.options().css,
     controller: context.controller()
   };
   _componentCache.push(cached);
