@@ -1142,7 +1142,7 @@ function initController(ctrl) {
             code += 'const $' + f + ' = context["#"].' + f + ';';
             code += 'const ' + f + ' = $' + f + '.get();';
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
-            code += 'new MutationObserver((a,b) => { zuix.context(' + f + ', function(c) { _' + f + ' = c; });}).observe(' + f + ',{attributes:true,attributeFilter: ["shadow"]});';
+            code += 'if (' + f + ') new MutationObserver((a,b) => { zuix.context(' + f + ', function(c) { _' + f + ' = c; });}).observe(' + f + ',{attributes:true,attributeFilter: ["shadow"]});';
           });
         }
         // add explicit local vars defined via {ContextController}.declare(...)

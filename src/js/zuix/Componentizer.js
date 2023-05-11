@@ -416,9 +416,9 @@ function loadInline(element, opts) {
         // Seek parentContext if any
         let parentContext = null;
         if (v.parent().get() instanceof ShadowRoot) {
-          parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zContext}]`);
+          parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zReady}="true"]`);
         } else {
-          parentContext = v.parent(`[${_optionAttributes.zContext}]`);
+          parentContext = v.parent(`[${_optionAttributes.zReady}="true"]`);
         }
         parentContext = zuix.context(parentContext);
         try {

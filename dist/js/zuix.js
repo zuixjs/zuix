@@ -1,5 +1,3 @@
-/* zuix.js v1.1.24 23.05.06 19:59:07 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -4149,9 +4147,9 @@ function loadInline(element, opts) {
         // Seek parentContext if any
         let parentContext = null;
         if (v.parent().get() instanceof ShadowRoot) {
-          parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zContext}]`);
+          parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zReady}="true"]`);
         } else {
-          parentContext = v.parent(`[${_optionAttributes.zContext}]`);
+          parentContext = v.parent(`[${_optionAttributes.zReady}="true"]`);
         }
         parentContext = zuix.context(parentContext);
         try {
@@ -6375,7 +6373,7 @@ function initController(ctrl) {
             code += 'const $' + f + ' = context["#"].' + f + ';';
             code += 'const ' + f + ' = $' + f + '.get();';
             code += 'let _' + f + ' = null; zuix.context(' + f + ', function(c) { _' + f + ' = c; });';
-            code += 'new MutationObserver((a,b) => { zuix.context(' + f + ', function(c) { _' + f + ' = c; });}).observe(' + f + ',{attributes:true,attributeFilter: ["shadow"]});';
+            code += 'if (' + f + ') new MutationObserver((a,b) => { zuix.context(' + f + ', function(c) { _' + f + ' = c; });}).observe(' + f + ',{attributes:true,attributeFilter: ["shadow"]});';
           });
         }
         // add explicit local vars defined via {ContextController}.declare(...)

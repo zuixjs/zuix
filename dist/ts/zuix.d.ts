@@ -189,6 +189,8 @@ export interface ZxQuery {
   visibility(mode?: String): String | ZxQuery;
   show(mode?: String): ZxQuery;
   hide(): ZxQuery;
+  playAnimation(options: string[] | string | PlayFxConfig);
+  playTransition(options: string[] | string | PlayFxConfig);
 }
 export interface ZxQueryStatic {
   (what?: ZxQuery | Node[] | Node | NodeList | String | any);
@@ -202,6 +204,18 @@ export interface ZxQueryStatic {
   replaceBraces(html: String, callback: Function): String;
   getClosest(elem: Element, selector: String): Element;
   getPosition(el: Element, tolerance?: Number): ElementPosition;
+}
+export interface PlayFxConfig {
+  type: 'transition' | 'animation';
+  target: Element | ZxQuery;
+  classes: string[] | string;
+  options?: any;
+  holdState?: boolean;
+  onStep?: PlayFxCallback;
+  onEnd?: PlayFxCallback;
+}
+export interface PlayFxCallback {
+  ($element: ZxQuery, classQueue: string[]): void
 }
 export interface ObjectObserver {
   observable(obj: any): ObservableObject;
