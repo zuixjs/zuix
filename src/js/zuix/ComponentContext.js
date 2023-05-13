@@ -340,7 +340,7 @@ ComponentContext.prototype.dispose = function() {
   this._viewObserver.stop();
 
   // only remove style if component's view is a ShadowRoot
-  const shadowRoot = util.dom.getShadowRoot(this._view);
+  const shadowRoot = util.dom.getShadowRoot(this._container || this._view);
   if (shadowRoot) {
     this.style(null);
   }
@@ -661,7 +661,7 @@ ComponentContext.prototype.style = function(css) {
   if (typeof css === 'undefined') return this._style;
   const cssId = this.getCssId();
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
-  const shadowRoot = util.dom.getShadowRoot(this._view);
+  const shadowRoot = util.dom.getShadowRoot(this._container || this._view);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
     this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, shadowRoot);
@@ -1154,7 +1154,7 @@ ComponentContext.prototype.modelToView = function() {
 ComponentContext.prototype.getCssId = function() {
   let override = '';
   if (this.componentId === 'default' ||
-      (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view))) {
+      (typeof this._options.css === 'string' && util.dom.getShadowRoot(this._container || this._view) === false)) {
     override = '_' + this.contextId;
   }
   return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;

@@ -1,5 +1,3 @@
-/* zuix.js v1.1.25 23.05.11 10:15:27 */
-
 var zuix;
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -2860,7 +2858,7 @@ ComponentContext.prototype.dispose = function() {
   this._viewObserver.stop();
 
   // only remove style if component's view is a ShadowRoot
-  const shadowRoot = util.dom.getShadowRoot(this._view);
+  const shadowRoot = util.dom.getShadowRoot(this._container || this._view);
   if (shadowRoot) {
     this.style(null);
   }
@@ -3181,7 +3179,7 @@ ComponentContext.prototype.style = function(css) {
   if (typeof css === 'undefined') return this._style;
   const cssId = this.getCssId();
   _log.t(this.componentId, 'view:style', 'timer:view:start', cssId);
-  const shadowRoot = util.dom.getShadowRoot(this._view);
+  const shadowRoot = util.dom.getShadowRoot(this._container || this._view);
   if (css == null || css instanceof Element) {
     this._css = (css instanceof Element) ? css.innerText : css;
     this._style = z$.appendCss(css, this._style, this.componentId + '@' + cssId, shadowRoot);
@@ -3674,7 +3672,7 @@ ComponentContext.prototype.modelToView = function() {
 ComponentContext.prototype.getCssId = function() {
   let override = '';
   if (this.componentId === 'default' ||
-      (typeof this._options.css === 'string' && !util.dom.getShadowRoot(this._view))) {
+      (typeof this._options.css === 'string' && util.dom.getShadowRoot(this._container || this._view) === false)) {
     override = '_' + this.contextId;
   }
   return _optionAttributes.cssIdPrefix + getComponentIndex(this) + override;
@@ -4680,7 +4678,7 @@ ContextController.prototype.addTransition = function(className, properties, opti
       className,
       properties,
       options,
-      util.dom.getShadowRoot(this.context.view())
+      util.dom.getShadowRoot(this.context.container() || this.context.view())
   );
   return this;
 };
@@ -4797,8 +4795,9 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
     this.context
         .trigger(this.context, eventPath, eventData);
   } else {
-    this.view()
-        .trigger(eventPath, eventData);
+    const sv = this.options().__shadowRoot;
+    if (sv) sv.trigger(eventPath, eventData);
+    this.view().trigger(eventPath, eventData);
   }
   return this;
 };
@@ -5707,7 +5706,7 @@ function loadResources(ctx, options) {
       }
       if (options.css !== false && typeof options.css !== 'string') {
         options.css = false;
-        const shadowRoot = util.dom.getShadowRoot(ctx.view());
+        const shadowRoot = util.dom.getShadowRoot(ctx.container() || ctx.view());
         if (!cachedComponent.css_applied || shadowRoot) {
           cachedComponent.css_applied = true;
           ctx.style(cachedComponent.css);
@@ -6365,7 +6364,7 @@ function initController(ctrl) {
       let refreshHandler = ctx._refreshHandler;
       // allocate refresh handler on the first "paint" request
       if (!refreshHandler) {
-        const scriptHeader = 'return (function($this, context, args){const $ = context.$; const model = context.model(); ';
+        const scriptHeader = 'return (function($this, context, args){const $ = context.$; const model = context.model(); const trigger = (ep, ed) => context._c.trigger(ep, ed); ';
         let code = '"use strict"; expose = {}; ';
 
         // add local vars from fields
@@ -6904,8 +6903,9 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
       }
     } else {
       const isCss = (resourceType === 'style');
-      if (z$.find(resourceType + '[id="' + hashId + '"]').length() === 0) {
-        const container = isCss && ctx ? util.dom.getShadowRoot(ctx.view()) : null;
+      const shadowRoot = (isCss && ctx && util.dom.getShadowRoot(ctx.container() || ctx.view()));
+      const container = shadowRoot || undefined;
+      if (z$(container).find(resourceType + '[id="' + hashId + '"]').length() === 0) {
         const head = container || document.head || document.getElementsByTagName('head')[0];
         const resource = document.createElement(resourceType);
         if (isCss) {
@@ -6921,6 +6921,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         const addResource = (text) => {
           // TODO: add logging
           if (isCss) {
+            if (shadowRoot) text = text.replace(/:root/g, ':host');
             if (resource.styleSheet) {
               resource.styleSheet.cssText = text;
             } else {

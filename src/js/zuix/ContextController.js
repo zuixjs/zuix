@@ -257,7 +257,7 @@ ContextController.prototype.addTransition = function(className, properties, opti
       className,
       properties,
       options,
-      util.dom.getShadowRoot(this.context.view())
+      util.dom.getShadowRoot(this.context.container() || this.context.view())
   );
   return this;
 };
@@ -374,8 +374,9 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
     this.context
         .trigger(this.context, eventPath, eventData);
   } else {
-    this.view()
-        .trigger(eventPath, eventData);
+    const sv = this.options().__shadowRoot;
+    if (sv) sv.trigger(eventPath, eventData);
+    this.view().trigger(eventPath, eventData);
   }
   return this;
 };

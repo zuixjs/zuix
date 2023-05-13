@@ -474,7 +474,7 @@ function loadResources(ctx, options) {
       }
       if (options.css !== false && typeof options.css !== 'string') {
         options.css = false;
-        const shadowRoot = util.dom.getShadowRoot(ctx.view());
+        const shadowRoot = util.dom.getShadowRoot(ctx.container() || ctx.view());
         if (!cachedComponent.css_applied || shadowRoot) {
           cachedComponent.css_applied = true;
           ctx.style(cachedComponent.css);
@@ -1132,7 +1132,7 @@ function initController(ctrl) {
       let refreshHandler = ctx._refreshHandler;
       // allocate refresh handler on the first "paint" request
       if (!refreshHandler) {
-        const scriptHeader = 'return (function($this, context, args){const $ = context.$; const model = context.model(); ';
+        const scriptHeader = 'return (function($this, context, args){const $ = context.$; const model = context.model(); const trigger = (ep, ed) => context._c.trigger(ep, ed); ';
         let code = '"use strict"; expose = {}; ';
 
         // add local vars from fields
@@ -1671,8 +1671,9 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
       }
     } else {
       const isCss = (resourceType === 'style');
-      if (z$.find(resourceType + '[id="' + hashId + '"]').length() === 0) {
-        const container = isCss && ctx ? util.dom.getShadowRoot(ctx.view()) : null;
+      const shadowRoot = (isCss && ctx && util.dom.getShadowRoot(ctx.container() || ctx.view()));
+      const container = shadowRoot || undefined;
+      if (z$(container).find(resourceType + '[id="' + hashId + '"]').length() === 0) {
         const head = container || document.head || document.getElementsByTagName('head')[0];
         const resource = document.createElement(resourceType);
         if (isCss) {
@@ -1688,6 +1689,7 @@ Zuix.prototype.using = function(resourceType, resourcePath, callback, ctx) {
         const addResource = (text) => {
           // TODO: add logging
           if (isCss) {
+            if (shadowRoot) text = text.replace(/:root/g, ':host');
             if (resource.styleSheet) {
               resource.styleSheet.cssText = text;
             } else {
