@@ -4,7 +4,7 @@ tags: api
 options: mdl highlight
 icon: construction
 title: "zuix.js <i class='material-icons'>emoji_nature</i> API"
-description: "zUIx.js API documentation, Class: Zuix"
+description: "zUIx.js API documentation, Namespace: dom"
 keywords:
 - Documentation
 - API
@@ -65,733 +65,132 @@ main table code {
 /* END: MARKDOWN JSDOC */
 </style>
 
-## `Zuix` class
-
-### Constructor
-
-<a name="Zuix"></a>
-#### new Zuix() &rarr; {[Zuix](../../zuix/Zuix)}
-
-Allocates a new instance of *zuix.js*, JavaScript library for
- component-based development.
- A *zuix.js* instance is automatically allocated on page load,
- and always available in the global scope as `zuix`.
+## [Utils](../../helpers/Utils).`dom` namespace
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 191](../../zuix/Zuix.js#L191)
+[helpers/Util.js](../../helpers/Util.js), [line 221](../../helpers/Util.js#L221)
 
 -->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)*
-
-### Properties
-
-<a name="$"></a>
-#### $ &rarr; *[ZxQueryStatic](../../helpers/ZxQueryStatic)*
-
-Helper function for manipulating the DOM.
 
 ### Methods
 
-<a name="activeRefresh"></a>
-#### activeRefresh($view, $element, contextData, refreshCallback) &rarr; {[ActiveRefresh](../../zuix/ActiveRefresh)}
+<a name="cssNot"></a>
+#### &lt;_static_&gt; cssNot(name, value) &rarr; {QuerySelectors}
 
-Active-Refresh factory method.
+Gets the CSS `:not` selector for the given comma-separated list of attributes with the specified value (if any).
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|The component's view|
-|`$element`|*[ZxQuery](../../helpers/ZxQuery)*|The target element|
-|`contextData`|*object*|Custom data that ca be passed from call to call|
-|`refreshCallback`|*[ActiveRefreshHandler](#ActiveRefreshHandler)*|The refresh handler function|
+|`name`|*string*|Comma separated list of attributes.|
+|`value`|*string*|The value to match.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1850](../../zuix/Zuix.js#L1850)
+[helpers/Util.js](../../helpers/Util.js), [line 300](../../helpers/Util.js#L300)
 
 -->
 
 ##### Returns
 
-*[ActiveRefresh](../../zuix/ActiveRefresh)*
- &dash; The ActiveRefresh object. Invoke the `start()` method on the returned object, to actually activate the refresh handler.
+*QuerySelectors*
+ &dash; The query selectors.
 
-<a name="bundle"></a>
-#### bundle(bundleData, callback) &rarr; {[Zuix](../../zuix/Zuix)|Array.&lt;<a href="#BundleItem">BundleItem</a>>}
+<a name="getAttribute"></a>
+#### &lt;_static_&gt; getAttribute(element, name) &rarr; {string}
 
-Gets/Sets the application's data bundle (all components and scripts used in the page packed into a single object).
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`bundleData`|*!Array.&lt;<a href="#BundleItem">BundleItem</a>>* \| *true*|*optional*  |A bundle object holding in memory all components' data (cache)|
-|`callback`|*function*|*optional*  |Called once the bundle compilation ends. Works if *bundleData* is *true*|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1860](../../zuix/Zuix.js#L1860)
-
--->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)* \| *Array.&lt;<a href="#BundleItem">BundleItem</a>>*
-
-<a name="componentize"></a>
-#### componentize(element) &rarr; {[Zuix](../../zuix/Zuix)}
-
-Searches the document, or inside the given `element`,
-for elements with `z-load` attribute, and loads the
-requested components.
-Is also possible to disable/enable the componentizer
-by passing a boolean value as argument.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`element`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *boolean*|*optional*  |Container to use as starting element for the search (**default:** *document*)|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1793](../../zuix/Zuix.js#L1793)
-
--->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)*
- &dash; The `{Zuix}` object itself.
-
-##### Example
-
-```js
- zuix.componentize(document);
- // Globally disable the componentizer
- zuix.compenentize(false);
- // Re-enable the componentizer
- zuix.compenentize(true);
- ```
-
-<a name="context"></a>
-#### context(contextId, callback) &rarr; {[ComponentContext](../../zuix/ComponentContext)}
-
-Gets a `ComponentContext` object, given its `contextId` or its host element.
-The `contextId` is the one specified in the `ContextOptions` object or by using the `z-context` attribute on the host element.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`contextId`|*Element* \| *[ZxQuery](../../helpers/ZxQuery)* \| *string*|  |The `contextId` or the component's host element.|
-|`callback`|*[ContextReadyCallback](#ContextReadyCallback)*|*optional*  |The callback function that will pass the component's context object once loaded and ready.|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1533](../../zuix/Zuix.js#L1533)
-
--->
-
-##### Returns
-
-*[ComponentContext](../../zuix/ComponentContext)*
- &dash; The matching component's context or `null` if the context does not exist or not yet loaded.
-
-##### Example
-
-```html
-<div z-load="site/components/slideshow"
-     z-context="my-slide-show">...</div>
-```
-```js
-slideShow = null;
-zuix.context('my-slide-show', function(ctx) {
-  slideShow = ctx;
-  // call component's methods
-  slideShow.setSlide(1);
-});
-```
-
-<a name="controller"></a>
-#### controller(handler, options) &rarr; {[ContextControllerHandler](#ContextControllerHandler)}
-
-Allocates a component's controller handler. The provided `handler` function will
-be called to initialize the component's controller instance once the component
-has been loaded.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`handler`|*[ContextControllerHandler](#ContextControllerHandler)* \| *string*|  |Function called to initialize the component controller that will be passed as argument of this function|
-|`options`|*Object* \| *Object*|*optional*  |Optional controller options / callback|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1499](../../zuix/Zuix.js#L1499)
-
--->
-
-##### Returns
-
-*[ContextControllerHandler](#ContextControllerHandler)*
- &dash; The allocated controller handler.
-
-##### Example
-
-```js
-// Allocates and assign a controller for
-// the component 'path/to/component_name'
-ctrl = zuix.controller(function(cp) {
-  // `cp` is the {ContextController}
-  // TODO: inline code of controller follows...
-}).for('path/to/component_name');
-```
-
-<a name="dumpCache"></a>
-#### dumpCache() &rarr; {Array.&lt;<a href="#ComponentCache">ComponentCache</a>>}
-
-Dumps content of the components cache. Mainly for debugging purpose.
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1919](../../zuix/Zuix.js#L1919)
-
--->
-
-##### Returns
-
-*Array.&lt;<a href="#ComponentCache">ComponentCache</a>>*
-
-<a name="dumpContexts"></a>
-#### dumpContexts() &rarr; {Array.&lt;<a href="../../zuix/ComponentContext">ComponentContext</a>>}
-
-Dumps allocated component's contexts. Mainly for debugging purpose.
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1924](../../zuix/Zuix.js#L1924)
-
--->
-
-##### Returns
-
-*Array.&lt;<a href="../../zuix/ComponentContext">ComponentContext</a>>*
-
-<a name="field"></a>
-#### field(fieldName, container, context) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
-
-Search the document or inside the given `container` for elements
-with `z-field` attribute matching the provided `fieldName`.
-This method implements a caching mechanism and automatic
-disposal of allocated objects and events.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`fieldName`|*string*|  |Value of *z-field* to look for|
-|`container`|*Element*|*optional*  |Starting DOM element for this search (**default:** *document*)|
-|`context`|*object*|*optional*  |The context|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1354](../../zuix/Zuix.js#L1354)
-
--->
-
-##### Returns
-
-*[ZxQuery](../../helpers/ZxQuery)*
- &dash; ZxQuery object with elements matching the given `z-field` attribute.
-If there's just one matching element, then the returned object will also have the additional method `field(fieldName)`
-to search for fields inside the element itself.
-
-##### Example
-
-```html
-<div z-field="sample-container">
-   <!-- HTML -->
-</div>
-<script>
-container = zuix.field('sample-container');
-container.html('Hello World!');
-</script>
-```
-
-<a name="getResourcePath"></a>
-#### getResourcePath(path) &rarr; {string}
-
-Gets the path of a loadable resource.
+Gets the first non-null value for the given comma-separated list of element attributes.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`path`|*string*|Loadable resource *id*|
+|`element`|*Element*|The target element.|
+|`name`|*string*|Comma separated list of attributes.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1831](../../zuix/Zuix.js#L1831)
+[helpers/Util.js](../../helpers/Util.js), [line 258](../../helpers/Util.js#L258)
 
 -->
 
 ##### Returns
 
 *string*
- &dash; The resource's path.
+ &dash; The attribute value.
 
-<a name="hook"></a>
-#### hook(eventPath, eventHandler) &rarr; {[Zuix](../../zuix/Zuix)}
+<a name="getShadowRoot"></a>
+#### &lt;_static_&gt; getShadowRoot(node) &rarr; {ShadowRoot|boolean}
 
-Sets a callback for a global event.
-There can be only one callback for each kind of global event.
-Pass null as `eventHandler` to unset a previously set callback.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`eventPath`|*string*|  |The event path|
-|`eventHandler`|*function* \| *undefined*|*optional*  |The handler function|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1619](../../zuix/Zuix.js#L1619)
-
--->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)*
- &dash; The `{Zuix}` object itself.
-
-##### Example
-
-```js
-// The context `this` in the event handlers will be
-// the {ComponentContext} object that sourced the event.
-// The `data` parameter passed to the handlers, is of
-// variant type, depending on the type of the occurring event.
-zuix.hook('load:begin', function(data) {
-
-  loaderMessage.html('Loading "' + data.task + '" ...');
-  loaderMessage.show();
-
-}).hook('load:next', function(data) {
-
-  loaderMessage.html('"' + data.task + '" done, loading next..');
-
-}).hook('load:end', function() {
-
-  loaderMessage.hide();
-
-}).hook('html:parse', function(data) {
-  // Process HTML content before it's attached to the DOM
-
-  if (this.options().markdown === true && typeof showdown !== 'undefined') {
-    // ShowDown - MarkDown syntax compiler
-    let htmlMarkDown = data.content;
-    htmlMarkDown = new showdown.Converter()
-      .makeHtml(htmlMarkDown);
-    // return the processed content
-    data.content = htmlMarkDown;
-  }
-
-}).hook('css:parse', function(data) {
-  // Process CSS content before it's attached to the DOM
-
-  let css = data.content;
-  // process css, eg. run a CSS pre-processor
-  // eg. Sass, Less, ...
-  css = run_pre_processor(css);
-  // return the processed content
-  data.content = css;
-
-}).hook('view:process', function(view) {
-  // The view DOM is now fully loaded and ready
-  // `view` is of {ZxQuery} type
-
-  // Prism code syntax highlighter
-  view.find('code').each(function(i, block) {
-    this.addClass('language-javascript');
-    Prism.highlightElement(block);
-  });
-
-  // Force opening of all non-local links in a new window
-  zuix.$('a[href*="://"]').attr('target', '_blank');
-
-  // Material Design Light auto-detection
-  // Call DOM upgrade on newly added view elements
-  if (componentHandler)
-    componentHandler.upgradeElements(view.get());
-
-});
-```
-
-<a name="lazyLoad"></a>
-#### lazyLoad(enable, threshold) &rarr; {[Zuix](../../zuix/Zuix)|boolean}
-
-Enables/Disables lazy-loading or gets the current setting.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`enable`|*boolean*|*optional*  |Enable or disable lazy loading.|
-|`threshold`|*number*|*optional*  |Load-ahead threshold in pixels. When < 0, elements will be loaded before entering the viewport for the given amount of pixels. Positive values will delay loading of element until the entered the viewport for at least the given number of pixels.|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1766](../../zuix/Zuix.js#L1766)
-
--->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)* \| *boolean*
- &dash; *true* if lazy-loading is enabled, *false* otherwise.
-
-<a name="load"></a>
-#### load(componentId, options) &rarr; {[ComponentContext](../../zuix/ComponentContext)}
-
-Loads a component.
-This is the programmatic equivalent of `z-load`
-attribute used to load components from HTML.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`componentId`|*string*|  |The identifier name of the component to be loaded|
-|`options`|*[ContextOptions](#ContextOptions)*|*optional*  |Options used to initialize the loaded component|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1404](../../zuix/Zuix.js#L1404)
-
--->
-
-##### Returns
-
-*[ComponentContext](../../zuix/ComponentContext)*
- &dash; The component context.
-
-##### Example
-
-```html
- <!--
- The controller will be loaded on the following host element:
- -->
-<div #sample-view></div>
-
-<script>
-// Get the host element
-const view = zuix.field('sample-view');
-
-// Declares inline controller for 'my/example/component'
-const exampleController = zuix.controller((cp) => {
-  cp.create = onCreate;
-
-  function onCreate() {
-    // Sets the initial content of the view
-    cp.view().html('Hello World!');
-    // Exposes the private `testMethod`
-    // as the public method `test`
-    cp.expose('test', testMethod);
-  }
-
-  function testMethod() {
-    cp.log.i("Method exposing test");
-    cp.view().html('A simple test.');
-  }
-}).for('my/example/component');
-
-// loads the controller
-zuix.load('my/example/component', { view, ready: (ctx) => {
-  // call the public method `test` after 1 second
-  setTimeout(ctx.test, 1000);
-}});
-</script>
-```
-
-<a name="loadComponent"></a>
-#### loadComponent(elements, componentId, type, options) &rarr; {[Zuix](../../zuix/Zuix)}
-
-Loads a component, given the target host element(s).
-If the target is already a component, it will be
-unloaded and replaced by the new one.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`elements`|*[ZxQuery](../../helpers/ZxQuery)* \| *Element*|  |The target host element(s) or component context(s)|
-|`componentId`|*string* \| *object*|  |The id of the component to load (path/component_name)|
-|`type`|*'view'* \| *'ctrl'* \| *undefined*|*optional*  |The component type|
-|`options`|*[ContextOptions](#ContextOptions)* \| *undefined*|*optional*  |The component options|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1476](../../zuix/Zuix.js#L1476)
-
--->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)*
- &dash; The `{Zuix}` object itself.
-
-##### Example
-
-```html
-<div layout="rows center-spread">
-
-  <div class="card-component">
-    <div z-field="title">Card 1</div>
-  </div>
-
-  <div class="card-component">
-    <div z-field="title">Card 2</div>
-  </div>
-
-</div>
-<style>
-.card-component {
-  margin: 8px;
-  max-width: 360px;
-}
-</style>
-<script>
-  const elements = zuix.$.find('.card-component');
-  zuix.loadComponent(elements, 'templates/mdl_card', 'view');
-</script>
-```
-<div layout="rows center-spread">
-  <div class="card-component">
-    <div z-field="title">Card 1</div>
-  </div>
-  <div class="card-component">
-    <div z-field="title">Card 2</div>
-  </div>
-</div>
-<style>
-.card-component {
-  margin: 8px;
-  max-width: 360px;
-}
-</style>
-<script>
-  const elements = zuix.$.find('.card-component');
-  zuix.loadComponent(elements, 'templates/mdl_card', 'view');
-</script>
-
-<a name="observable"></a>
-#### observable(obj) &rarr; {[ObservableObject](../../observable/ObservableObject)}
-
-Gets an observable instance of the given object. Based on
-the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy?retiredLocale=it) object.
+Return the ShadowRoot node containing the given element, or false if not in a shadow DOM.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`obj`|*object*|Object to observe|
+|`node`|*Node*|The node element.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1839](../../zuix/Zuix.js#L1839)
+[helpers/Util.js](../../helpers/Util.js), [line 334](../../helpers/Util.js#L334)
 
 -->
 
 ##### Returns
 
-*[ObservableObject](../../observable/ObservableObject)*
- &dash; The observable object.
+*ShadowRoot* \| *boolean*
+ &dash; The ShadowRoot or false.
 
-<a name="runScriptlet"></a>
-#### runScriptlet(scriptCode, $el, $view, data) &rarr; {object|undefined}
+<a name="queryAttribute"></a>
+#### &lt;_static_&gt; queryAttribute(name, value, appendValue) &rarr; {string}
 
-Runs a script in the scripting context of the given view element.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`scriptCode`|*string*|  |Scriptlet Js code|
-|`$el`|*[ZxQuery](../../helpers/ZxQuery)*|  |Target ZxQuery-wrapped element|
-|`$view`|*[ZxQuery](../../helpers/ZxQuery)*|  |Component's view (ZxQuery)|
-|`data`|*object* \| *undefined*|*optional*  |Custom data|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1960](../../zuix/Zuix.js#L1960)
-
--->
-
-##### Returns
-
-*object* \| *undefined*
-
-<a name="setComponentCache"></a>
-#### setComponentCache()
-
-Sets components cache.
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1914](../../zuix/Zuix.js#L1914)
-
--->
-
-##### Returns
-
- &dash; void
-
-<a name="store"></a>
-#### store(name, value) &rarr; {object}
-
-Gets/Sets a global store entry.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`name`|*string*|  |Entry name|
-|`value`|*object*|*optional*  |Entry value|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1819](../../zuix/Zuix.js#L1819)
-
--->
-
-##### Returns
-
-*object*
-
-##### Example
-
-```js
- // stores *myObjectData* in the store entry named *my-data*
- zuix.store('my-data', myObjectData);
- // gets data from the store entry named *my-data*
- const data = zuix.store('my-data');
- ```
-
-<a name="trigger"></a>
-#### trigger(context, eventPath, eventData) &rarr; {[Zuix](../../zuix/Zuix)}
-
-Triggers the event specified by `eventPath`.
-
-##### Parameters
-
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`context`|*object*|  |The context object (*this*) passed to handler functions listening for this event|
-|`eventPath`|*string*|  |The path of the event to fire|
-|`eventData`|*object*|*optional*  |The data object of the event|
-
-<!--
-
-*Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1544](../../zuix/Zuix.js#L1544)
-
--->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)*
- &dash; The `{Zuix}` object itself.
-
-<a name="unload"></a>
-#### unload(context) &rarr; {[Zuix](../../zuix/Zuix)}
-
-Unloads the given component context(s) releasing all allocated resources.
+Gets CSS query for matching the given value in a list of specified attributes.
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`context`|*[ComponentContext](../../zuix/ComponentContext)* \| *[ZxQuery](../../helpers/ZxQuery)* \| *Element*|The instance of the component to be unloaded, a *ZxQuery* selection, or the component's host element|
+|`name`|*string*|Comma separated list of attribute names.|
+|`value`|*string*|The value to match.|
+|`appendValue`|*QuerySelectors*|Additional CSS query to append|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1418](../../zuix/Zuix.js#L1418)
+[helpers/Util.js](../../helpers/Util.js), [line 235](../../helpers/Util.js#L235)
 
 -->
 
 ##### Returns
 
-*[Zuix](../../zuix/Zuix)*
- &dash; The `{Zuix}` object itself.
+*string*
+ &dash; The query string.
 
-##### Example
+<a name="setAttribute"></a>
+#### &lt;_static_&gt; setAttribute(element, name, value)
 
-```js
-zuix.unload(ctx);
-```
-
-<a name="using"></a>
-#### using(resourceType, resourcePath, callback, ctx) &rarr; {[Zuix](../../zuix/Zuix)}
-
-Loads a CSS, script or a singleton component. Resources loaded
-with this method are available in the global scope and can also be
-included in the application bundle.
+Sets the value of the given comma-separated list of attributes.
 
 ##### Parameters
 
-|Name|Type|Argument|Description|
-|----|----|--------|-----------|
-|`resourceType`|*string*|  |Either *'style'*, *'script'* or *'component'*|
-|`resourcePath`|*string*|  |Relative or absolute resource url path|
-|`callback`|*[ResourceUsingCallback](#ResourceUsingCallback)*|*optional*  |Callback function to call once resource is loaded|
-|`ctx`|*[ComponentContext](../../zuix/ComponentContext)*|*optional*  |The target context. Mandatory when loading resources for a component with ShadowDOM (custom element).|
+|Name|Type|Description|
+|----|----|-----------|
+|`element`|*Element*|The target element.|
+|`name`|*string*|Comma separated list of attributes.|
+|`value`|*object* \| *string*|The value to set.|
 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1641](../../zuix/Zuix.js#L1641)
+[helpers/Util.js](../../helpers/Util.js), [line 280](../../helpers/Util.js#L280)
 
 -->
-
-##### Returns
-
-*[Zuix](../../zuix/Zuix)*
- &dash; The `{Zuix}` object itself.
-
-##### Example
-
-```js
-zuix.using('script', 'https://some.cdn.js/moment.min.js', function(){
-  // can start using moment.js
-});
-```
 
 ### Type Definitions
 

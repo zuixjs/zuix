@@ -637,7 +637,7 @@ function loadComponent(elements, componentId, type, options) {
     }
   };
   elements.each((i, el, $el) => {
-    !($el.attr(_optionAttributes.zLoaded) === true || $el.attr(_optionAttributes.zLoaded) === false) && load($el)
+    !($el.attr(_optionAttributes.zLoaded) === true || $el.attr(_optionAttributes.zLoaded) === false) && load($el);
   });
 }
 
@@ -1503,6 +1503,9 @@ Zuix.prototype.controller = function(handler, options) {
     }
     handler = getController(handler, options);
   }
+  if (options.componentId) {
+    _globalControllerHandlers[options.componentId] = handler;
+  }
   return controller.call(this, handler);
 };
 /**
@@ -1946,7 +1949,7 @@ Zuix.prototype.resolveImplicitLoad = (element) => {
 
 
 /**
- * // TODO: document method
+ * Runs a script in the scripting context of the given view element.
  *
  * @param {string} scriptCode Scriptlet Js code
  * @param {ZxQuery} $el Target ZxQuery-wrapped element
@@ -1961,10 +1964,10 @@ Zuix.prototype.runScriptlet = (scriptCode, $el, $view, data) => {
   }
 };
 
-// member to expose utility class
-// TODO: document this with JSDocs
-/** @package
- * @private */
+/**
+ * Common utility functions.
+ * @type {Utils}
+ */
 Zuix.prototype.utils = util;
 
 /**

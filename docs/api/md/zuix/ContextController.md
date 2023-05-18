@@ -213,7 +213,7 @@ Declare fields that are available in the view's scripting scope.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 416](../../zuix/ContextController.js#L416)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 417](../../zuix/ContextController.js#L417)
 
 -->
 
@@ -238,7 +238,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 390](../../zuix/ContextController.js#L390)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 391](../../zuix/ContextController.js#L391)
 
 -->
 
@@ -286,7 +286,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 513](../../zuix/ContextController.js#L513)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 514](../../zuix/ContextController.js#L514)
 
 -->
 
@@ -322,7 +322,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 456](../../zuix/ContextController.js#L456)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 457](../../zuix/ContextController.js#L457)
 
 -->
 
@@ -361,7 +361,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 482](../../zuix/ContextController.js#L482)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 483](../../zuix/ContextController.js#L483)
 
 -->
 
