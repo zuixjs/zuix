@@ -1,4 +1,4 @@
-/* zuix.js v1.1.26 23.05.13 23:23:08 */
+/* zuix.js v1.1.27 23.05.18 18:03:16 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -376,14 +376,35 @@ module.exports = TaskQueue;
 
 
 
-// Generic utility class
-module.exports = {
+/**
+ * @typedef QuerySelectors
+ * @method {function(): string} getAll
+ * @method {function(i: number): string} get
+ */
 
-  isNoU: function(obj) {
+/**
+ * Common utility functions.
+ * @namespace Utils
+ */
+const Utils = {
+
+  /**
+   * Returns true only if object is null || undefined
+   * @param {object} obj The object to test.
+   * @return {boolean} True if null or undefined, otherwise false.
+   * @memberOf Utils
+   */
+  isNoU(obj) {
     return (typeof obj === 'undefined' || obj === null);
   },
-
-  propertyFromPath: function(o, s) {
+  /**
+   * Gets object property given its name
+   * @param {object} o The object to get property from.
+   * @param {string} s The property path (dotted/indexed form).
+   * @return {object|undefined} The property matching the given path.
+   * @memberOf Utils
+   */
+  propertyFromPath(o, s) {
     if (typeof s !== 'string' || o == null) {
       return;
     }
@@ -426,7 +447,13 @@ module.exports = {
     return ref;
   },
 
-  cloneObject: function cloneObject(obj) {
+  /**
+   * Creates a copy of a given object.
+   * @param {object} obj The source object.
+   * @return {object} The object copy.
+   * @memberOf Utils
+   */
+  cloneObject(obj) {
     if (obj === null || typeof obj !== 'object') {
       return obj;
     }
@@ -436,7 +463,7 @@ module.exports = {
       temp = obj.constructor();
       for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
-          temp[key] = cloneObject(obj[key]);
+          temp[key] = this.cloneObject(obj[key]);
         }
       }
     } catch (e) {
@@ -445,7 +472,13 @@ module.exports = {
     return temp;
   },
 
-  hasPassiveEvents: function hasPassiveEvents() {
+  // TODO: deprecate `hasPassiveEvents`
+  /**
+   * Returns true if browser supports passive events.
+   * @return {boolean} True if supported, otherwise false.
+   * @memberOf Utils
+   */
+  hasPassiveEvents() {
     let supportsPassive = false;
     try {
       const opts = Object.defineProperty({}, 'passive', {
@@ -459,14 +492,26 @@ module.exports = {
     return supportsPassive;
   },
 
-  hyphensToCamelCase: function(s) {
+  /**
+   * Converts the given string to `camelCase`
+   * @param {string} s The string to convert.
+   * @return {string} The converted string.
+   * @memberOf Utils
+   */
+  hyphensToCamelCase(s) {
     return typeof s === 'string' ? s.replace(/--/g, ':').replace(/-([a-z0-9_$-])/g, function(g) {
       return '_$-'.indexOf(g[1]) > -1 || (+g[1]).toString() === g[1] ?
           '_' + g[1].replace('-', '_') : g[1].toUpperCase();
     }).replace(/:/g, '-') : s;
   },
 
-  camelCaseToHyphens: function(s) {
+  /**
+   * Converts the given string to `kebab-case`.
+   * @param {string} s The string to convert.
+   * @return {string} The converted string.
+   * @memberOf Utils
+   */
+  camelCaseToHyphens(s) {
     if (typeof s !== 'string') return s;
     s = s.replace(/(^\w)|(\s+\w)/g, function(letter) {
       return letter.toUpperCase();
@@ -474,7 +519,13 @@ module.exports = {
     return s.split(/(?=[A-Z])/).join('-').toLowerCase();
   },
 
-  normalizeControllerCode: function(javascriptCode) {
+  /**
+   * Normalizes controller code (ES5/ES6+).
+   * @param {string} javascriptCode The JS code to normalize.
+   * @return {string} Normalized JS controller code.
+   * @memberOf Utils
+   */
+  normalizeControllerCode(javascriptCode) {
     if (javascriptCode.indexOf('module.exports') >= 0) {
       return '\'use strict\'; let module = {}; ' + javascriptCode + ';\nreturn module.exports;';
     } else {
@@ -494,7 +545,14 @@ module.exports = {
     }
   },
 
-  catchContextError: function(ctx, fn, errorCallback) {
+  /**
+   * Catches errors occurred in the specified component context.
+   * @param {ComponentContext} ctx The component context.
+   * @param {function} fn Function code to execute.
+   * @param {function} errorCallback Error callback.
+   * @memberOf Utils
+   */
+  catchContextError(ctx, fn, errorCallback) {
     try {
       fn();
     } catch (err) {
@@ -509,9 +567,21 @@ module.exports = {
     }
   },
 
+  /**
+   * @namespace dom
+   * @memberof Utils
+   */
   dom: {
 
-    queryAttribute: function(name, value, appendValue) {
+    /**
+     * Gets CSS query for matching the given value in a list of specified attributes.
+     * @param {string} name Comma separated list of attribute names.
+     * @param {string} value The value to match.
+     * @param {QuerySelectors} appendValue Additional CSS query to append
+     * @return {string} The query string.
+     * @memberof Utils.dom
+     */
+    queryAttribute(name, value, appendValue) {
       const fields = name.split(/[\s|,]+/g);
       let selector = '';
       fields.forEach(function(f, i) {
@@ -527,7 +597,14 @@ module.exports = {
       });
       return selector;
     },
-    getAttribute: function(element, name) {
+    /**
+     * Gets the first non-null value for the given comma-separated list of element attributes.
+     * @param {Element} element The target element.
+     * @param {string} name Comma separated list of attributes.
+     * @return {string} The attribute value.
+     * @memberof Utils.dom
+     */
+    getAttribute(element, name) {
       let value;
       if (typeof name === 'string' && name.indexOf(',') !== -1) {
         const fields = name.split(/[\s|,]+/g);
@@ -542,7 +619,14 @@ module.exports = {
       } else value = element.getAttribute(name);
       return value;
     },
-    setAttribute: function(element, name, value) {
+    /**
+     * Sets the value of the given comma-separated list of attributes.
+     * @param {Element} element The target element.
+     * @param {string} name Comma separated list of attributes.
+     * @param {object|string} value The value to set.
+     * @memberof Utils.dom
+     */
+    setAttribute(element, name, value) {
       if (typeof name === 'string' && name.indexOf(',') !== -1) {
         const fields = name.split(/[\s|,]+/g);
         const _t = this;
@@ -550,12 +634,19 @@ module.exports = {
           _t.setAttribute(element, f, value);
         });
       } else if (value === null) {
-        element.removeAttribute(name, value);
+        element.removeAttribute(name);
       } else if (element.getAttribute(name) !== value) {
         element.setAttribute(name, value);
       }
     },
-    cssNot: function(name, value) {
+    /**
+     * Gets the CSS `:not` selector for the given comma-separated list of attributes with the specified value (if any).
+     * @param {string} name Comma separated list of attributes.
+     * @param {string} value The value to match.
+     * @return {QuerySelectors} The query selectors.
+     * @memberof Utils.dom
+     */
+    cssNot(name, value) {
       const fields = name.split(',');
       let selector = '';
       fields.forEach(function(v, i) {
@@ -569,20 +660,27 @@ module.exports = {
         if (i < fields.length - 1) selector += ',';
       });
       return (function(s) {
+        /** @type {QuerySelectors} */
         return {
-          get: function(i) {
+          get(i) {
             const selectors = s.split(',');
             return (i >= selectors.length || i == null) ? selectors[0] : selectors[i];
           },
           // eslint-disable-next-line no-unused-vars
-          getAll: function(i) {
+          getAll() {
             const selectors = s.split(',');
             return selectors.join('');
           }
         };
       })(selector);
     },
-    getShadowRoot: function(node) {
+    /**
+     * Return the ShadowRoot node containing the given element, or false if not in a shadow DOM.
+     * @param {Node} node The node element.
+     * @return {ShadowRoot|boolean} The ShadowRoot or false.
+     * @memberof Utils.dom
+     */
+    getShadowRoot(node) {
       for (; node; node = node.parentNode) {
         if (node instanceof ShadowRoot) {
           return node;
@@ -594,6 +692,8 @@ module.exports = {
   }
 
 };
+
+module.exports = Utils;
 
 
 /***/ }),
@@ -5871,7 +5971,7 @@ function loadComponent(elements, componentId, type, options) {
     }
   };
   elements.each((i, el, $el) => {
-    !($el.attr(_optionAttributes.zLoaded) === true || $el.attr(_optionAttributes.zLoaded) === false) && load($el)
+    !($el.attr(_optionAttributes.zLoaded) === true || $el.attr(_optionAttributes.zLoaded) === false) && load($el);
   });
 }
 
@@ -6737,6 +6837,9 @@ Zuix.prototype.controller = function(handler, options) {
     }
     handler = getController(handler, options);
   }
+  if (options.componentId) {
+    _globalControllerHandlers[options.componentId] = handler;
+  }
   return controller.call(this, handler);
 };
 /**
@@ -7180,7 +7283,7 @@ Zuix.prototype.resolveImplicitLoad = (element) => {
 
 
 /**
- * // TODO: document method
+ * Runs a script in the scripting context of the given view element.
  *
  * @param {string} scriptCode Scriptlet Js code
  * @param {ZxQuery} $el Target ZxQuery-wrapped element
@@ -7195,10 +7298,10 @@ Zuix.prototype.runScriptlet = (scriptCode, $el, $view, data) => {
   }
 };
 
-// member to expose utility class
-// TODO: document this with JSDocs
-/** @package
- * @private */
+/**
+ * Common utility functions.
+ * @type {Utils}
+ */
 Zuix.prototype.utils = util;
 
 /**
