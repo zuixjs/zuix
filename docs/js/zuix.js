@@ -1,4 +1,4 @@
-/* zuix.js v1.1.27 23.05.18 18:03:16 */
+/* zuix.js v1.1.28 23.05.24 11:18:24 */
 
 var zuix;
 /******/ (function() { // webpackBootstrap
@@ -2202,6 +2202,9 @@ ObjectObserver.prototype.observable = function(obj) {
       /** @type ObjectObserver */
       context: null,
       get: function(target, key) {
+        if (key === 'toJSON') {
+          return () => target;
+        }
         if (key === 'observableTarget') {
           return target;
         }
