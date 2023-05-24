@@ -96,6 +96,9 @@ ObjectObserver.prototype.observable = function(obj) {
       /** @type ObjectObserver */
       context: null,
       get: function(target, key) {
+        if (key === 'toJSON') {
+          return () => target;
+        }
         if (key === 'observableTarget') {
           return target;
         }
