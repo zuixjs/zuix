@@ -296,7 +296,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 #### field(fieldName, container, context) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
 
 Search the document or inside the given `container` for elements
-with `z-field` attribute matching the provided `fieldName`.
+having the `#<field_name>` (or `z-field="<name>"`) attribute matching the given value.
 This method implements a caching mechanism and automatic
 disposal of allocated objects and events.
 
@@ -304,7 +304,7 @@ disposal of allocated objects and events.
 
 |Name|Type|Argument|Description|
 |----|----|--------|-----------|
-|`fieldName`|*string*|  |Value of *z-field* to look for|
+|`fieldName`|*string*|  |The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get|
 |`container`|*Element*|*optional*  |Starting DOM element for this search (**default:** *document*)|
 |`context`|*object*|*optional*  |The context|
 
@@ -318,14 +318,14 @@ disposal of allocated objects and events.
 ##### Returns
 
 *[ZxQuery](../../helpers/ZxQuery)*
- &dash; ZxQuery object with elements matching the given `z-field` attribute.
+ &dash; A `{ZxQuery}` object wrapping the matching element(s).
 If there's just one matching element, then the returned object will also have the additional method `field(fieldName)`
 to search for fields inside the element itself.
 
 ##### Example
 
 ```html
-<div z-field="sample-container">
+<div #sample-container>
    <!-- HTML -->
 </div>
 <script>
@@ -568,11 +568,11 @@ unloaded and replaced by the new one.
 <div layout="rows center-spread">
 
   <div class="card-component">
-    <div z-field="title">Card 1</div>
+    <div #title>Card 1</div>
   </div>
 
   <div class="card-component">
-    <div z-field="title">Card 2</div>
+    <div #title>Card 2</div>
   </div>
 
 </div>
@@ -589,10 +589,10 @@ unloaded and replaced by the new one.
 ```
 <div layout="rows center-spread">
   <div class="card-component">
-    <div z-field="title">Card 1</div>
+    <div #title>Card 1</div>
   </div>
   <div class="card-component">
-    <div z-field="title">Card 2</div>
+    <div #title>Card 2</div>
   </div>
 </div>
 <style>

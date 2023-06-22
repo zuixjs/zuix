@@ -262,10 +262,11 @@ ContextController.prototype.addTransition = function(className, properties, opti
   return this;
 };
 /**
- * Gets view's field(s) with the specified name.
+ * Gets, within the component view, elements having the `#<field_name>` (or `z-field="<name>"`)
+ * attribute matching the given value.
  * Same as [ComponentContext&ndash;field](../ComponentContext/#field).
  *
- * @param {!string} fieldName Value to match in the *z-field* attribute
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get.
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  */
 ContextController.prototype.field = function(fieldName) {

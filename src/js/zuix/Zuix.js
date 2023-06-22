@@ -312,10 +312,10 @@ function controller(handler) {
 /**
  *
  * @private
- * @param {!string} fieldName Value to match in the `z-field` attribute.
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get.
  * @param {!Element|!ZxQuery} [container] Starting DOM element for this search (**default:** *document*)
  * @param {object} [context] The context
- * @return {ZxQuery} ZxQuery object with elements matching the given ```z-field``` attribute.
+ * @return {ZxQuery} ZxQuery object with elements matching the given `fieldName`.
  * If the matching element is just one, then it will also have the extra method `field(fieldName)`
  * to search for fields contained in it.
  *
@@ -1327,14 +1327,14 @@ function getController(javascriptCode, callback) {
 
 /**
  * Search the document or inside the given `container` for elements
- * with `z-field` attribute matching the provided `fieldName`.
+ * having the `#<field_name>` (or `z-field="<name>"`) attribute matching the given value.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
  * @example
  *
 ```html
-<div z-field="sample-container">
+<div #sample-container>
    <!-- HTML -->
 </div>
 <script>
@@ -1343,10 +1343,10 @@ container.html('Hello World!');
 </script>
 ```
  *
- * @param {!string} fieldName Value of *z-field* to look for
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get
  * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
  * @param {object} [context] The context
- * @return {ZxQuery} ZxQuery object with elements matching the given `z-field` attribute.
+ * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  * If there's just one matching element, then the returned object will also have the additional method `field(fieldName)`
  * to search for fields inside the element itself.
  *
@@ -1429,11 +1429,11 @@ Zuix.prototype.unload = function(context) {
 <div layout="rows center-spread">
 
   <div class="card-component">
-    <div z-field="title">Card 1</div>
+    <div #title>Card 1</div>
   </div>
 
   <div class="card-component">
-    <div z-field="title">Card 2</div>
+    <div #title>Card 2</div>
   </div>
 
 </div>
@@ -1450,10 +1450,10 @@ Zuix.prototype.unload = function(context) {
 ```
 <div layout="rows center-spread">
   <div class="card-component">
-    <div z-field="title">Card 1</div>
+    <div #title>Card 1</div>
   </div>
   <div class="card-component">
-    <div z-field="title">Card 2</div>
+    <div #title>Card 2</div>
   </div>
 </div>
 <style>
@@ -1498,12 +1498,12 @@ ctrl = zuix.controller(function(cp) {
  */
 Zuix.prototype.controller = function(handler, options) {
   if (typeof handler === 'string') {
-    if (options.componentId) {
+    if (options && options.componentId) {
       handler += '\n//# sourceURL="' + options.componentId + '.js"\n';
     }
     handler = getController(handler, options);
   }
-  if (options.componentId) {
+  if (options && options.componentId) {
     _globalControllerHandlers[options.componentId] = handler;
   }
   return controller.call(this, handler);

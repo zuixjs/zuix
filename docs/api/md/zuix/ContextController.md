@@ -194,7 +194,7 @@ Clears the fields cache.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 277](../../zuix/ContextController.js#L277)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 278](../../zuix/ContextController.js#L278)
 
 -->
 
@@ -213,7 +213,7 @@ Declare fields that are available in the view's scripting scope.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 417](../../zuix/ContextController.js#L417)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 418](../../zuix/ContextController.js#L418)
 
 -->
 
@@ -238,7 +238,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 391](../../zuix/ContextController.js#L391)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 392](../../zuix/ContextController.js#L392)
 
 -->
 
@@ -250,19 +250,20 @@ component context object.
 <a name="field"></a>
 #### field(fieldName) &rarr; {[ZxQuery](../../helpers/ZxQuery)}
 
-Gets view's field(s) with the specified name.
+Gets, within the component view, elements having the `#<field_name>` (or `z-field="<name>"`)
+attribute matching the given value.
 Same as [ComponentContext&ndash;field](../ComponentContext/#field).
 
 ##### Parameters
 
 |Name|Type|Description|
 |----|----|-----------|
-|`fieldName`|*string*|Value to match in the *z-field* attribute|
+|`fieldName`|*string*|The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get.|
 
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 271](../../zuix/ContextController.js#L271)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 272](../../zuix/ContextController.js#L272)
 
 -->
 
@@ -286,7 +287,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 514](../../zuix/ContextController.js#L514)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 515](../../zuix/ContextController.js#L515)
 
 -->
 
@@ -322,7 +323,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 457](../../zuix/ContextController.js#L457)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 458](../../zuix/ContextController.js#L458)
 
 -->
 
@@ -361,7 +362,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 483](../../zuix/ContextController.js#L483)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 484](../../zuix/ContextController.js#L484)
 
 -->
 
@@ -399,7 +400,7 @@ Same as [ComponentContext&ndash;model](../ComponentContext/#model).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 325](../../zuix/ContextController.js#L325)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 326](../../zuix/ContextController.js#L326)
 
 -->
 
@@ -416,7 +417,7 @@ Same as [ComponentContext&ndash;options](../ComponentContext/#options).
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 337](../../zuix/ContextController.js#L337)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 338](../../zuix/ContextController.js#L338)
 
 -->
 
@@ -445,7 +446,7 @@ in case `isHook` is set to true, use the
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 364](../../zuix/ContextController.js#L364)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 365](../../zuix/ContextController.js#L365)
 
 -->
 
@@ -519,7 +520,7 @@ gets the view elements matching the given `filter`
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 298](../../zuix/ContextController.js#L298)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 299](../../zuix/ContextController.js#L299)
 
 -->
 
