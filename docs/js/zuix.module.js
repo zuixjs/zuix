@@ -1,4 +1,4 @@
-/* zuix.js v1.1.28 23.05.24 11:18:24 */
+/* zuix.js v1.1.29 23.06.22 15:11:52 */
 
 /******/ var __webpack_modules__ = ({
 
@@ -3174,8 +3174,8 @@ ComponentContext.prototype.view = function(view) {
 };
 
 /**
- * Gets, within the component's view, elements with `#` (same as `z-field`)
- * attribute matching the given `fieldName`.
+ * Gets, within the component view, elements having the `#<field_name>` (or `z-field="<name>"`)
+ * attribute matching the given value.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
@@ -3203,7 +3203,7 @@ zuix.context('field-test', (ctx) => {
 });
 </script>
  *
- * @param {!string} fieldName Value to match in the *z-field* attribute
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get.
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  */
 ComponentContext.prototype.field = function(fieldName) {
@@ -3323,9 +3323,9 @@ ComponentContext.prototype.style = function(css) {
  * @example
 ```html
 <div z-load="default" z-context="model-test">
-  <h1 z-field="title"></h1>
+  <h1 #title></h1>
   <label>Update title</label>
-  <input type="text" z-field="title-input" />
+  <input type="text" #title-input />
 </div>
 
 <script>
@@ -3344,14 +3344,14 @@ zuix.context('model-test', (ctx) => {
 In this example, when the text in the input box is changed, the
 new value is assigned to *model.title* property, and this will
 automatically trigger the update of the *h1* element's content
-in the view, because it is bound to the *title*'s field (`z-field="title"`).
+in the view, because it is bound to the *title*'s field (`#title`).
 For further info, see [Data binding](../../../view/#data_binding) in the View's chapter.
 
 <h5>Result</h5>
 <div z-load="default" z-context="model-test">
-  <h6 z-field="title" style="min-height:24px"></h6>
+  <h6 #title style="min-height:24px"></h6>
   <label for="title_input">Update title</label>
-  <input type="text" id="title_input" z-field="title-input" maxlength="30" />
+  <input type="text" id="title_input" #title-input maxlength="30" />
 </div>
 <script>
 zuix.context('model-test', (ctx) => {
@@ -3651,8 +3651,8 @@ ComponentContext.prototype.loadHtml = function(options) {
   return this;
 };
 /**
- * Creates the data model out of all `z-field` elements
- * declared in the component's view.
+ * Creates the data model out of all elements with the `#<field_name>` (or `z-field="<name>"`) attribute
+ * and that are declared in the component's view.
  *
  * @return {ComponentContext} The ```{ComponentContext}``` object itself.
  */
@@ -3691,7 +3691,7 @@ ComponentContext.prototype.viewToModel = function() {
   return this;
 };
 /**
- * Triggers the update of all `z-field` elements in the view
+ * Triggers the update of all elements in the view
  * that are bound to the model's fields. If the `inherits="true"` attribute
  * is present on a field, data can be inherited from parent component.
  *
@@ -4775,10 +4775,11 @@ ContextController.prototype.addTransition = function(className, properties, opti
   return this;
 };
 /**
- * Gets view's field(s) with the specified name.
+ * Gets, within the component view, elements having the `#<field_name>` (or `z-field="<name>"`)
+ * attribute matching the given value.
  * Same as [ComponentContext&ndash;field](../ComponentContext/#field).
  *
- * @param {!string} fieldName Value to match in the *z-field* attribute
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get.
  * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  */
 ContextController.prototype.field = function(fieldName) {
@@ -5633,10 +5634,10 @@ function controller(handler) {
 /**
  *
  * @private
- * @param {!string} fieldName Value to match in the `z-field` attribute.
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get.
  * @param {!Element|!ZxQuery} [container] Starting DOM element for this search (**default:** *document*)
  * @param {object} [context] The context
- * @return {ZxQuery} ZxQuery object with elements matching the given ```z-field``` attribute.
+ * @return {ZxQuery} ZxQuery object with elements matching the given `fieldName`.
  * If the matching element is just one, then it will also have the extra method `field(fieldName)`
  * to search for fields contained in it.
  *
@@ -6648,14 +6649,14 @@ function getController(javascriptCode, callback) {
 
 /**
  * Search the document or inside the given `container` for elements
- * with `z-field` attribute matching the provided `fieldName`.
+ * having the `#<field_name>` (or `z-field="<name>"`) attribute matching the given value.
  * This method implements a caching mechanism and automatic
  * disposal of allocated objects and events.
  *
  * @example
  *
 ```html
-<div z-field="sample-container">
+<div #sample-container>
    <!-- HTML -->
 </div>
 <script>
@@ -6664,10 +6665,10 @@ container.html('Hello World!');
 </script>
 ```
  *
- * @param {!string} fieldName Value of *z-field* to look for
+ * @param {!string} fieldName The name of the `#<field_name>` (or `z-field="name"`) attribute of the element(s) to get
  * @param {!Element} [container] Starting DOM element for this search (**default:** *document*)
  * @param {object} [context] The context
- * @return {ZxQuery} ZxQuery object with elements matching the given `z-field` attribute.
+ * @return {ZxQuery} A `{ZxQuery}` object wrapping the matching element(s).
  * If there's just one matching element, then the returned object will also have the additional method `field(fieldName)`
  * to search for fields inside the element itself.
  *
@@ -6750,11 +6751,11 @@ Zuix.prototype.unload = function(context) {
 <div layout="rows center-spread">
 
   <div class="card-component">
-    <div z-field="title">Card 1</div>
+    <div #title>Card 1</div>
   </div>
 
   <div class="card-component">
-    <div z-field="title">Card 2</div>
+    <div #title>Card 2</div>
   </div>
 
 </div>
@@ -6771,10 +6772,10 @@ Zuix.prototype.unload = function(context) {
 ```
 <div layout="rows center-spread">
   <div class="card-component">
-    <div z-field="title">Card 1</div>
+    <div #title>Card 1</div>
   </div>
   <div class="card-component">
-    <div z-field="title">Card 2</div>
+    <div #title>Card 2</div>
   </div>
 </div>
 <style>
@@ -6819,12 +6820,12 @@ ctrl = zuix.controller(function(cp) {
  */
 Zuix.prototype.controller = function(handler, options) {
   if (typeof handler === 'string') {
-    if (options.componentId) {
+    if (options && options.componentId) {
       handler += '\n//# sourceURL="' + options.componentId + '.js"\n';
     }
     handler = getController(handler, options);
   }
-  if (options.componentId) {
+  if (options && options.componentId) {
     _globalControllerHandlers[options.componentId] = handler;
   }
   return controller.call(this, handler);
