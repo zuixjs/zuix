@@ -83,6 +83,25 @@ Localization helper class.
 
 ### Methods
 
+<a name="Localize"></a>
+#### Localize(container)
+
+Localize the specified element by replacing all `data-locale-id` fields
+with the translated text.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`container`|*Element*||
+
+<!--
+
+*Source:*
+[localizer/Localizer.js](../../localizer/Localizer.js), [line 47](../../localizer/Localizer.js#L47)
+
+-->
+
 <a name="getDateEndianType"></a>
 #### getDateEndianType() &rarr; {string}
 
@@ -141,25 +160,6 @@ Get client language settings.
 
 *string*
  &dash; Locale identifier string (eg. 'en' ,'fr', 'it', ...)
-
-<a name="Localize"></a>
-#### Localize(container)
-
-Localize the specified element by replacing all `data-locale-id` fields
-with the translated text.
-
-##### Parameters
-
-|Name|Type|Description|
-|----|----|-----------|
-|`container`|*Element*||
-
-<!--
-
-*Source:*
-[localizer/Localizer.js](../../localizer/Localizer.js), [line 47](../../localizer/Localizer.js#L47)
-
--->
 
 ### Type Definitions
 

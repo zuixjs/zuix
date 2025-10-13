@@ -31,10 +31,11 @@
     "eslint": "^8.16.0",
     "eslint-config-google": "^0.14.0",
     "fs-readdir-recursive": "^1.1.0",
-    "jsdoc": "^3.6.10",
+    "jsdoc": "^4.0.5",
+    "taffydb": "^2.7.3",
     "replace": "^1.2.1",
     "terminal-kit": "^2.4.0",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack": "^5.98.0",
+    "webpack-cli": "^4.10.0"
   }
 }

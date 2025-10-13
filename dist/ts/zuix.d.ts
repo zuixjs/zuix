@@ -37,7 +37,7 @@ export interface Zuix {
   loadComponent(elements: Element | ZxQuery, componentId: string, type?: 'view' | 'ctrl', options?: ContextOptions);
   trigger(context: any, eventPath: String, eventData?: any): Zuix;
   hook(eventPath: String, eventHandler: Function): Zuix;
-  using(resourceType: String, resourcePath: String, callback?: Function): void;
+  using(resourceType: String, resourcePath: String, callback?: Function, context?: ComponentContext): void;
   lazyLoad(enable?: Boolean, threshold?: Number): Zuix | Boolean;
   httpCaching(enable?: Boolean): Zuix | Boolean;
   componentize(element?: Element | ZxQuery): Zuix;

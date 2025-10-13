@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/zuix-dist"><img src="https://img.shields.io/npm/v/zuix-dist.svg?style=for-the-badge" alt="npm dist"></a>
   <a href="https://github.com/zuixjs/zuix/blob/master/LICENSE.TXT"><img src="https://img.shields.io/npm/l/zuix-dist.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://deepwiki.com/zuixjs/zuix"><img height="30px" src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 </p>
 
 # [zuix.js v1.1.29](https://zuixjs.github.io/zuixjs.org)
@@ -19,9 +20,8 @@ A lightweight JavaScript library to support you in creating amazing component-ba
 
 See the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md#contributing) document.
 
-### Integrated Development Environment
 
-[JetBrains WebStorm](https://www.jetbrains.com/webstorm/) is the official IDE employed for developing this project.
+### A Note on `npm audit`
 
-![JetBrains Logo](https://raw.githubusercontent.com/zuixjs/zuix/master/docs/images/github/jetbrains.svg)
-![JetBrains WebStorm Logo](https://raw.githubusercontent.com/zuixjs/zuix/master/docs/images/github/icon-webstorm.svg)
+The vulnerability reported in `taffydb` is a false positive for this project. It is a `devDependency` used only for
+generating the documentation and can be safely ignored.
