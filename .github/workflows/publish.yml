@@ -1,6 +1,4 @@
-# .github/workflows/publish.yml
-
-name: Build, Publish and Deploy
+name: Build and Publish zuix-dist
 
 on:
   push:
@@ -8,8 +6,8 @@ on:
       - 'v*'
 
 permissions:
-  id-token: write   # Required for Trusted Publisher authentication
-  contents: write   # Required to push changes to the 'docs' folder
+  id-token: write
+  contents: write
 
 jobs:
   release:
@@ -29,22 +27,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Build will also trigger the 'postbuild' script we created
-      - name: Build and run post-build tasks
+      - name: Build and prepare distribution files
         run: npm run build
 
-      - name: Publish main package from root
-        run: npm publish --provenance
-
-      - name: Publish distribution package from /dist
+      - name: Publish package to NPM from /dist folder
         run: npm publish --provenance
         working-directory: ./dist
 
-      # Generate API documentation using jsdoc
       - name: Generate API docs
         run: npm run docs
-      
-      # Copy final distribution files to the docs folder for the website
+
       - name: Copy distribution files to /docs folder
         run: |
           mkdir -p ./docs/js
