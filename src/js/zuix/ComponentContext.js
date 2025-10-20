@@ -127,6 +127,8 @@ const dataBind = (el, boundData) => {
     case 'input':
       switch (el.type) {
         case 'checkbox':
+          el.checked = value;
+          break;
         case 'radio':
           if (el.value == value) {
             el.checked = true;

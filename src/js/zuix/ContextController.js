@@ -384,20 +384,34 @@ ContextController.prototype.trigger = function(eventPath, eventData, isHook) {
 /**
  * Declare fields that are available as public members of the
  * component context object.
+ * It automatically binds given methods to the controller instance.
  *
  * @param {string|JSON} name Name of the exposed method/property, or list of name/value pairs
  * @param {function} [handler] Function or property descriptor.
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.expose = function(name, handler) {
-  const expose = (m, h) => {
-    if (h && (h.get || h.set)) {
-      Object.defineProperty(this.context, m, h);
+  const controllerInstance = this;
+  const expose = (key, value) => {
+    // Check for property descriptors (getters/setters)
+    // No changes here.
+    if (value && (value.get || value.set)) {
+      Object.defineProperty(controllerInstance.context, key, value);
     } else {
-      if (h === undefined) {
-        delete this.context[m];
+      // Check if the provided value is a function AND if it's a method
+      // of the current controller instance.
+      if (typeof value === 'function' && typeof controllerInstance[key] === 'function' && controllerInstance[key] === value) {
+        // If it is, bind it automatically to the controller instance
+        // before exposing it on the component context.
+        controllerInstance.context[key] = value.bind(controllerInstance);
       } else {
-        this.context[m] = h;
+        // Otherwise (it's a property, an arrow function, or already bound), assign it as-is.
+        // The original logic is preserved here.
+        if (value === undefined) {
+          delete controllerInstance.context[key];
+        } else {
+          controllerInstance.context[key] = value;
+        }
       }
     }
   };
@@ -410,20 +424,31 @@ ContextController.prototype.expose = function(name, handler) {
 };
 /**
  * Declare fields that are available in the view's scripting scope.
+ * It automatically binds given methods to the controller instance.
  *
  * @param {string|JSON} name Name of the declared method/property, or list of name/value pairs
  * @param {function} [handler] Function or property descriptor.
  * @return {ContextController} The `{ContextController}` itself.
  */
 ContextController.prototype.declare = function(name, handler) {
-  const declare = (m, h) => {
-    if (h && (h.get || h.set)) {
-      Object.defineProperty(this.context['_'], m, h);
+  const controllerInstance = this;
+  const declare = (key, value) => {
+    // Check for property descriptors (getters/setters)
+    if (value && (value.get || value.set)) {
+      Object.defineProperty(controllerInstance.context['_'], key, value);
     } else {
-      if (h === undefined) {
-        delete this.context['_'][m];
+      // Check if the provided value is a function AND if it's a method
+      // of the current controller instance.
+      if (typeof value === 'function' && typeof controllerInstance[key] === 'function' && controllerInstance[key] === value) {
+        // If it is, bind it automatically to the controller instance.
+        controllerInstance.context['_'][key] = value.bind(controllerInstance);
       } else {
-        this.context['_'][m] = h;
+        // Otherwise (it's a property, an arrow function, or already bound), assign it as-is.
+        if (value === undefined) {
+          delete controllerInstance.context['_'][key];
+        } else {
+          controllerInstance.context['_'][key] = value;
+        }
       }
     }
   };

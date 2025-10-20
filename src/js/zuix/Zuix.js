@@ -227,6 +227,8 @@ function Zuix() {
           if ((el.type === 'checkbox' || el.type === 'radio') &&
               !el.checked && contextData[field] == val) {
             val = '';
+          } else if ((el.type === 'checkbox' || el.type === 'radio')) {
+            val = el.checked;
           }
           if (contextData[field] !== val) {
             contextData[field] = val;
