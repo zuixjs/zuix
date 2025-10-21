@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-NEW_VERSION=$1
-
-if [[ $NEW_VERSION == v* ]]; then
-  NEW_VERSION=${NEW_VERSION:1}
-fi
+NEW_VERSION=$(node -p "require('./package.json').version")
 
 PACKAGE_NAME_REGEX="\\[zuix\\.js"
 PACKAGE_NAME="[zuix.js"

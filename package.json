@@ -10,7 +10,7 @@
     "test": "echo \"Error: not implemented\" && exit 1",
     "build": "echo '=> running build' && node build",
     "docs": "jsdoc -c jsdoc.conf.json -t ./build/jsdoc/templates/markdown -a public",
-    "preversion": "./build/version.sh",
+    "version": "./build/version.sh",
     "postbuild": "./build/post-build.sh"
   },
   "author": "Generoso Martello",
