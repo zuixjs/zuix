@@ -114,7 +114,7 @@ Active-Refresh factory method.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1850](../../zuix/Zuix.js#L1850)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1852](../../zuix/Zuix.js#L1852)
 
 -->
 
@@ -138,7 +138,7 @@ Gets/Sets the application's data bundle (all components and scripts used in the 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1860](../../zuix/Zuix.js#L1860)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1862](../../zuix/Zuix.js#L1862)
 
 -->
 
@@ -164,7 +164,7 @@ by passing a boolean value as argument.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1793](../../zuix/Zuix.js#L1793)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1795](../../zuix/Zuix.js#L1795)
 
 -->
 
@@ -199,7 +199,7 @@ The `contextId` is the one specified in the `ContextOptions` object or by using 
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1533](../../zuix/Zuix.js#L1533)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1535](../../zuix/Zuix.js#L1535)
 
 -->
 
@@ -240,7 +240,7 @@ has been loaded.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1499](../../zuix/Zuix.js#L1499)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1501](../../zuix/Zuix.js#L1501)
 
 -->
 
@@ -268,7 +268,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1919](../../zuix/Zuix.js#L1919)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1921](../../zuix/Zuix.js#L1921)
 
 -->
 
@@ -284,7 +284,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1924](../../zuix/Zuix.js#L1924)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1926](../../zuix/Zuix.js#L1926)
 
 -->
 
@@ -311,7 +311,7 @@ disposal of allocated objects and events.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1354](../../zuix/Zuix.js#L1354)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1356](../../zuix/Zuix.js#L1356)
 
 -->
 
@@ -348,7 +348,7 @@ Gets the path of a loadable resource.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1831](../../zuix/Zuix.js#L1831)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1833](../../zuix/Zuix.js#L1833)
 
 -->
 
@@ -374,7 +374,7 @@ Pass null as `eventHandler` to unset a previously set callback.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1619](../../zuix/Zuix.js#L1619)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1621](../../zuix/Zuix.js#L1621)
 
 -->
 
@@ -461,7 +461,7 @@ Enables/Disables lazy-loading or gets the current setting.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1766](../../zuix/Zuix.js#L1766)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1768](../../zuix/Zuix.js#L1768)
 
 -->
 
@@ -487,7 +487,7 @@ attribute used to load components from HTML.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1404](../../zuix/Zuix.js#L1404)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1406](../../zuix/Zuix.js#L1406)
 
 -->
 
@@ -553,7 +553,7 @@ unloaded and replaced by the new one.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1476](../../zuix/Zuix.js#L1476)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1478](../../zuix/Zuix.js#L1478)
 
 -->
 
@@ -621,7 +621,7 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1839](../../zuix/Zuix.js#L1839)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1841](../../zuix/Zuix.js#L1841)
 
 -->
 
@@ -647,7 +647,7 @@ Runs a script in the scripting context of the given view element.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1960](../../zuix/Zuix.js#L1960)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1962](../../zuix/Zuix.js#L1962)
 
 -->
 
@@ -663,7 +663,7 @@ Sets components cache.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1914](../../zuix/Zuix.js#L1914)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1916](../../zuix/Zuix.js#L1916)
 
 -->
 
@@ -686,7 +686,7 @@ Gets/Sets a global store entry.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1819](../../zuix/Zuix.js#L1819)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1821](../../zuix/Zuix.js#L1821)
 
 -->
 
@@ -719,7 +719,7 @@ Triggers the event specified by `eventPath`.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1544](../../zuix/Zuix.js#L1544)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1546](../../zuix/Zuix.js#L1546)
 
 -->
 
@@ -742,7 +742,7 @@ Unloads the given component context(s) releasing all allocated resources.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1418](../../zuix/Zuix.js#L1418)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1420](../../zuix/Zuix.js#L1420)
 
 -->
 
@@ -776,7 +776,7 @@ included in the application bundle.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1641](../../zuix/Zuix.js#L1641)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1643](../../zuix/Zuix.js#L1643)
 
 -->
 

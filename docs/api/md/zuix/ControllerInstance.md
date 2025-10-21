@@ -185,6 +185,7 @@ Clears the fields cache.
 #### declare(name, handler) &rarr; {[ContextController](../../zuix/ContextController)}
 
 Declare fields that are available in the view's scripting scope.
+It automatically binds given methods to the controller instance.
 
 ##### Parameters
 
@@ -199,7 +200,7 @@ Declare fields that are available in the view's scripting scope.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 418](../../zuix/ContextController.js#L418)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 433](../../zuix/ContextController.js#L433)
 
 -->
 
@@ -213,6 +214,7 @@ Declare fields that are available in the view's scripting scope.
 
 Declare fields that are available as public members of the
 component context object.
+It automatically binds given methods to the controller instance.
 
 ##### Parameters
 
@@ -227,7 +229,7 @@ component context object.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 392](../../zuix/ContextController.js#L392)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 393](../../zuix/ContextController.js#L393)
 
 -->
 
@@ -282,7 +284,7 @@ for the given component type.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 515](../../zuix/ContextController.js#L515)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 540](../../zuix/ContextController.js#L540)
 
 -->
 
@@ -321,7 +323,7 @@ the file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 458](../../zuix/ContextController.js#L458)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 483](../../zuix/ContextController.js#L483)
 
 -->
 
@@ -363,7 +365,7 @@ file with the same base-name as the `componentId`.
 <!--
 
 *Source:*
-[zuix/ContextController.js](../../zuix/ContextController.js), [line 484](../../zuix/ContextController.js#L484)
+[zuix/ContextController.js](../../zuix/ContextController.js), [line 509](../../zuix/ContextController.js#L509)
 
 -->
 
