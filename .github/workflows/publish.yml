@@ -1,5 +1,4 @@
-name: Build and Publish zuix-dist
-
+name: Build, Publish and Deploy
 on:
   push:
     tags:
@@ -26,12 +25,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Build and prepare distribution files
+      - name: Build and run post-build tasks
         run: npm run build
-
-      - name: Publish package to NPM from /dist folder
-        run: npm publish --provenance
+      - name: Publish to NPM from /dist folder
+        run: |
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          npm publish --provenance
         working-directory: ./dist
 
       - name: Generate API docs
