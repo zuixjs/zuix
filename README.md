@@ -18,7 +18,7 @@
 
 ---
 
-## [zuix.js v1.2.1](https://zuixjs.github.io/zuixjs.org)
+## [zuix.js v1.2.2](https://zuixjs.github.io/zuixjs.org)
 
 **zUIx.js** is a component-based JavaScript framework for building modern web user interfaces. It's designed to be lightweight, fast, and easy to learn, allowing you to create reusable components with clean HTML, CSS, and JavaScript.
 
