@@ -171,29 +171,72 @@ const Utils = {
   },
 
   /**
-   * Normalizes controller code (ES5/ES6+).
-   * @param {string} javascriptCode The JS code to normalize.
-   * @return {string} Normalized JS controller code.
-   * @memberOf Utils
-   */
+     * Normalizes controller code (ES5/ES6+) to be wrapped in a function
+     * that returns the controller class, function, or object.
+     *
+     * This function is designed to be robust against common code formatting styles,
+     * such as leading comments and global variable declarations before the main export.
+     *
+     * ALGORITHM:
+     * 1.  The code is "stripped" of all comments to create a clean version for analysis.
+     * 2.  It finds the first top-level declaration keyword ('class', 'function', or 'zuix.controller')
+     *     that starts on a new line.
+     * 3.  For 'class' or 'function', it extracts a unique "marker" signature from the keyword
+     *     up to the opening brace '{' (e.g., "class MyController extends Base").
+     * 4.  It finds this unique marker in the original, unmodified code.
+     * 5.  It inserts the 'return' keyword right before the marker in the original code,
+     *     preserving all leading content (comments, global consts, etc.).
+     *
+     * KNOWN LIMITATION:
+     * This parser will fail if the exact signature of the class/function declaration
+     * (e.g., "class MyController extends Base") is present inside a comment *before*
+     * the actual code declaration. This is considered a rare edge case.
+     *
+     * @param {string} javascriptCode The JS code to normalize.
+     * @return {string} Normalized JS controller code.
+     * @memberOf Utils
+     */
   normalizeControllerCode(javascriptCode) {
     if (javascriptCode.indexOf('module.exports') >= 0) {
       return '\'use strict\'; let module = {}; ' + javascriptCode + ';\nreturn module.exports;';
     } else {
-      const pattern = /((?:\s*\/\*[\s\S]*?\*\/)*\s*)(class|function|zuix\.controller)/;
-      const match = javascriptCode.match(pattern);
-      if (match) {
-        const leadingContent = match[1] || ''; // All comments and whitespace before the keyword
-        const keyword = match[2];
-        if (keyword === 'zuix.controller') {
-          // Handle the special case for zuix.controller({...})
-          const keywordIndex = javascriptCode.indexOf('zuix.controller');
-          return javascriptCode.substring(0, keywordIndex) + 'return ' + javascriptCode.substring(keywordIndex + 15);
-        } else {
-          // For 'class' or 'function', insert 'return' right after the leading comments/whitespace.
-          return leadingContent + 'return ' + javascriptCode.substring(leadingContent.length);
+      const strippedCode = javascriptCode
+          .replace(/\/\*[\s\S]*?\*\//g, '')
+          .replace(/\/\/.*/g, '');
+
+      const match = strippedCode.match(/^\s*(class|function|zuix\.controller)/m);
+
+      if (!match) {
+        return javascriptCode;
+      }
+
+      const keyword = match[1];
+      const keywordIndex = match.index;
+
+      if (keyword === 'zuix.controller') {
+        const originalIndex = javascriptCode.indexOf('zuix.controller');
+        return javascriptCode.substring(0, originalIndex) + 'return ' + javascriptCode.substring(originalIndex + 15);
+      }
+
+      // Find the opening curly brace '{' that belongs to the class/function definition.
+      const openBraceIndex = strippedCode.indexOf('{', keywordIndex);
+
+      if (openBraceIndex > -1) {
+        // The marker is the text from the keyword up to (but not including) the curly brace.
+        // E.g., "class TimeClock extends ControllerInstance"
+        const markerSignature = strippedCode.substring(keywordIndex, openBraceIndex).trim();
+
+        if (markerSignature) {
+          // Find this signature in the original code.
+          const originalIndex = javascriptCode.indexOf(markerSignature);
+
+          if (originalIndex > -1) {
+            // Insert 'return' right before this signature.
+            return javascriptCode.substring(0, originalIndex) + 'return ' + javascriptCode.substring(originalIndex);
+          }
         }
       }
+
       return javascriptCode;
     }
   },
