@@ -84,5 +84,3 @@ const myComponent = zuix.load('path/to/my-component', {
 
 We welcome contributions! Please see the [CONTRIBUTING.md](https://github.com/zuixjs/zuix/blob/master/CONTRIBUTING.md#contributing) document
 for guidelines on how to submit bug reports, feature requests, and pull requests.
-
-```
