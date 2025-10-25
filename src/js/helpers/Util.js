@@ -180,19 +180,21 @@ const Utils = {
     if (javascriptCode.indexOf('module.exports') >= 0) {
       return '\'use strict\'; let module = {}; ' + javascriptCode + ';\nreturn module.exports;';
     } else {
-      // TODO: improve code parsing
-      let code = javascriptCode;
-      const fni = javascriptCode.indexOf('function ');
-      const fnz = javascriptCode.indexOf('zuix.controller');
-      const fnc = javascriptCode.indexOf('class ');
-      if (fnc >= 0 && (fnc < fni || fni === -1) && (fnc < fnz || fnz === -1)) {
-        code = javascriptCode.substring(0, fnc) + 'return ' + javascriptCode.substring(fnc);
-      } else if (fni >= 0 && (fni < fnz || fnz === -1)) {
-        code = javascriptCode.substring(0, fni) + 'return ' + javascriptCode.substring(fni);
-      } else if (fnz !== -1) {
-        code = javascriptCode.substring(0, fnz) + 'return ' + javascriptCode.substring(fnz + 15);
+      const pattern = /((?:\s*\/\*[\s\S]*?\*\/)*\s*)(class|function|zuix\.controller)/;
+      const match = javascriptCode.match(pattern);
+      if (match) {
+        const leadingContent = match[1] || ''; // All comments and whitespace before the keyword
+        const keyword = match[2];
+        if (keyword === 'zuix.controller') {
+          // Handle the special case for zuix.controller({...})
+          const keywordIndex = javascriptCode.indexOf('zuix.controller');
+          return javascriptCode.substring(0, keywordIndex) + 'return ' + javascriptCode.substring(keywordIndex + 15);
+        } else {
+          // For 'class' or 'function', insert 'return' right after the leading comments/whitespace.
+          return leadingContent + 'return ' + javascriptCode.substring(leadingContent.length);
+        }
       }
-      return code;
+      return javascriptCode;
     }
   },
 
