@@ -249,6 +249,18 @@ export interface Zuix {
      */
     setComponentCache(cache: ComponentCache[]): void;
     /**
+     * Removes a component from the components cache.
+     * @param componentId
+     * @returns {ComponentCache | null}
+     */
+    removeCachedComponent(cachedComponentId: string): ComponentCache | null;
+    /**
+     * Gets a component from the components cache.
+     * @param {Object} componentId
+     * @return {ComponentCache | null}
+     */
+    getCachedComponent(componentId: string): ComponentCache | null;
+    /**
      * Runs a script in the scripting context of the given view element.
      *
      * @param scriptCode Scriptlet Js code.

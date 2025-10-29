@@ -733,17 +733,17 @@ function setComponentCache(cache) {
   _componentCache = cache;
 }
 
-///** @private */
-//function removeCachedComponent(componentId) {
-// TODO: removeCachedComponent
-// TODO: should this be called when last instance of a component type is disposed?
-//}
+/** @private */
+function removeCachedComponent(componentId) {
+  delete _globalControllerHandlers[componentId];
+  const idx = _componentCache.findIndex((c) => c.componentId === componentId);
+  if (idx >= 0) {
+    return (_componentCache.splice(idx, 1))[0];
+  }
+  return null;
+}
 
-/**
- * @private
- * @param {Object} componentId
- * @return {ComponentCache | null}
- */
+/** @private */
 function getCachedComponent(componentId) {
   /** @type {ComponentCache | null} */
   let cached = null;
@@ -1914,6 +1914,18 @@ Zuix.prototype.ZxQuery = z$.ZxQuery;
  * @return void
  */
 Zuix.prototype.setComponentCache = (componentCache) => setComponentCache(componentCache);
+/**
+ * Removes a component from the components cache.
+ * @param componentId
+ * @returns {ComponentCache | null}
+ */
+Zuix.prototype.removeCachedComponent = (componentId) => removeCachedComponent(componentId);
+/**
+ * Gets a component from the components cache.
+ * @param {Object} componentId
+ * @return {ComponentCache | null}
+ */
+Zuix.prototype.getCachedComponent = (componentId) => getCachedComponent(componentId);
 /**
  * Dumps content of the components cache. Mainly for debugging purpose.
  * @return {Array<ComponentCache>}
