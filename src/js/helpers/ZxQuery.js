@@ -160,7 +160,7 @@ function addEventHandler(el, path, handler, options) {
   });
   if (!found) {
     _zuix_events_mapping.push({element: el, path, handler, options});
-    el.addEventListener(path, routeEvent, supportsPassive && (options == null || options.passive !== false) ? {passive: true} : false);
+    el.addEventListener(path, routeEvent, options);
   }
 }
 function removeEventHandler(el, path, handler) {
