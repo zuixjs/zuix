@@ -120,7 +120,7 @@ Catches errors occurred in the specified component context.
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 206](../../helpers/Util.js#L206)
+[helpers/Util.js](../../helpers/Util.js), [line 251](../../helpers/Util.js#L251)
 
 -->
 
@@ -213,7 +213,26 @@ Returns true only if object is null || undefined
 <a name="normalizeControllerCode"></a>
 #### &lt;_static_&gt; normalizeControllerCode(javascriptCode) &rarr; {string}
 
-Normalizes controller code (ES5/ES6+).
+Normalizes controller code (ES5/ES6+) to be wrapped in a function
+that returns the controller class, function, or object.
+
+This function is designed to be robust against common code formatting styles,
+such as leading comments and global variable declarations before the main export.
+
+ALGORITHM:
+1.  The code is "stripped" of all comments to create a clean version for analysis.
+2.  It finds the first top-level declaration keyword ('class', 'function', or 'zuix.controller')
+    that starts on a new line.
+3.  For 'class' or 'function', it extracts a unique "marker" signature from the keyword
+    up to the opening brace '{' (e.g., "class MyController extends Base").
+4.  It finds this unique marker in the original, unmodified code.
+5.  It inserts the 'return' keyword right before the marker in the original code,
+    preserving all leading content (comments, global consts, etc.).
+
+KNOWN LIMITATION:
+This parser will fail if the exact signature of the class/function declaration
+(e.g., "class MyController extends Base") is present inside a comment *before*
+the actual code declaration. This is considered a rare edge case.
 
 ##### Parameters
 
@@ -224,7 +243,7 @@ Normalizes controller code (ES5/ES6+).
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 179](../../helpers/Util.js#L179)
+[helpers/Util.js](../../helpers/Util.js), [line 199](../../helpers/Util.js#L199)
 
 -->
 

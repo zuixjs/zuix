@@ -268,7 +268,7 @@ Dumps content of the components cache. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1921](../../zuix/Zuix.js#L1921)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1933](../../zuix/Zuix.js#L1933)
 
 -->
 
@@ -284,7 +284,7 @@ Dumps allocated component's contexts. Mainly for debugging purpose.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1926](../../zuix/Zuix.js#L1926)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1938](../../zuix/Zuix.js#L1938)
 
 -->
 
@@ -333,6 +333,28 @@ container = zuix.field('sample-container');
 container.html('Hello World!');
 </script>
 ```
+
+<a name="getCachedComponent"></a>
+#### getCachedComponent(componentId) &rarr; {[ComponentCache](#ComponentCache)|null}
+
+Gets a component from the components cache.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`componentId`|*Object*||
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1928](../../zuix/Zuix.js#L1928)
+
+-->
+
+##### Returns
+
+*[ComponentCache](#ComponentCache)* \| *null*
 
 <a name="getResourcePath"></a>
 #### getResourcePath(path) &rarr; {string}
@@ -630,6 +652,28 @@ the browser's built-in [Proxy](https://developer.mozilla.org/en-US/docs/Web/Java
 *[ObservableObject](../../observable/ObservableObject)*
  &dash; The observable object.
 
+<a name="removeCachedComponent"></a>
+#### removeCachedComponent(componentId) &rarr; {[ComponentCache](#ComponentCache)|null}
+
+Removes a component from the components cache.
+
+##### Parameters
+
+|Name|Type|Description|
+|----|----|-----------|
+|`componentId`|||
+
+<!--
+
+*Source:*
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1922](../../zuix/Zuix.js#L1922)
+
+-->
+
+##### Returns
+
+*[ComponentCache](#ComponentCache)* \| *null*
+
 <a name="runScriptlet"></a>
 #### runScriptlet(scriptCode, $el, $view, data) &rarr; {object|undefined}
 
@@ -647,7 +691,7 @@ Runs a script in the scripting context of the given view element.
 <!--
 
 *Source:*
-[zuix/Zuix.js](../../zuix/Zuix.js), [line 1962](../../zuix/Zuix.js#L1962)
+[zuix/Zuix.js](../../zuix/Zuix.js), [line 1974](../../zuix/Zuix.js#L1974)
 
 -->
 

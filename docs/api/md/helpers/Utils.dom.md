@@ -70,7 +70,7 @@ main table code {
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 221](../../helpers/Util.js#L221)
+[helpers/Util.js](../../helpers/Util.js), [line 266](../../helpers/Util.js#L266)
 
 -->
 
@@ -91,7 +91,7 @@ Gets the CSS `:not` selector for the given comma-separated list of attributes wi
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 300](../../helpers/Util.js#L300)
+[helpers/Util.js](../../helpers/Util.js), [line 345](../../helpers/Util.js#L345)
 
 -->
 
@@ -115,7 +115,7 @@ Gets the first non-null value for the given comma-separated list of element attr
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 258](../../helpers/Util.js#L258)
+[helpers/Util.js](../../helpers/Util.js), [line 303](../../helpers/Util.js#L303)
 
 -->
 
@@ -138,7 +138,7 @@ Return the ShadowRoot node containing the given element, or false if not in a sh
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 334](../../helpers/Util.js#L334)
+[helpers/Util.js](../../helpers/Util.js), [line 379](../../helpers/Util.js#L379)
 
 -->
 
@@ -163,7 +163,7 @@ Gets CSS query for matching the given value in a list of specified attributes.
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 235](../../helpers/Util.js#L235)
+[helpers/Util.js](../../helpers/Util.js), [line 280](../../helpers/Util.js#L280)
 
 -->
 
@@ -188,7 +188,7 @@ Sets the value of the given comma-separated list of attributes.
 <!--
 
 *Source:*
-[helpers/Util.js](../../helpers/Util.js), [line 280](../../helpers/Util.js#L280)
+[helpers/Util.js](../../helpers/Util.js), [line 325](../../helpers/Util.js#L325)
 
 -->
 
