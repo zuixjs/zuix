@@ -565,6 +565,7 @@ function unload(context) {
       util.catchContextError(ctx, () => {
         ctx.dispose();
       });
+      ctx._error = 'disposed';
     }
   };
   if (context && context.each) {
