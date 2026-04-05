@@ -28,14 +28,13 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "^8.16.0",
+    "eslint": "9.39.4",
     "eslint-config-google": "^0.14.0",
+    "eslint-plugin-jsdoc": "^62.9.0",
     "fs-readdir-recursive": "^1.1.0",
     "jsdoc": "^4.0.5",
-    "taffydb": "^2.7.3",
-    "replace": "^1.2.1",
-    "terminal-kit": "^2.4.0",
-    "webpack": "^5.98.0",
-    "webpack-cli": "^4.10.0"
+    "terminal-kit": "^3.1.2",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2"
   }
 }
