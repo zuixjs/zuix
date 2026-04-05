@@ -28,10 +28,11 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "9.39.4",
+    "eslint": "10.2.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-jsdoc": "^62.9.0",
     "fs-readdir-recursive": "^1.1.0",
+    "globals": "^17.4.0",
     "jsdoc": "^4.0.5",
     "terminal-kit": "^3.1.2",
     "webpack": "^5.105.4",
