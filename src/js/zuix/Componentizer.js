@@ -415,7 +415,7 @@ function loadInline(element, opts) {
         let val;
         // Seek parentContext if any
         let parentContext = null;
-        if (v.parent().get() instanceof ShadowRoot) {
+        if (v.parent().get() instanceof ShadowRoot && options.__shadowRoot != null) {
           parentContext = options.__shadowRoot.parent(`[${_optionAttributes.zReady}="true"]`);
         } else {
           parentContext = v.parent(`[${_optionAttributes.zReady}="true"]`);
